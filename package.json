@@ -1,0 +1,71 @@
+{
+  "name": "cookbook",
+  "version": "0.2.0",
+  "private": true,
+  "babel": {
+    "presets": [
+      "latest",
+      "react"
+    ]
+  },
+  "scripts": {
+    "start": "node index",
+    "dev": "run-p dev:server dev:webpack",
+    "dev:server": "nodemon server --watch src/server --exec babel-node",
+    "dev:webpack": "webpack-dev-server --inline --hot --progress --colors --config webpack.dev.js",
+    "build": "run-s clean build:server build:copy build:webpack",
+    "build:server": "babel server -d dist/",
+    "build:copy": "shx cp package.json Dockerfile dist/",
+    "build:webpack": "webpack --progress --colors --config webpack.prod.js",
+    "clean": "shx rm -rf dist/"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "bootstrap-sass": "^3.3.7",
+    "composable-middleware": "^0.3.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^2.2.0",
+    "jsonwebtoken": "^7.1.9",
+    "lodash": "^4.16.4",
+    "mongoose": "^4.6.5",
+    "ms": "^0.7.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-router": "^3.0.0",
+    "react-router-redux": "^4.0.7",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.9.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-react": "^6.6.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "favicons-webpack-plugin": "^0.0.7",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.0",
+    "imports-loader": "^0.6.5",
+    "node-sass": "^3.10.1",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^3.1.1",
+    "sass-loader": "^4.0.2",
+    "shx": "^0.1.4",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2",
+    "webpack-merge": "^0.15.0"
+  }
+}
