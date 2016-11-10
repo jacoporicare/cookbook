@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
@@ -18,25 +19,32 @@ module.exports = {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel'
+      loader: 'babel-loader'
     }, {
       test: /\.html$/,
-      loader: 'html'
+      loader: 'html-loader'
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', [
-        'css?sourceMap',
-        'autoprefixer?browsers=last 3 versions',
-        'sass?sourceMap'
+      loader: ExtractTextPlugin.extract('style-loader', [
+        'css-loader?sourceMap',
+        'postcss-loader',
+        'sass-loader?sourceMap'
       ])
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', 'css')
+      loader: ExtractTextPlugin.extract('style-loader', [
+        'css-loader?sourceMap',
+        'postcss-loader'
+      ])
     }, {
       test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000'
+      loader: 'url-loader?limit=10000'
     }]
   },
+
+  postcss: [autoprefixer({
+    browsers: ['last 3 versions']
+  })],
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
