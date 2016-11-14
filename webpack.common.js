@@ -48,7 +48,7 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
+      names: ['vendor', 'polyfills']
     }),
 
     new HtmlWebpackPlugin({
@@ -61,7 +61,7 @@ module.exports = {
       icons: {
         android: true,
         appleIcon: true,
-        appleStartup: false,
+        appleStartup: true,
         coast: false,
         favicons: true,
         firefox: true,

@@ -16,6 +16,7 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
+    new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('[name].css')
   ],
 
