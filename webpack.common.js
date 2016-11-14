@@ -6,9 +6,9 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    'polyfills': './client/polyfills.jsx',
-    'vendor': './client/vendor.jsx',
-    'app': './client/app.jsx'
+    'polyfills': './src/client/polyfills.js',
+    'vendor': './src/client/vendor.js',
+    'app': './src/client/index.js'
   },
 
   resolve: {
@@ -52,11 +52,11 @@ module.exports = {
     }),
 
     new HtmlWebpackPlugin({
-      template: './client/index.html'
+      template: './src/client/index.html'
     }),
 
     new FaviconsWebpackPlugin({
-      logo: './client/piggy.png',
+      logo: './src/client/piggy.png',
       title: 'Žrádelník',
       icons: {
         android: true,

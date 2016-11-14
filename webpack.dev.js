@@ -10,14 +10,16 @@ module.exports = webpackMerge(commonConfig, {
   noInfo: false,
 
   output: {
-    path: path.join(__dirname, '../dist'),
+    path: path.join(__dirname, 'dist'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js'
   },
 
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('[name].css')
+    new ExtractTextPlugin('[name].css', {
+      disable: true
+    })
   ],
 
   devServer: {
