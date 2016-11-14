@@ -6,6 +6,6 @@ const NotFoundPage = () => {
       <h2>Nenalezeno</h2>
     </div>
   );
-}
+};
 
 export default NotFoundPage;
