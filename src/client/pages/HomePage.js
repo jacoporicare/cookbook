@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import RecipeList from '../components/RecipeList/RecipeList';
 
-const HomePage = () => {
+const HomePage = ({ recipes }) => {
   return (
-    <div>
-      <h2>Home Page</h2>
-    </div>
+    <RecipeList recipes={recipes} />
   );
 };
 
-export default HomePage;
+HomePage.propTypes = {
+  recipes: PropTypes.array.isRequired
+};
+
+function mapStateToProps(state) {
+  return {
+    recipes: state.recipes
+  };
+}
+
+export default connect(
+  mapStateToProps
+)(HomePage);

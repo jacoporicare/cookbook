@@ -1,3 +1,5 @@
-export default function recipesReducer(state = [], action) {
+import initialState from './initialState';
+
+export default function (state = initialState.recipes, action) {
   return state;
-}
+};

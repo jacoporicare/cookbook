@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import recipes from './recipesReducer';
+import recipes from "./recipesReducer";
 
-const rootReducer = combineReducers({
+export default combineReducers({
   routing: routerReducer,
   recipes
 });
-
-export default rootReducer;

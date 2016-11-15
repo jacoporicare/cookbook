@@ -19,26 +19,26 @@ module.exports = {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
+      loader: 'babel'
     }, {
       test: /\.html$/,
-      loader: 'html-loader'
+      loader: 'html'
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style-loader', [
-        'css-loader?sourceMap',
-        'postcss-loader',
-        'sass-loader?sourceMap'
+      loader: ExtractTextPlugin.extract('style', [
+        'css?sourceMap',
+        'postcss',
+        'sass?sourceMap'
       ])
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style-loader', [
-        'css-loader?sourceMap',
-        'postcss-loader'
+      loader: ExtractTextPlugin.extract('style', [
+        'css?sourceMap',
+        'postcss'
       ])
     }, {
       test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url-loader?limit=10000'
+      loader: 'url?limit=10000'
     }]
   },
 

@@ -2,8 +2,11 @@ import React from 'react';
 
 const NotFoundPage = () => {
   return (
-    <div>
-      <h2>Nenalezeno</h2>
+    <div className="container">
+      <h1>Nenalezeno</h1>
+      <div className="alert alert-info">
+        Toto není stránka kterou hledáš.
+      </div>
     </div>
   );
 };

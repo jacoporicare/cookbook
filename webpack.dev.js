@@ -19,6 +19,10 @@ module.exports = webpackMerge(commonConfig, {
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('[name].css', {
       disable: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+      __DEV__: true
     })
   ],
 
