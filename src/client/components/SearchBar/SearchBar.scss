@@ -1,0 +1,14 @@
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
+
+.cb-search {
+  border-top-right-radius: $input-border-radius !important;
+  border-bottom-right-radius: $input-border-radius !important;
+
+  @media (min-width: $screen-sm-min) {
+    width: 250px !important;
+  }
+
+  @media (min-width: $screen-md-min) {
+    width: 400px !important;
+  }
+}

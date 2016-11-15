@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link, IndexLink } from 'react-router';
+import SearchBar from '../SearchBar/SearchBar';
 
 const Navbar = ({ username, isLoggedIn }) => {
   return (
@@ -20,7 +21,7 @@ const Navbar = ({ username, isLoggedIn }) => {
             <li><Link to="/prilohy" activeClassName="active">Přílohy</Link></li>
           </ul>
 
-
+          {isLoggedIn && <SearchBar />}
 
           <ul className="nav navbar-nav navbar-right">
             {!isLoggedIn && <li><Link to="/prihlaseni" activeClassName="active">Přihlásit</Link></li>}
