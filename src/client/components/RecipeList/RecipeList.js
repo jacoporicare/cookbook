@@ -3,11 +3,11 @@ import RecipeListItem from './RecipeListItem.js';
 
 const RecipeList = ({ recipes }) => {
   return (
-    <div>
+    <ul>
       {recipes.map(recipe =>
         <RecipeListItem recipe={recipe} key={recipe.id} />
       )}
-    </div>
+    </ul>
   );
 };
 

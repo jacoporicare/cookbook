@@ -2,13 +2,15 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RecipeList from '../components/RecipeList/RecipeList';
 
-const HomePage = ({ recipes }) => {
+const RecipeListPage = ({ recipes }) => {
   return (
-    <RecipeList recipes={recipes} />
+    <div className="container">
+      <RecipeList recipes={recipes} />
+    </div>
   );
 };
 
-HomePage.propTypes = {
+RecipeListPage.propTypes = {
   recipes: PropTypes.array.isRequired
 };
 
@@ -20,4 +22,4 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps
-)(HomePage);
+)(RecipeListPage);
