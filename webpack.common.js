@@ -37,7 +37,7 @@ module.exports = {
       ])
     }, {
       test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&name=[name].[ext]'
+      loader: 'url?limit=10000'
     }]
   },
 
