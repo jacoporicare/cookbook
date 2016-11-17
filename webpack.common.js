@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -38,7 +37,7 @@ module.exports = {
       ])
     }, {
       test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000'
+      loader: 'url?limit=10000&name=[name].[ext]'
     }]
   },
 
@@ -53,23 +52,6 @@ module.exports = {
 
     new HtmlWebpackPlugin({
       template: './src/client/index.html'
-    }),
-
-    new FaviconsWebpackPlugin({
-      logo: './src/client/piggy.png',
-      title: 'Žrádelník',
-      icons: {
-        android: true,
-        appleIcon: true,
-        appleStartup: true,
-        coast: false,
-        favicons: true,
-        firefox: true,
-        opengraph: false,
-        twitter: false,
-        yandex: false,
-        windows: false
-      }
     })
   ]
 };

@@ -13,7 +13,7 @@ module.exports = webpackMerge(commonConfig, {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js',
-    publicPath: '/'
+    publicPath: 'http://localhost:8080/'
   },
 
   plugins: [
