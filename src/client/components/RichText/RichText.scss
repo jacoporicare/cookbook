@@ -1,0 +1,35 @@
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss';
+
+$cb-step-size: 2em;
+$cb-step-line-height: 1.5em;
+
+.cb-steps {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 1.5em;
+
+  li {
+    position: relative;
+    padding-left: $cb-step-size + 1em;
+    line-height: $cb-step-line-height;
+
+    & + li {
+      margin-top: 1em;
+    }
+  }
+
+  .cb-step {
+    position: absolute;
+    left: 0;
+    top: -(($cb-step-size - $cb-step-line-height) / 2);
+    width: $cb-step-size;
+    height: $cb-step-size;
+    line-height: $cb-step-size;
+    text-align: center;
+    border: 1px solid $state-info-border;
+    border-radius: 50%;
+    font-weight: bold;
+    color: $state-info-text;
+    background-color: $state-info-bg;
+  }
+}

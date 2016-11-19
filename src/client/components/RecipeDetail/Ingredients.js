@@ -1,10 +1,6 @@
 import React, { PropTypes } from 'react';
 
 const Ingredients = ({ ingredients }) => {
-  if (!ingredients.length) {
-    return;
-  }
-
   return (
     <ul className="list-group cb-ingredient-list">
       {ingredients.map(ingredient => {
