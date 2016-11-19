@@ -5,7 +5,7 @@ const NotFoundPage = () => {
     <div className="container">
       <h1>Nenalezeno</h1>
       <div className="alert alert-info">
-        Toto není stránka kterou hledáš.
+        Toto není stránka, kterou hledáš.
       </div>
     </div>
   );
