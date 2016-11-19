@@ -7,7 +7,7 @@ const RecipeList = ({ recipes }) => {
     <div className="cb-recipes">
       <div className="row">
         {recipes.map(recipe =>
-          <RecipeListItem recipe={recipe} key={recipe.id} />
+          <RecipeListItem recipe={recipe} key={recipe._id} />
         )}
       </div>
       {!recipes.length &&

@@ -1,11 +1,32 @@
 import React, { PropTypes } from 'react';
+import Header from './Header';
+import Ingredients from './Ingredients';
+import RichText from '../RichText/RichText';
 
 const RecipeDetail = ({ recipe }) => {
-  const { title } = recipe;
+  const { _id, title, preparationTime, sideDish, ingredients, directions } = recipe;
 
   return (
     <div className="container">
-      {title}
+      <Header
+        id={_id}
+        title={title}
+        preparationTime={preparationTime}
+        sideDish={sideDish}
+      />
+      <div className="cb-recipe-detail">
+        <div className="row">
+          <div className="col-md-3 col-sm-4">
+            <h3>Ingredience</h3>
+            <Ingredients ingredients={ingredients} />
+          </div>
+
+          <div className="col-md-9 col-sm-8">
+            <h3>Postup</h3>
+            <RichText text={directions} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

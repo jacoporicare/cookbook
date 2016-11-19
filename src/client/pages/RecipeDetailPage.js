@@ -25,7 +25,7 @@ function mapStateToProps(state, ownProps) {
 
   const recipeId = ownProps.params.id;
   if (recipeId && state.recipes.length) {
-    recipe = state.recipes.find(r => r.id == recipeId);
+    recipe = state.recipes.find(r => r._id == recipeId);
   }
 
   return {
