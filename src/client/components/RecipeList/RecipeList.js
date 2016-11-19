@@ -1,13 +1,21 @@
 import React, { PropTypes } from 'react';
 import RecipeListItem from './RecipeListItem.js';
+import './RecipeList.scss';
 
 const RecipeList = ({ recipes }) => {
   return (
-    <ul>
-      {recipes.map(recipe =>
-        <RecipeListItem recipe={recipe} key={recipe.id} />
-      )}
-    </ul>
+    <div className="cb-recipes">
+      <div className="row">
+        {recipes.map(recipe =>
+          <RecipeListItem recipe={recipe} key={recipe.id} />
+        )}
+      </div>
+      {!recipes.length &&
+        <div className="alert alert-info">
+          Zatím zde není žádný recept.
+        </div>
+      }
+    </div>
   );
 };
 

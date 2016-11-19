@@ -12,10 +12,10 @@ export function fetchRecipes() {
     setTimeout(() => {
       const recipes = [];
       for (let i = 1; i < 100; i++) {
-        recipes.push({ id: i, title: `Recept ${i}` });
+        recipes.push({ id: i, title: `Recept ${i}`, sideDish: 'brambory', preparationTime: 30 });
       }
 
-      dispatch(receiveRecipes(recipes))
+      dispatch(receiveRecipes(recipes));
     }, 1000);
   };
 }

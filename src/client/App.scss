@@ -1,0 +1,40 @@
+/**
+ * Bootstrap overrides
+ */
+
+.page-header {
+  margin-top: 0;
+}
+
+
+/**
+ * Common
+ */
+
+.cb-info-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  li {
+    display: inline;
+
+    & + li:before {
+      content: ' · ';
+    }
+  }
+}
+
+.cb-ingredient-list {
+  .row {
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+
+  .cb-sortable-handle {
+    cursor: pointer;
+  }
+}
