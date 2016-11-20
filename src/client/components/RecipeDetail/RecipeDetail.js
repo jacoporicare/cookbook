@@ -4,12 +4,12 @@ import Ingredients from './Ingredients';
 import RichText from '../RichText/RichText';
 
 const RecipeDetail = ({ recipe }) => {
-  const { _id, title, preparationTime, sideDish, ingredients, directions } = recipe;
+  const { slug, title, preparationTime, sideDish, ingredients, directions } = recipe;
 
   return (
     <div className="container">
       <Header
-        id={_id}
+        slug={slug}
         title={title}
         preparationTime={preparationTime}
         sideDish={sideDish}

@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 const RecipeListItem = ({ recipe }) => {
-  const { _id, title, preparationTime, sideDish } = recipe;
+  const { slug, title, preparationTime, sideDish } = recipe;
 
   return (
     <div className="col-lg-4 col-md-6 recipe-container">
-      <Link to={`/recept/${_id}`} className="recipe">
+      <Link to={`/recept/${slug}`} className="recipe">
         <h4 className="text-primary" title="{title}">{title}</h4>
         <ul className="cb-info-list text-muted">
 					{preparationTime > 0 && <li><b>Doba přípravy:</b> {preparationTime} min</li>}

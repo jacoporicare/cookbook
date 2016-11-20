@@ -32,7 +32,8 @@
     "react-router-redux": "^4.0.7",
     "react-router-scroll": "^0.4.1",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "slug": "^0.9.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.2",

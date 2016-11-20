@@ -9,7 +9,7 @@ import NotFoundPage from './pages/NotFoundPage';
 export default (
   <Route path="/" component={AppPage}>
     <IndexRoute component={RecipeListPage} />
-    <Route path="recept/:id" component={RecipeDetailPage} />
+    <Route path="recept/:slug" component={RecipeDetailPage} />
     <Route path="prilohy" component={SideDishListPage} />
     <Route path="*" component={NotFoundPage} />
   </Route>

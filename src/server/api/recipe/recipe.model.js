@@ -11,6 +11,7 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  slug: String,
   directions: String,
   sideDish: String,
   preparationTime: Number,

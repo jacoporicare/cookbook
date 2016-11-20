@@ -23,9 +23,9 @@ RecipeDetailPage.propTypes = {
 function mapStateToProps(state, ownProps) {
   let recipe;
 
-  const recipeId = ownProps.params.id;
-  if (recipeId && state.recipes.length) {
-    recipe = state.recipes.find(r => r._id == recipeId);
+  const { slug } = ownProps.params;
+  if (slug && state.recipes.length) {
+    recipe = state.recipes.find(r => r.slug == slug);
   }
 
   return {
