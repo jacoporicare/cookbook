@@ -18,7 +18,12 @@ const RecipeListItem = ({ recipe }) => {
 };
 
 RecipeListItem.propTypes = {
-  recipe: PropTypes.object.isRequired
+  recipe: PropTypes.shape({
+    slug: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    preparationTime: PropTypes.number,
+    sideDish: PropTypes.string
+  }).isRequired
 };
 
 export default RecipeListItem;

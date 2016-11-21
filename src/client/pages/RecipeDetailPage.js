@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchRecipesIfNeeded } from '../actions/recipesActions';
+import { loadRecipes } from '../actions/recipesActions';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 
 class RecipeDetailPage extends React.Component {
   componentDidMount() {
-    this.props.dispatch(fetchRecipesIfNeeded());
+    this.props.loadRecipes();
   }
 
   render() {
@@ -28,7 +28,7 @@ class RecipeDetailPage extends React.Component {
 RecipeDetailPage.propTypes = {
   recipe: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired
+  loadRecipes: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -43,4 +43,6 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps)(RecipeDetailPage);
+export default connect(mapStateToProps, {
+  loadRecipes
+})(RecipeDetailPage);

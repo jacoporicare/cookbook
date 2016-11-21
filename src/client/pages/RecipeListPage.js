@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchRecipesIfNeeded } from '../actions/recipesActions';
+import { loadRecipes } from '../actions/recipesActions';
 import RecipeList from '../components/RecipeList/RecipeList';
 
 class RecipeListPage extends React.Component {
   componentDidMount() {
-    this.props.dispatch(fetchRecipesIfNeeded());
+    this.props.loadRecipes();
   }
 
   render() {
@@ -28,7 +28,7 @@ class RecipeListPage extends React.Component {
 RecipeListPage.propTypes = {
   recipes: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired
+  loadRecipes: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -40,4 +40,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(RecipeListPage);
+export default connect(mapStateToProps, {
+  loadRecipes
+})(RecipeListPage);

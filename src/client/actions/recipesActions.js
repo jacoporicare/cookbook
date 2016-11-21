@@ -1,14 +1,9 @@
 import axios from 'axios';
 import ms from 'ms';
 import {
-  INVALIDATE_RECIPES,
   REQUEST_RECIPES,
   RECEIVE_RECIPES
 } from '../constants/actionTypes';
-
-export const invalidateRecipes = () => ({
-  type: INVALIDATE_RECIPES
-});
 
 export const requestRecipes = () => ({
   type: REQUEST_RECIPES
@@ -25,19 +20,9 @@ const fetchRecipes = () => dispatch => {
     .then(response => dispatch(receiveRecipes(response.data)));
 };
 
-const shouldFetchRecipes = recipes => {
-  if (recipes.isFetching) {
-    return false;
-  }
-  if (!recipes.lastUpdated || (Date.now() - recipes.lastUpdated) > ms('15m')) {
-    return true;
-  }
-  return recipes.didInvalidate;
-};
-
-export const fetchRecipesIfNeeded = () => (dispatch, getState) => {
+export const loadRecipes = () => (dispatch, getState) => {
   const { recipes } = getState();
-  if (shouldFetchRecipes(recipes)) {
+  if (!recipes.isFetching) {
     return dispatch(fetchRecipes());
   }
 };
