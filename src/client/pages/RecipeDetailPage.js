@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { loadRecipe } from '../actions/recipeDetailsActions';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
+import Spinner from '../components/Spinner/Spinner';
 
 class RecipeDetailPage extends React.Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ class RecipeDetailPage extends React.Component {
       return (
         <div className="container">
           {isFetching
-            ? <h2>Nahrávání...</h2>
+            ? <Spinner />
             : <div className="alert alert-danger">Recept nenalezen.</div>
           }
         </div>
@@ -29,7 +30,7 @@ class RecipeDetailPage extends React.Component {
       <div className="container">
         <RecipeHeader slug={slug} title={title} preparationTime={preparationTime} sideDish={sideDish} />
         {isFetching && !hasDetail
-          ? <h2>Nahrávání...</h2>
+          ? <Spinner />
           : <RecipeDetail ingredients={ingredients} directions={directions} />
         }
       </div>
