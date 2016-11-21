@@ -1,5 +1,4 @@
 import { CALL_API } from '../middleware/api';
-
 import {
   RECIPES_REQUEST,
   RECIPES_SUCCESS,
