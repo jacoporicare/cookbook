@@ -1,12 +1,13 @@
 import initialState from './initialState';
 import {
-  REQUEST_RECIPE_DETAIL,
-  RECEIVE_RECIPE_DETAIL
+  RECIPE_DETAIL_REQUEST,
+  RECIPE_DETAIL_SUCCESS,
+  RECIPE_DETAIL_FAILURE
 } from '../constants/actionTypes';
 
 export default function (state = initialState.recipeDetails, action) {
   switch (action.type) {
-    case REQUEST_RECIPE_DETAIL:
+    case RECIPE_DETAIL_REQUEST:
       return {
         ...state,
         [action.slug]: {
@@ -15,13 +16,13 @@ export default function (state = initialState.recipeDetails, action) {
         }
       };
 
-    case RECEIVE_RECIPE_DETAIL:
+    case RECIPE_DETAIL_SUCCESS:
       return {
         ...state,
         [action.slug]: {
           ...state[action.slug],
           isFetching: false,
-          recipe: action.recipe
+          recipe: action.response
         }
       };
 

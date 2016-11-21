@@ -1,26 +1,17 @@
-import axios from 'axios';
-import ms from 'ms';
+import { CALL_API } from '../middleware/api';
 import {
-  REQUEST_RECIPE_DETAIL,
-  RECEIVE_RECIPE_DETAIL
+  RECIPE_DETAIL_REQUEST,
+  RECIPE_DETAIL_SUCCESS,
+  RECIPE_DETAIL_FAILURE
 } from '../constants/actionTypes';
 
-export const requestRecipe = slug => ({
-  type: REQUEST_RECIPE_DETAIL,
-  slug
-});
-
-export const receiveRecipe = (slug, recipe) => ({
-  type: RECEIVE_RECIPE_DETAIL,
+const fetchRecipe = slug => ({
   slug,
-  recipe
+  [CALL_API]: {
+    types: [RECIPE_DETAIL_REQUEST, RECIPE_DETAIL_SUCCESS, RECIPE_DETAIL_FAILURE],
+    url: `/api/recipes/by-slug/${slug}`
+  }
 });
-
-const fetchRecipe = slug => dispatch => {
-  dispatch(requestRecipe(slug));
-  return axios.get(`/api/recipes/by-slug/${slug}`)
-    .then(response => dispatch(receiveRecipe(slug, response.data)));
-};
 
 export const loadRecipe = slug => (dispatch, getState) => {
   const { recipeDetails } = getState();

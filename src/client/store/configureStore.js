@@ -1,25 +1,27 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import thunk from 'redux-thunk';
+import api from '../middleware/api';
 import rootReducer from '../reducers';
 
-function configureStoreProd(initialState) {
-  const middlewares = [
-    thunk
-  ];
+const middlewares = [
+  thunk,
+  api
+];
 
+function configureStoreProd(initialState) {
   return createStore(rootReducer, initialState, compose(applyMiddleware(...middlewares)));
 }
 
 function configureStoreDev(initialState) {
-  const middlewares = [
+  const devMiddlewares = [
     reduxImmutableStateInvariant(),
-    thunk
+    ...middlewares
   ];
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(rootReducer, initialState, composeEnhancers(
-    applyMiddleware(...middlewares)
+    applyMiddleware(...devMiddlewares)
   ));
 
   return store;
