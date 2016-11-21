@@ -7,7 +7,7 @@ const RecipeDetail = ({ recipe }) => {
   const { slug, title, preparationTime, sideDish, ingredients, directions } = recipe;
 
   return (
-    <div className="container">
+    <div>
       <Header
         slug={slug}
         title={title}

@@ -1,5 +1,3 @@
-'use strict';
-
 import config from '../config';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';

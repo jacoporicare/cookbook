@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index",
     "dev": "run-p dev:server dev:webpack",
-    "dev:server": "nodemon server --watch src/server --exec babel-node",
+    "dev:server": "nodemon src/server --watch src/server --exec babel-node",
     "dev:webpack": "webpack-dev-server --inline --hot --progress --colors --config webpack.dev.js",
     "build": "run-s clean build:server build:copy build:webpack",
     "build:server": "babel src/server -d dist",
@@ -14,6 +14,7 @@
     "clean": "shx rm -rf dist"
   },
   "dependencies": {
+    "axios": "^0.15.2",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "^3.3.7",
     "composable-middleware": "^0.3.0",

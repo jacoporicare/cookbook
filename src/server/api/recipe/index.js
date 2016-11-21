@@ -1,8 +1,8 @@
-'use strict';
-
 import { Router } from 'express';
 import Recipe from './recipe.model';
+import slug from 'slug';
 
+const toSlug = title => slug(title, { mode: 'rfc3986' });
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -24,7 +24,6 @@ router.get('/', (req, res) => {
       ]
     });
   }
-
   query.then(results => res.send(results))
     .catch(err => res.status(500).send(err));
 });
@@ -41,6 +40,19 @@ router.get('/side-dishes', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+router.get('/fix-slugs', (req, res) => {
+  Recipe.find()
+    .then(results => {
+      results.forEach(recipe => {
+        recipe.slug = toSlug(recipe.title);
+        recipe.save();
+      });
+
+      res.status(201).end();
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 router.get('/:id', (req, res) => {
   Recipe.findById(req.params.id)
     .then(result => res.send(result))
@@ -49,6 +61,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   req.body.user = req.user.name;
+  req.body.slug = toSlug(req.body.title);
   Recipe.create(req.body)
     .then(recipe => res.status(201).send(recipe))
     .catch(err => res.status(500).send(err));
@@ -56,6 +69,7 @@ router.post('/', (req, res) => {
 
 router.post('/:id', (req, res) => {
   req.body.user = req.user.name;
+  req.body.slug = toSlug(req.body.title);
   Recipe.findByIdAndUpdate(req.params.id, { $set: req.body })
     .then(recipe => res.send(recipe))
     .catch(err => res.status(500).send(err));

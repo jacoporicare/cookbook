@@ -1,5 +1,3 @@
-'use strict';
-
 import { Router } from 'express';
 import { checkUser, signToken } from '../../auth/auth.service';
 
