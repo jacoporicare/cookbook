@@ -4,5 +4,7 @@ export default {
     didInvalidate: false,
     lastUpdated: 0,
     items: []
-  }
+  },
+
+  recipeDetails: {}
 };

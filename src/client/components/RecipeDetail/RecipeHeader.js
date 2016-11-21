@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-const Header = ({ slug, title, preparationTime, sideDish }) => {
+const RecipeHeader = ({ slug, title, preparationTime, sideDish }) => {
   return (
     <div>
       <h1 className="page-header clearfix">
@@ -21,11 +21,11 @@ const Header = ({ slug, title, preparationTime, sideDish }) => {
   );
 };
 
-Header.propTypes = {
+RecipeHeader.propTypes = {
   slug: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   preparationTime: PropTypes.number,
   sideDish: PropTypes.string
 };
 
-export default Header;
+export default RecipeHeader;

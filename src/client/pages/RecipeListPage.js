@@ -16,9 +16,7 @@ class RecipeListPage extends React.Component {
       <div className="container">
         {isEmpty
           ? (isFetching ? <h2>Nahrávání...</h2> : <div className="alert alert-info">Zatím zde není žádný recept.</div>)
-          : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-              <RecipeList recipes={recipes} />
-            </div>
+          : <RecipeList recipes={recipes} />
         }
       </div>
     );

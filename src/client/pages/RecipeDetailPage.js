@@ -1,24 +1,36 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadRecipes } from '../actions/recipesActions';
+import { loadRecipe } from '../actions/recipeDetailsActions';
+import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 
 class RecipeDetailPage extends React.Component {
   componentDidMount() {
-    this.props.loadRecipes();
+    this.props.loadRecipe(this.props.slug);
   }
 
   render() {
-    const { recipe, isFetching } = this.props;
-    const exists = !!recipe;
+    const { recipe, isFetching, hasDetail } = this.props;
+
+    if (!recipe) {
+      return (
+        <div className="container">
+          {isFetching
+            ? <h2>Nahrávání...</h2>
+            : <div className="alert alert-danger">Recept nenalezen.</div>
+          }
+        </div>
+      );
+    }
+
+    const { slug, title, preparationTime, sideDish, ingredients, directions } = recipe;
 
     return (
       <div className="container">
-        {!exists
-          ? (isFetching ? <h2>Nahrávání...</h2> : <div className="alert alert-danger">Recept nenalezen.</div>)
-          : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-              <RecipeDetail recipe={recipe} />
-            </div>
+        <RecipeHeader slug={slug} title={title} preparationTime={preparationTime} sideDish={sideDish} />
+        {isFetching && !hasDetail
+          ? <h2>Nahrávání...</h2>
+          : <RecipeDetail ingredients={ingredients} directions={directions} />
         }
       </div>
     );
@@ -26,23 +38,27 @@ class RecipeDetailPage extends React.Component {
 }
 
 RecipeDetailPage.propTypes = {
+  slug: PropTypes.string.isRequired,
   recipe: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
-  loadRecipes: PropTypes.func.isRequired
+  loadRecipe: PropTypes.func.isRequired,
+  hasDetail: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-  const { recipes } = state;
+  const { recipes, recipeDetails } = state;
   const { slug } = ownProps.params;
-
-  const recipe = recipes.items.find(r => r.slug == slug);
+  const recipeDetail = recipeDetails[slug] || { isFetching: true };
+  const recipe = recipeDetail.recipe || recipes.items.find(r => r.slug == slug);
 
   return {
+    slug,
     recipe,
-    isFetching: recipes.isFetching
+    isFetching: recipeDetail.isFetching,
+    hasDetail: !!recipeDetail.recipe
   };
 }
 
 export default connect(mapStateToProps, {
-  loadRecipes
+  loadRecipe
 })(RecipeDetailPage);

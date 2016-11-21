@@ -24,6 +24,9 @@ router.get('/', (req, res) => {
       ]
     });
   }
+
+  query.select('_id title slug preparationTime sideDish');
+
   query.then(results => res.send(results))
     .catch(err => res.status(500).send(err));
 });
@@ -50,6 +53,12 @@ router.get('/fix-slugs', (req, res) => {
 
       res.status(201).end();
     })
+    .catch(err => res.status(500).send(err));
+});
+
+router.get('/by-slug/:slug', (req, res) => {
+  Recipe.findOne({ slug: req.params.slug })
+    .then(result => res.send(result))
     .catch(err => res.status(500).send(err));
 });
 
