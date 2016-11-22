@@ -1,23 +1,14 @@
 import mongoose from 'mongoose';
 
 const RecipeSchema = new mongoose.Schema({
-  user: {
-    type: String,
-    required: true
-  },
-  title: {
-    type: String,
-    required: true
-  },
-  slug: String,
+  user: { type: String, required: true },
+  title: { type: String, required: true },
+  slug: { type: String, unique: true },
   directions: String,
   sideDish: String,
   preparationTime: Number,
   servingCount: Number,
-  lastModifiedDate: {
-    type: Date,
-    default: Date.now
-  },
+  lastModifiedDate: { type: Date, default: Date.now },
   ingredients: [{
     amount: Number,
     amountUnit: String,

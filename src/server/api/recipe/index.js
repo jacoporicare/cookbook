@@ -49,7 +49,13 @@ router.get('/fix-slugs', (req, res) => {
     .then(results => {
       results.forEach(recipe => {
         recipe.slug = toSlug(recipe.title);
-        recipe.save();
+        Recipe.findOne({ slug: recipe.slug })
+          .then(result => {
+            if (recipe.slug === result.slug && !recipe._id.equals(result._id)) {
+              recipe.slug = `${recipe.slug}_${recipe._id}`;
+            }
+            recipe.save();
+          });
       });
 
       res.status(201).end();
@@ -73,6 +79,7 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   req.body.user = req.user.name;
   req.body.slug = toSlug(req.body.title);
+
   Recipe.create(req.body)
     .then(recipe => res.status(201).send(recipe))
     .catch(err => res.status(500).send(err));
