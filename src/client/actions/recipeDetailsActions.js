@@ -9,7 +9,7 @@ const fetchRecipe = slug => ({
   slug,
   [CALL_API]: {
     types: [RECIPE_DETAIL_REQUEST, RECIPE_DETAIL_SUCCESS, RECIPE_DETAIL_FAILURE],
-    url: `/api/recipes/by-slug/${slug}`
+    url: `/api/recipes/${slug}`
   }
 });
 

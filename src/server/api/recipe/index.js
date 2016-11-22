@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import Recipe from './recipe.model';
 import slug from 'slug';
 
@@ -56,16 +57,17 @@ router.get('/fix-slugs', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-router.get('/by-slug/:slug', (req, res) => {
-  Recipe.findOne({ slug: req.params.slug })
-    .then(result => res.send(result))
-    .catch(err => res.status(500).send(err));
-});
-
 router.get('/:id', (req, res) => {
-  Recipe.findById(req.params.id)
-    .then(result => res.send(result))
-    .catch(err => res.status(500).send(err));
+  const { id } = req.params;
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    Recipe.findById(id)
+      .then(result => res.send(result))
+      .catch(err => res.status(500).send(err));
+  } else {
+    Recipe.findOne({ slug: id })
+      .then(result => res.send(result))
+      .catch(err => res.status(500).send(err));
+  }
 });
 
 router.post('/', (req, res) => {
