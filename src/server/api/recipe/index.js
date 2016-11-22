@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Recipe from './recipe.model';
 import slug from 'slug';
 
-const toSlug = title => slug(title, { mode: 'rfc3986' });
+const toSlug = title => title ? slug(title, { mode: 'rfc3986' }) : title;
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -79,7 +79,6 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   req.body.user = req.user.name;
   req.body.slug = toSlug(req.body.title);
-
   Recipe.create(req.body)
     .then(recipe => res.status(201).send(recipe))
     .catch(err => res.status(500).send(err));
