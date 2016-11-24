@@ -1,9 +1,8 @@
 import { CALL_API } from '../middleware/api';
-import {
-  RECIPE_DETAIL_REQUEST,
-  RECIPE_DETAIL_SUCCESS,
-  RECIPE_DETAIL_FAILURE
-} from '../constants/actionTypes';
+
+export const RECIPE_DETAIL_REQUEST = 'RECIPE_DETAIL_REQUEST';
+export const RECIPE_DETAIL_SUCCESS = 'RECIPE_DETAIL_SUCCESS';
+export const RECIPE_DETAIL_FAILURE = 'RECIPE_DETAIL_FAILURE';
 
 const fetchRecipe = slug => ({
   slug,

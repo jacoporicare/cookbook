@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadRecipe } from '../actions/recipeDetailsActions';
+import { findRecipeBySlug } from '../reducers/recipesReducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import Spinner from '../components/Spinner/Spinner';
@@ -47,10 +48,10 @@ RecipeDetailPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const { recipes, recipeDetails } = state;
+  const { recipeDetails } = state;
   const { slug } = ownProps.params;
   const recipeDetail = recipeDetails[slug] || { isFetching: true };
-  const recipe = recipeDetail.recipe || recipes.items.find(r => r.slug == slug);
+  const recipe = recipeDetail.recipe || findRecipeBySlug(state, slug);
 
   return {
     slug,

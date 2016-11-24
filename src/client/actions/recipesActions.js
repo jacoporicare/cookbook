@@ -1,9 +1,8 @@
 import { CALL_API } from '../middleware/api';
-import {
-  RECIPES_REQUEST,
-  RECIPES_SUCCESS,
-  RECIPES_FAILURE
-} from '../constants/actionTypes';
+
+export const RECIPES_REQUEST = 'RECIPES_REQUEST';
+export const RECIPES_SUCCESS = 'RECIPES_SUCCESS';
+export const RECIPES_FAILURE = 'RECIPES_FAILURE';
 
 const fetchRecipes = () => ({
   [CALL_API]: {
@@ -14,6 +13,7 @@ const fetchRecipes = () => ({
 
 export const loadRecipes = () => (dispatch, getState) => {
   const { recipes } = getState();
+
   if (!recipes.isFetching) {
     return dispatch(fetchRecipes());
   }

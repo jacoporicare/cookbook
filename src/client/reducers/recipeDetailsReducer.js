@@ -3,7 +3,7 @@ import {
   RECIPE_DETAIL_REQUEST,
   RECIPE_DETAIL_SUCCESS,
   RECIPE_DETAIL_FAILURE
-} from '../constants/actionTypes';
+} from '../actions/recipeDetailsActions';
 
 export default function (state = initialState.recipeDetails, action) {
   switch (action.type) {

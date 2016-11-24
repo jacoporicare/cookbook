@@ -3,7 +3,7 @@ import {
   RECIPES_REQUEST,
   RECIPES_SUCCESS,
   RECIPES_FAILURE
-} from '../constants/actionTypes';
+} from '../actions/recipesActions';
 
 export default function (state = initialState.recipes, action) {
   switch (action.type) {
@@ -23,4 +23,8 @@ export default function (state = initialState.recipes, action) {
     default:
       return state;
   }
+}
+
+export function findRecipeBySlug(state, slug) {
+  return state.recipes.items.find(r => r.slug === slug);
 }
