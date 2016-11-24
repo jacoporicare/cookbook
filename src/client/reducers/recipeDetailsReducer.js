@@ -26,6 +26,15 @@ export default function (state = initialState.recipeDetails, action) {
         }
       };
 
+    case RECIPE_DETAIL_FAILURE:
+      return {
+        ...state,
+        [action.slug]: {
+          ...state[action.slug],
+          isFetching: false
+        }
+      };
+
     default:
       return state;
   }

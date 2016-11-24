@@ -20,6 +20,12 @@ export default function (state = initialState.recipes, action) {
         items: action.response
       };
 
+    case RECIPES_FAILURE:
+      return {
+        ...state,
+        isFetching: false
+      };
+
     default:
       return state;
   }

@@ -12,7 +12,7 @@ class Spinner extends React.Component {
 
   componentDidMount() {
     if (!this.state.visible) {
-      this.timer = setTimeout(() => this.setState({ visible: true }), this.props.delay || 100);
+      this.timer = setTimeout(() => this.setState({ visible: true }), this.props.delay || 50);
     }
   }
 

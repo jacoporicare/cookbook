@@ -31,14 +31,10 @@ RecipeListPage.propTypes = {
   loadRecipes: PropTypes.func.isRequired
 };
 
-function mapStateToProps(state) {
-  const { recipes } = state;
-
-  return {
-    recipes: recipes.items,
-    isFetching: recipes.isFetching
-  };
-}
+const mapStateToProps = state => ({
+  recipes: state.recipes.items,
+  isFetching: state.recipes.isFetching
+});
 
 export default connect(mapStateToProps, {
   loadRecipes

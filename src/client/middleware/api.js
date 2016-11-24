@@ -35,7 +35,7 @@ export default store => next => action => {
     };
     delete finalAction[CALL_API];
     return finalAction;
-  }
+  };
 
   const [requestType, successType, failureType] = types;
   next(actionWith({ type: requestType }));
@@ -47,6 +47,6 @@ export default store => next => action => {
     })))
     .catch(error => next(actionWith({
       type: failureType,
-      error: error.message || 'An unexpected error has occurred.'
+      error: error.message || 'Nastala neočekávaná chyba.'
     })));
-}
+};
