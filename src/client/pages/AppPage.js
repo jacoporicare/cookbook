@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import toastr from 'toastr';
 import { resetErrorMessage } from '../actions/errorMessageActions';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
@@ -14,7 +13,7 @@ class AppPage extends React.Component {
     const { errorMessage } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
-      toastr.error(errorMessage);
+      alert(errorMessage);
       resetErrorMessage();
     }
   }

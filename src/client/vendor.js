@@ -8,3 +8,5 @@ import 'react-router-redux';
 import 'react-router-scroll';
 import 'redux';
 import 'redux-thunk';
+
+import 'axios';
