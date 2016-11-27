@@ -32,25 +32,38 @@ class RecipeEditPage extends React.Component {
   }
 
   parseValue(value, type) {
+    let parsedValue;
+
     switch (type) {
       case 'number':
-        return parseInt(value);
+        parsedValue = Number.parseInt(value);
+        return !Number.isNaN(parsedValue) ? parsedValue : '';
 
       default:
         return value;
     }
   }
 
+  validate(recipe) {
+    const { title } = recipe;
+    const errors = {};
+
+    if (title.length < 1) {
+      errors.title = true;
+    }
+
+    return errors;
+  }
+
   handleChange(event) {
     const { name, value } = event.target;
-    const { recipe } = this.state;
+    const recipe = {
+      ...this.state.recipe,
+      [name]: this.parseValue(value, event.target.type)
+    };
+    const errors = this.validate(recipe);
 
-    this.setState({
-      recipe: {
-        ...recipe,
-        [name]: this.parseValue(value, event.target.type)
-      }
-    });
+    this.setState({ recipe, errors });
   }
 
   render() {

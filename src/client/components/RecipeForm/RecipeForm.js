@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react';
+import RichText from '../RichText/RichText';
 
 const RecipeForm = ({ recipe, onChange, errors }) => {
   const {
     title = '',
     preparationTime = '',
     servingCount = '',
-    sideDish = ''
+    sideDish = '',
+    directions = ''
   } = recipe;
 
   return (
@@ -90,7 +92,13 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
           <fieldset>
             <legend>Postup</legend>
             <div className="form-group">
-              <textarea name="directions" id="directions" rows="20" className="form-control" />
+              <textarea
+                id="directions"
+                name="directions"
+                value={directions}
+                onChange={onChange}
+                rows="20"
+                className="form-control" />
               <div className="help-block text-right">
                 <ul className="list-inline">
                   <li><strong>*tučně*</strong></li>
@@ -111,6 +119,7 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
 
       <fieldset>
         <legend>Náhled postupu</legend>
+        <RichText text={directions} />
       </fieldset>
 
     </form>
