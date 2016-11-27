@@ -17,8 +17,7 @@ const App = () => {
       <Router
         history={history}
         routes={routes}
-        render={applyRouterMiddleware(useScroll())}
-      />
+        render={applyRouterMiddleware(useScroll())} />
     </Provider>
   );
 };

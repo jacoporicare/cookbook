@@ -5,14 +5,59 @@ import RecipeForm from '../components/RecipeForm/RecipeForm';
 import Spinner from '../components/Spinner/Spinner';
 
 class RecipeEditPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      recipe: { ...this.props.recipe },
+      errors: {}
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
   componentDidMount() {
     this.props.loadRecipe(this.props.slug);
   }
 
-  render() {
-    const { recipe, isFetching } = this.props;
+  componentWillReceiveProps(nextProps) {
+    const { recipe: oldRecipe } = this.props;
+    const { recipe: newRecipe } = nextProps;
 
-    if (!recipe) {
+    if (newRecipe.slug !== oldRecipe.slug) {
+      this.setState({
+        recipe: { ...newRecipe }
+      });
+    }
+  }
+
+  parseValue(value, type) {
+    switch (type) {
+      case 'number':
+        return parseInt(value);
+
+      default:
+        return value;
+    }
+  }
+
+  handleChange(event) {
+    const { name, value } = event.target;
+    const { recipe } = this.state;
+
+    this.setState({
+      recipe: {
+        ...recipe,
+        [name]: this.parseValue(value, event.target.type)
+      }
+    });
+  }
+
+  render() {
+    const { recipe, errors } = this.state;
+    const { isFetching } = this.props;
+
+    if (!recipe.slug) {
       return (
         <div className="container">
           {isFetching
@@ -23,11 +68,9 @@ class RecipeEditPage extends React.Component {
       );
     }
 
-    const { slug, title, preparationTime, sideDish, ingredients, directions } = recipe;
-
     return (
       <div className="container">
-        <RecipeForm recipe={recipe} />
+        <RecipeForm recipe={recipe} onChange={this.handleChange} errors={errors} />
       </div>
     );
   }
@@ -35,7 +78,7 @@ class RecipeEditPage extends React.Component {
 
 RecipeEditPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  recipe: PropTypes.object,
+  recipe: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   loadRecipe: PropTypes.func.isRequired
 };
@@ -43,12 +86,15 @@ RecipeEditPage.propTypes = {
 function mapStateToProps(state, ownProps) {
   const { recipeDetails } = state;
   const { slug } = ownProps.params;
-  const recipeDetail = recipeDetails[slug] || { isFetching: true };
+  const {
+    isFetching = true,
+    recipe = {}
+  } = recipeDetails[slug] || {};
 
   return {
     slug,
-    recipe: recipeDetail.recipe,
-    isFetching: recipeDetail.isFetching
+    isFetching,
+    recipe
   };
 }
 

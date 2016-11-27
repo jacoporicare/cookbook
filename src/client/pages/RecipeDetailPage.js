@@ -25,7 +25,14 @@ class RecipeDetailPage extends React.Component {
       );
     }
 
-    const { slug, title, preparationTime, sideDish, ingredients, directions } = recipe;
+    const {
+      slug,
+      title,
+      preparationTime,
+      sideDish,
+      ingredients,
+      directions
+    } = recipe;
 
     return (
       <div className="container">
@@ -50,13 +57,16 @@ RecipeDetailPage.propTypes = {
 function mapStateToProps(state, ownProps) {
   const { recipeDetails } = state;
   const { slug } = ownProps.params;
-  const recipeDetail = recipeDetails[slug] || { isFetching: true };
-  const recipe = recipeDetail.recipe || findRecipeBySlug(state, slug);
+  const recipeDetail = recipeDetails[slug] || {};
+  const {
+    isFetching = true,
+    recipe = findRecipeBySlug(state, slug)
+  } = recipeDetail;
 
   return {
     slug,
+    isFetching,
     recipe,
-    isFetching: recipeDetail.isFetching,
     hasDetail: !!recipeDetail.recipe
   };
 }
