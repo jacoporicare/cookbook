@@ -11,6 +11,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
     directions = ''
   } = recipe;
 
+  const hasError = Object.keys(errors).length > 0;
+
   return (
     <form onSubmit={onSubmit} className="form">
       {isSaving && <Spinner overlay />}
@@ -18,9 +20,9 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
       <h1 className="page-header clearfix">
         {title || 'Název receptu'}
         <span className="pull-right">
-          <button type="submit" className="btn btn-success" disabled={isSaving}>
+          <button type="submit" className="btn btn-success" disabled={hasError || isSaving}>
             <i className="fa fa-save" />{' '}
-            {isSaving ? <span>Odesílání&hellip;</span> : 'Uložit'}
+            {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
           </button>
         </span>
       </h1>
@@ -112,9 +114,9 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
           </fieldset>
 
           <p className="text-right">
-            <button type="submit" className="btn btn-success btn-lg" disabled={isSaving}>
+            <button type="submit" className="btn btn-success btn-lg" disabled={hasError || isSaving}>
               <i className="fa fa-save" />{' '}
-              {isSaving ? <span>Odesílání&hellip;</span> : 'Uložit'}
+              {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
             </button>
           </p>
         </div>
