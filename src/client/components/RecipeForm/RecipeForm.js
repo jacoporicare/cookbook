@@ -17,7 +17,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
         {title || 'Název receptu'}
         <span className="pull-right">
           <button type="submit" className="btn btn-success" disabled={isSaving}>
-            <i className="fa fa-save" />{' '}Uložit
+            <i className="fa fa-save" />{' '}
+            {isSaving ? <span>Odesílání&hellip;</span> : 'Uložit'}
           </button>
         </span>
       </h1>
@@ -110,7 +111,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
 
           <p className="text-right">
             <button type="submit" className="btn btn-success btn-lg" disabled={isSaving}>
-              <i className="fa fa-save" />{' '}Uložit
+              <i className="fa fa-save" />{' '}
+              {isSaving ? <span>Odesílání&hellip;</span> : 'Uložit'}
             </button>
           </p>
         </div>

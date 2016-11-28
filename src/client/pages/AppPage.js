@@ -13,7 +13,7 @@ class AppPage extends React.Component {
     const { errorMessage } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
-      alert(errorMessage);
+      alert('toastr: ' + errorMessage); //toastr
       resetErrorMessage();
     }
   }

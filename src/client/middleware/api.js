@@ -43,10 +43,12 @@ export default store => next => action => {
   return axios({ method, url, data })
     .then(response => next(actionWith({
       type: successType,
+      isSuccess: true,
       response: response.data
     })))
     .catch(error => next(actionWith({
       type: failureType,
+      isSuccess: false,
       error: error.message || 'Nastala neočekávaná chyba.'
     })));
 };

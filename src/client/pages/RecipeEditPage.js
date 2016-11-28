@@ -69,7 +69,15 @@ class RecipeEditPage extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.saveRecipe(this.state.recipe);
+    this.props.saveRecipe(this.state.recipe)
+      .then(action => this.handleSave(action));
+  }
+
+  handleSave(action) {
+    if (action.isSuccess) {
+      alert('toastr: Uloženo'); //toastr
+      this.context.router.push(`/recept/${action.response.slug}`);
+    }
   }
 
   render() {
