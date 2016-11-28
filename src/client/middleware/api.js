@@ -48,7 +48,8 @@ export default store => next => action => {
     })))
     .catch(error => next(actionWith({
       type: failureType,
-      isSuccess: false,
-      error: error.message || 'Nastala neočekávaná chyba.'
+      isError: true,
+      response: error.response,
+      errorMessage: error.message
     })));
 };

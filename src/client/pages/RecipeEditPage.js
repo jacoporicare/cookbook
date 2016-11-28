@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import toastr from 'toastr';
 import { loadRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import Spinner from '../components/Spinner/Spinner';
@@ -75,7 +76,7 @@ class RecipeEditPage extends React.Component {
 
   handleSave(action) {
     if (action.isSuccess) {
-      alert('toastr: Uloženo'); //toastr
+      toastr.success('Recept úspěšně uložen');
       this.context.router.push(`/recept/${action.response.slug}`);
     }
   }

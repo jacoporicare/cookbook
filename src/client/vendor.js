@@ -10,3 +10,6 @@ import 'redux';
 import 'redux-thunk';
 
 import 'axios';
+
+import 'jquery';
+import 'toastr';
