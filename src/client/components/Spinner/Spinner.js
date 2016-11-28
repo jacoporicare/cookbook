@@ -25,20 +25,25 @@ class Spinner extends React.Component {
       return null;
     }
 
+    const { overlay } = this.props;
+
     return (
-      <div className="spinner">
-        <div className="rect1" />{' '}
-        <div className="rect2" />{' '}
-        <div className="rect3" />{' '}
-        <div className="rect4" />{' '}
-        <div className="rect5" />
+      <div className={overlay ? 'spinner-overlay' : ''}>
+        <div className="spinner">
+          <div className="rect1" />{' '}
+          <div className="rect2" />{' '}
+          <div className="rect3" />{' '}
+          <div className="rect4" />{' '}
+          <div className="rect5" />
+        </div>
       </div>
     );
   }
 }
 
 Spinner.propTypes = {
-  delay: PropTypes.number
+  delay: PropTypes.number,
+  overlay: PropTypes.bool
 };
 
 export default Spinner;

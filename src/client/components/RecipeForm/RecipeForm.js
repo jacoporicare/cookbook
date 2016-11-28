@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import RichText from '../RichText/RichText';
+import Spinner from '../Spinner/Spinner';
 
 const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
   const {
@@ -12,6 +13,7 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
 
   return (
     <form onSubmit={onSubmit} className="form">
+      {isSaving && <Spinner overlay />}
 
       <h1 className="page-header clearfix">
         {title || 'Název receptu'}
