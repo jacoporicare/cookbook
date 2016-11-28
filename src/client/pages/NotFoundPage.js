@@ -4,9 +4,9 @@ const NotFoundPage = () => {
   return (
     <div className="container">
       <h1 className="page-header">Nenalezeno</h1>
-      <div className="alert alert-info">
+      <h3 className="alert alert-warning">
         Toto není stránka, kterou hledáš.
-      </div>
+      </h3>
     </div>
   );
 };
