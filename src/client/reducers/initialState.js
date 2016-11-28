@@ -1,8 +1,10 @@
 export default {
   errorMessage: null,
   recipes: {
-    isFetching: false,
-    items: []
+    items: [],
+    isFetching: false
   },
-  recipeDetails: {}
+  recipeDetails: {
+    isSaving: false
+  }
 };

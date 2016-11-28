@@ -18,6 +18,13 @@ const users = [
   }
 ];
 
+export function fakeAuth() {
+  return (req, res, next) => {
+    req.user = users[0];
+    next();
+  };
+}
+
 export function checkUser(username, password) {
   return users.find(u => u.username === username && u.password === password);
 }

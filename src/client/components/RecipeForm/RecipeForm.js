@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import RichText from '../RichText/RichText';
 
-const RecipeForm = ({ recipe, onChange, errors }) => {
+const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
   const {
     title = '',
     preparationTime = '',
@@ -11,12 +11,12 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
   } = recipe;
 
   return (
-    <form className="form" noValidate>
+    <form onSubmit={onSubmit} className="form">
 
       <h1 className="page-header clearfix">
         {title || 'Název receptu'}
         <span className="pull-right">
-          <button type="button" className="btn btn-success">
+          <button type="submit" className="btn btn-success" disabled={isSaving}>
             <i className="fa fa-save" />{' '}Uložit
           </button>
         </span>
@@ -30,8 +30,7 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
             value={title}
             onChange={onChange}
             className="form-control"
-            placeholder="Název"
-            required />
+            placeholder="Název" />
           {errors.title && <span className="text-danger">Název je povinný</span>}
         </div>
       </fieldset>
@@ -110,7 +109,7 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
           </fieldset>
 
           <p className="text-right">
-            <button type="button" className="btn btn-success btn-lg">
+            <button type="submit" className="btn btn-success btn-lg" disabled={isSaving}>
               <i className="fa fa-save" />{' '}Uložit
             </button>
           </p>
@@ -128,8 +127,10 @@ const RecipeForm = ({ recipe, onChange, errors }) => {
 
 RecipeForm.propTypes = {
   recipe: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  isSaving: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  onSubmit: PropTypes.func.isRequired
 };
 
 export default RecipeForm;

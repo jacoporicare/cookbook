@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadRecipe } from '../actions/recipeDetailsActions';
+import { loadRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import Spinner from '../components/Spinner/Spinner';
 
 class RecipeEditPage extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
       recipe: { ...this.props.recipe },
@@ -14,6 +14,7 @@ class RecipeEditPage extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -66,9 +67,14 @@ class RecipeEditPage extends React.Component {
     this.setState({ recipe, errors });
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.saveRecipe(this.state.recipe);
+  }
+
   render() {
     const { recipe, errors } = this.state;
-    const { isFetching } = this.props;
+    const { isFetching, isSaving } = this.props;
 
     if (!recipe.slug) {
       return (
@@ -83,7 +89,12 @@ class RecipeEditPage extends React.Component {
 
     return (
       <div className="container">
-        <RecipeForm recipe={recipe} onChange={this.handleChange} errors={errors} />
+        <RecipeForm
+          recipe={recipe}
+          errors={errors}
+          isSaving={isSaving}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit} />
       </div>
     );
   }
@@ -93,24 +104,33 @@ RecipeEditPage.propTypes = {
   slug: PropTypes.string.isRequired,
   recipe: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  loadRecipe: PropTypes.func.isRequired
+  isSaving: PropTypes.bool.isRequired,
+  loadRecipe: PropTypes.func.isRequired,
+  saveRecipe: PropTypes.func.isRequired
+};
+
+RecipeEditPage.contextTypes = {
+  router: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-  const { recipeDetails } = state;
   const { slug } = ownProps.params;
+  const { recipeDetails } = state;
+  const { isSaving } = recipeDetails;
   const {
-    isFetching = true,
-    recipe = {}
+    recipe = {},
+    isFetching = true
   } = recipeDetails[slug] || {};
 
   return {
     slug,
+    recipe,
     isFetching,
-    recipe
+    isSaving
   };
 }
 
 export default connect(mapStateToProps, {
-  loadRecipe
+  loadRecipe,
+  saveRecipe
 })(RecipeEditPage);

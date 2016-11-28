@@ -2,7 +2,10 @@ import initialState from './initialState';
 import {
   RECIPE_DETAIL_REQUEST,
   RECIPE_DETAIL_SUCCESS,
-  RECIPE_DETAIL_FAILURE
+  RECIPE_DETAIL_FAILURE,
+  RECIPE_SAVE_REQUEST,
+  RECIPE_SAVE_SUCCESS,
+  RECIPE_SAVE_FAILURE
 } from '../actions/recipeDetailsActions';
 
 export default function (state = initialState.recipeDetails, action) {
@@ -33,6 +36,28 @@ export default function (state = initialState.recipeDetails, action) {
           ...state[action.slug],
           isFetching: false
         }
+      };
+
+    case RECIPE_SAVE_REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
+
+    case RECIPE_SAVE_SUCCESS:
+      return {
+        ...state,
+        isSaving: false,
+        [action.response.slug]: {
+          ...state[action.response.slug],
+          recipe: action.response
+        }
+      };
+
+    case RECIPE_SAVE_FAILURE:
+      return {
+        ...state,
+        isSaving: false
       };
 
     default:
