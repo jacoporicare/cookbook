@@ -5,7 +5,7 @@ import {
   RECIPES_FAILURE
 } from '../actions/recipesActions';
 
-export default function (state = initialState.recipes, action) {
+export default function recipesReducer(state = initialState.recipes, action) {
   switch (action.type) {
     case RECIPES_REQUEST:
       return {

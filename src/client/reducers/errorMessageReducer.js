@@ -1,7 +1,7 @@
 import initialState from './initialState';
 import { RESET_ERROR_MESSAGE } from '../actions/errorMessageActions';
 
-export default function (state = initialState.errorMessage, action) {
+export default function errorMessageReducer(state = initialState.errorMessage, action) {
   const { type, isError, response, errorMessage } = action;
 
   if (type === RESET_ERROR_MESSAGE) {

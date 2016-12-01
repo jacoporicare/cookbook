@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadRecipes } from '../actions/recipesActions';
 import RecipeList from '../components/RecipeList/RecipeList';
-import Spinner from '../components/Spinner/Spinner';
+import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeListPage extends React.Component {
   componentDidMount() {
@@ -17,7 +17,7 @@ class RecipeListPage extends React.Component {
       <div className="container">
         <h1 className="page-header clearfix">Recepty</h1>
         {isEmpty
-          ? (isFetching ? <Spinner /> : <div className="alert alert-info">Zatím zde není žádný recept.</div>)
+          ? <SpinnerAlert level="info" text="Zatím zde není žádný recept." spinner={isFetching} />
           : <RecipeList recipes={recipes} />
         }
       </div>

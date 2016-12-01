@@ -8,7 +8,7 @@ import {
   RECIPE_SAVE_FAILURE
 } from '../actions/recipeDetailsActions';
 
-export default function (state = initialState.recipeDetails, action) {
+export default function recipeDetailsReducer(state = initialState.recipeDetails, action) {
   switch (action.type) {
     case RECIPE_DETAIL_REQUEST:
       return {

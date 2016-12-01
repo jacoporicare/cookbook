@@ -5,6 +5,7 @@ import { findRecipeBySlug } from '../reducers/recipesReducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import Spinner from '../components/Spinner/Spinner';
+import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeDetailPage extends React.Component {
   componentDidMount() {
@@ -17,10 +18,7 @@ class RecipeDetailPage extends React.Component {
     if (!recipe) {
       return (
         <div className="container">
-          {isFetching
-            ? <Spinner />
-            : <div className="alert alert-danger">Recept nenalezen.</div>
-          }
+          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
         </div>
       );
     }

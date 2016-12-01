@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import toastr from 'toastr';
 import { loadRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
-import Spinner from '../components/Spinner/Spinner';
+import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeEditPage extends React.Component {
   constructor(props, context) {
@@ -34,12 +34,11 @@ class RecipeEditPage extends React.Component {
   }
 
   parseValue(value, type) {
-    let parsedValue;
-
     switch (type) {
-      case 'number':
-        parsedValue = Number.parseInt(value);
+      case 'number': {
+        const parsedValue = Number.parseInt(value, 10);
         return !Number.isNaN(parsedValue) ? parsedValue : '';
+      }
 
       default:
         return value;
@@ -88,10 +87,7 @@ class RecipeEditPage extends React.Component {
     if (!recipe.slug) {
       return (
         <div className="container">
-          {isFetching
-            ? <Spinner />
-            : <div className="alert alert-danger">Recept nenalezen.</div>
-          }
+          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
         </div>
       );
     }
