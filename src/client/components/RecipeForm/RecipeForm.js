@@ -35,7 +35,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
             value={title}
             onChange={onChange}
             className="form-control"
-            placeholder="Název" />
+            placeholder="Název"
+          />
           {errors.title && <span className="text-danger">Název je povinný</span>}
         </div>
       </fieldset>
@@ -55,7 +56,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
                   name="preparationTime"
                   value={preparationTime}
                   onChange={onChange}
-                  className="form-control" />
+                  className="form-control"
+                />
                 <span className="input-group-addon">min</span>
               </div>
             </div>
@@ -69,7 +71,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
                 name="servingCount"
                 value={servingCount}
                 onChange={onChange}
-                className="form-control" />
+                className="form-control"
+              />
             </div>
 
             <div className="form-group">
@@ -80,7 +83,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
                 name="sideDish"
                 value={sideDish}
                 onChange={onChange}
-                className="form-control" />
+                className="form-control"
+              />
             </div>
 
           </fieldset>
@@ -102,7 +106,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
                 value={directions}
                 onChange={onChange}
                 rows="20"
-                className="form-control" />
+                className="form-control"
+              />
               <div className="help-block text-right">
                 <ul className="list-inline">
                   <li><strong>*tučně*</strong></li>

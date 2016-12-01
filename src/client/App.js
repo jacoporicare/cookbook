@@ -4,7 +4,7 @@ import { Router, browserHistory, applyRouterMiddleware } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import routes from './routes';
-import configureStore from './store/configureStore.js';
+import configureStore from './store/configureStore';
 
 import './App.scss';
 
@@ -17,7 +17,8 @@ const App = () => {
       <Router
         history={history}
         routes={routes}
-        render={applyRouterMiddleware(useScroll())} />
+        render={applyRouterMiddleware(useScroll())}
+      />
     </Provider>
   );
 };

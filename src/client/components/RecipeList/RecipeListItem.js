@@ -9,9 +9,9 @@ const RecipeListItem = ({ recipe }) => {
       <Link to={`/recept/${slug}`} className="recipe">
         <h4 className="text-primary" title={title}>{title}</h4>
         <ul className="cb-info-list text-muted">
-					{preparationTime > 0 && <li><b>Doba přípravy:</b> {preparationTime} min</li>}
+          {preparationTime > 0 && <li><b>Doba přípravy:</b> {preparationTime} min</li>}
           {!!sideDish && <li title={sideDish}><b>Příloha:</b> {sideDish}</li>}
-				</ul>
+        </ul>
       </Link>
     </div>
   );

@@ -103,7 +103,8 @@ class RecipeEditPage extends React.Component {
           errors={errors}
           isSaving={isSaving}
           onChange={this.handleChange}
-          onSubmit={this.handleSubmit} />
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }

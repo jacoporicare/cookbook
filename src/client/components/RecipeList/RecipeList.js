@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import RecipeListItem from './RecipeListItem.js';
+import RecipeListItem from './RecipeListItem';
 import './RecipeList.scss';
 
 const RecipeList = ({ recipes }) => {

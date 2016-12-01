@@ -6,7 +6,7 @@ const SideDishListPage = () => {
 
       <h1 className="page-header">Přílohy</h1>
 
-      <table className="table table-hover" style={{width: 'auto'}}>
+      <table className="table table-hover" style={{ width: 'auto' }}>
 
         <thead>
           <tr>

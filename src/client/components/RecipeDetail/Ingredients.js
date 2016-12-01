@@ -33,7 +33,7 @@ const Ingredients = ({ ingredients }) => {
           </li>
         );
       })}
-		</ul>
+    </ul>
   );
 };
 
