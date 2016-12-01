@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import Recipe from './recipe.model';
+import mongoose from 'mongoose';
 import slug from 'slug';
+import Recipe from './recipe.model';
 
 const toSlug = title => title ? slug(title, { mode: 'rfc3986' }) : title;
 const router = Router();
@@ -68,6 +69,10 @@ router.get('/:id', (req, res) => {
     .then(result => {
       if (result) {
         return res.send(result);
+      }
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).end();
       }
 
       Recipe.findById(id)
