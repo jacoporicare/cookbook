@@ -1,14 +1,16 @@
 import React, { PropTypes } from 'react';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
+import Ingredients from './Ingredients';
 
-const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
+const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredient, onRemoveIngredient }) => {
   const {
     title = '',
     preparationTime = '',
     servingCount = '',
     sideDish = '',
-    directions = ''
+    directions = '',
+    ingredients
   } = recipe;
 
   const hasError = Object.keys(errors).length > 0;
@@ -93,6 +95,10 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit }) => {
         <div className="col-md-4">
           <fieldset>
             <legend>Ingredience</legend>
+            {ingredients && ingredients.length > 0
+              ? <Ingredients items={ingredients} onAdd={onAddIngredient} onRemove={onRemoveIngredient} />
+              : <div className="alert alert-info">Zatím žádné ingredience.</div>
+            }
           </fieldset>
         </div>
 
@@ -141,7 +147,9 @@ RecipeForm.propTypes = {
   errors: PropTypes.object.isRequired,
   isSaving: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  onAddIngredient: PropTypes.func.isRequired,
+  onRemoveIngredient: PropTypes.func.isRequired
 };
 
 export default RecipeForm;
