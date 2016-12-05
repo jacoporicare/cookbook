@@ -10,15 +10,10 @@ class IngredientsForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      ingredient: initialIngredient,
-      group: ''
-    };
+    this.state = { ingredient: initialIngredient };
 
-    this.handleAddIngredient = this.handleAddIngredient.bind(this);
-    this.handleAddGroup = this.handleAddGroup.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleGroupChange = this.handleGroupChange.bind(this);
   }
 
   parseValue(value, type) {
@@ -42,119 +37,76 @@ class IngredientsForm extends React.Component {
     this.setState({ ingredient });
   }
 
-  handleGroupChange(event) {
-    this.setState({
-      group: event.target.value
-    });
-  }
-
-  handleAddIngredient(event) {
+  handleAdd(event) {
     this.props.onAdd(event, this.state.ingredient);
-    this.setState({
-      ingredient: initialIngredient
-    });
-  }
-
-  handleAddGroup(event) {
-    this.props.onAddGroup(event, this.state.group);
-    this.setState({
-      group: ''
-    });
+    this.setState({ ingredient: initialIngredient });
   }
 
   render() {
-    const {
-      ingredient: { name, amount, amountUnit },
-      group
-    } = this.state;
+    const { name, amount, amountUnit } = this.state.ingredient;
 
     return (
-      <div>
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            Přidat ingredienci
-          </div>
-          <div className="panel-body">
-            <div className="row">
-              <div className="col-xs-6">
-                <div className="form-group">
-                  <input
-                    type="number"
-                    name="amount"
-                    value={amount}
-                    onChange={this.handleChange}
-                    min="0"
-                    className="form-control"
-                    placeholder="Množství"
-                  />
-                </div>
-              </div>
-              <div className="col-xs-6">
-                <div className="form-group">
-                  <input
-                    type="text"
-                    name="amountUnit"
-                    value={amountUnit}
-                    onChange={this.handleChange}
-                    className="form-control"
-                    placeholder="Jednotka"
-                  />
-                </div>
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          Přidat ingredienci
+        </div>
+        <div className="panel-body">
+          <div className="row">
+            <div className="col-xs-6">
+              <div className="form-group">
+                <input
+                  type="number"
+                  name="amount"
+                  value={amount}
+                  onChange={this.handleChange}
+                  min="0"
+                  className="form-control"
+                  placeholder="Množství"
+                />
               </div>
             </div>
-            <div className="form-group">
-              <div className="input-group">
+            <div className="col-xs-6">
+              <div className="form-group">
                 <input
                   type="text"
-                  name="name"
-                  value={name}
+                  name="amountUnit"
+                  value={amountUnit}
                   onChange={this.handleChange}
                   className="form-control"
-                  placeholder="Název"
+                  placeholder="Jednotka"
                 />
-                <div className="input-group-btn">
-                  <button
-                    type="button"
-                    onClick={this.handleAddIngredient}
-                    className="btn btn-primary"
-                  >
-                    <i className="fa fa-plus" /> Přidat
-                  </button>
-                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="form-group">
-          <div className="input-group">
-            <input
-              type="text"
-              name="newGroup"
-              value={group}
-              onChange={this.handleGroupChange}
-              className="form-control"
-              placeholder="Nová skupina"
-            />
-            <div className="input-group-btn">
-              <button
-                type="button"
-                onClick={this.handleAddGroup}
-                className="btn btn-default"
-              >
-                <i className="fa fa-plus" /> Přidat
-              </button>
+          <div className="form-group">
+            <div className="input-group">
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={this.handleChange}
+                className="form-control"
+                placeholder="Název"
+              />
+              <div className="input-group-btn">
+                <button
+                  type="button"
+                  onClick={this.handleAdd}
+                  className="btn btn-primary"
+                >
+                  <i className="fa fa-plus" /> Přidat
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     );
   }
 }
 
 IngredientsForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
-  onAddGroup: PropTypes.func.isRequired
+  onAdd: PropTypes.func.isRequired
 };
 
 export default IngredientsForm;
