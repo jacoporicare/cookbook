@@ -3,7 +3,7 @@ import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
 
-const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredient, onRemoveIngredient }) => {
+const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient }) => {
   const {
     title = '',
     preparationTime = '',
@@ -96,7 +96,7 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredi
           <fieldset>
             <legend>Ingredience</legend>
             {ingredients && ingredients.length > 0
-              ? <Ingredients items={ingredients} onAdd={onAddIngredient} onRemove={onRemoveIngredient} />
+              ? <Ingredients items={ingredients} onAdd={onAddIngredient} onAddGroup={onAddGroup} onRemove={onRemoveIngredient} />
               : <div className="alert alert-info">Zatím žádné ingredience.</div>
             }
           </fieldset>
@@ -149,6 +149,7 @@ RecipeForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onAddIngredient: PropTypes.func.isRequired,
+  onAddGroup: PropTypes.func.isRequired,
   onRemoveIngredient: PropTypes.func.isRequired
 };
 

@@ -1,50 +1,12 @@
 import React, { PropTypes } from 'react';
+import IngredientsList from './IngredientsList';
+import IngredientsForm from './IngredientsForm';
 
-const Ingredients = ({ items, onAdd, onRemove }) => {
+const Ingredients = ({ items, onAdd, onAddGroup, onRemove }) => {
   return (
     <div>
-      <ul className="list-group cb-ingredient-list">
-        {items.map((ingredient, index) => {
-          const { name, amount, amountUnit, isGroup } = ingredient;
-
-          let className = 'list-group-item';
-          if (isGroup) {
-            className += ' list-group-item-warning';
-          }
-
-          return (
-            <li key={index} className={className}>
-              <div className="row">
-
-                <div className="col-xs-2">
-                  <a href="" onClick={e => onRemove(e, index)}><i className="fa fa-trash" /></a>
-                </div>
-
-                {!isGroup &&
-                  <div className="col-xs-3 text-right">
-                    <b>{amount}&nbsp;{amountUnit}</b>
-                  </div>
-                }
-
-                {!isGroup
-                  ? (
-                    <div className="col-xs-7">
-                      {name}
-                      <div className="pull-right text-muted cb-sortable-handle"><i className="fa fa-bars" /></div>
-                    </div>
-                  )
-                  : (
-                    <div className="col-xs-10">
-                      <b>{name}</b>
-                      <div className="pull-right text-muted cb-sortable-handle"><i className="fa fa-bars" /></div>
-                    </div>
-                  )
-                }
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <IngredientsList items={items} onRemove={onRemove} />
+      <IngredientsForm onAdd={onAdd} onAddGroup={onAddGroup} />
     </div>
   );
 };
@@ -52,6 +14,7 @@ const Ingredients = ({ items, onAdd, onRemove }) => {
 Ingredients.propTypes = {
   items: PropTypes.array.isRequired,
   onAdd: PropTypes.func.isRequired,
+  onAddGroup: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired
 };
 
