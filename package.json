@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.15.2",
+    "babel-polyfill": "^6.16.0",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "^3.3.7",
     "composable-middleware": "^0.3.0",
@@ -42,7 +43,6 @@
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
     "babel-plugin-transform-react-remove-prop-types": "^0.2.10",
-    "babel-polyfill": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
