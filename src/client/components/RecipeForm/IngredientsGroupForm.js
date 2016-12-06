@@ -1,54 +1,34 @@
 import React, { PropTypes } from 'react';
 
-class IngredientsGroupForm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { group: '' };
-
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ group: event.target.value });
-  }
-
-  handleAdd(event) {
-    this.props.onAdd(event, this.state.group);
-    this.setState({ group: '' });
-  }
-
-  render() {
-    const { group } = this.state;
-
-    return (
-      <div className="form-group">
-        <div className="input-group">
-          <input
-            type="text"
-            name="newGroup"
-            value={group}
-            onChange={this.handleChange}
-            className="form-control"
-            placeholder="Nová skupina"
-          />
-          <div className="input-group-btn">
-            <button
-              type="button"
-              onClick={this.handleAdd}
-              className="btn btn-default"
-            >
-              <i className="fa fa-plus" /> Přidat
-            </button>
-          </div>
+const IngredientsGroupForm = ({ group, onChange, onAdd }) => {
+  return (
+    <div className="form-group">
+      <div className="input-group">
+        <input
+          type="text"
+          name="newGroup"
+          value={group}
+          onChange={onChange}
+          className="form-control"
+          placeholder="Nová skupina"
+        />
+        <div className="input-group-btn">
+          <button
+            type="button"
+            onClick={onAdd}
+            className="btn btn-default"
+          >
+            <i className="fa fa-plus" /> Přidat
+          </button>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 IngredientsGroupForm.propTypes = {
+  group: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired
 };
 
