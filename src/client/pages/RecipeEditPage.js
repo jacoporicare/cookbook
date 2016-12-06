@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
+import { parseValue } from '../util';
 import { loadRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
@@ -36,18 +37,6 @@ class RecipeEditPage extends React.Component {
     }
   }
 
-  parseValue(value, type) {
-    switch (type) {
-      case 'number': {
-        const parsedValue = Number.parseInt(value, 10);
-        return !Number.isNaN(parsedValue) ? parsedValue : '';
-      }
-
-      default:
-        return value;
-    }
-  }
-
   validate(recipe) {
     const { title } = recipe;
     const errors = {};
@@ -63,7 +52,7 @@ class RecipeEditPage extends React.Component {
     const { name, value } = event.target;
     const recipe = {
       ...this.state.recipe,
-      [name]: this.parseValue(value, event.target.type)
+      [name]: parseValue(value, event.target.type)
     };
     const errors = this.validate(recipe);
 
