@@ -11,7 +11,7 @@ export default function errorMessageReducer(state = initialState.errorMessage, a
       const { status, data } = response;
 
       if (status === 500 && data && data.name === 'MongoError' && data.code === 11000) {
-        return 'Název již existuje'; //TODO: fix with client side validation
+        return 'Název již existuje'; // TODO: fix with client side validation
       }
     }
 

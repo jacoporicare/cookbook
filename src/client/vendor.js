@@ -1,5 +1,3 @@
-import './vendor.scss';
-
 import 'react';
 import 'react-dom';
 import 'react-redux';
@@ -13,3 +11,5 @@ import 'axios';
 
 import 'jquery';
 import 'toastr';
+
+import './vendor.scss';

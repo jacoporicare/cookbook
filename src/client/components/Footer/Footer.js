@@ -1,14 +1,10 @@
 import React from 'react';
 
-const Footer = () => {
-  const year = new Date().getFullYear();
-
-  return (
-    <div className="container">
-      <hr />
-      <p>&copy; {year} &middot; Žrádelník</p>
-    </div>
-  );
-};
+const Footer = () => (
+  <div className="container">
+    <hr />
+    <p>&copy; {new Date().getFullYear()} &middot; Žrádelník</p>
+  </div>
+);
 
 export default Footer;

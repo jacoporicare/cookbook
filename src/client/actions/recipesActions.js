@@ -15,6 +15,6 @@ export const loadRecipes = () => (dispatch, getState) => {
   const { recipes } = getState();
 
   if (!recipes.isFetching) {
-    return dispatch(fetchRecipes());
+    dispatch(fetchRecipes());
   }
 };

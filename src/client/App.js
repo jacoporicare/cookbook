@@ -11,16 +11,14 @@ import './App.scss';
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
-const App = () => {
-  return (
-    <Provider store={store}>
-      <Router
-        history={history}
-        routes={routes}
-        render={applyRouterMiddleware(useScroll())}
-      />
-    </Provider>
-  );
-};
+const App = () => (
+  <Provider store={store}>
+    <Router
+      history={history}
+      routes={routes}
+      render={applyRouterMiddleware(useScroll())}
+    />
+  </Provider>
+);
 
 export default App;

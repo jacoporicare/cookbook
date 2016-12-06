@@ -1,5 +1,4 @@
 import { createStore, compose, applyMiddleware } from 'redux';
-import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import thunk from 'redux-thunk';
 import api from '../middleware/api';
 import rootReducer from '../reducers';
@@ -15,7 +14,7 @@ function configureStoreProd(initialState) {
 
 function configureStoreDev(initialState) {
   const devMiddlewares = [
-    reduxImmutableStateInvariant(),
+    require('redux-immutable-state-invariant')(), // eslint-disable-line global-require, import/no-extraneous-dependencies
     ...middlewares
   ];
 

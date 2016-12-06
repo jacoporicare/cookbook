@@ -21,7 +21,7 @@ export const loadRecipe = slug => (dispatch, getState) => {
   const recipeDetail = recipeDetails[slug];
 
   if (!recipeDetail || !recipeDetail.isFetching) {
-    return dispatch(fetchRecipe(slug));
+    dispatch(fetchRecipe(slug));
   }
 };
 
