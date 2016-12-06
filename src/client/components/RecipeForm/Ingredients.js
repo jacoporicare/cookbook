@@ -55,9 +55,20 @@ class Ingredients extends React.Component {
 
     return (
       <div>
-        <IngredientsList items={items} onRemove={onRemove} />
-        <IngredientsForm ingredient={ingredient} onChange={this.handleIngredientChange} onAdd={this.handleAddIngredient} />
-        <IngredientsGroupForm group={group} onChange={this.handleGroupChange} onAdd={this.handleAddGroup} />
+        <IngredientsList
+          items={items}
+          onRemove={onRemove}
+        />
+        <IngredientsForm
+          ingredient={ingredient}
+          onChange={this.handleIngredientChange}
+          onAdd={this.handleAddIngredient}
+        />
+        <IngredientsGroupForm
+          group={group}
+          onChange={this.handleGroupChange}
+          onAdd={this.handleAddGroup}
+        />
       </div>
     );
   }
