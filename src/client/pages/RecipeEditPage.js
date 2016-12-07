@@ -19,6 +19,7 @@ class RecipeEditPage extends React.Component {
     this.handleAddIngredient = this.handleAddIngredient.bind(this);
     this.handleAddGroup = this.handleAddGroup.bind(this);
     this.handleRemoveIngredient = this.handleRemoveIngredient.bind(this);
+    this.handleSortIngredient = this.handleSortIngredient.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -109,6 +110,20 @@ class RecipeEditPage extends React.Component {
     });
   }
 
+  handleSortIngredient({ oldIndex, newIndex }) {
+    const { recipe } = this.state;
+
+    const ingredients = [...recipe.ingredients];
+    ingredients.splice(newIndex, 0, ingredients.splice(oldIndex, 1)[0]);
+
+    this.setState({
+      recipe: {
+        ...recipe,
+        ingredients
+      }
+    });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     this.props.saveRecipe(this.state.recipe)
@@ -144,6 +159,7 @@ class RecipeEditPage extends React.Component {
           onAddIngredient={this.handleAddIngredient}
           onAddGroup={this.handleAddGroup}
           onRemoveIngredient={this.handleRemoveIngredient}
+          onSortIngredient={this.handleSortIngredient}
           onSubmit={this.handleSubmit}
         />
       </div>

@@ -50,7 +50,7 @@ class Ingredients extends React.Component {
   }
 
   render() {
-    const { items, onRemove } = this.props;
+    const { items, onRemove, onSort } = this.props;
     const { ingredient, group } = this.state;
 
     return (
@@ -58,6 +58,7 @@ class Ingredients extends React.Component {
         <IngredientsList
           items={items}
           onRemove={onRemove}
+          onSort={onSort}
         />
         <IngredientsForm
           ingredient={ingredient}
@@ -78,7 +79,8 @@ Ingredients.propTypes = {
   items: PropTypes.array.isRequired,
   onAdd: PropTypes.func.isRequired,
   onAddGroup: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired
+  onRemove: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired
 };
 
 export default Ingredients;
