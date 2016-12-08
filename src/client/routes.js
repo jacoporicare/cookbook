@@ -11,7 +11,7 @@ export default (
   <Route path="/" component={AppPage}>
     <IndexRoute component={RecipeListPage} />
     <Route path="recept/:slug" component={RecipeDetailPage} />
-    <Route path="recept/upravit/:slug" component={RecipeEditPage} />
+    <Route path="recept/:slug/upravit" component={RecipeEditPage} />
     <Route path="prilohy" component={SideDishListPage} />
     <Route path="*" component={NotFoundPage} />
   </Route>

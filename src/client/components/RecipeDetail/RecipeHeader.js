@@ -6,9 +6,9 @@ const RecipeHeader = ({ slug, title, preparationTime, sideDish }) => (
     <h1 className="page-header clearfix">
       {title}
       <span className="pull-right">
-        <Link to={`/recept/upravit/${slug}`} className="btn btn-primary"><i className="fa fa-edit" /> Upravit</Link>
+        <Link to={`/recept/${slug}/upravit`} className="btn btn-primary"><i className="fa fa-edit" /> Upravit</Link>
         {' '}
-        <Link to={`/recept/smazat/${slug}`} className="btn btn-danger"><i className="fa fa-trash" /> Smazat</Link>
+        <Link to={`/recept/${slug}/smazat`} className="btn btn-danger"><i className="fa fa-trash" /> Smazat</Link>
       </span>
     </h1>
 
