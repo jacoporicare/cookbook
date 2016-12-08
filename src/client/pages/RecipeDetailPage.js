@@ -1,15 +1,53 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadRecipe } from '../actions/recipeDetailsActions';
+import toastr from 'toastr';
+import { loadRecipe, deleteRecipe } from '../actions/recipeDetailsActions';
 import { findRecipeBySlug } from '../reducers/recipesReducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
+import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal';
 import Spinner from '../components/Spinner/Spinner';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeDetailPage extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      showDeleteModal: false
+    };
+
+    this.handleDeleteShow = this.handleDeleteShow.bind(this);
+    this.handleDeleteClose = this.handleDeleteClose.bind(this);
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+  }
+
   componentDidMount() {
     this.props.loadRecipe(this.props.slug);
+  }
+
+  handleDeleteShow() {
+    this.setState({
+      showDeleteModal: true
+    });
+  }
+
+  handleDeleteClose() {
+    this.setState({
+      showDeleteModal: false
+    });
+  }
+
+  handleDeleteConfirm() {
+    this.props.deleteRecipe(this.props.recipe._id)
+      .then(action => this.handleDelete(action));
+  }
+
+  handleDelete(action) {
+    if (action.isSuccess) {
+      toastr.success('Recept úspěšně smazán');
+      this.context.router.push('/');
+    }
   }
 
   render() {
@@ -23,6 +61,7 @@ class RecipeDetailPage extends React.Component {
       );
     }
 
+    const { showDeleteModal } = this.state;
     const {
       slug,
       title,
@@ -33,12 +72,26 @@ class RecipeDetailPage extends React.Component {
     } = recipe;
 
     return (
-      <div className="container">
-        <RecipeHeader slug={slug} title={title} preparationTime={preparationTime} sideDish={sideDish} />
-        {isFetching && !hasDetail
-          ? <Spinner />
-          : <RecipeDetail ingredients={ingredients} directions={directions} />
-        }
+      <div>
+        <div className="container">
+          <RecipeHeader
+            slug={slug}
+            title={title}
+            preparationTime={preparationTime}
+            sideDish={sideDish}
+            onDeleteShow={this.handleDeleteShow}
+          />
+          {isFetching && !hasDetail
+            ? <Spinner />
+            : <RecipeDetail ingredients={ingredients} directions={directions} />
+          }
+        </div>
+        <RecipeDeleteModal
+          show={showDeleteModal}
+          recipeTitle={title}
+          onClose={this.handleDeleteClose}
+          onConfirm={this.handleDeleteConfirm}
+        />
       </div>
     );
   }
@@ -49,7 +102,12 @@ RecipeDetailPage.propTypes = {
   recipe: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
   loadRecipe: PropTypes.func.isRequired,
+  deleteRecipe: PropTypes.func.isRequired,
   hasDetail: PropTypes.bool.isRequired
+};
+
+RecipeDetailPage.contextTypes = {
+  router: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -70,5 +128,6 @@ function mapStateToProps(state, ownProps) {
 }
 
 export default connect(mapStateToProps, {
-  loadRecipe
+  loadRecipe,
+  deleteRecipe
 })(RecipeDetailPage);

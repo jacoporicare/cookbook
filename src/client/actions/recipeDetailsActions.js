@@ -8,6 +8,10 @@ export const RECIPE_SAVE_REQUEST = 'RECIPE_SAVE_REQUEST';
 export const RECIPE_SAVE_SUCCESS = 'RECIPE_SAVE_SUCCESS';
 export const RECIPE_SAVE_FAILURE = 'RECIPE_SAVE_FAILURE';
 
+export const RECIPE_DELETE_REQUEST = 'RECIPE_DELETE_REQUEST';
+export const RECIPE_DELETE_SUCCESS = 'RECIPE_DELETE_SUCCESS';
+export const RECIPE_DELETE_FAILURE = 'RECIPE_DELETE_FAILURE';
+
 const fetchRecipe = slug => ({
   slug,
   [CALL_API]: {
@@ -31,5 +35,14 @@ export const saveRecipe = recipe => ({
     url: `/api/recipes/${recipe._id}`,
     method: 'post',
     data: recipe
+  }
+});
+
+export const deleteRecipe = id => ({
+  id,
+  [CALL_API]: {
+    types: [RECIPE_DELETE_REQUEST, RECIPE_DELETE_SUCCESS, RECIPE_DELETE_FAILURE],
+    url: `/api/recipes/${id}`,
+    method: 'delete'
   }
 });

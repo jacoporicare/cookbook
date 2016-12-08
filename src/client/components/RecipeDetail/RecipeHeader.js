@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-const RecipeHeader = ({ slug, title, preparationTime, sideDish }) => (
+const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }) => (
   <div>
     <h1 className="page-header clearfix">
       {title}
       <span className="pull-right">
         <Link to={`/recept/${slug}/upravit`} className="btn btn-primary"><i className="fa fa-edit" /> Upravit</Link>
         {' '}
-        <Link to={`/recept/${slug}/smazat`} className="btn btn-danger"><i className="fa fa-trash" /> Smazat</Link>
+        <button className="btn btn-danger" onClick={onDeleteShow}><i className="fa fa-trash" /> Smazat</button>
       </span>
     </h1>
 
@@ -23,7 +23,8 @@ RecipeHeader.propTypes = {
   slug: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   preparationTime: PropTypes.number,
-  sideDish: PropTypes.string
+  sideDish: PropTypes.string,
+  onDeleteShow: PropTypes.func.isRequired
 };
 
 export default RecipeHeader;
