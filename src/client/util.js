@@ -9,3 +9,16 @@ export function parseValue(value, type) {
       return value;
   }
 }
+
+export function deleteNullOrUndefinedKeys(obj) {
+  const result = {};
+
+  Object.keys(obj).forEach(k => {
+    const value = obj[k];
+    if (value !== undefined && value !== null) {
+      result[k] = value;
+    }
+  });
+
+  return result;
+}

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
+import { deleteNullOrUndefinedKeys } from '../../util';
 
 const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient }) => {
   const {
@@ -10,8 +11,8 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredi
     servingCount = '',
     sideDish = '',
     directions = '',
-    ingredients
-  } = recipe;
+    ingredients = []
+  } = deleteNullOrUndefinedKeys(recipe);
 
   const hasError = Object.keys(errors).length > 0;
 
@@ -95,10 +96,13 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredi
         <div className="col-md-4">
           <fieldset>
             <legend>Ingredience</legend>
-            {ingredients && ingredients.length > 0
-              ? <Ingredients items={ingredients} onAdd={onAddIngredient} onAddGroup={onAddGroup} onRemove={onRemoveIngredient} onSort={onSortIngredient} />
-              : <div className="alert alert-info">Zatím žádné ingredience.</div>
-            }
+            <Ingredients
+              items={ingredients}
+              onAdd={onAddIngredient}
+              onAddGroup={onAddGroup}
+              onRemove={onRemoveIngredient}
+              onSort={onSortIngredient}
+            />
           </fieldset>
         </div>
 
