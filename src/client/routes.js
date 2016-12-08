@@ -12,6 +12,7 @@ export default (
     <IndexRoute component={RecipeListPage} />
     <Route path="recept/:slug" component={RecipeDetailPage} />
     <Route path="recept/:slug/upravit" component={RecipeEditPage} />
+    <Route path="novy-recept" component={RecipeEditPage} />
     <Route path="prilohy" component={SideDishListPage} />
     <Route path="*" component={NotFoundPage} />
   </Route>

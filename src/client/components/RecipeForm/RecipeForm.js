@@ -4,7 +4,7 @@ import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
 import { deleteNullOrUndefinedKeys } from '../../util';
 
-const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient }) => {
+const RecipeForm = ({ recipe, errors, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient, isSaving }) => {
   const {
     title = '',
     preparationTime = '',
@@ -149,13 +149,13 @@ const RecipeForm = ({ recipe, errors, isSaving, onChange, onSubmit, onAddIngredi
 RecipeForm.propTypes = {
   recipe: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  isSaving: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onAddIngredient: PropTypes.func.isRequired,
   onAddGroup: PropTypes.func.isRequired,
   onRemoveIngredient: PropTypes.func.isRequired,
-  onSortIngredient: PropTypes.func.isRequired
+  onSortIngredient: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool
 };
 
 export default RecipeForm;

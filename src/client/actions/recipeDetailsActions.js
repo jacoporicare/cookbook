@@ -29,6 +29,15 @@ export const loadRecipe = slug => (dispatch, getState) => {
   }
 };
 
+export const createRecipe = recipe => ({
+  [CALL_API]: {
+    types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
+    url: '/api/recipes',
+    method: 'post',
+    data: recipe
+  }
+});
+
 export const saveRecipe = recipe => ({
   [CALL_API]: {
     types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
