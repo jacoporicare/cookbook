@@ -39,15 +39,9 @@ class RecipeDetailPage extends React.Component {
   }
 
   handleDeleteConfirm() {
-    this.props.deleteRecipe(this.props.recipe._id)
-      .then(action => this.handleDelete(action));
-  }
-
-  handleDelete(action) {
-    if (action.isSuccess) {
-      toastr.success('Recept úspěšně smazán');
-      this.props.router.push('/');
-    }
+    this.props.deleteRecipe(this.props.recipe._id);
+    toastr.success('Recept úspěšně smazán');
+    this.props.router.push('/');
   }
 
   render() {

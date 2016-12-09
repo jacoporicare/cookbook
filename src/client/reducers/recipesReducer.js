@@ -4,7 +4,7 @@ import {
   RECIPES_SUCCESS,
   RECIPES_FAILURE
 } from '../actions/recipesActions';
-import { RECIPE_DELETE_SUCCESS } from '../actions/recipeDetailsActions';
+import { RECIPE_DELETE_REQUEST } from '../actions/recipeDetailsActions';
 
 export default function recipesReducer(state = initialState.recipes, action) {
   switch (action.type) {
@@ -27,7 +27,7 @@ export default function recipesReducer(state = initialState.recipes, action) {
         isFetching: false
       };
 
-    case RECIPE_DELETE_SUCCESS:
+    case RECIPE_DELETE_REQUEST:
       return {
         ...state,
         items: state.items.filter(r => r._id !== action.id)

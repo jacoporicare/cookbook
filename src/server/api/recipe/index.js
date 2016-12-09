@@ -3,7 +3,21 @@ import mongoose from 'mongoose';
 import slug from 'slug';
 import Recipe from './recipe.model';
 
-const toSlug = title => title ? slug(title, { mode: 'rfc3986' }) : title;
+function toSlug(title) {
+  return (title ? slug(title, { mode: 'rfc3986' }) : title);
+}
+
+function getError(err) {
+  if (err.code === 11000) {
+    return {
+      code: 11000,
+      message: 'Název již existuje'
+    };
+  }
+
+  return err;
+}
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -87,7 +101,7 @@ router.post('/', (req, res) => {
   req.body.slug = toSlug(req.body.title);
   Recipe.create(req.body)
     .then(recipe => res.status(201).send(recipe))
-    .catch(err => res.status(500).send(err));
+    .catch(err => res.status(500).send(getError(err)));
 });
 
 router.post('/:id', (req, res) => {
@@ -95,7 +109,7 @@ router.post('/:id', (req, res) => {
   req.body.slug = toSlug(req.body.title);
   Recipe.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
     .then(recipe => res.send(recipe))
-    .catch(err => res.status(500).send(err));
+    .catch(err => res.status(500).send(getError(err)));
 });
 
 router.delete('/:id', (req, res) => {
