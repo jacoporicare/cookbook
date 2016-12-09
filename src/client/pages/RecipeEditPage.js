@@ -7,8 +7,8 @@ import RecipeForm from '../components/RecipeForm/RecipeForm';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeEditPage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       recipe: { ...this.props.recipe },
@@ -138,7 +138,7 @@ class RecipeEditPage extends React.Component {
   handleSave(action) {
     if (action.isSuccess) {
       toastr.success('Recept úspěšně uložen');
-      this.context.router.push(`/recept/${action.response.slug}`);
+      this.props.router.push(`/recept/${action.response.slug}`);
     }
   }
 
@@ -181,10 +181,7 @@ RecipeEditPage.propTypes = {
   isSaving: PropTypes.bool,
   loadRecipe: PropTypes.func.isRequired,
   createRecipe: PropTypes.func.isRequired,
-  saveRecipe: PropTypes.func.isRequired
-};
-
-RecipeEditPage.contextTypes = {
+  saveRecipe: PropTypes.func.isRequired,
   router: PropTypes.object.isRequired
 };
 

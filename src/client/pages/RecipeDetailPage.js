@@ -10,8 +10,8 @@ import Spinner from '../components/Spinner/Spinner';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeDetailPage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       showDeleteModal: false
@@ -46,7 +46,7 @@ class RecipeDetailPage extends React.Component {
   handleDelete(action) {
     if (action.isSuccess) {
       toastr.success('Recept úspěšně smazán');
-      this.context.router.push('/');
+      this.props.router.push('/');
     }
   }
 
@@ -103,10 +103,7 @@ RecipeDetailPage.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   loadRecipe: PropTypes.func.isRequired,
   deleteRecipe: PropTypes.func.isRequired,
-  hasDetail: PropTypes.bool.isRequired
-};
-
-RecipeDetailPage.contextTypes = {
+  hasDetail: PropTypes.bool.isRequired,
   router: PropTypes.object.isRequired
 };
 
