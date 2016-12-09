@@ -159,6 +159,7 @@ class RecipeEditPage extends React.Component {
         <RecipeForm
           recipe={recipe}
           errors={errors}
+          isNew={isNew}
           isSaving={isSaving}
           onChange={this.handleChange}
           onAddIngredient={this.handleAddIngredient}

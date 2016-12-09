@@ -4,7 +4,7 @@ import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
 import { deleteNullOrUndefinedKeys } from '../../util';
 
-const RecipeForm = ({ recipe, errors, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient, isSaving }) => {
+const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient }) => {
   const {
     title = '',
     preparationTime = '',
@@ -21,7 +21,7 @@ const RecipeForm = ({ recipe, errors, onChange, onSubmit, onAddIngredient, onAdd
       {isSaving && <Spinner overlay />}
 
       <h1 className="page-header clearfix">
-        {title || 'Název receptu'}
+        {title || (isNew ? 'Nový recept' : 'Název receptu')}
         <span className="pull-right">
           <button type="submit" className="btn btn-success" disabled={hasError || isSaving}>
             <i className="fa fa-save" />{' '}
@@ -155,6 +155,7 @@ RecipeForm.propTypes = {
   onAddGroup: PropTypes.func.isRequired,
   onRemoveIngredient: PropTypes.func.isRequired,
   onSortIngredient: PropTypes.func.isRequired,
+  isNew: PropTypes.bool,
   isSaving: PropTypes.bool
 };
 
