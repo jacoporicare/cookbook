@@ -24,9 +24,13 @@ class RecipeListPage extends React.Component {
             </Link>
           </span>
         </h1>
-        {isEmpty
-          ? <SpinnerAlert level="info" text="Zatím zde není žádný recept." spinner={isFetching} />
-          : <RecipeList recipes={recipes} />
+        {isEmpty ?
+          <SpinnerAlert
+            level="info"
+            text="Zatím zde není žádný recept."
+            spinner={isFetching}
+          /> :
+          <RecipeList recipes={recipes} />
         }
       </div>
     );

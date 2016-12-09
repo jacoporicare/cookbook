@@ -128,9 +128,9 @@ class RecipeEditPage extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const promise = this.props.isNew
-      ? this.props.createRecipe(this.state.recipe)
-      : this.props.saveRecipe(this.state.recipe);
+    const promise = this.props.isNew ?
+      this.props.createRecipe(this.state.recipe) :
+      this.props.saveRecipe(this.state.recipe);
 
     promise.then(action => this.handleSave(action));
   }

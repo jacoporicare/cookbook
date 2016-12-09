@@ -81,9 +81,9 @@ class RecipeDetailPage extends React.Component {
             sideDish={sideDish}
             onDeleteShow={this.handleDeleteShow}
           />
-          {isFetching && !hasDetail
-            ? <Spinner />
-            : <RecipeDetail ingredients={ingredients} directions={directions} />
+          {isFetching && !hasDetail ?
+            <Spinner /> :
+            <RecipeDetail ingredients={ingredients} directions={directions} />
           }
         </div>
         <RecipeDeleteModal

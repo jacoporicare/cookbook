@@ -31,13 +31,11 @@ const SortableItem = SortableElement(({ index, ingredient, onRemove }) => {
           </div>
         }
 
-        {!isGroup &&
+        {!isGroup ?
           <div className="col-xs-7">
             {name}
             <Handle />
-          </div>
-        }
-        {isGroup &&
+          </div> :
           <div className="col-xs-10">
             <b>{name}</b>
             <Handle />

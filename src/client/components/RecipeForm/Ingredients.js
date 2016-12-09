@@ -55,13 +55,13 @@ class Ingredients extends React.Component {
 
     return (
       <div>
-        {items.length > 0
-          ? <IngredientsList
+        {items.length > 0 ?
+          <IngredientsList
             items={items}
             onRemove={onRemove}
             onSort={onSort}
-          />
-          : <div className="alert alert-info">Zatím žádné ingredience.</div>
+          /> :
+          <div className="alert alert-info">Zatím žádné ingredience.</div>
         }
         <IngredientsForm
           ingredient={ingredient}
