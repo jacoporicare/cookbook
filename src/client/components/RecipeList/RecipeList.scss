@@ -1,26 +1,26 @@
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
-$cb-border-color: #eee;
-$cb-spacing: 15px;
-$cb-height: 80px;
+$cb-recipe-border-color: #eee;
+$cb-recipe-spacing: 15px;
+$cb-recipe-height: 86px;
 
 .cb-recipes {
   .recipe-container {
-    margin-bottom: $cb-spacing;
+    margin-bottom: $cb-recipe-spacing;
   }
 
   .recipe {
     display: block;
-    height: $cb-height;
-    border: 1px solid $cb-border-color;
+    height: $cb-recipe-height;
+    border: 1px solid $cb-recipe-border-color;
     border-radius: $border-radius-base;
-    box-shadow: 1px 1px 2px $cb-border-color;
-    padding: $cb-spacing;
+    box-shadow: 1px 1px 2px $cb-recipe-border-color;
+    padding: $cb-recipe-spacing;
     text-decoration: none;
 
     &:hover {
-      border-color: darken($cb-border-color, 20%);
-      box-shadow: 1px 1px 2px darken($cb-border-color, 20%);
+      border-color: darken($cb-recipe-border-color, 20%);
+      box-shadow: 1px 1px 2px darken($cb-recipe-border-color, 20%);
     }
 
     h4 {
@@ -29,6 +29,7 @@ $cb-height: 80px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: $line-height-base;
     }
   }
 }
