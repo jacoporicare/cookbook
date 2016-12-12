@@ -33,14 +33,12 @@ export default function recipesReducer(state = initialState.recipes, action) {
       };
 
     case RECIPE_SAVE_SUCCESS: {
-      const items = [
-        ...state.items.filter(r => r._id !== action.response._id),
-        action.response
-      ];
-
       return {
         ...state,
-        items: items.sort(sortByTitle)
+        items: [
+          ...state.items.filter(r => r._id !== action.response._id),
+          action.response
+        ].sort(sortByTitle)
       };
     }
 
