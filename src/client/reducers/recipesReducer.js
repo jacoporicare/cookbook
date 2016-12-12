@@ -4,7 +4,12 @@ import {
   RECIPES_SUCCESS,
   RECIPES_FAILURE
 } from '../actions/recipesActions';
-import { RECIPE_DELETE_REQUEST } from '../actions/recipeDetailsActions';
+import {
+  RECIPE_SAVE_SUCCESS,
+  RECIPE_DELETE_REQUEST
+} from '../actions/recipeDetailsActions';
+
+const sortByTitle = (a, b) => a.title.localeCompare(b.title);
 
 export default function recipesReducer(state = initialState.recipes, action) {
   switch (action.type) {
@@ -18,7 +23,7 @@ export default function recipesReducer(state = initialState.recipes, action) {
       return {
         ...state,
         isFetching: false,
-        items: action.response
+        items: action.response.sort(sortByTitle)
       };
 
     case RECIPES_FAILURE:
@@ -26,6 +31,18 @@ export default function recipesReducer(state = initialState.recipes, action) {
         ...state,
         isFetching: false
       };
+
+    case RECIPE_SAVE_SUCCESS: {
+      const items = [
+        ...state.items.filter(r => r._id !== action.response._id),
+        action.response
+      ];
+
+      return {
+        ...state,
+        items: items.sort(sortByTitle)
+      };
+    }
 
     case RECIPE_DELETE_REQUEST:
       return {
