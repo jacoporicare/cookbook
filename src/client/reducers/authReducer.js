@@ -1,5 +1,6 @@
 import initialState from './initialState';
 import {
+  SET_AUTH_TOKEN,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -10,6 +11,12 @@ import {
 
 export default function authReducer(state = initialState.auth, action) {
   switch (action.type) {
+    case SET_AUTH_TOKEN:
+      return {
+        ...state,
+        token: action.token
+      };
+
     case LOGIN_REQUEST:
       return {
         ...state,

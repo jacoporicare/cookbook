@@ -40,7 +40,13 @@ export default store => next => action => {
   const [requestType, successType, failureType] = types;
   next(actionWith({ type: requestType }));
 
-  return axios({ method, url, data })
+  const headers = {};
+  const token = store.getState().auth.token;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  return axios({ method, url, data, headers })
     .then(response => next(actionWith({
       type: successType,
       isSuccess: true,
