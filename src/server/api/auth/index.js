@@ -5,9 +5,18 @@ const router = Router();
 
 router.use('/local', (req, res, next) => {
   const user = checkUser(req.body.username, req.body.password);
-  if (!user) return res.status(401).json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
+  if (!user) {
+    return res.status(401).json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
+  }
 
-  res.json({ token: signToken(user.id) });
+  res.json({
+    token: signToken(user.id),
+    user: {
+      id: user.id,
+      username: user.username,
+      name: user.name
+    }
+  });
 });
 
 export default router;
