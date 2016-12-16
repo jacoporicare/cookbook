@@ -36,23 +36,16 @@ export default function authReducer(state = initialState.auth, action) {
     case LOGIN_FAILURE:
       return {
         ...state,
-        isSubmitting: false,
-        isAuthenticated: false,
-        token: null
+        isSubmitting: false
       };
 
     case LOGOUT:
-      return {
-        ...state,
-        isAuthenticated: false,
-        token: null
-      };
+      return initialState.auth;
 
     case CURRENT_USER_REQUEST:
       return {
         ...state,
         user: {
-          ...state.user,
           isFetching: true
         }
       };
@@ -61,7 +54,6 @@ export default function authReducer(state = initialState.auth, action) {
       return {
         ...state,
         user: {
-          ...state.user,
           ...action.response,
           isFetching: false
         }
@@ -71,7 +63,6 @@ export default function authReducer(state = initialState.auth, action) {
       return {
         ...state,
         user: {
-          ...state.user,
           isFetching: false
         }
       };
