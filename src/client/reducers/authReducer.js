@@ -4,6 +4,7 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  LOGOUT,
   CURRENT_USER_REQUEST,
   CURRENT_USER_SUCCESS,
   CURRENT_USER_FAILURE
@@ -14,19 +15,20 @@ export default function authReducer(state = initialState.auth, action) {
     case SET_AUTH_TOKEN:
       return {
         ...state,
+        isAuthenticated: true,
         token: action.token
       };
 
     case LOGIN_REQUEST:
       return {
         ...state,
-        isFetching: true
+        isSubmitting: true
       };
 
     case LOGIN_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isSubmitting: false,
         isAuthenticated: true,
         token: action.response.token
       };
@@ -34,7 +36,14 @@ export default function authReducer(state = initialState.auth, action) {
     case LOGIN_FAILURE:
       return {
         ...state,
-        isFetching: false,
+        isSubmitting: false,
+        isAuthenticated: false,
+        token: null
+      };
+
+    case LOGOUT:
+      return {
+        ...state,
         isAuthenticated: false,
         token: null
       };

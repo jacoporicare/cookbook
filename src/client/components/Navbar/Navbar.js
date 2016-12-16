@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Link, IndexLink } from 'react-router';
 import SearchBar from '../SearchBar/SearchBar';
 
-const Navbar = ({ username, isLoggedIn }) => (
+const Navbar = ({ userName, isAuthenticated, isFetchingUser }) => (
   <div className="navbar navbar-default">
     <div className="container">
 
@@ -16,17 +16,20 @@ const Navbar = ({ username, isLoggedIn }) => (
       </div>
 
       <div className="navbar-collapse collapse" id="navbar-main">
-        <ul className="nav navbar-nav">
-          <li><Link to="/prilohy" activeClassName="active">Přílohy</Link></li>
-        </ul>
+        {isAuthenticated &&
+          <ul className="nav navbar-nav">
+            <li><Link to="/prilohy" activeClassName="active">Přílohy</Link></li>
+          </ul>
+        }
 
-        {isLoggedIn && <SearchBar />}
+        {/* isAuthenticated && <SearchBar /> */}
 
-        <ul className="nav navbar-nav navbar-right">
-          {!isLoggedIn && <li><Link to="/prihlaseni" activeClassName="active">Přihlásit</Link></li>}
-          {isLoggedIn && <li><a><i className="fa fa-user" /> {username}</a></li>}
-          {isLoggedIn && <li><Link to="/odhlaseni">Odhlásit</Link></li>}
-        </ul>
+        {isAuthenticated &&
+          <ul className="nav navbar-nav navbar-right">
+            <li><a>{isFetchingUser ? <i className="fa fa-spin fa-spinner" /> : <span><i className="fa fa-user" /> {userName}</span>}</a></li>
+            <li><Link to="/odhlaseni">Odhlásit</Link></li>
+          </ul>
+        }
 
       </div>
 
@@ -35,8 +38,9 @@ const Navbar = ({ username, isLoggedIn }) => (
 );
 
 Navbar.propTypes = {
-  username: PropTypes.string,
-  isLoggedIn: PropTypes.bool.isRequired
+  userName: PropTypes.string,
+  isAuthenticated: PropTypes.bool,
+  isFetchingUser: PropTypes.bool
 };
 
 export default Navbar;

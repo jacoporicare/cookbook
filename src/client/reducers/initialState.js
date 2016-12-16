@@ -1,7 +1,7 @@
 export default {
   errorMessage: null,
   auth: {
-    isFetching: false,
+    isSubmitting: false,
     isAuthenticated: false,
     token: null,
     user: {
