@@ -7,7 +7,7 @@ const Handle = SortableHandle(() =>
   </div>
 );
 
-const SortableItem = SortableElement(({ index, ingredient, onRemove }) => {
+const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   let className = 'list-group-item';
@@ -20,7 +20,7 @@ const SortableItem = SortableElement(({ index, ingredient, onRemove }) => {
       <div className="row">
 
         <div className="col-xs-2">
-          <a href="" onClick={e => onRemove(e, index)}>
+          <a href="" onClick={e => onRemove(e, itemIndex)}>
             <i className="fa fa-trash" />
           </a>
         </div>
@@ -52,6 +52,7 @@ const SortableList = SortableContainer(({ items, onRemove }) => (
       <SortableItem
         key={index}
         index={index}
+        itemIndex={index}
         ingredient={ingredient}
         onRemove={onRemove}
       />
