@@ -16,6 +16,7 @@ const IngredientsGroupForm = ({ group, onChange, onAdd }) => (
           type="button"
           onClick={onAdd}
           className="btn btn-default"
+          disabled={!group}
         >
           <i className="fa fa-plus" /> Přidat
         </button>

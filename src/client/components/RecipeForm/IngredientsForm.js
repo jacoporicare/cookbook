@@ -51,6 +51,7 @@ const IngredientsForm = ({ ingredient, onChange, onAdd }) => {
                 type="button"
                 onClick={onAdd}
                 className="btn btn-primary"
+                disabled={!name}
               >
                 <i className="fa fa-plus" /> Přidat
               </button>

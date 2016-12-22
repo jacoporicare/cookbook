@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
-import { parseValue } from '../util';
+import { parseValue } from '../utils';
 import { loadRecipe, createRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';

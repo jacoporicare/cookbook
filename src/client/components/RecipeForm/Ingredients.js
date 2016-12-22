@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { parseValue } from '../../util';
+import { parseValue } from '../../utils';
 import IngredientsList from './IngredientsList';
 import IngredientsForm from './IngredientsForm';
 import IngredientsGroupForm from './IngredientsGroupForm';

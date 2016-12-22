@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
-import { deleteNullOrUndefinedKeys } from '../../util';
+import { deleteNullOrUndefinedKeys } from '../../utils';
 
 const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient }) => {
   const {
@@ -23,7 +23,7 @@ const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAdd
       <h1 className="page-header clearfix">
         {title || (isNew ? 'Nový recept' : 'Název receptu')}
         <span className="pull-right">
-          <button type="submit" className="btn btn-success" disabled={hasError || isSaving}>
+          <button type="submit" className="btn btn-success" disabled={!title || hasError || isSaving}>
             <i className="fa fa-save" />{' '}
             {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
           </button>
@@ -31,7 +31,7 @@ const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAdd
       </h1>
 
       <fieldset>
-        <div className="form-group">
+        <div className={`form-group ${errors.title ? 'has-error' : ''}`}>
           <input
             type="text"
             name="title"
@@ -129,7 +129,7 @@ const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAdd
           </fieldset>
 
           <p className="text-right">
-            <button type="submit" className="btn btn-success btn-lg" disabled={hasError || isSaving}>
+            <button type="submit" className="btn btn-success btn-lg" disabled={!title || hasError || isSaving}>
               <i className="fa fa-save" />{' '}
               {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
             </button>
