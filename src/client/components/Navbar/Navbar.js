@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link, IndexLink } from 'react-router';
-import SearchBar from '../SearchBar/SearchBar';
+import NavItem from '../NavItem/NavItem';
+// import SearchBar from '../SearchBar/SearchBar';
 
 const Navbar = ({ userName, isAuthenticated, isFetchingUser }) => (
   <div className="navbar navbar-default">
@@ -18,7 +19,7 @@ const Navbar = ({ userName, isAuthenticated, isFetchingUser }) => (
       <div className="navbar-collapse collapse" id="navbar-main">
         {isAuthenticated &&
           <ul className="nav navbar-nav">
-            <li><Link to="/prilohy" activeClassName="active">Přílohy</Link></li>
+            <NavItem to="/prilohy">Přílohy</NavItem>
           </ul>
         }
 
