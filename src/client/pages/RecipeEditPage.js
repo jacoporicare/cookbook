@@ -44,7 +44,7 @@ class RecipeEditPage extends React.Component {
     const { title } = recipe;
     const errors = {};
 
-    if (title.length < 1) {
+    if (!title || title.length < 1) {
       errors.title = true;
     }
 
