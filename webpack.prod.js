@@ -5,8 +5,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const commonConfig = require('./webpack.common');
 
-const env = process.env.NODE_ENV = process.env.ENV = 'production';
-
 module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
 
@@ -23,7 +21,7 @@ module.exports = webpackMerge(commonConfig, {
     new ExtractTextPlugin('[name].[hash].css'),
     new webpack.DefinePlugin({
       'process.env': {
-        'ENV': JSON.stringify(env)
+        NODE_ENV: JSON.stringify('production')
       }
     }),
     new FaviconsWebpackPlugin({

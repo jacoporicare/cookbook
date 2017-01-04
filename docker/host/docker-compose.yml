@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  db:
+    image: mongo:latest
+    container_name: cookbook-db
+    networks:
+      - cookbook
+
+  web:
+    container_name: cookbook-web
+    environment:
+      - MONGO_URI=mongodb://cookbook-db/cookbook
+    networks:
+      - cookbook
+      - web
+
+networks:
+  cookbook:
+  web:
+    external: true

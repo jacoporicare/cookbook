@@ -65,7 +65,7 @@ router.get('/fix-slugs', (req, res) => {
         recipe.slug = toSlug(recipe.title);
         Recipe.findOne({ slug: recipe.slug })
           .then(result => {
-            if (recipe.slug === result.slug && !recipe._id.equals(result._id)) {
+            if (result && recipe.slug === result.slug && !recipe._id.equals(result._id)) {
               recipe.slug = `${recipe.slug}_${recipe._id}`;
             }
             recipe.save();

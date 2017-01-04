@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  db:
+    restart: always
+
+  web:
+    image: jacoporicare/cookbook:latest
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=zradelnik.jakubricar.cz
