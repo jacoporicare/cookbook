@@ -7,7 +7,7 @@ import IngredientsGroupForm from './IngredientsGroupForm';
 const initialIngredient = {
   name: '',
   amount: '',
-  amountUnit: ''
+  amountUnit: '',
 };
 
 class Ingredients extends React.Component {
@@ -16,35 +16,30 @@ class Ingredients extends React.Component {
 
     this.state = {
       ingredient: initialIngredient,
-      group: ''
+      group: '',
     };
-
-    this.handleIngredientChange = this.handleIngredientChange.bind(this);
-    this.handleGroupChange = this.handleGroupChange.bind(this);
-    this.handleAddIngredient = this.handleAddIngredient.bind(this);
-    this.handleAddGroup = this.handleAddGroup.bind(this);
   }
 
-  handleIngredientChange(event) {
+  handleIngredientChange = (event) => {
     const { name, value } = event.target;
     this.setState({
       ingredient: {
         ...this.state.ingredient,
-        [name]: parseValue(value, event.target.type)
-      }
+        [name]: parseValue(value, event.target.type),
+      },
     });
   }
 
-  handleGroupChange(event) {
+  handleGroupChange = (event) => {
     this.setState({ group: event.target.value });
   }
 
-  handleAddIngredient(event) {
+  handleAddIngredient = (event) => {
     this.props.onAdd(event, this.state.ingredient);
     this.setState({ ingredient: initialIngredient });
   }
 
-  handleAddGroup(event) {
+  handleAddGroup = (event) => {
     this.props.onAddGroup(event, this.state.group);
     this.setState({ group: '' });
   }
@@ -83,7 +78,7 @@ Ingredients.propTypes = {
   onAdd: PropTypes.func.isRequired,
   onAddGroup: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
-  onSort: PropTypes.func.isRequired
+  onSort: PropTypes.func.isRequired,
 };
 
 export default Ingredients;

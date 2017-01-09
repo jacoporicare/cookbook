@@ -66,7 +66,7 @@ const IngredientsForm = ({ ingredient, onChange, onAdd }) => {
 IngredientsForm.propTypes = {
   ingredient: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired
+  onAdd: PropTypes.func.isRequired,
 };
 
 export default IngredientsForm;

@@ -12,15 +12,8 @@ class RecipeEditPage extends React.Component {
 
     this.state = {
       recipe: { ...this.props.recipe },
-      errors: {}
+      errors: {},
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleAddIngredient = this.handleAddIngredient.bind(this);
-    this.handleAddGroup = this.handleAddGroup.bind(this);
-    this.handleRemoveIngredient = this.handleRemoveIngredient.bind(this);
-    this.handleSortIngredient = this.handleSortIngredient.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -35,7 +28,7 @@ class RecipeEditPage extends React.Component {
 
     if (newRecipe.slug !== oldRecipe.slug) {
       this.setState({
-        recipe: { ...newRecipe }
+        recipe: { ...newRecipe },
       });
     }
   }
@@ -51,18 +44,18 @@ class RecipeEditPage extends React.Component {
     return errors;
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const { name, value } = event.target;
     const recipe = {
       ...this.state.recipe,
-      [name]: parseValue(value, event.target.type)
+      [name]: parseValue(value, event.target.type),
     };
     const errors = this.validate(recipe);
 
     this.setState({ recipe, errors });
   }
 
-  handleAddIngredient(event, ingredient) {
+  handleAddIngredient = (event, ingredient) => {
     event.preventDefault();
 
     const { recipe } = this.state;
@@ -72,13 +65,13 @@ class RecipeEditPage extends React.Component {
         ...recipe,
         ingredients: [
           ...recipe.ingredients,
-          ingredient
-        ]
-      }
+          ingredient,
+        ],
+      },
     });
   }
 
-  handleAddGroup(event, group) {
+  handleAddGroup = (event, group) => {
     event.preventDefault();
 
     const { recipe } = this.state;
@@ -90,14 +83,14 @@ class RecipeEditPage extends React.Component {
           ...recipe.ingredients,
           {
             name: group,
-            isGroup: true
-          }
-        ]
-      }
+            isGroup: true,
+          },
+        ],
+      },
     });
   }
 
-  handleRemoveIngredient(event, index) {
+  handleRemoveIngredient = (event, index) => {
     event.preventDefault();
 
     const { recipe } = this.state;
@@ -106,13 +99,13 @@ class RecipeEditPage extends React.Component {
       recipe: {
         ...recipe,
         ingredients: [
-          ...recipe.ingredients.filter((e, i) => i !== index)
-        ]
-      }
+          ...recipe.ingredients.filter((e, i) => i !== index),
+        ],
+      },
     });
   }
 
-  handleSortIngredient({ oldIndex, newIndex }) {
+  handleSortIngredient = ({ oldIndex, newIndex }) => {
     const { recipe } = this.state;
 
     const ingredients = [...recipe.ingredients];
@@ -121,12 +114,12 @@ class RecipeEditPage extends React.Component {
     this.setState({
       recipe: {
         ...recipe,
-        ingredients
-      }
+        ingredients,
+      },
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
     const promise = this.props.isNew ?
       this.props.createRecipe(this.state.recipe) :
@@ -182,7 +175,7 @@ RecipeEditPage.propTypes = {
   loadRecipe: PropTypes.func.isRequired,
   createRecipe: PropTypes.func.isRequired,
   saveRecipe: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -192,8 +185,8 @@ function mapStateToProps(state, ownProps) {
     return {
       isNew: true,
       recipe: {
-        ingredients: []
-      }
+        ingredients: [],
+      },
     };
   }
 
@@ -201,19 +194,19 @@ function mapStateToProps(state, ownProps) {
   const { isSaving } = recipeDetails;
   const {
     recipe = {},
-    isFetching = true
+    isFetching = true,
   } = recipeDetails[slug] || {};
 
   return {
     slug,
     recipe,
     isFetching,
-    isSaving
+    isSaving,
   };
 }
 
 export default connect(mapStateToProps, {
   loadRecipe,
   createRecipe,
-  saveRecipe
+  saveRecipe,
 })(RecipeEditPage);
