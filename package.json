@@ -27,6 +27,7 @@
     "jsonwebtoken": "^7.1.9",
     "mongoose": "^4.6.5",
     "react": "^15.4.1",
+    "react-autosuggest": "^8.0.0",
     "react-bootstrap": "^0.30.7",
     "react-cookie": "^1.0.4",
     "react-dom": "^15.4.1",

@@ -54,7 +54,9 @@ router.get('/ingredients', (req, res) => {
 
 router.get('/side-dishes', (req, res) => {
   Recipe.distinct('sideDish')
-    .then(results => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
+    .then(results => res.send(results
+      .filter(sd => sd && sd !== '')
+      .sort((a, b) => a.localeCompare(b, 'cs'))))
     .catch(err => res.status(500).send(err));
 });
 

@@ -48,8 +48,9 @@ class RecipeEditPage extends React.Component {
     return errors;
   }
 
-  handleChange = (event) => {
-    const { name, value } = event.target;
+  handleChange = (event, { newValue, method }) => {
+    const { name } = event.target;
+    const value = method ? newValue : event.target.value;
     const recipe = {
       ...this.state.recipe,
       [name]: parseValue(value, event.target.type),
@@ -60,8 +61,6 @@ class RecipeEditPage extends React.Component {
   }
 
   handleAddIngredient = (event, ingredient) => {
-    event.preventDefault();
-
     const { recipe } = this.state;
 
     this.setState({
@@ -76,8 +75,6 @@ class RecipeEditPage extends React.Component {
   }
 
   handleAddGroup = (event, group) => {
-    event.preventDefault();
-
     const { recipe } = this.state;
 
     this.setState({
