@@ -45,7 +45,7 @@ class Ingredients extends React.Component {
   }
 
   render() {
-    const { items, onRemove, onSort } = this.props;
+    const { items, ingredientOptions, onRemove, onSort } = this.props;
     const { ingredient, group } = this.state;
 
     return (
@@ -60,6 +60,7 @@ class Ingredients extends React.Component {
         }
         <IngredientsForm
           ingredient={ingredient}
+          ingredientOptions={ingredientOptions}
           onChange={this.handleIngredientChange}
           onAdd={this.handleAddIngredient}
         />
@@ -75,6 +76,7 @@ class Ingredients extends React.Component {
 
 Ingredients.propTypes = {
   items: PropTypes.array.isRequired,
+  ingredientOptions: PropTypes.array.isRequired,
   onAdd: PropTypes.func.isRequired,
   onAddGroup: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import toastr from 'toastr';
 import { parseValue } from '../utils';
 import { loadRecipe, createRecipe, saveRecipe } from '../actions/recipeDetailsActions';
+import { loadIngredients, loadSideDishes } from '../actions/autocompleteActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
@@ -17,6 +18,9 @@ class RecipeEditPage extends React.Component {
   }
 
   componentDidMount() {
+    this.props.loadIngredients();
+    this.props.loadSideDishes();
+
     if (this.props.slug) {
       this.props.loadRecipe(this.props.slug);
     }
@@ -137,7 +141,7 @@ class RecipeEditPage extends React.Component {
 
   render() {
     const { recipe, errors } = this.state;
-    const { isNew, isFetching, isSaving } = this.props;
+    const { isNew, isFetching, isSaving, ingredientOptions, sideDishOptions } = this.props;
 
     if (!isNew && !recipe.slug) {
       return (
@@ -151,6 +155,8 @@ class RecipeEditPage extends React.Component {
       <div className="container">
         <RecipeForm
           recipe={recipe}
+          ingredientOptions={ingredientOptions}
+          sideDishOptions={sideDishOptions}
           errors={errors}
           isNew={isNew}
           isSaving={isSaving}
@@ -172,13 +178,21 @@ RecipeEditPage.propTypes = {
   recipe: PropTypes.object,
   isFetching: PropTypes.bool,
   isSaving: PropTypes.bool,
+  ingredientOptions: PropTypes.array.isRequired,
+  sideDishOptions: PropTypes.array.isRequired,
   loadRecipe: PropTypes.func.isRequired,
   createRecipe: PropTypes.func.isRequired,
   saveRecipe: PropTypes.func.isRequired,
+  loadIngredients: PropTypes.func.isRequired,
+  loadSideDishes: PropTypes.func.isRequired,
   router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
+  const { autocomplete } = state;
+  const ingredientOptions = autocomplete.ingredients.items;
+  const sideDishOptions = autocomplete.sideDishes.items;
+
   const { slug } = ownProps.params;
 
   if (!slug) {
@@ -187,6 +201,8 @@ function mapStateToProps(state, ownProps) {
       recipe: {
         ingredients: [],
       },
+      ingredientOptions,
+      sideDishOptions,
     };
   }
 
@@ -202,6 +218,8 @@ function mapStateToProps(state, ownProps) {
     recipe,
     isFetching,
     isSaving,
+    ingredientOptions,
+    sideDishOptions,
   };
 }
 
@@ -209,4 +227,6 @@ export default connect(mapStateToProps, {
   loadRecipe,
   createRecipe,
   saveRecipe,
+  loadIngredients,
+  loadSideDishes,
 })(RecipeEditPage);

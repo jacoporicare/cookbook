@@ -48,13 +48,13 @@ router.get('/', (req, res) => {
 
 router.get('/ingredients', (req, res) => {
   Recipe.distinct('ingredients.name')
-    .then(results => res.send(results))
+    .then(results => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
     .catch(err => res.status(500).send(err));
 });
 
 router.get('/side-dishes', (req, res) => {
   Recipe.distinct('sideDish')
-    .then(results => res.send(results))
+    .then(results => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
     .catch(err => res.status(500).send(err));
 });
 

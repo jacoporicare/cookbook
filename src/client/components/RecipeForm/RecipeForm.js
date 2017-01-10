@@ -4,14 +4,27 @@ import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
 import { deleteNullOrUndefinedKeys } from '../../utils';
 
-const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAddIngredient, onAddGroup, onRemoveIngredient, onSortIngredient }) => {
+const RecipeForm = ({
+  recipe,
+  ingredientOptions,
+  sideDishOptions,
+  errors,
+  isNew,
+  isSaving,
+  onChange,
+  onSubmit,
+  onAddIngredient,
+  onAddGroup,
+  onRemoveIngredient,
+  onSortIngredient,
+}) => {
   const {
     title = '',
     preparationTime = '',
     servingCount = '',
     sideDish = '',
     directions = '',
-    ingredients = []
+    ingredients = [],
   } = deleteNullOrUndefinedKeys(recipe);
 
   const hasError = Object.keys(errors).length > 0;
@@ -98,6 +111,7 @@ const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAdd
             <legend>Ingredience</legend>
             <Ingredients
               items={ingredients}
+              ingredientOptions={ingredientOptions}
               onAdd={onAddIngredient}
               onAddGroup={onAddGroup}
               onRemove={onRemoveIngredient}
@@ -148,6 +162,8 @@ const RecipeForm = ({ recipe, errors, isNew, isSaving, onChange, onSubmit, onAdd
 
 RecipeForm.propTypes = {
   recipe: PropTypes.object.isRequired,
+  ingredientOptions: PropTypes.array.isRequired,
+  sideDishOptions: PropTypes.array.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -156,7 +172,7 @@ RecipeForm.propTypes = {
   onRemoveIngredient: PropTypes.func.isRequired,
   onSortIngredient: PropTypes.func.isRequired,
   isNew: PropTypes.bool,
-  isSaving: PropTypes.bool
+  isSaving: PropTypes.bool,
 };
 
 export default RecipeForm;

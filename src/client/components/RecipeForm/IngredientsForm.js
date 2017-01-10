@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const IngredientsForm = ({ ingredient, onChange, onAdd }) => {
+const IngredientsForm = ({ ingredient, ingredientOptions, onChange, onAdd }) => {
   const { name, amount, amountUnit } = ingredient;
 
   return (
@@ -65,6 +65,7 @@ const IngredientsForm = ({ ingredient, onChange, onAdd }) => {
 
 IngredientsForm.propTypes = {
   ingredient: PropTypes.object.isRequired,
+  ingredientOptions: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
 };

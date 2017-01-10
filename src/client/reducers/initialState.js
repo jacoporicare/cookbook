@@ -5,14 +5,24 @@ export default {
     isAuthenticated: false,
     token: null,
     user: {
-      isFetching: false
-    }
+      isFetching: false,
+    },
   },
   recipes: {
     items: [],
-    isFetching: false
+    isFetching: false,
   },
   recipeDetails: {
-    isSaving: false
-  }
+    isSaving: false,
+  },
+  autocomplete: {
+    ingredients: {
+      items: [],
+      isFetching: false,
+    },
+    sideDishes: {
+      items: [],
+      isFetching: false,
+    },
+  },
 };
