@@ -48,11 +48,12 @@ class RecipeEditPage extends React.Component {
     return errors;
   }
 
-  handleChange = (event, selectEvent) => {
+  handleChange = (event, selectEvent, targetName) => {
+    const name = targetName || event.target.name;
     const value = selectEvent ? selectEvent.newValue : event.target.value;
     const recipe = {
       ...this.state.recipe,
-      [event.target.name]: parseValue(value, event.target.type),
+      [name]: parseValue(value, event.target.type),
     };
     const errors = this.validate(recipe);
 

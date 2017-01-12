@@ -87,7 +87,7 @@ class IngredientsForm extends React.Component {
                 inputProps={{
                   name: 'name',
                   value: name,
-                  onChange,
+                  onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
                   onKeyPress: this.handleKeyPress,
                   className: 'form-control',
                   placeholder: 'Název',

@@ -136,7 +136,7 @@ class RecipeForm extends React.Component {
                     id: 'sideDish',
                     name: 'sideDish',
                     value: sideDish,
-                    onChange,
+                    onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
                     onKeyPress: this.handleKeyPress,
                     className: 'form-control',
                   }}
