@@ -20,14 +20,13 @@ class Ingredients extends React.Component {
     };
   }
 
-  handleIngredientChange = (event, { newValue, method }) => {
-    const { name } = event.target;
-    const value = method ? newValue : event.target;
+  handleIngredientChange = (event, selectEvent) => {
+    const value = selectEvent ? selectEvent.newValue : event.target.value;
 
     this.setState({
       ingredient: {
         ...this.state.ingredient,
-        [name]: parseValue(value, event.target.type),
+        [event.target.name]: parseValue(value, event.target.type),
       },
     });
   }
