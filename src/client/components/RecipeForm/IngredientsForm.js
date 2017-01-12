@@ -38,7 +38,7 @@ class IngredientsForm extends React.Component {
 
   render() {
     const { ingredientOptions } = this.state;
-    const { ingredient, onChange, onNameChange, onAdd } = this.props;
+    const { ingredient, onChange, onAdd } = this.props;
     const { name, amount, amountUnit } = ingredient;
 
     return (
