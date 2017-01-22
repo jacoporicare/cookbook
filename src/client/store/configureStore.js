@@ -5,7 +5,7 @@ import rootReducer from '../reducers';
 
 const middlewares = [
   thunk,
-  api
+  api,
 ];
 
 function configureStoreProd(initialState) {
@@ -15,12 +15,12 @@ function configureStoreProd(initialState) {
 function configureStoreDev(initialState) {
   const devMiddlewares = [
     require('redux-immutable-state-invariant')(), // eslint-disable-line global-require, import/no-extraneous-dependencies
-    ...middlewares
+    ...middlewares,
   ];
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(rootReducer, initialState, composeEnhancers(
-    applyMiddleware(...devMiddlewares)
+    applyMiddleware(...devMiddlewares),
   ));
 
   return store;

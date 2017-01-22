@@ -22,7 +22,7 @@ RecipeListItem.propTypes = {
     slug: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     preparationTime: PropTypes.number,
-    sideDish: PropTypes.string
+    sideDish: PropTypes.string,
   }).isRequired
 };
 

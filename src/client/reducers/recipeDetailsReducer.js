@@ -5,7 +5,7 @@ import {
   RECIPE_DETAIL_FAILURE,
   RECIPE_SAVE_REQUEST,
   RECIPE_SAVE_SUCCESS,
-  RECIPE_SAVE_FAILURE
+  RECIPE_SAVE_FAILURE,
 } from '../actions/recipeDetailsActions';
 
 export default function recipeDetailsReducer(state = initialState.recipeDetails, action) {
@@ -15,8 +15,8 @@ export default function recipeDetailsReducer(state = initialState.recipeDetails,
         ...state,
         [action.slug]: {
           ...state[action.slug],
-          isFetching: true
-        }
+          isFetching: true,
+        },
       };
 
     case RECIPE_DETAIL_SUCCESS:
@@ -25,8 +25,8 @@ export default function recipeDetailsReducer(state = initialState.recipeDetails,
         [action.slug]: {
           ...state[action.slug],
           isFetching: false,
-          recipe: action.response
-        }
+          recipe: action.response,
+        },
       };
 
     case RECIPE_DETAIL_FAILURE:
@@ -34,14 +34,14 @@ export default function recipeDetailsReducer(state = initialState.recipeDetails,
         ...state,
         [action.slug]: {
           ...state[action.slug],
-          isFetching: false
-        }
+          isFetching: false,
+        },
       };
 
     case RECIPE_SAVE_REQUEST:
       return {
         ...state,
-        isSaving: true
+        isSaving: true,
       };
 
     case RECIPE_SAVE_SUCCESS:
@@ -50,14 +50,14 @@ export default function recipeDetailsReducer(state = initialState.recipeDetails,
         isSaving: false,
         [action.response.slug]: {
           ...state[action.response.slug],
-          recipe: action.response
-        }
+          recipe: action.response,
+        },
       };
 
     case RECIPE_SAVE_FAILURE:
       return {
         ...state,
-        isSaving: false
+        isSaving: false,
       };
 
     default:

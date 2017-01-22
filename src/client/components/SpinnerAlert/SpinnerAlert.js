@@ -10,7 +10,7 @@ const SpinnerAlert = ({ level, text, spinner }) => (
 SpinnerAlert.propTypes = {
   level: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  spinner: PropTypes.bool
+  spinner: PropTypes.bool,
 };
 
 export default SpinnerAlert;

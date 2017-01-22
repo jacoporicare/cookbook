@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const Ingredients = ({ ingredients }) => (
   <ul className="list-group cb-ingredient-list">
-    {ingredients.map(ingredient => {
+    {ingredients.map((ingredient) => {
       const { _id, isGroup, name, amount, amountUnit } = ingredient;
 
       let className = 'list-group-item';
@@ -36,7 +36,7 @@ const Ingredients = ({ ingredients }) => (
 );
 
 Ingredients.propTypes = {
-  ingredients: PropTypes.array.isRequired
+  ingredients: PropTypes.array.isRequired,
 };
 
 export default Ingredients;

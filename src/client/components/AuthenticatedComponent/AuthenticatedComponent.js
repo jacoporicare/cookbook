@@ -29,11 +29,11 @@ export default function AuthenticatedComponent(Component) {
 
   AuthenticatedComponent.propTypes = {
     isAuthenticated: PropTypes.bool,
-    router: PropTypes.object.isRequired
+    router: PropTypes.object.isRequired,
   };
 
   const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
   });
 
   return connect(mapStateToProps)(AuthenticatedComponent);

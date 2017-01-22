@@ -14,7 +14,7 @@ class RecipeDetailPage extends React.Component {
     super(props);
 
     this.state = {
-      showDeleteModal: false
+      showDeleteModal: false,
     };
 
     this.handleDeleteShow = this.handleDeleteShow.bind(this);
@@ -28,13 +28,13 @@ class RecipeDetailPage extends React.Component {
 
   handleDeleteShow() {
     this.setState({
-      showDeleteModal: true
+      showDeleteModal: true,
     });
   }
 
   handleDeleteClose() {
     this.setState({
-      showDeleteModal: false
+      showDeleteModal: false,
     });
   }
 
@@ -62,7 +62,7 @@ class RecipeDetailPage extends React.Component {
       preparationTime,
       sideDish,
       ingredients,
-      directions
+      directions,
     } = recipe;
 
     return (
@@ -98,7 +98,7 @@ RecipeDetailPage.propTypes = {
   loadRecipe: PropTypes.func.isRequired,
   deleteRecipe: PropTypes.func.isRequired,
   hasDetail: PropTypes.bool.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -107,18 +107,18 @@ function mapStateToProps(state, ownProps) {
   const recipeDetail = recipeDetails[slug] || {};
   const {
     isFetching = true,
-    recipe = findRecipeBySlug(state, slug)
+    recipe = findRecipeBySlug(state, slug),
   } = recipeDetail;
 
   return {
     slug,
     isFetching,
     recipe,
-    hasDetail: !!recipeDetail.recipe
+    hasDetail: !!recipeDetail.recipe,
   };
 }
 
 export default connect(mapStateToProps, {
   loadRecipe,
-  deleteRecipe
+  deleteRecipe,
 })(RecipeDetailPage);

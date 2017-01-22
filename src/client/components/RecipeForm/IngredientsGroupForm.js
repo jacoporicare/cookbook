@@ -45,7 +45,7 @@ class IngredientsGroupForm extends React.Component {
 IngredientsGroupForm.propTypes = {
   group: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired
+  onAdd: PropTypes.func.isRequired,
 };
 
 export default IngredientsGroupForm;

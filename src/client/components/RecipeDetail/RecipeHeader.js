@@ -28,7 +28,7 @@ RecipeHeader.propTypes = {
   title: PropTypes.string.isRequired,
   preparationTime: PropTypes.number,
   sideDish: PropTypes.string,
-  onDeleteShow: PropTypes.func.isRequired
+  onDeleteShow: PropTypes.func.isRequired,
 };
 
 export default RecipeHeader;

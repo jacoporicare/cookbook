@@ -72,7 +72,7 @@ const IngredientsList = ({ items, onRemove, onSort }) => (
 IngredientsList.propTypes = {
   items: PropTypes.array.isRequired,
   onRemove: PropTypes.func.isRequired,
-  onSort: PropTypes.func.isRequired
+  onSort: PropTypes.func.isRequired,
 };
 
 export default IngredientsList;

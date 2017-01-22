@@ -13,7 +13,7 @@ class Navbar extends React.Component {
   }
 
   handleCollapseToggle = () => {
-    this.setState({ collapsed: !this.state.collapsed });
+    this.setState(({ collapsed }) => ({ collapsed: !collapsed }));
   }
 
   render() {

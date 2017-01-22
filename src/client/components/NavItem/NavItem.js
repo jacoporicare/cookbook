@@ -17,11 +17,11 @@ NavItem.propTypes = {
   onlyActiveOnIndex: PropTypes.bool,
   to: PropTypes.string.isRequired,
   activeClassName: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 NavItem.contextTypes = {
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
 };
 
 export default NavItem;

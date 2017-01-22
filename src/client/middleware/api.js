@@ -5,7 +5,7 @@ export const CALL_API = Symbol('Call API');
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
-export default store => next => action => {
+export default store => next => (action) => {
   const callAPI = action[CALL_API];
   if (typeof callAPI === 'undefined') {
     return next(action);
@@ -15,7 +15,7 @@ export default store => next => action => {
     method = 'get',
     url,
     data,
-    types
+    types,
   } = callAPI;
 
   if (typeof url !== 'string') {
@@ -28,10 +28,10 @@ export default store => next => action => {
     throw new Error('Expected action types to be strings.');
   }
 
-  const actionWith = data => {
+  const actionWith = (data) => {
     const finalAction = {
       ...action,
-      ...data
+      ...data,
     };
     delete finalAction[CALL_API];
     return finalAction;
@@ -50,12 +50,12 @@ export default store => next => action => {
     .then(response => next(actionWith({
       type: successType,
       isSuccess: true,
-      response: response.data
+      response: response.data,
     })))
     .catch(error => next(actionWith({
       type: failureType,
       isError: true,
       response: error.response,
-      errorMessage: error.message
+      errorMessage: error.message,
     })));
 };

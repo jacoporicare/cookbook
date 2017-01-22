@@ -16,9 +16,9 @@ class LogoutPage extends React.Component {
 }
 
 LogoutPage.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
 };
 
 export default connect(null, {
-  logout
+  logout,
 })(LogoutPage);

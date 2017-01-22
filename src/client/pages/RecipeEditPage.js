@@ -51,19 +51,20 @@ class RecipeEditPage extends React.Component {
   handleChange = (event, selectEvent, targetName) => {
     const name = targetName || event.target.name;
     const value = selectEvent ? selectEvent.newValue : event.target.value;
-    const recipe = {
-      ...this.state.recipe,
-      [name]: parseValue(value, event.target.type),
-    };
-    const errors = this.validate(recipe);
 
-    this.setState({ recipe, errors });
+    this.setState((prevState) => {
+      const recipe = {
+        ...prevState.recipe,
+        [name]: parseValue(value, event.target.type),
+      };
+      const errors = this.validate(recipe);
+
+      return { recipe, errors };
+    });
   }
 
   handleAddIngredient = (event, ingredient) => {
-    const { recipe } = this.state;
-
-    this.setState({
+    this.setState(({ recipe }) => ({
       recipe: {
         ...recipe,
         ingredients: [
@@ -71,13 +72,11 @@ class RecipeEditPage extends React.Component {
           ingredient,
         ],
       },
-    });
+    }));
   }
 
   handleAddGroup = (event, group) => {
-    const { recipe } = this.state;
-
-    this.setState({
+    this.setState(({ recipe }) => ({
       recipe: {
         ...recipe,
         ingredients: [
@@ -88,35 +87,33 @@ class RecipeEditPage extends React.Component {
           },
         ],
       },
-    });
+    }));
   }
 
   handleRemoveIngredient = (event, index) => {
     event.preventDefault();
 
-    const { recipe } = this.state;
-
-    this.setState({
+    this.setState(({ recipe }) => ({
       recipe: {
         ...recipe,
         ingredients: [
           ...recipe.ingredients.filter((e, i) => i !== index),
         ],
       },
-    });
+    }));
   }
 
   handleSortIngredient = ({ oldIndex, newIndex }) => {
-    const { recipe } = this.state;
+    this.setState(({ recipe }) => {
+      const ingredients = [...recipe.ingredients];
+      ingredients.splice(newIndex, 0, ingredients.splice(oldIndex, 1)[0]);
 
-    const ingredients = [...recipe.ingredients];
-    ingredients.splice(newIndex, 0, ingredients.splice(oldIndex, 1)[0]);
-
-    this.setState({
-      recipe: {
-        ...recipe,
-        ingredients,
-      },
+      return {
+        recipe: {
+          ...recipe,
+          ingredients,
+        },
+      };
     });
   }
 

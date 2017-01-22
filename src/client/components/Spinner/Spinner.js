@@ -6,7 +6,7 @@ class Spinner extends React.Component {
     super(props);
 
     this.state = {
-      visible: (props.delay < 1)
+      visible: (props.delay < 1),
     };
   }
 
@@ -43,7 +43,7 @@ class Spinner extends React.Component {
 
 Spinner.propTypes = {
   delay: PropTypes.number,
-  overlay: PropTypes.bool
+  overlay: PropTypes.bool,
 };
 
 export default Spinner;

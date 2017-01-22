@@ -26,7 +26,7 @@ const RecipeDetail = ({ ingredients, directions }) => (
 
 RecipeDetail.propTypes = {
   ingredients: PropTypes.array,
-  directions: PropTypes.string
+  directions: PropTypes.string,
 };
 
 export default RecipeDetail;

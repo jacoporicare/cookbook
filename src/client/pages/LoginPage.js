@@ -11,7 +11,7 @@ class LoginPage extends React.Component {
     this.state = {
       username: '',
       password: '',
-      rememberMe: true
+      rememberMe: true,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,8 +21,7 @@ class LoginPage extends React.Component {
   handleChange(event) {
     const { name, value, type, checked } = event.target;
     this.setState({
-      ...this.state,
-      [name]: (type === 'checkbox' ? checked : value)
+      [name]: (type === 'checkbox' ? checked : value),
     });
   }
 
@@ -31,7 +30,7 @@ class LoginPage extends React.Component {
     const { username, password, rememberMe } = this.state;
 
     this.props.login(username, password)
-      .then(action => {
+      .then((action) => {
         if (action.isSuccess) {
           const cookieOpts = { path: '/' };
           if (rememberMe) {
@@ -66,15 +65,15 @@ class LoginPage extends React.Component {
 LoginPage.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   login: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    isSubmitting: state.auth.isSubmitting
+    isSubmitting: state.auth.isSubmitting,
   };
 }
 
 export default connect(mapStateToProps, {
-  login
+  login,
 })(LoginPage);

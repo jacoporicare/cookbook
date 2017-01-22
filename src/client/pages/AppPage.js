@@ -16,7 +16,7 @@ class AppPage extends React.Component {
   componentWillReceiveProps(nextProps) {
     const {
       errorMessage: oldErrorMessage,
-      resetErrorMessage
+      resetErrorMessage,
     } = this.props;
     const { errorMessage } = nextProps;
 
@@ -54,21 +54,21 @@ AppPage.propTypes = {
   isFetchingUser: PropTypes.bool,
   errorMessage: PropTypes.string,
   resetErrorMessage: PropTypes.func.isRequired,
-  getCurrentUser: PropTypes.func.isRequired
+  getCurrentUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { errorMessage, auth } = state;
 
   return {
     errorMessage,
     isAuthenticated: auth.isAuthenticated,
     userName: auth.user.name,
-    isFetchingUser: auth.user.isFetching
+    isFetchingUser: auth.user.isFetching,
   };
 };
 
 export default connect(mapStateToProps, {
   resetErrorMessage,
-  getCurrentUser
+  getCurrentUser,
 })(AppPage);

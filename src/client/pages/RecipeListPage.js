@@ -40,14 +40,14 @@ class RecipeListPage extends React.Component {
 RecipeListPage.propTypes = {
   recipes: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  loadRecipes: PropTypes.func.isRequired
+  loadRecipes: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   recipes: state.recipes.items,
-  isFetching: state.recipes.isFetching
+  isFetching: state.recipes.isFetching,
 });
 
 export default connect(mapStateToProps, {
-  loadRecipes
+  loadRecipes,
 })(RecipeListPage);

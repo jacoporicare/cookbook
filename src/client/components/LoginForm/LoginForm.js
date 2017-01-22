@@ -59,7 +59,7 @@ LoginForm.propTypes = {
   rememberMe: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

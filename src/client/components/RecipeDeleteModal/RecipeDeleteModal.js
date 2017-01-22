@@ -20,7 +20,7 @@ RecipeDeleteModal.propTypes = {
   show: PropTypes.bool,
   recipeTitle: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default RecipeDeleteModal;
