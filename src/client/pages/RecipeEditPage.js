@@ -48,6 +48,10 @@ class RecipeEditPage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.onbeforeunload = undefined;
+  }
+
   checkChanged = (recipe) => {
     const changed = !_.isEqual(recipe, this.props.recipe);
 
