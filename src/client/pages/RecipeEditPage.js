@@ -1,11 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import toastr from 'toastr';
 import { parseValue } from '../utils';
 import { loadRecipe, createRecipe, saveRecipe } from '../actions/recipeDetailsActions';
 import { loadIngredients, loadSideDishes } from '../actions/autocompleteActions';
 import RecipeForm from '../components/RecipeForm/RecipeForm';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
+
+const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
 class RecipeEditPage extends React.Component {
   constructor(props) {
@@ -14,7 +17,15 @@ class RecipeEditPage extends React.Component {
     this.state = {
       recipe: { ...this.props.recipe },
       errors: {},
+      changed: false,
     };
+  }
+
+  componentWillMount() {
+    this.props.router.setRouteLeaveHook(
+      this.props.route,
+      this.routerWillLeave,
+    );
   }
 
   componentDidMount() {
@@ -37,6 +48,23 @@ class RecipeEditPage extends React.Component {
     }
   }
 
+  routerWillLeave = () => (this.state.changed ? confirmMsg : undefined);
+
+  checkChanged = (recipe) => {
+    const changed = !_.isEqual(recipe, this.props.recipe);
+
+    if (changed) {
+      window.onbeforeunload = (e) => {
+        e.returnValue = confirmMsg; // eslint-disable-line no-param-reassign
+        return confirmMsg;
+      };
+    } else {
+      window.onbeforeunload = undefined;
+    }
+
+    return changed;
+  }
+
   validate(recipe) {
     const { title } = recipe;
     const errors = {};
@@ -53,32 +81,40 @@ class RecipeEditPage extends React.Component {
     const value = selectEvent ? selectEvent.newValue : event.target.value;
     const type = event.target.type;
 
-    this.setState((prevState) => {
-      const recipe = {
-        ...prevState.recipe,
+    this.setState(({ recipe }) => {
+      const newRecipe = {
+        ...recipe,
         [name]: parseValue(value, type),
       };
-      const errors = this.validate(recipe);
 
-      return { recipe, errors };
+      return {
+        recipe: newRecipe,
+        errors: this.validate(newRecipe),
+        changed: this.checkChanged(newRecipe),
+      };
     });
   }
 
   handleAddIngredient = (event, ingredient) => {
-    this.setState(({ recipe }) => ({
-      recipe: {
+    this.setState(({ recipe }) => {
+      const newRecipe = {
         ...recipe,
         ingredients: [
           ...recipe.ingredients,
           ingredient,
         ],
-      },
-    }));
+      };
+
+      return {
+        recipe: newRecipe,
+        changed: this.checkChanged(newRecipe),
+      };
+    });
   }
 
   handleAddGroup = (event, group) => {
-    this.setState(({ recipe }) => ({
-      recipe: {
+    this.setState(({ recipe }) => {
+      const newRecipe = {
         ...recipe,
         ingredients: [
           ...recipe.ingredients,
@@ -87,21 +123,31 @@ class RecipeEditPage extends React.Component {
             isGroup: true,
           },
         ],
-      },
-    }));
+      };
+
+      return {
+        recipe: newRecipe,
+        changed: this.checkChanged(newRecipe),
+      };
+    });
   }
 
   handleRemoveIngredient = (event, index) => {
     event.preventDefault();
 
-    this.setState(({ recipe }) => ({
-      recipe: {
+    this.setState(({ recipe }) => {
+      const newRecipe = {
         ...recipe,
         ingredients: [
           ...recipe.ingredients.filter((e, i) => i !== index),
         ],
-      },
-    }));
+      };
+
+      return {
+        recipe: newRecipe,
+        changed: this.checkChanged(newRecipe),
+      };
+    });
   }
 
   handleSortIngredient = ({ oldIndex, newIndex }) => {
@@ -109,11 +155,14 @@ class RecipeEditPage extends React.Component {
       const ingredients = [...recipe.ingredients];
       ingredients.splice(newIndex, 0, ingredients.splice(oldIndex, 1)[0]);
 
+      const newRecipe = {
+        ...recipe,
+        ingredients,
+      };
+
       return {
-        recipe: {
-          ...recipe,
-          ingredients,
-        },
+        recipe: newRecipe,
+        changed: this.checkChanged(newRecipe),
       };
     });
   }
@@ -135,7 +184,7 @@ class RecipeEditPage extends React.Component {
   }
 
   render() {
-    const { recipe, errors } = this.state;
+    const { recipe, errors, changed } = this.state;
     const { isNew, isFetching, isSaving, ingredientOptions, sideDishOptions } = this.props;
 
     if (!isNew && !recipe.slug) {
@@ -153,6 +202,7 @@ class RecipeEditPage extends React.Component {
           ingredientOptions={ingredientOptions}
           sideDishOptions={sideDishOptions}
           errors={errors}
+          changed={changed}
           isNew={isNew}
           isSaving={isSaving}
           onChange={this.handleChange}
@@ -181,6 +231,7 @@ RecipeEditPage.propTypes = {
   loadIngredients: PropTypes.func.isRequired,
   loadSideDishes: PropTypes.func.isRequired,
   router: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, ownProps) {

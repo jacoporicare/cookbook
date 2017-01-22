@@ -41,6 +41,7 @@ class RecipeForm extends React.Component {
       recipe,
       ingredientOptions,
       errors,
+      changed,
       isNew,
       isSaving,
       onChange,
@@ -69,7 +70,11 @@ class RecipeForm extends React.Component {
         <h1 className="page-header clearfix">
           {title || (isNew ? 'Nový recept' : 'Název receptu')}
           <span className="pull-right">
-            <button type="submit" className="btn btn-success" disabled={!title || hasError || isSaving}>
+            <button
+              type="submit"
+              className="btn btn-success"
+              disabled={!title || hasError || isSaving || !changed}
+            >
               <i className="fa fa-save" />{' '}
               {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
             </button>
@@ -183,7 +188,11 @@ class RecipeForm extends React.Component {
             </fieldset>
 
             <p className="text-right">
-              <button type="submit" className="btn btn-success btn-lg" disabled={!title || hasError || isSaving}>
+              <button
+                type="submit"
+                className="btn btn-success btn-lg"
+                disabled={!title || hasError || isSaving || !changed}
+              >
                 <i className="fa fa-save" />{' '}
                 {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
               </button>
@@ -206,6 +215,7 @@ RecipeForm.propTypes = {
   ingredientOptions: PropTypes.array.isRequired,
   sideDishOptions: PropTypes.array.isRequired,
   errors: PropTypes.object.isRequired,
+  changed: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onAddIngredient: PropTypes.func.isRequired,
