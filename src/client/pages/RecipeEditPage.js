@@ -24,7 +24,7 @@ class RecipeEditPage extends React.Component {
   componentWillMount() {
     this.props.router.setRouteLeaveHook(
       this.props.route,
-      this.routerWillLeave,
+      () => (this.state.changed ? confirmMsg : undefined),
     );
   }
 
@@ -47,8 +47,6 @@ class RecipeEditPage extends React.Component {
       });
     }
   }
-
-  routerWillLeave = () => (this.state.changed ? confirmMsg : undefined);
 
   checkChanged = (recipe) => {
     const changed = !_.isEqual(recipe, this.props.recipe);
