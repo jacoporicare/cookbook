@@ -14,6 +14,10 @@ class RecipeForm extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.titleInput.focus();
+  }
+
   handleSuggestionsFetchRequested = ({ value }) => {
     if (value) {
       const valueLowerCase = value.toLowerCase();
@@ -84,6 +88,7 @@ class RecipeForm extends React.Component {
         <fieldset>
           <div className={`form-group ${errors.title ? 'has-error' : ''}`}>
             <input
+              ref={(titleInput) => { this.titleInput = titleInput; }}
               type="text"
               name="title"
               value={title}
