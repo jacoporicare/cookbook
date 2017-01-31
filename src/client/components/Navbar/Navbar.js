@@ -21,7 +21,7 @@ class Navbar extends React.Component {
     const { collapsed } = this.state;
 
     return (
-      <div className="navbar navbar-default">
+      <div className="navbar navbar-default navbar-static-top">
         <div className="container">
 
           <div className="navbar-header">
