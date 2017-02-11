@@ -17,8 +17,8 @@ const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }) 
     </h1>
 
     <ul className="cb-info-list">
-      {preparationTime > 0 && <li><b>Doba přípravy:</b> {preparationTime} min</li>}
-      {!!sideDish && <li><b>Příloha:</b> {sideDish}</li>}
+      {preparationTime > 0 && <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
+      {!!sideDish && <li><i className="fa fa-spoon" /> {sideDish}</li>}
     </ul>
   </div>
 );

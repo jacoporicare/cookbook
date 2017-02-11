@@ -5,15 +5,15 @@ const RecipeListItem = ({ recipe }) => {
   const { slug, title, preparationTime, sideDish } = recipe;
 
   return (
-    <div className="col-lg-4 col-md-6 recipe-container">
-      <Link to={`/recept/${slug}`} className="recipe">
-        <h4 className="text-primary" title={title}>{title}</h4>
+    <Link to={`/recept/${slug}`} className="recipe">
+      <h4 className="text-primary">{title}</h4>
+      {(preparationTime > 0 || !!sideDish) &&
         <ul className="cb-info-list text-muted">
-          {preparationTime > 0 && <li><b>Doba přípravy:</b> {preparationTime} min</li>}
-          {!!sideDish && <li title={sideDish}><b>Příloha:</b> {sideDish}</li>}
+          {preparationTime > 0 && <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
+          {!!sideDish && <li><i className="fa fa-spoon" /> {sideDish}</li>}
         </ul>
-      </Link>
-    </div>
+      }
+    </Link>
   );
 };
 
@@ -23,7 +23,7 @@ RecipeListItem.propTypes = {
     title: PropTypes.string.isRequired,
     preparationTime: PropTypes.number,
     sideDish: PropTypes.string,
-  }).isRequired
+  }).isRequired,
 };
 
 export default RecipeListItem;

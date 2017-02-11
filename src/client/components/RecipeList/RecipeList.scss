@@ -1,35 +1,42 @@
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
-$cb-recipe-border-color: #eee;
 $cb-recipe-spacing: 15px;
-$cb-recipe-height: 86px;
+$cb-recipe-border-color: #f0f0f0;
 
 .cb-recipes {
-  .recipe-container {
-    margin-bottom: $cb-recipe-spacing;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
 
   .recipe {
     display: block;
-    height: $cb-recipe-height;
-    border: 1px solid $cb-recipe-border-color;
-    border-radius: $border-radius-base;
-    box-shadow: 1px 1px 2px $cb-recipe-border-color;
+    flex: 0 0 100%;
+    border-radius: 2px;
+    box-shadow: 0 0 12px 4px $cb-recipe-border-color;
+    margin-bottom: $cb-recipe-spacing;
     padding: $cb-recipe-spacing;
     text-decoration: none;
 
+    @media (min-width: $screen-sm-min) {
+      flex-basis: 49%;
+    }
+
+    @media (min-width: $screen-md-min) {
+      flex-basis: 32%;
+    }
+
     &:hover {
-      border-color: darken($cb-recipe-border-color, 20%);
-      box-shadow: 1px 1px 2px darken($cb-recipe-border-color, 20%);
+      box-shadow: 0 0 12px 4px darken($cb-recipe-border-color, 10%);
     }
 
     h4 {
-      margin-top: 0;
+      margin: 0;
       font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: $line-height-base;
+    }
+
+    .cb-info-list {
+      margin-top: 1em;
     }
   }
 }
