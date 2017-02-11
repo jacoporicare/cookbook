@@ -10,3 +10,5 @@ services:
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=zradelnik.jakubricar.cz
+      - LETSENCRYPT_HOST=zradelnik.jakubricar.cz
+      - LETSENCRYPT_EMAIL=***REMOVED***
