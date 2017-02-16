@@ -19,12 +19,14 @@ class RecipeEditPage extends React.Component {
       errors: {},
       changed: false,
     };
+
+    this.saved = false;
   }
 
   componentWillMount() {
     this.props.router.setRouteLeaveHook(
       this.props.route,
-      () => (this.state.changed ? confirmMsg : undefined),
+      () => (this.state.changed && !this.saved ? confirmMsg : undefined),
     );
   }
 
@@ -138,11 +140,12 @@ class RecipeEditPage extends React.Component {
     event.preventDefault();
 
     this.setState(({ recipe }) => {
+      const ingredients = [...recipe.ingredients];
+      ingredients.splice(index, 1);
+
       const newRecipe = {
         ...recipe,
-        ingredients: [
-          ...recipe.ingredients.filter((e, i) => i !== index),
-        ],
+        ingredients,
       };
 
       return {
@@ -171,16 +174,18 @@ class RecipeEditPage extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const promise = this.props.isNew ?
-      this.props.createRecipe(this.state.recipe) :
-      this.props.saveRecipe(this.state.recipe);
 
+    const { recipe } = this.state;
+    const { isNew, createRecipe, saveRecipe } = this.props;
+
+    const promise = (isNew ? createRecipe(recipe) : saveRecipe(recipe));
     promise.then(action => this.handleSave(action));
   }
 
   handleSave(action) {
     if (action.isSuccess) {
       toastr.success('Recept úspěšně uložen');
+      this.saved = true;
       this.props.router.push(`/recept/${action.response.slug}`);
     }
   }
