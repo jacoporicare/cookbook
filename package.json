@@ -11,7 +11,8 @@
     "build:server": "babel src/server -d dist",
     "build:copy": "shx cp package.json Dockerfile dist",
     "build:webpack": "webpack --progress --colors --config webpack.prod.js",
-    "clean": "shx rm -rf dist"
+    "clean": "shx rm -rf dist",
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.15.2",
@@ -47,6 +48,7 @@
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.7",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-react-remove-prop-types": "^0.2.10",
@@ -65,10 +67,12 @@
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.24.0",
     "imports-loader": "^0.6.5",
+    "jest": "^18.1.0",
     "node-sass": "^3.10.1",
     "nodemon": "^1.11.0",
     "npm-run-all": "^3.1.1",
     "postcss-loader": "^1.1.1",
+    "react-test-renderer": "^15.4.2",
     "redux-immutable-state-invariant": "^1.2.4",
     "sass-loader": "^4.0.2",
     "shx": "^0.1.4",
