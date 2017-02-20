@@ -5,54 +5,59 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    'polyfills': './src/client/polyfills.js',
-    'vendor': './src/client/vendor.js',
-    'app': './src/client/index.js'
+    vendor: './src/client/vendor.js',
+    app: './src/client/index.js',
   },
 
   resolve: {
-    extension: ['', '.js', '.jsx']
+    extension: ['', '.js', '.jsx'],
   },
 
   module: {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel'
+      loader: 'babel',
     }, {
       test: /\.html$/,
-      loader: 'html'
+      loader: 'html',
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('style', [
         'css?sourceMap',
         'postcss',
-        'sass?sourceMap'
-      ])
+        'sass?sourceMap',
+      ]),
     }, {
       test: /\.css$/,
       loader: ExtractTextPlugin.extract('style', [
         'css?sourceMap',
-        'postcss'
-      ])
+        'postcss',
+      ]),
     }, {
       test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000'
-    }]
+      loader: 'url?limit=10000',
+    }],
   },
 
   postcss: [autoprefixer({
-    browsers: ['last 3 versions']
+    browsers: ['last 3 versions'],
   })],
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'polyfills']
+      name: 'vendor',
+      minChunks: Infinity,
     }),
 
     new HtmlWebpackPlugin({
       template: './src/client/index.html',
-      chunksSortMode: 'dependency'
-    })
-  ]
+    }),
+
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
+  ],
 };

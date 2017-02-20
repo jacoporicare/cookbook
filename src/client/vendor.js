@@ -1,4 +1,5 @@
 import 'axios';
+import 'babel-polyfill';
 import 'jquery';
 import 'lodash';
 import 'react';
