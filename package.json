@@ -12,7 +12,8 @@
     "build:copy": "shx cp package.json Dockerfile dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress --colors --config webpack.prod.js",
     "clean": "shx rm -rf dist",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "axios": "^0.15.2",
@@ -83,5 +84,10 @@
     "webpack-dev-server": "^1.16.2",
     "webpack-md5-hash": "0.0.5",
     "webpack-merge": "^0.15.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|scss|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js"
+    }
   }
 }

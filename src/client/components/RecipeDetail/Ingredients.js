@@ -10,25 +10,19 @@ const Ingredients = ({ ingredients }) => (
         className += ' list-group-item-warning';
       }
 
-      let body;
-      if (!isGroup) {
-        body = (
-          <div className="row">
-            <div className="col-xs-3 text-right">
-              {(amount || amountUnit) &&
-                <b>{amount}&nbsp;{amountUnit}</b>
-              }
-            </div>
-            <div className="col-xs-9">{name}</div>
-          </div>
-        );
-      } else {
-        body = <b>{name}</b>;
-      }
-
       return (
         <li key={_id} className={className}>
-          {body}
+          {isGroup ?
+            <b>{name}</b> :
+            <div className="row">
+              <div className="col-xs-3 text-right">
+                {(amount || amountUnit) &&
+                  <b>{amount}&nbsp;{amountUnit}</b>
+                }
+              </div>
+              <div className="col-xs-9">{name}</div>
+            </div>
+          }
         </li>
       );
     })}
