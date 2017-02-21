@@ -16,29 +16,25 @@ class RecipeDetailPage extends React.Component {
     this.state = {
       showDeleteModal: false,
     };
-
-    this.handleDeleteShow = this.handleDeleteShow.bind(this);
-    this.handleDeleteClose = this.handleDeleteClose.bind(this);
-    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
   }
 
   componentDidMount() {
     this.props.loadRecipe(this.props.slug);
   }
 
-  handleDeleteShow() {
+  handleDeleteShow = () => {
     this.setState({
       showDeleteModal: true,
     });
   }
 
-  handleDeleteClose() {
+  handleDeleteClose = () => {
     this.setState({
       showDeleteModal: false,
     });
   }
 
-  handleDeleteConfirm() {
+  handleDeleteConfirm = () => {
     this.props.deleteRecipe(this.props.recipe._id);
     toastr.success('Recept úspěšně smazán');
     this.props.router.push('/');

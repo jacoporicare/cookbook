@@ -13,19 +13,16 @@ class LoginPage extends React.Component {
       password: '',
       rememberMe: true,
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     this.setState({
       [name]: (type === 'checkbox' ? checked : value),
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
     const { username, password, rememberMe } = this.state;
 
