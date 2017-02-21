@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import Ingredients from '../../../../src/client/components/RecipeDetail/Ingredients';
 
-test('Recipe detail ingredients renders correctly', () => {
+test('Recipe detail <Ingredients /> renders correctly', () => {
   const ingredients = [
     {
       _id: 1,

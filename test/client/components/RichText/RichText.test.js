@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import RichText from '../../../../src/client/components/RichText/RichText';
 
-test('Rich Text renders correctly', () => {
+test('<RichText /> converts formatted text to HTML', () => {
   const text = `*bold* is *bold*
 *) list
 *) list2
