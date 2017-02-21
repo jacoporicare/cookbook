@@ -1,4 +1,4 @@
-exports[`test <RecipeList /> renders correctly 1`] = `
+exports[`<RecipeList /> renders recipes 1`] = `
 <div
   className="cb-recipes">
   <a

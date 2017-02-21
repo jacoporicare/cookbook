@@ -1,4 +1,4 @@
-exports[`test Recipe detail <Ingredients /> renders correctly 1`] = `
+exports[`<Ingredients /> (RecipeDetail) renders list of ingredients and a group 1`] = `
 <ul
   className="list-group cb-ingredient-list">
   <li

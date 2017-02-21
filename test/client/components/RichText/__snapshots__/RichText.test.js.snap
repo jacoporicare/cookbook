@@ -1,4 +1,4 @@
-exports[`test <RichText /> converts formatted text to HTML 1`] = `
+exports[`<RichText /> converts formatted text to HTML 1`] = `
 <div
   dangerouslySetInnerHTML={
     Object {
