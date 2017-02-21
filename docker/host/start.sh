@@ -5,5 +5,12 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-docker-compose -f "docker-compose.yml" -f "docker-compose.$1.yml" pull
-docker-compose -f "docker-compose.yml" -f "docker-compose.$1.yml" up -d
+docker-compose \
+  -f "${BASH_SOURCE%/*}/docker-compose.yml" \
+  -f "${BASH_SOURCE%/*}/docker-compose.$1.yml" \
+  pull
+
+docker-compose \
+  -f "${BASH_SOURCE%/*}/docker-compose.yml" \
+  -f "${BASH_SOURCE%/*}/docker-compose.$1.yml" \
+  up -d

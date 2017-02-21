@@ -2,7 +2,7 @@ version: '2'
 
 services:
   db:
-    image: mongo:latest
+    image: mongo:3.4
     container_name: cookbook-db
     networks:
       - cookbook

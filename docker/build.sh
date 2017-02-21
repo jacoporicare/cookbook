@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-cd ..
+cd ${BASH_SOURCE%/*}/../
 npm run build
 
 cd dist

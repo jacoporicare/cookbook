@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-ssh ricar@zradelnik.jakubricar.cz "cd cookbook && ./start.sh $1"
+ssh ricar@zradelnik.jakubricar.cz "./cookbook/start.sh $1"
