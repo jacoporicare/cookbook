@@ -3,10 +3,11 @@ import { checkUser, signToken } from '../../auth/auth.service';
 
 const router = Router();
 
-router.use('/local', (req, res, next) => {
+router.use('/local', (req, res) => {
   const user = checkUser(req.body.username, req.body.password);
   if (!user) {
-    return res.status(401).json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
+    res.status(401).json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
+    return;
   }
 
   res.json({
@@ -14,8 +15,8 @@ router.use('/local', (req, res, next) => {
     user: {
       id: user.id,
       username: user.username,
-      name: user.name
-    }
+      name: user.name,
+    },
   });
 });
 

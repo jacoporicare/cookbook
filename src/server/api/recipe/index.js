@@ -11,7 +11,7 @@ function getError(err) {
   if (err.code === 11000) {
     return {
       code: 11000,
-      message: 'Název již existuje'
+      message: 'Název již existuje',
     };
   }
 
@@ -35,8 +35,8 @@ router.get('/', (req, res) => {
       $or: [
         { title: { $in: q } },
         { sideDish: { $in: q } },
-        { 'ingredients.name': { $in: q } }
-      ]
+        { 'ingredients.name': { $in: q } },
+      ],
     });
   }
 
@@ -62,11 +62,11 @@ router.get('/side-dishes', (req, res) => {
 
 router.get('/fix-slugs', (req, res) => {
   Recipe.find()
-    .then(results => {
-      results.forEach(recipe => {
+    .then((results) => {
+      results.forEach((recipe) => {
         recipe.slug = toSlug(recipe.title);
         Recipe.findOne({ slug: recipe.slug })
-          .then(result => {
+          .then((result) => {
             if (result && recipe.slug === result.slug && !recipe._id.equals(result._id)) {
               recipe.slug = `${recipe.slug}_${recipe._id}`;
             }
@@ -82,13 +82,15 @@ router.get('/fix-slugs', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   Recipe.findOne({ slug: id })
-    .then(result => {
+    .then((result) => {
       if (result) {
-        return res.send(result);
+        res.send(result);
+        return;
       }
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).end();
+        res.status(404).end();
+        return;
       }
 
       Recipe.findById(id)

@@ -7,7 +7,7 @@ router.get('/me', auth(), (req, res) => {
   res.json({
     id: req.user.id,
     username: req.user.username,
-    name: req.user.name
+    name: req.user.name,
   });
 });
 

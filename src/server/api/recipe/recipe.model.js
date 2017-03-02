@@ -13,8 +13,8 @@ const RecipeSchema = new mongoose.Schema({
     amount: Number,
     amountUnit: String,
     name: String,
-    isGroup: Boolean
-  }]
+    isGroup: Boolean,
+  }],
 });
 
 /**
@@ -22,7 +22,7 @@ const RecipeSchema = new mongoose.Schema({
  */
 
 RecipeSchema.virtual('creationDate')
-  .get(function () {
+  .get(function getCreationDate() {
     return this._id.getTimestamp();
   });
 
