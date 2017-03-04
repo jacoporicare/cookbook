@@ -5,8 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const commonConfig = require('./webpack.common');
 
 module.exports = webpackMerge(commonConfig, {
-  devtool: '#cheap-module-eval-source-map',
-  debug: true,
+  devtool: 'eval-source-map',
 
   output: {
     path: path.join(__dirname, 'dist'),
@@ -15,8 +14,8 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('[name].css', {
+    new ExtractTextPlugin({
+      filename: '[name].css',
       disable: true,
     }),
   ],

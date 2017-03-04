@@ -4,6 +4,7 @@
       "targets": {
         "browsers": ["last 3 versions", "> 5%", "safari >= 7"]
       },
+      "modules": false,
       "useBuiltIns": true
     }],
     "react",
@@ -13,6 +14,9 @@
     "lodash"
   ],
   "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    },
     "production": {
       "plugins": [
         "transform-react-remove-prop-types"

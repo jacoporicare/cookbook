@@ -9,42 +9,57 @@ module.exports = {
     app: './src/client/index.js',
   },
 
-  resolve: {
-    extension: ['', '.js', '.jsx'],
-  },
-
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: 'babel',
-    }, {
-      test: /\.html$/,
-      loader: 'html',
-    }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', [
-        'css?sourceMap',
-        'postcss',
-        'sass?sourceMap',
-      ]),
-    }, {
-      test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', [
-        'css?sourceMap',
-        'postcss',
-      ]),
-    }, {
-      test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000',
-    }],
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader?sourceMap',
+            'postcss-loader',
+            'sass-loader?sourceMap',
+          ],
+        }),
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader?sourceMap',
+            'postcss-loader',
+          ],
+        }),
+      },
+      {
+        test: /\.(png|jpe?g|gif|ico|woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=10000',
+      },
+    ],
   },
-
-  postcss: [autoprefixer({
-    browsers: ['last 3 versions'],
-  })],
 
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        context: '/',
+        postcss: [
+          autoprefixer({
+            browsers: ['last 3 versions'],
+          }),
+        ],
+      },
+    }),
+
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
