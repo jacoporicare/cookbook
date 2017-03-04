@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-./build.sh latest
-./push.sh latest
-./update.sh prod
+./${BASH_SOURCE%/*}/build.sh latest
+./${BASH_SOURCE%/*}/push.sh latest
+./${BASH_SOURCE%/*}/update.sh prod
