@@ -18,8 +18,11 @@ module.exports = webpackMerge(commonConfig, {
   plugins: [
     new WebpackMd5Hash(),
 
-    new webpack.optimize.UglifyJsPlugin({
+    new webpack.LoaderOptionsPlugin({
       minimize: true,
+    }),
+
+    new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
     }),
 
