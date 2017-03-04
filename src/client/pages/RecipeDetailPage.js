@@ -97,7 +97,7 @@ RecipeDetailPage.propTypes = {
   router: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   const { recipeDetails } = state;
   const { slug } = ownProps.params;
   const recipeDetail = recipeDetails[slug] || {};
@@ -112,9 +112,11 @@ function mapStateToProps(state, ownProps) {
     recipe,
     hasDetail: !!recipeDetail.recipe,
   };
-}
+};
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   loadRecipe,
   deleteRecipe,
-})(RecipeDetailPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecipeDetailPage);

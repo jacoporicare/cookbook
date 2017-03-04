@@ -19,6 +19,8 @@ LogoutPage.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
-export default connect(null, {
+const mapDispatchToProps = {
   logout,
-})(LogoutPage);
+};
+
+export default connect(null, mapDispatchToProps)(LogoutPage);

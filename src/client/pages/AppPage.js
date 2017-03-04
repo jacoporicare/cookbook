@@ -57,18 +57,16 @@ AppPage.propTypes = {
   getCurrentUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const { errorMessage, auth } = state;
+const mapStateToProps = state => ({
+  errorMessage: state.errorMessage,
+  isAuthenticated: state.auth.isAuthenticated,
+  userName: state.auth.user.name,
+  isFetchingUser: state.auth.user.isFetching,
+});
 
-  return {
-    errorMessage,
-    isAuthenticated: auth.isAuthenticated,
-    userName: auth.user.name,
-    isFetchingUser: auth.user.isFetching,
-  };
-};
-
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   resetErrorMessage,
   getCurrentUser,
-})(AppPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppPage);

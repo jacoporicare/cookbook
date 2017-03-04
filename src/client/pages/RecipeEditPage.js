@@ -241,7 +241,7 @@ RecipeEditPage.propTypes = {
   route: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   const { autocomplete } = state;
   const ingredientOptions = autocomplete.ingredients.items;
   const sideDishOptions = autocomplete.sideDishes.items;
@@ -274,12 +274,14 @@ function mapStateToProps(state, ownProps) {
     ingredientOptions,
     sideDishOptions,
   };
-}
+};
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   loadRecipe,
   createRecipe,
   saveRecipe,
   loadIngredients,
   loadSideDishes,
-})(RecipeEditPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecipeEditPage);

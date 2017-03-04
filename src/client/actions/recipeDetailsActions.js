@@ -16,8 +16,8 @@ const fetchRecipe = slug => ({
   slug,
   [CALL_API]: {
     types: [RECIPE_DETAIL_REQUEST, RECIPE_DETAIL_SUCCESS, RECIPE_DETAIL_FAILURE],
-    url: `/api/recipes/${slug}`
-  }
+    url: `/api/recipes/${slug}`,
+  },
 });
 
 export const loadRecipe = slug => (dispatch, getState) => {
@@ -34,8 +34,8 @@ export const createRecipe = recipe => ({
     types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
     url: '/api/recipes',
     method: 'post',
-    data: recipe
-  }
+    data: recipe,
+  },
 });
 
 export const saveRecipe = recipe => ({
@@ -43,8 +43,8 @@ export const saveRecipe = recipe => ({
     types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
     url: `/api/recipes/${recipe._id}`,
     method: 'post',
-    data: recipe
-  }
+    data: recipe,
+  },
 });
 
 export const deleteRecipe = id => ({
@@ -52,6 +52,6 @@ export const deleteRecipe = id => ({
   [CALL_API]: {
     types: [RECIPE_DELETE_REQUEST, RECIPE_DELETE_SUCCESS, RECIPE_DELETE_FAILURE],
     url: `/api/recipes/${id}`,
-    method: 'delete'
-  }
+    method: 'delete',
+  },
 });

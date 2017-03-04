@@ -13,7 +13,7 @@ export function parseValue(value, type) {
 export function deleteNullOrUndefinedKeys(obj) {
   const result = {};
 
-  Object.keys(obj).forEach(k => {
+  Object.keys(obj).forEach((k) => {
     const value = obj[k];
     if (value !== undefined && value !== null) {
       result[k] = value;

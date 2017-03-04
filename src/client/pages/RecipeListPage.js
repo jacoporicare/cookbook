@@ -48,6 +48,8 @@ const mapStateToProps = state => ({
   isFetching: state.recipes.isFetching,
 });
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   loadRecipes,
-})(RecipeListPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecipeListPage);

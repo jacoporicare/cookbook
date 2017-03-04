@@ -65,12 +65,12 @@ LoginPage.propTypes = {
   router: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    isSubmitting: state.auth.isSubmitting,
-  };
-}
+const mapStateToProps = state => ({
+  isSubmitting: state.auth.isSubmitting,
+});
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
   login,
-})(LoginPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

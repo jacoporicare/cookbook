@@ -7,8 +7,8 @@ export const RECIPES_FAILURE = 'RECIPES_FAILURE';
 const fetchRecipes = () => ({
   [CALL_API]: {
     types: [RECIPES_REQUEST, RECIPES_SUCCESS, RECIPES_FAILURE],
-    url: '/api/recipes'
-  }
+    url: '/api/recipes',
+  },
 });
 
 export const loadRecipes = () => (dispatch, getState) => {

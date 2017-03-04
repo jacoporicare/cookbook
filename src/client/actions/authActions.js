@@ -14,7 +14,7 @@ export const CURRENT_USER_FAILURE = 'CURRENT_USER_FAILURE';
 
 export const setAuthToken = token => ({
   type: SET_AUTH_TOKEN,
-  token
+  token,
 });
 
 export const login = (username, password) => ({
@@ -22,19 +22,19 @@ export const login = (username, password) => ({
     types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
     url: '/api/auth/local',
     method: 'post',
-    data: { username, password }
-  }
+    data: { username, password },
+  },
 });
 
 export const logout = () => ({
-  type: LOGOUT
+  type: LOGOUT,
 });
 
 const fetchCurrentUser = () => ({
   [CALL_API]: {
     types: [CURRENT_USER_REQUEST, CURRENT_USER_SUCCESS, CURRENT_USER_FAILURE],
-    url: '/api/users/me'
-  }
+    url: '/api/users/me',
+  },
 });
 
 export const getCurrentUser = () => (dispatch, getState) => {
