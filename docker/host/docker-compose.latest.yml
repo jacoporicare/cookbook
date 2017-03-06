@@ -7,18 +7,19 @@ services:
     restart: always
     networks:
       - cookbook
+    volumes:
+      - ~/cookbook/data:/data/db
 
   cookbook-web:
     image: jacoporicare/cookbook:latest
     container_name: cookbook-web
     restart: always
-    environment:
-      - MONGO_URI=mongodb://cookbook-db/cookbook
     networks:
       - cookbook
       - web
     environment:
       - NODE_ENV=production
+      - MONGO_URI=mongodb://cookbook-db/cookbook
       - VIRTUAL_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_EMAIL=***REMOVED***

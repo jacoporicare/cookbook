@@ -13,12 +13,12 @@ services:
     container_name: cookbook-web-dev
     restart: always
     environment:
-      - MONGO_URI=mongodb://cookbook-db-dev/cookbook
     networks:
       - cookbook-dev
       - web
     environment:
       - NODE_ENV=production
+      - MONGO_URI=mongodb://cookbook-db-dev/cookbook
       - VIRTUAL_HOST=zradelnik-dev.jakubricar.cz
       - LETSENCRYPT_HOST=zradelnik-dev.jakubricar.cz
       - LETSENCRYPT_EMAIL=***REMOVED***
