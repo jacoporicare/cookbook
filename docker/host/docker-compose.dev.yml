@@ -1,14 +1,14 @@
 version: '2'
 
 services:
-  db:
+  cookbook-db-dev:
     image: mongo:3.4
     container_name: cookbook-db-dev
     restart: always
     networks:
       - cookbook-dev
 
-  web:
+  cookbook-web-dev:
     image: jacoporicare/cookbook:dev
     container_name: cookbook-web-dev
     restart: always
