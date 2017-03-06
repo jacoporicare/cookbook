@@ -3,4 +3,4 @@
 cd ${BASH_SOURCE%/*}
 ./build.sh latest
 ./push.sh latest
-./update.sh prod
+./update.sh latest
