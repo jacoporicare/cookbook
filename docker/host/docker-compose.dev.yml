@@ -12,7 +12,6 @@ services:
     image: jacoporicare/cookbook:dev
     container_name: cookbook-web-dev
     restart: always
-    environment:
     networks:
       - cookbook-dev
       - web
