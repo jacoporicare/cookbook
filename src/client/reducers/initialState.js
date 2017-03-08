@@ -4,7 +4,9 @@ export default {
     isSubmitting: false,
     isAuthenticated: false,
     token: null,
-    user: {
+  },
+  user: {
+    currentUser: {
       isFetching: false,
     },
   },

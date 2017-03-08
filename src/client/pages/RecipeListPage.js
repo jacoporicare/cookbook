@@ -6,7 +6,7 @@ import RecipeList from '../components/RecipeList/RecipeList';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeListPage extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.loadRecipes();
   }
 

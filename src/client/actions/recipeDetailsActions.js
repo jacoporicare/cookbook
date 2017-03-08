@@ -12,46 +12,56 @@ export const RECIPE_DELETE_REQUEST = 'RECIPE_DELETE_REQUEST';
 export const RECIPE_DELETE_SUCCESS = 'RECIPE_DELETE_SUCCESS';
 export const RECIPE_DELETE_FAILURE = 'RECIPE_DELETE_FAILURE';
 
-const fetchRecipe = slug => ({
-  slug,
-  [CALL_API]: {
-    types: [RECIPE_DETAIL_REQUEST, RECIPE_DETAIL_SUCCESS, RECIPE_DETAIL_FAILURE],
-    url: `/api/recipes/${slug}`,
-  },
-});
+function fetchRecipe(slug) {
+  return {
+    slug,
+    [CALL_API]: {
+      types: [RECIPE_DETAIL_REQUEST, RECIPE_DETAIL_SUCCESS, RECIPE_DETAIL_FAILURE],
+      url: `/api/recipes/${slug}`,
+    },
+  };
+}
 
-export const loadRecipe = slug => (dispatch, getState) => {
-  const { recipeDetails } = getState();
-  const recipeDetail = recipeDetails[slug];
+export function loadRecipe(slug) {
+  return (dispatch, getState) => {
+    const { recipeDetails } = getState();
+    const recipeDetail = recipeDetails[slug];
 
-  if (!recipeDetail || !recipeDetail.isFetching) {
-    dispatch(fetchRecipe(slug));
-  }
-};
+    if (!recipeDetail || !recipeDetail.isFetching) {
+      dispatch(fetchRecipe(slug));
+    }
+  };
+}
 
-export const createRecipe = recipe => ({
-  [CALL_API]: {
-    types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
-    url: '/api/recipes',
-    method: 'post',
-    data: recipe,
-  },
-});
+export function createRecipe(recipe) {
+  return {
+    [CALL_API]: {
+      types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
+      url: '/api/recipes',
+      method: 'post',
+      data: recipe,
+    },
+  };
+}
 
-export const saveRecipe = recipe => ({
-  [CALL_API]: {
-    types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
-    url: `/api/recipes/${recipe._id}`,
-    method: 'post',
-    data: recipe,
-  },
-});
+export function saveRecipe(recipe) {
+  return {
+    [CALL_API]: {
+      types: [RECIPE_SAVE_REQUEST, RECIPE_SAVE_SUCCESS, RECIPE_SAVE_FAILURE],
+      url: `/api/recipes/${recipe._id}`,
+      method: 'post',
+      data: recipe,
+    },
+  };
+}
 
-export const deleteRecipe = id => ({
-  id,
-  [CALL_API]: {
-    types: [RECIPE_DELETE_REQUEST, RECIPE_DELETE_SUCCESS, RECIPE_DELETE_FAILURE],
-    url: `/api/recipes/${id}`,
-    method: 'delete',
-  },
-});
+export function deleteRecipe(id) {
+  return {
+    id,
+    [CALL_API]: {
+      types: [RECIPE_DELETE_REQUEST, RECIPE_DELETE_SUCCESS, RECIPE_DELETE_FAILURE],
+      url: `/api/recipes/${id}`,
+      method: 'delete',
+    },
+  };
+}

@@ -18,7 +18,7 @@ class RecipeDetailPage extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.loadRecipe(this.props.slug);
   }
 

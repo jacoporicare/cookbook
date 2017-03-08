@@ -9,7 +9,9 @@ import {
   RECIPE_DELETE_REQUEST,
 } from '../actions/recipeDetailsActions';
 
-const sortByTitle = (a, b) => a.title.localeCompare(b.title);
+function sortByTitle(a, b) {
+  return a.title.localeCompare(b.title);
+}
 
 export default function recipesReducer(state = initialState.recipes, action) {
   switch (action.type) {

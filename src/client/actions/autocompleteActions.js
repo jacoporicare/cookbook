@@ -8,40 +8,48 @@ export const AUTOCOMPLETE_SIDE_DISHES_REQUEST = 'AUTOCOMPLETE_SIDE_DISHES_REQUES
 export const AUTOCOMPLETE_SIDE_DISHES_SUCCESS = 'AUTOCOMPLETE_SIDE_DISHES_SUCCESS';
 export const AUTOCOMPLETE_SIDE_DISHES_FAILURE = 'AUTOCOMPLETE_SIDE_DISHES_FAILURE';
 
-const fetchIngredients = () => ({
-  [CALL_API]: {
-    types: [
-      AUTOCOMPLETE_INGREDIENTS_REQUEST,
-      AUTOCOMPLETE_INGREDIENTS_SUCCESS,
-      AUTOCOMPLETE_INGREDIENTS_FAILURE,
-    ],
-    url: '/api/recipes/ingredients',
-  },
-});
+function fetchIngredients() {
+  return {
+    [CALL_API]: {
+      types: [
+        AUTOCOMPLETE_INGREDIENTS_REQUEST,
+        AUTOCOMPLETE_INGREDIENTS_SUCCESS,
+        AUTOCOMPLETE_INGREDIENTS_FAILURE,
+      ],
+      url: '/api/recipes/ingredients',
+    },
+  };
+}
 
-export const loadIngredients = () => (dispatch, getState) => {
-  const { autocomplete } = getState();
+export function loadIngredients() {
+  return (dispatch, getState) => {
+    const { autocomplete } = getState();
 
-  if (!autocomplete.ingredients.isFetching) {
-    dispatch(fetchIngredients());
-  }
-};
+    if (!autocomplete.ingredients.isFetching) {
+      dispatch(fetchIngredients());
+    }
+  };
+}
 
-const fetchSideDishes = () => ({
-  [CALL_API]: {
-    types: [
-      AUTOCOMPLETE_SIDE_DISHES_REQUEST,
-      AUTOCOMPLETE_SIDE_DISHES_SUCCESS,
-      AUTOCOMPLETE_SIDE_DISHES_FAILURE,
-    ],
-    url: '/api/recipes/side-dishes',
-  },
-});
+function fetchSideDishes() {
+  return {
+    [CALL_API]: {
+      types: [
+        AUTOCOMPLETE_SIDE_DISHES_REQUEST,
+        AUTOCOMPLETE_SIDE_DISHES_SUCCESS,
+        AUTOCOMPLETE_SIDE_DISHES_FAILURE,
+      ],
+      url: '/api/recipes/side-dishes',
+    },
+  };
+}
 
-export const loadSideDishes = () => (dispatch, getState) => {
-  const { autocomplete } = getState();
+export function loadSideDishes() {
+  return (dispatch, getState) => {
+    const { autocomplete } = getState();
 
-  if (!autocomplete.sideDishes.isFetching) {
-    dispatch(fetchSideDishes());
-  }
-};
+    if (!autocomplete.sideDishes.isFetching) {
+      dispatch(fetchSideDishes());
+    }
+  };
+}

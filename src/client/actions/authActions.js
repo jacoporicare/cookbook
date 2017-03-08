@@ -8,39 +8,26 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
-export const CURRENT_USER_REQUEST = 'CURRENT_USER_REQUEST';
-export const CURRENT_USER_SUCCESS = 'CURRENT_USER_SUCCESS';
-export const CURRENT_USER_FAILURE = 'CURRENT_USER_FAILURE';
+export function setAuthToken(token) {
+  return {
+    type: SET_AUTH_TOKEN,
+    token,
+  };
+}
 
-export const setAuthToken = token => ({
-  type: SET_AUTH_TOKEN,
-  token,
-});
+export function login(username, password) {
+  return {
+    [CALL_API]: {
+      types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
+      url: '/api/auth/local',
+      method: 'post',
+      data: { username, password },
+    },
+  };
+}
 
-export const login = (username, password) => ({
-  [CALL_API]: {
-    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
-    url: '/api/auth/local',
-    method: 'post',
-    data: { username, password },
-  },
-});
-
-export const logout = () => ({
-  type: LOGOUT,
-});
-
-const fetchCurrentUser = () => ({
-  [CALL_API]: {
-    types: [CURRENT_USER_REQUEST, CURRENT_USER_SUCCESS, CURRENT_USER_FAILURE],
-    url: '/api/users/me',
-  },
-});
-
-export const getCurrentUser = () => (dispatch, getState) => {
-  const { auth } = getState();
-
-  if (!auth.user.isFetching) {
-    dispatch(fetchCurrentUser());
-  }
-};
+export function logout() {
+  return {
+    type: LOGOUT,
+  };
+}

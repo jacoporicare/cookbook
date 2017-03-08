@@ -28,9 +28,7 @@ class RecipeEditPage extends React.Component {
       this.props.route,
       () => (this.state.changed && !this.saved ? confirmMsg : undefined),
     );
-  }
 
-  componentDidMount() {
     this.props.loadIngredients();
     this.props.loadSideDishes();
 

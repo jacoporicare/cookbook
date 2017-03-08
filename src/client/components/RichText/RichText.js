@@ -2,12 +2,14 @@ import React, { PropTypes } from 'react';
 import HtmlBuilder from './htmlBuilder';
 import './RichText.scss';
 
-const formatText = value => value
-  .replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>')
-  .replace(/_([^_\n]+)_/g, '<em>$1</em>')
-  .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+function formatText(value) {
+  return value
+    .replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>')
+    .replace(/_([^_\n]+)_/g, '<em>$1</em>')
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+}
 
-const getHtml = (text) => {
+function getHtml(text) {
   if (!text) {
     return null;
   }
@@ -52,7 +54,7 @@ const getHtml = (text) => {
   });
 
   return hb.getHtml();
-};
+}
 
 const RichText = ({ text }) => (
   <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} /> // eslint-disable-line react/no-danger

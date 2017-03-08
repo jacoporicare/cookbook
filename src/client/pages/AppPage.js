@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
 import { resetErrorMessage } from '../actions/errorMessageActions';
-import { getCurrentUser } from '../actions/authActions';
+import { getCurrentUser } from '../actions/userActions';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 
 class AppPage extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.isAuthenticated && !this.props.userName) {
       this.props.getCurrentUser();
     }
@@ -60,8 +60,8 @@ AppPage.propTypes = {
 const mapStateToProps = state => ({
   errorMessage: state.errorMessage,
   isAuthenticated: state.auth.isAuthenticated,
-  userName: state.auth.user.name,
-  isFetchingUser: state.auth.user.isFetching,
+  userName: state.user.currentUser.name,
+  isFetchingUser: state.user.currentUser.isFetching,
 });
 
 const mapDispatchToProps = {
