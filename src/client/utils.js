@@ -10,15 +10,12 @@ export function parseValue(value, type) {
   }
 }
 
-export function deleteNullOrUndefinedKeys(obj) {
-  const result = {};
-
-  Object.keys(obj).forEach((k) => {
-    const value = obj[k];
-    if (value !== undefined && value !== null) {
-      result[k] = value;
+export function deleteNullKeys(obj) {
+  return Object.keys(obj).reduce((acc, cur) => {
+    const value = obj[cur];
+    if (value !== null) {
+      acc[cur] = value; // eslint-disable-line no-param-reassign
     }
-  });
-
-  return result;
+    return acc;
+  }, {});
 }

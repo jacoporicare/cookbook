@@ -3,7 +3,7 @@ import Autosuggest from 'react-autosuggest';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
-import { deleteNullOrUndefinedKeys } from '../../utils';
+import { deleteNullKeys } from '../../utils';
 
 class RecipeForm extends React.Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class RecipeForm extends React.Component {
       sideDish = '',
       directions = '',
       ingredients = [],
-    } = deleteNullOrUndefinedKeys(recipe);
+    } = deleteNullKeys(recipe);
 
     const hasError = Object.keys(errors).length > 0;
 

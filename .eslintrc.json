@@ -15,6 +15,7 @@
       "devDependencies": ["**/*.test.js", "**/*.spec.js", "webpack.*.js"]
     }],
     "max-len": 0,
+    "no-plusplus": 0,
     "no-shadow": 0,
     "react/forbid-prop-types": ["error", { "forbid": ["any"] }],
     "react/jsx-filename-extension": 0
