@@ -23,13 +23,15 @@ class Ingredients extends Component {
   }
 
   handleServingCountChange = (event) => {
+    const servingCount = Number.parseInt(event.target.value, 10);
+
     this.setState({
-      servingCount: Number.parseInt(event.target.value, 10),
+      servingCount: !Number.isNaN(servingCount) && servingCount > 0 ? servingCount : '',
     });
   }
 
   render() {
-    const { ingredients } = this.props;
+    const { ingredients, servingCount: initialServingCount } = this.props;
     const { servingCount } = this.state;
 
     if (!ingredients || !ingredients.length) {
@@ -38,7 +40,7 @@ class Ingredients extends Component {
 
     return (
       <div>
-        {!!servingCount &&
+        {!!initialServingCount &&
           <div className="form-group">
             <div className="input-group">
               <div className="input-group-addon">
