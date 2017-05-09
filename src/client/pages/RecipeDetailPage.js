@@ -59,6 +59,7 @@ class RecipeDetailPage extends React.Component {
       preparationTime,
       sideDish,
       ingredients,
+      servingCount,
       directions,
     } = recipe;
 
@@ -74,7 +75,11 @@ class RecipeDetailPage extends React.Component {
           />
           {isFetching && !hasDetail ?
             <Spinner /> :
-            <RecipeDetail ingredients={ingredients} directions={directions} />
+            <RecipeDetail
+              ingredients={ingredients}
+              servingCount={servingCount}
+              directions={directions}
+            />
           }
         </div>
         <RecipeDeleteModal

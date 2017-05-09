@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import Ingredients from './Ingredients';
 import RichText from '../RichText/RichText';
 
-const RecipeDetail = ({ ingredients, directions }) => (
+const RecipeDetail = ({ ingredients, servingCount, directions }) => (
   <div className="cb-recipe-detail">
     <div className="row">
       <div className="col-md-3 col-sm-4">
         <h3>Ingredience</h3>
-        {ingredients && ingredients.length > 0 ?
-          <Ingredients ingredients={ingredients} /> :
-          <div className="alert alert-info">Žádné ingredience.</div>
-        }
+        <Ingredients
+          ingredients={ingredients}
+          servingCount={servingCount}
+        />
       </div>
 
       <div className="col-md-9 col-sm-8">
@@ -27,6 +27,7 @@ const RecipeDetail = ({ ingredients, directions }) => (
 
 RecipeDetail.propTypes = {
   ingredients: PropTypes.array,
+  servingCount: PropTypes.number,
   directions: PropTypes.string,
 };
 
