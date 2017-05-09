@@ -87,7 +87,7 @@ class Ingredients extends Component {
 }
 
 Ingredients.propTypes = {
-  ingredients: PropTypes.array.isRequired,
+  ingredients: PropTypes.array,
   servingCount: PropTypes.number,
 };
 

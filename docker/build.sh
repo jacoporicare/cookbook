@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
 fi
 
 cd ${BASH_SOURCE%/*}/../
-npm run build
+yarn run build
 
 cd dist
 docker build -t "jacoporicare/cookbook:$1" .
