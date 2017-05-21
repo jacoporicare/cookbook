@@ -1,76 +1,88 @@
 exports[`<RecipeList /> renders recipes 1`] = `
 <div
-  className="cb-recipes">
-  <a
-    className="recipe"
-    onClick={[Function]}
-    style={Object {}}>
-    <h4
-      className="text-primary">
-      Recept 1
-    </h4>
-  </a>
-  <a
-    className="recipe"
-    onClick={[Function]}
-    style={Object {}}>
-    <h4
-      className="text-primary">
-      Recept 2
-    </h4>
-    <ul
-      className="cb-info-list text-muted">
-      <li>
-        <i
-          className="fa fa-clock-o" />
-         
-        120
-         min
-      </li>
-    </ul>
-  </a>
-  <a
-    className="recipe"
-    onClick={[Function]}
-    style={Object {}}>
-    <h4
-      className="text-primary">
-      Recept 3
-    </h4>
-    <ul
-      className="cb-info-list text-muted">
-      <li>
-        <i
-          className="fa fa-spoon" />
-         
-        kaše
-      </li>
-    </ul>
-  </a>
-  <a
-    className="recipe"
-    onClick={[Function]}
-    style={Object {}}>
-    <h4
-      className="text-primary">
-      Recept 4
-    </h4>
-    <ul
-      className="cb-info-list text-muted">
-      <li>
-        <i
-          className="fa fa-clock-o" />
-         
-        120
-         min
-      </li>
-      <li>
-        <i
-          className="fa fa-spoon" />
-         
-        kaše
-      </li>
-    </ul>
-  </a>
+  className="row cb-recipes">
+  <div
+    className="col-sm-6 col-md-4">
+    <a
+      className="recipe"
+      onClick={[Function]}
+      style={Object {}}>
+      <h4
+        className="text-primary">
+        Recept 1
+      </h4>
+    </a>
+  </div>
+  <div
+    className="col-sm-6 col-md-4">
+    <a
+      className="recipe"
+      onClick={[Function]}
+      style={Object {}}>
+      <h4
+        className="text-primary">
+        Recept 2
+      </h4>
+      <ul
+        className="cb-info-list text-muted">
+        <li>
+          <i
+            className="fa fa-clock-o" />
+           
+          120
+           min
+        </li>
+      </ul>
+    </a>
+  </div>
+  <div
+    className="col-sm-6 col-md-4">
+    <a
+      className="recipe"
+      onClick={[Function]}
+      style={Object {}}>
+      <h4
+        className="text-primary">
+        Recept 3
+      </h4>
+      <ul
+        className="cb-info-list text-muted">
+        <li>
+          <i
+            className="fa fa-spoon" />
+           
+          kaše
+        </li>
+      </ul>
+    </a>
+  </div>
+  <div
+    className="col-sm-6 col-md-4">
+    <a
+      className="recipe"
+      onClick={[Function]}
+      style={Object {}}>
+      <h4
+        className="text-primary">
+        Recept 4
+      </h4>
+      <ul
+        className="cb-info-list text-muted">
+        <li>
+          <i
+            className="fa fa-clock-o" />
+           
+          120
+           min
+        </li>
+        <li>
+          <i
+            className="fa fa-spoon" />
+           
+          kaše
+        </li>
+      </ul>
+    </a>
+  </div>
 </div>
 `;
