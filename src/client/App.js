@@ -4,7 +4,7 @@ import { Router, browserHistory, applyRouterMiddleware } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import cookie from 'react-cookie';
-import configureStore from './store/configureStore';
+import configureStore from './redux/configureStore';
 import { setAuthToken } from './actions/authActions';
 import routes from './routes';
 

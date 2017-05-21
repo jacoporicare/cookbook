@@ -10,8 +10,8 @@ export default {
       isFetching: false,
     },
   },
-  recipes: {
-    items: [],
+  recipeList: {
+    recipes: [],
     isFetching: false,
   },
   recipeDetails: {

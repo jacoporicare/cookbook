@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
 import { loadRecipe, deleteRecipe } from '../actions/recipeDetailsActions';
-import { findRecipeBySlug } from '../reducers/recipesReducer';
+import { findRecipeBySlug } from '../components/RecipeList/reducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal';

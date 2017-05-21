@@ -1,4 +1,4 @@
-import initialState from './initialState';
+import initialState from '../redux/initialState';
 import {
   CURRENT_USER_REQUEST,
   CURRENT_USER_SUCCESS,

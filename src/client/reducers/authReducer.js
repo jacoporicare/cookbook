@@ -1,4 +1,4 @@
-import initialState from './initialState';
+import initialState from '../redux/initialState';
 import {
   SET_AUTH_TOKEN,
   LOGIN_REQUEST,

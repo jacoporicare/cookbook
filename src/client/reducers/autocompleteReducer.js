@@ -1,4 +1,4 @@
-import initialState from './initialState';
+import initialState from '../redux/initialState';
 import {
   AUTOCOMPLETE_INGREDIENTS_REQUEST,
   AUTOCOMPLETE_INGREDIENTS_SUCCESS,

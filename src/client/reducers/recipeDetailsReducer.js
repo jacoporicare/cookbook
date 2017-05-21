@@ -1,4 +1,4 @@
-import initialState from './initialState';
+import initialState from '../redux/initialState';
 import {
   RECIPE_DETAIL_REQUEST,
   RECIPE_DETAIL_SUCCESS,

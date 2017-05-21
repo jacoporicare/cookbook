@@ -1,4 +1,4 @@
-import initialState from './initialState';
+import initialState from '../redux/initialState';
 import { RESET_ERROR_MESSAGE } from '../actions/errorMessageActions';
 
 export default function errorMessageReducer(state = initialState.errorMessage, action) {
