@@ -4,36 +4,25 @@ $cb-recipe-spacing: 15px;
 $cb-recipe-border-color: #f0f0f0;
 
 .cb-recipes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-
   .recipe {
     display: block;
-    flex: 0 0 100%;
+    border: 1px solid $cb-recipe-border-color;
     border-radius: 2px;
-    box-shadow: 0 0 12px 4px $cb-recipe-border-color;
-    margin-bottom: $cb-recipe-spacing;
+    box-shadow: 0 0 12px 2px $cb-recipe-border-color;
+    margin-bottom: ($cb-recipe-spacing * 2);
     padding: $cb-recipe-spacing;
     text-decoration: none;
 
-    @media (min-width: $screen-sm-min) {
-      flex-basis: 49%;
-      margin-bottom: 2%;
-    }
-
-    @media (min-width: $screen-md-min) {
-      flex-basis: 32%;
-    }
-
     &:hover {
-      box-shadow: 0 0 12px 4px darken($cb-recipe-border-color, 10%);
+      box-shadow: 0 0 12px 2px darken($cb-recipe-border-color, 10%);
     }
 
     h4 {
       margin: 0;
       font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .cb-info-list {

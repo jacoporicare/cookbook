@@ -4,7 +4,7 @@ import RecipeListItem from './RecipeListItem';
 import './RecipeList.scss';
 
 const RecipeList = ({ recipes }) => (
-  <div className="cb-recipes">
+  <div className="row cb-recipes">
     {recipes.map(recipe => (
       <RecipeListItem recipe={recipe} key={recipe._id} />
     ))}
