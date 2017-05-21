@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 import NavItem from '../NavItem/NavItem';
-// import SearchBar from '../SearchBar/SearchBar';
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -36,20 +35,23 @@ class Navbar extends React.Component {
 
           <div className={`navbar-collapse ${collapsed ? 'collapse' : ''}`} id="navbar-main">
             {isAuthenticated &&
-              <ul className="nav navbar-nav">
-                <NavItem to="/prilohy">Přílohy</NavItem>
-              </ul>
+              <div>
+                <ul className="nav navbar-nav">
+                  <NavItem to="/prilohy">Přílohy</NavItem>
+                </ul>
+                <ul className="nav navbar-nav navbar-right">
+                  <li>
+                    <a>
+                      {isFetchingUser ?
+                        <i className="fa fa-spin fa-spinner" /> :
+                        <span><i className="fa fa-user" /> {userName}</span>
+                      }
+                    </a>
+                  </li>
+                  <li><Link to="/odhlaseni">Odhlásit</Link></li>
+                </ul>
+              </div>
             }
-
-            {/* isAuthenticated && <SearchBar /> */}
-
-            {isAuthenticated &&
-              <ul className="nav navbar-nav navbar-right">
-                <li><a>{isFetchingUser ? <i className="fa fa-spin fa-spinner" /> : <span><i className="fa fa-user" /> {userName}</span>}</a></li>
-                <li><Link to="/odhlaseni">Odhlásit</Link></li>
-              </ul>
-            }
-
           </div>
 
         </div>
