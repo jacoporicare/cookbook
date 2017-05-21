@@ -4,7 +4,7 @@ import slug from 'slug';
 import Recipe from './recipe.model';
 
 function toSlug(title) {
-  return (title ? slug(title, { mode: 'rfc3986' }) : title);
+  return slug(title.trim(), { mode: 'rfc3986' });
 }
 
 function getError(err) {
@@ -16,6 +16,21 @@ function getError(err) {
   }
 
   return err;
+}
+
+function getRecipe({ body: recipe, user }) {
+  return {
+    ...recipe,
+    user: user.name,
+    title: recipe.title.trim(),
+    slug: toSlug(recipe.title),
+    sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
+    ingredients: recipe.ingredients ?
+      recipe.ingredients.map(ingredient => ({
+        ...ingredient,
+        name: ingredient.name.trim(),
+      })) : undefined,
+  };
 }
 
 const router = Router();
@@ -60,27 +75,9 @@ router.get('/side-dishes', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-router.get('/fix-slugs', (req, res) => {
-  Recipe.find()
-    .then((results) => {
-      results.forEach((recipe) => {
-        recipe.slug = toSlug(recipe.title);
-        Recipe.findOne({ slug: recipe.slug })
-          .then((result) => {
-            if (result && recipe.slug === result.slug && !recipe._id.equals(result._id)) {
-              recipe.slug = `${recipe.slug}_${recipe._id}`;
-            }
-            recipe.save();
-          });
-      });
-
-      res.status(201).end();
-    })
-    .catch(err => res.status(500).send(err));
-});
-
 router.get('/:id', (req, res) => {
   const { id } = req.params;
+
   Recipe.findOne({ slug: id })
     .then((result) => {
       if (result) {
@@ -101,17 +98,17 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  req.body.user = req.user.name;
-  req.body.slug = toSlug(req.body.title);
-  Recipe.create(req.body)
+  const recipe = getRecipe(req);
+
+  Recipe.create(recipe)
     .then(recipe => res.status(201).send(recipe))
     .catch(err => res.status(500).send(getError(err)));
 });
 
 router.post('/:id', (req, res) => {
-  req.body.user = req.user.name;
-  req.body.slug = toSlug(req.body.title);
-  Recipe.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+  const recipe = getRecipe(req);
+
+  Recipe.findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
     .then(recipe => res.send(recipe))
     .catch(err => res.status(500).send(getError(err)));
 });
