@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-export default function AuthenticatedComponent(Component) {
+const authenticatedComponent = (Component) => {
   class AuthenticatedComponent extends React.Component {
     componentWillMount() {
       if (!this.props.isAuthenticated) {
@@ -38,4 +38,6 @@ export default function AuthenticatedComponent(Component) {
   });
 
   return connect(mapStateToProps)(AuthenticatedComponent);
-}
+};
+
+export default authenticatedComponent;

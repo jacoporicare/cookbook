@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import AuthenticatedComponent from './components/AuthenticatedComponent/AuthenticatedComponent';
+import authenticatedComponent from './components/common/authenticatedComponent';
 import AppPage from './pages/AppPage';
 import RecipeListPage from './pages/RecipeListPage';
 import RecipeDetailPage from './pages/RecipeDetailPage';
@@ -12,13 +12,13 @@ import NotFoundPage from './pages/NotFoundPage';
 
 export default (
   <Route path="/" component={AppPage}>
-    <IndexRoute component={AuthenticatedComponent(RecipeListPage)} />
-    <Route path="recept/:slug" component={AuthenticatedComponent(RecipeDetailPage)} />
-    <Route path="recept/:slug/upravit" component={AuthenticatedComponent(RecipeEditPage)} />
-    <Route path="novy-recept" component={AuthenticatedComponent(RecipeEditPage)} />
-    <Route path="prilohy" component={AuthenticatedComponent(SideDishListPage)} />
+    <IndexRoute component={authenticatedComponent(RecipeListPage)} />
+    <Route path="recept/:slug" component={authenticatedComponent(RecipeDetailPage)} />
+    <Route path="recept/:slug/upravit" component={authenticatedComponent(RecipeEditPage)} />
+    <Route path="novy-recept" component={authenticatedComponent(RecipeEditPage)} />
+    <Route path="prilohy" component={authenticatedComponent(SideDishListPage)} />
     <Route path="prihlaseni" component={LoginPage} />
-    <Route path="odhlaseni" component={AuthenticatedComponent(LogoutPage)} />
+    <Route path="odhlaseni" component={authenticatedComponent(LogoutPage)} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 );
