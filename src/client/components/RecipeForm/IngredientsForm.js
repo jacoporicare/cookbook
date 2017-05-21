@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
+import removeDiacritics from 'javascript-remove-diacritics';
 
 class IngredientsForm extends React.Component {
   constructor(props) {
@@ -13,10 +14,10 @@ class IngredientsForm extends React.Component {
 
   handleSuggestionsFetchRequested = ({ value }) => {
     if (value) {
-      const valueLowerCase = value.toLowerCase();
+      const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
         ingredientOptions: this.props.ingredientOptions
-          .filter(i => i.toLowerCase().includes(valueLowerCase)),
+          .filter(i => removeDiacritics.replace(i).toLowerCase().includes(valueLowerCase)),
       });
     }
   }

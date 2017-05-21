@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
+import removeDiacritics from 'javascript-remove-diacritics';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
 import Ingredients from './Ingredients';
@@ -21,10 +22,10 @@ class RecipeForm extends React.Component {
 
   handleSuggestionsFetchRequested = ({ value }) => {
     if (value) {
-      const valueLowerCase = value.toLowerCase();
+      const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
         sideDishOptions: this.props.sideDishOptions
-          .filter(sd => sd.toLowerCase().includes(valueLowerCase)),
+          .filter(sd => removeDiacritics.replace(sd).toLowerCase().includes(valueLowerCase)),
       });
     }
   }
