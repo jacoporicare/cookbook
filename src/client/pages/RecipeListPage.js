@@ -54,7 +54,7 @@ class RecipeListPage extends Component {
 
   render() {
     const { isFetching } = this.props;
-    const { recipes } = this.state;
+    const { recipes, searchText } = this.state;
     const isEmpty = recipes.length === 0;
 
     return (
@@ -71,16 +71,14 @@ class RecipeListPage extends Component {
             </div>
           </div>
         </h1>
+        <SearchBar onChange={this.handleSearchChange} />
         {isEmpty ?
           <SpinnerAlert
             level="info"
-            text="Zatím zde není žádný recept."
             spinner={isFetching}
-          /> :
-          <div>
-            <SearchBar onChange={this.handleSearchChange} />
-            <RecipeList recipes={recipes} />
-          </div>
+            text={searchText ? 'Nenalezen žádný recept.' : 'Zatím zde není žádný recept.'}
+          />
+          : <RecipeList recipes={recipes} />
         }
       </div>
     );
