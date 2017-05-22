@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
-import { recipeFetch, recipeDelete } from '../components/RecipeDetail/actions';
+import { fetchRecipe, deleteRecipe } from '../components/RecipeDetail/actions';
 import { findRecipeBySlug } from '../components/RecipeList/reducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
@@ -16,8 +16,8 @@ class RecipeDetailPage extends Component {
     slug: PropTypes.string.isRequired,
     recipe: PropTypes.object,
     isFetching: PropTypes.bool.isRequired,
-    recipeFetch: PropTypes.func.isRequired,
-    recipeDelete: PropTypes.func.isRequired,
+    fetchRecipe: PropTypes.func.isRequired,
+    deleteRecipe: PropTypes.func.isRequired,
     hasDetail: PropTypes.bool.isRequired,
     router: PropTypes.object.isRequired,
   };
@@ -31,7 +31,7 @@ class RecipeDetailPage extends Component {
   }
 
   componentWillMount() {
-    this.props.recipeFetch(this.props.slug);
+    this.props.fetchRecipe(this.props.slug);
   }
 
   handleDeleteShow = () => {
@@ -47,7 +47,7 @@ class RecipeDetailPage extends Component {
   };
 
   handleDeleteConfirm = () => {
-    this.props.recipeDelete(this.props.recipe._id);
+    this.props.deleteRecipe(this.props.recipe._id);
     toastr.success('Recept úspěšně smazán');
     this.props.router.push('/');
   };
@@ -122,8 +122,8 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  recipeFetch,
-  recipeDelete,
+  fetchRecipe,
+  deleteRecipe,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeDetailPage);

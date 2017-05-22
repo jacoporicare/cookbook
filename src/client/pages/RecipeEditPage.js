@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import toastr from 'toastr';
 import { parseValue } from '../utils';
-import { recipeFetch } from '../components/RecipeDetail/actions';
-import { recipeSave } from '../components/RecipeEdit/actions';
+import { fetchRecipe } from '../components/RecipeDetail/actions';
+import { saveRecipe } from '../components/RecipeEdit/actions';
 import {
   loadIngredients,
   loadSideDishes,
@@ -24,8 +24,8 @@ class RecipeEditPage extends Component {
     isSaving: PropTypes.bool,
     ingredientOptions: PropTypes.array.isRequired,
     sideDishOptions: PropTypes.array.isRequired,
-    recipeFetch: PropTypes.func.isRequired,
-    recipeSave: PropTypes.func.isRequired,
+    fetchRecipe: PropTypes.func.isRequired,
+    saveRecipe: PropTypes.func.isRequired,
     loadIngredients: PropTypes.func.isRequired,
     loadSideDishes: PropTypes.func.isRequired,
     router: PropTypes.object.isRequired,
@@ -54,7 +54,7 @@ class RecipeEditPage extends Component {
     this.props.loadSideDishes();
 
     if (this.props.slug) {
-      this.props.recipeFetch(this.props.slug);
+      this.props.fetchRecipe(this.props.slug);
     }
   }
 
@@ -192,9 +192,9 @@ class RecipeEditPage extends Component {
     event.preventDefault();
 
     const { recipe } = this.state;
-    const { recipeSave } = this.props;
+    const { saveRecipe } = this.props;
 
-    recipeSave(recipe).then(action => this.handleSave(action));
+    saveRecipe(recipe).then(action => this.handleSave(action));
   };
 
   handleSave(action) {
@@ -282,8 +282,8 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  recipeFetch,
-  recipeSave,
+  fetchRecipe,
+  saveRecipe,
   loadIngredients,
   loadSideDishes,
 };

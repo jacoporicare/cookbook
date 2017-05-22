@@ -8,7 +8,7 @@ export const RECIPE_DELETE = 'RECIPE.DELETE';
 export const RECIPE_DELETE_SUCCESS = 'RECIPE.DELETE.SUCCESS';
 export const RECIPE_DELETE_FAILURE = 'RECIPE.DELETE.FAILURE';
 
-export const recipeFetch = slug => ({
+export const fetchRecipe = slug => ({
   slug,
   [CALL_API]: {
     types: [RECIPE_FETCH, RECIPE_FETCH_SUCCESS, RECIPE_FETCH_FAILURE],
@@ -16,7 +16,7 @@ export const recipeFetch = slug => ({
   },
 });
 
-export const recipeDelete = id => ({
+export const deleteRecipe = id => ({
   id,
   [CALL_API]: {
     types: [RECIPE_DELETE, RECIPE_DELETE_SUCCESS, RECIPE_DELETE_FAILURE],
