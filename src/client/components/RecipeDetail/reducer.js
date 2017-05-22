@@ -13,15 +13,18 @@ const recipeDetailReducer = (state = initialState.recipeDetail, action) => {
         isFetching: true,
       };
 
-    case RECIPE_FETCH_SUCCESS:
+    case RECIPE_FETCH_SUCCESS: {
+      const { recipe, slug } = action.payload;
+
       return {
         ...state,
         isFetching: false,
         recipesBySlug: {
           ...state.recipesBySlug,
-          [action.slug]: action.response,
+          [slug]: recipe,
         },
       };
+    }
 
     case RECIPE_FETCH_FAILURE:
       return {

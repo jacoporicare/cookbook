@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import removeDiacritics from 'javascript-remove-diacritics';
-import { recipeListFetch } from '../components/RecipeList/actions';
+import { fetchRecipeList } from '../components/RecipeList/actions';
 import RecipeList from '../components/RecipeList/RecipeList';
 import SearchBar from '../components/SearchBar/SearchBar';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
@@ -12,7 +12,7 @@ class RecipeListPage extends Component {
   static propTypes = {
     recipes: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    recipeListFetch: PropTypes.func.isRequired,
+    fetchRecipeList: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -25,7 +25,7 @@ class RecipeListPage extends Component {
   }
 
   componentWillMount() {
-    this.props.recipeListFetch();
+    this.props.fetchRecipeList();
   }
 
   componentWillReceiveProps({ recipes }) {
@@ -104,7 +104,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  recipeListFetch,
+  fetchRecipeList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeListPage);

@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import RichText from '../../../../src/client/components/RichText/RichText';
+import RichText from '../RichText';
 
 describe('<RichText />', () => {
   test('converts formatted text to HTML', () => {
