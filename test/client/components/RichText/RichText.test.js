@@ -18,9 +18,7 @@ and some spacing
 
   `;
 
-    const component = renderer.create(
-      <RichText text={text} />
-    );
+    const component = renderer.create(<RichText text={text} />);
 
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();

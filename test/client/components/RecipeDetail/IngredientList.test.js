@@ -1,8 +1,9 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Ingredients from '../../../../src/client/components/RecipeDetail/Ingredients';
+import IngredientList
+  from '../../../../src/client/components/RecipeDetail/IngredientList';
 
-describe('<Ingredients /> (RecipeDetail)', () => {
+describe('<IngredientList /> (RecipeDetail)', () => {
   test('renders list of ingredients and a group', () => {
     const ingredients = [
       {
@@ -28,7 +29,7 @@ describe('<Ingredients /> (RecipeDetail)', () => {
     ];
 
     const component = renderer.create(
-      <Ingredients ingredients={ingredients} />
+      <IngredientList ingredients={ingredients} />,
     );
 
     const tree = component.toJSON();

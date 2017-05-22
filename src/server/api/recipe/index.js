@@ -25,11 +25,12 @@ function getRecipe({ body: recipe, user }) {
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
     sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
-    ingredients: recipe.ingredients ?
-      recipe.ingredients.map(ingredient => ({
-        ...ingredient,
-        name: ingredient.name.trim(),
-      })) : undefined,
+    ingredients: recipe.ingredients
+      ? recipe.ingredients.map(ingredient => ({
+          ...ingredient,
+          name: ingredient.name.trim(),
+        }))
+      : undefined,
   };
 }
 
@@ -57,7 +58,8 @@ router.get('/', (req, res) => {
 
   query.select('_id title slug preparationTime sideDish');
 
-  query.then(results => res.send(results))
+  query
+    .then(results => res.send(results))
     .catch(err => res.status(500).send(err));
 });
 
@@ -69,9 +71,13 @@ router.get('/ingredients', (req, res) => {
 
 router.get('/side-dishes', (req, res) => {
   Recipe.distinct('sideDish')
-    .then(results => res.send(results
-      .filter(sd => sd && sd !== '')
-      .sort((a, b) => a.localeCompare(b, 'cs'))))
+    .then(results =>
+      res.send(
+        results
+          .filter(sd => sd && sd !== '')
+          .sort((a, b) => a.localeCompare(b, 'cs')),
+      ),
+    )
     .catch(err => res.status(500).send(err));
 });
 
@@ -79,7 +85,7 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
 
   Recipe.findOne({ slug: id })
-    .then((result) => {
+    .then(result => {
       if (result) {
         res.send(result);
         return;

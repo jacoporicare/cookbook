@@ -1,6 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import RecipeList from '../../../../src/client/components/RecipeList/RecipeList';
+import RecipeList
+  from '../../../../src/client/components/RecipeList/RecipeList';
 
 describe('<RecipeList />', () => {
   test('renders recipes', () => {
@@ -31,9 +32,7 @@ describe('<RecipeList />', () => {
       },
     ];
 
-    const component = renderer.create(
-      <RecipeList recipes={recipes} />
-    );
+    const component = renderer.create(<RecipeList recipes={recipes} />);
 
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();

@@ -6,7 +6,9 @@ const router = Router();
 router.use('/local', (req, res) => {
   const user = checkUser(req.body.username, req.body.password);
   if (!user) {
-    res.status(401).json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
+    res
+      .status(401)
+      .json({ message: 'Nesprávné uživatelské jméno nebo heslo.' });
     return;
   }
 
