@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class Ingredients extends Component {
+class IngredientList extends Component {
+  static propTypes = {
+    ingredients: PropTypes.array,
+    servingCount: PropTypes.number,
+  };
+
   constructor(props) {
     super(props);
 
@@ -19,16 +24,20 @@ class Ingredients extends Component {
       return amount.toLocaleString('cs');
     }
 
-    return ((amount / this.props.servingCount) * this.state.servingCount).toLocaleString('cs');
+    return (amount /
+      this.props.servingCount *
+      this.state.servingCount).toLocaleString('cs');
   }
 
-  handleServingCountChange = (event) => {
+  handleServingCountChange = event => {
     const servingCount = Number.parseInt(event.target.value, 10);
 
     this.setState({
-      servingCount: !Number.isNaN(servingCount) && servingCount > 0 ? servingCount : '',
+      servingCount: !Number.isNaN(servingCount) && servingCount > 0
+        ? servingCount
+        : '',
     });
-  }
+  };
 
   render() {
     const { ingredients, servingCount: initialServingCount } = this.props;
@@ -54,11 +63,10 @@ class Ingredients extends Component {
                 className="form-control"
               />
             </div>
-          </div>
-        }
+          </div>}
 
         <ul className="list-group cb-ingredient-list">
-          {ingredients.map((ingredient) => {
+          {ingredients.map(ingredient => {
             const { _id, isGroup, name, amount, amountUnit } = ingredient;
 
             let className = 'list-group-item';
@@ -68,17 +76,15 @@ class Ingredients extends Component {
 
             return (
               <li key={_id} className={className}>
-                {isGroup ?
-                  <b>{name}</b> :
-                  <div className="row">
-                    <div className="col-xs-3 text-right">
-                      {(amount || amountUnit) &&
-                        <b>{this.getAmount(amount)}&nbsp;{amountUnit}</b>
-                      }
-                    </div>
-                    <div className="col-xs-9">{name}</div>
-                  </div>
-                }
+                {isGroup
+                  ? <b>{name}</b>
+                  : <div className="row">
+                      <div className="col-xs-3 text-right">
+                        {(amount || amountUnit) &&
+                          <b>{this.getAmount(amount)}&nbsp;{amountUnit}</b>}
+                      </div>
+                      <div className="col-xs-9">{name}</div>
+                    </div>}
               </li>
             );
           })}
@@ -88,9 +94,4 @@ class Ingredients extends Component {
   }
 }
 
-Ingredients.propTypes = {
-  ingredients: PropTypes.array,
-  servingCount: PropTypes.number,
-};
-
-export default Ingredients;
+export default IngredientList;

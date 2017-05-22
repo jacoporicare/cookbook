@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spinner from '../Spinner/Spinner';
 
-const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onSubmit }) => (
+const LoginForm = ({
+  username,
+  password,
+  rememberMe,
+  isSubmitting,
+  onChange,
+  onSubmit,
+}) => (
   <div>
     {isSubmitting && <Spinner overlay />}
     <div className="row">
@@ -46,7 +53,13 @@ const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onS
             </label>
           </div>
           <div>
-            <button type="submit" className="btn btn-lg btn-primary" disabled={isSubmitting}>Přihlásit</button>
+            <button
+              type="submit"
+              className="btn btn-lg btn-primary"
+              disabled={isSubmitting}
+            >
+              Přihlásit
+            </button>
           </div>
         </form>
       </div>

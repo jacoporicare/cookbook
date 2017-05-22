@@ -5,14 +5,11 @@ import './RecipeList.scss';
 
 const RecipeList = ({ recipes }) => (
   <div className="row cb-recipes">
-    {recipes.map(recipe => (
-      <RecipeListItem recipe={recipe} key={recipe._id} />
-    ))}
+    {recipes.map(recipe => <RecipeListItem recipe={recipe} key={recipe._id} />)}
     {!recipes.length &&
       <div className="alert alert-info">
         Zatím zde není žádný recept.
-      </div>
-    }
+      </div>}
   </div>
 );
 

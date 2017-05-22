@@ -8,7 +8,7 @@ import {
   AUTOCOMPLETE_SIDE_DISHES_FAILURE,
 } from '../actions/autocompleteActions';
 
-export default function autocompleteReducer(state = initialState.autocomplete, action) {
+const autocompleteReducer = (state = initialState.autocomplete, action) => {
   switch (action.type) {
     case AUTOCOMPLETE_INGREDIENTS_REQUEST:
       return {
@@ -69,4 +69,6 @@ export default function autocompleteReducer(state = initialState.autocomplete, a
     default:
       return state;
   }
-}
+};
+
+export default autocompleteReducer;

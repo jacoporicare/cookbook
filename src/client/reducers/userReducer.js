@@ -6,7 +6,7 @@ import {
 } from '../actions/userActions';
 import { LOGIN_SUCCESS } from '../actions/authActions';
 
-export default function userReducer(state = initialState.user, action) {
+const userReducer = (state = initialState.user, action) => {
   switch (action.type) {
     case CURRENT_USER_REQUEST:
       return {
@@ -45,4 +45,6 @@ export default function userReducer(state = initialState.user, action) {
     default:
       return state;
   }
-}
+};
+
+export default userReducer;

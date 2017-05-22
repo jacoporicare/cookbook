@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+} from 'react-sortable-hoc';
 
 const Handle = SortableHandle(() => (
   <div className="pull-right text-muted cb-sortable-handle">
@@ -29,19 +33,17 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
         {!isGroup &&
           <div className="col-xs-3 text-right">
             <b>{amount}&nbsp;{amountUnit}</b>
-          </div>
-        }
+          </div>}
 
-        {!isGroup ?
-          <div className="col-xs-7">
-            {name}
-            <Handle />
-          </div> :
-          <div className="col-xs-10">
-            <b>{name}</b>
-            <Handle />
-          </div>
-        }
+        {!isGroup
+          ? <div className="col-xs-7">
+              {name}
+              <Handle />
+            </div>
+          : <div className="col-xs-10">
+              <b>{name}</b>
+              <Handle />
+            </div>}
       </div>
     </li>
   );
@@ -61,19 +63,25 @@ const SortableList = SortableContainer(({ items, onRemove }) => (
   </ul>
 ));
 
-const IngredientsList = ({ items, onRemove, onSort }) => (
-  <SortableList
-    items={items}
-    onRemove={onRemove}
-    onSortEnd={onSort}
-    useDragHandle
-  />
-);
+const IngredientList = ({ items, onRemove, onSort }) => {
+  if (items.length === 0) {
+    return <div className="alert alert-info">Zatím žádné ingredience.</div>;
+  }
 
-IngredientsList.propTypes = {
+  return (
+    <SortableList
+      items={items}
+      onRemove={onRemove}
+      onSortEnd={onSort}
+      useDragHandle
+    />
+  );
+};
+
+IngredientList.propTypes = {
   items: PropTypes.array.isRequired,
   onRemove: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
 };
 
-export default IngredientsList;
+export default IngredientList;

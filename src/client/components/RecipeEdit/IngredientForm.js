@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 import removeDiacritics from 'javascript-remove-diacritics';
 
-class IngredientsForm extends React.Component {
+class IngredientForm extends Component {
+  static propTypes = {
+    ingredient: PropTypes.object.isRequired,
+    ingredientOptions: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -16,17 +23,18 @@ class IngredientsForm extends React.Component {
     if (value) {
       const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
-        ingredientOptions: this.props.ingredientOptions
-          .filter(i => removeDiacritics.replace(i).toLowerCase().includes(valueLowerCase)),
+        ingredientOptions: this.props.ingredientOptions.filter(i =>
+          removeDiacritics.replace(i).toLowerCase().includes(valueLowerCase),
+        ),
       });
     }
-  }
+  };
 
   handleSuggestionsClearRequested = () => {
     this.setState({ ingredientOptions: [] });
-  }
+  };
 
-  handleKeyPress = (event) => {
+  handleKeyPress = event => {
     if (event.which === 13) {
       event.preventDefault();
 
@@ -34,7 +42,7 @@ class IngredientsForm extends React.Component {
         this.props.onAdd(event);
       }
     }
-  }
+  };
 
   renderSuggestion = suggestion => <span>{suggestion}</span>;
 
@@ -82,14 +90,19 @@ class IngredientsForm extends React.Component {
             <div className="input-group">
               <Autosuggest
                 suggestions={ingredientOptions}
-                onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-                onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+                onSuggestionsFetchRequested={
+                  this.handleSuggestionsFetchRequested
+                }
+                onSuggestionsClearRequested={
+                  this.handleSuggestionsClearRequested
+                }
                 getSuggestionValue={s => s}
                 renderSuggestion={this.renderSuggestion}
                 inputProps={{
                   name: 'name',
                   value: name,
-                  onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
+                  onChange: (event, selectEvent) =>
+                    onChange(event, selectEvent, 'name'),
                   onKeyPress: this.handleKeyPress,
                   className: 'form-control',
                   placeholder: 'Název',
@@ -113,11 +126,4 @@ class IngredientsForm extends React.Component {
   }
 }
 
-IngredientsForm.propTypes = {
-  ingredient: PropTypes.object.isRequired,
-  ingredientOptions: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
-};
-
-export default IngredientsForm;
+export default IngredientForm;

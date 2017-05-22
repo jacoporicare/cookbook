@@ -6,6 +6,12 @@ import { login } from '../actions/authActions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
 class LoginPage extends React.Component {
+  static propTypes = {
+    isSubmitting: PropTypes.bool.isRequired,
+    login: PropTypes.func.isRequired,
+    router: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -16,30 +22,29 @@ class LoginPage extends React.Component {
     };
   }
 
-  handleChange = (event) => {
+  handleChange = event => {
     const { name, value, type, checked } = event.target;
     this.setState({
-      [name]: (type === 'checkbox' ? checked : value),
+      [name]: type === 'checkbox' ? checked : value,
     });
-  }
+  };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     const { username, password, rememberMe } = this.state;
 
-    this.props.login(username, password)
-      .then((action) => {
-        if (action.isSuccess) {
-          const cookieOpts = { path: '/' };
-          if (rememberMe) {
-            cookieOpts.expires = new Date(Date.now() + (365 * 24 * 60 * 60 * 1000));
-          }
-          cookie.save('token', action.response.token, cookieOpts);
-
-          this.props.router.push('/');
+    this.props.login(username, password).then(action => {
+      if (action.isSuccess) {
+        const cookieOpts = { path: '/' };
+        if (rememberMe) {
+          cookieOpts.expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
         }
-      });
-  }
+        cookie.save('token', action.response.token, cookieOpts);
+
+        this.props.router.push('/');
+      }
+    });
+  };
 
   render() {
     const { username, password, rememberMe } = this.state;
@@ -59,12 +64,6 @@ class LoginPage extends React.Component {
     );
   }
 }
-
-LoginPage.propTypes = {
-  isSubmitting: PropTypes.bool.isRequired,
-  login: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired,
-};
 
 const mapStateToProps = state => ({
   isSubmitting: state.auth.isSubmitting,

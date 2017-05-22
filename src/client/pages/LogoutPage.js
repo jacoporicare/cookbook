@@ -5,6 +5,10 @@ import cookie from 'react-cookie';
 import { logout } from '../actions/authActions';
 
 class LogoutPage extends React.Component {
+  static propTypes = {
+    logout: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     cookie.remove('token');
     this.props.logout();
@@ -15,10 +19,6 @@ class LogoutPage extends React.Component {
     return null;
   }
 }
-
-LogoutPage.propTypes = {
-  logout: PropTypes.func.isRequired,
-};
 
 const mapDispatchToProps = {
   logout,

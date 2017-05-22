@@ -8,6 +8,16 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 
 class AppPage extends React.Component {
+  static propTypes = {
+    children: PropTypes.element,
+    isAuthenticated: PropTypes.bool,
+    userName: PropTypes.string,
+    isFetchingUser: PropTypes.bool,
+    errorMessage: PropTypes.string,
+    resetErrorMessage: PropTypes.func.isRequired,
+    getCurrentUser: PropTypes.func.isRequired,
+  };
+
   componentWillMount() {
     if (this.props.isAuthenticated && !this.props.userName) {
       this.props.getCurrentUser();
@@ -15,10 +25,7 @@ class AppPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      errorMessage: oldErrorMessage,
-      resetErrorMessage,
-    } = this.props;
+    const { errorMessage: oldErrorMessage, resetErrorMessage } = this.props;
     const { errorMessage } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
@@ -47,16 +54,6 @@ class AppPage extends React.Component {
     );
   }
 }
-
-AppPage.propTypes = {
-  children: PropTypes.element,
-  isAuthenticated: PropTypes.bool,
-  userName: PropTypes.string,
-  isFetchingUser: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  resetErrorMessage: PropTypes.func.isRequired,
-  getCurrentUser: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
   errorMessage: state.errorMessage,

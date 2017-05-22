@@ -14,7 +14,7 @@ const configureStoreProd = initialState =>
     compose(applyMiddleware(...middlewares)),
   );
 
-const configureStoreDev = (initialState) => {
+const configureStoreDev = initialState => {
   const devMiddlewares = [
     require('redux-immutable-state-invariant')(), // eslint-disable-line global-require, import/no-extraneous-dependencies
     ...middlewares,

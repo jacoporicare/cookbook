@@ -5,59 +5,62 @@ export const CALL_API = Symbol('Call API');
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
-export default function apiMiddleware(store) {
-  return next => (action) => {
-    const callAPI = action[CALL_API];
-    if (typeof callAPI === 'undefined') {
-      return next(action);
-    }
+const apiMiddleware = store => next => action => {
+  const callAPI = action[CALL_API];
+  if (typeof callAPI === 'undefined') {
+    return next(action);
+  }
 
-    const {
-      method = 'get',
-      url,
-      data,
-      types,
-    } = callAPI;
+  const { method = 'get', url, data, types } = callAPI;
 
-    if (typeof url !== 'string') {
-      throw new Error('Specify a string URL.');
-    }
-    if (!Array.isArray(types) || types.length !== 3) {
-      throw new Error('Expected an array of three action types.');
-    }
-    if (types.some(type => typeof type !== 'string')) {
-      throw new Error('Expected action types to be strings.');
-    }
+  if (typeof url !== 'string') {
+    throw new Error('Specify a string URL.');
+  }
+  if (!Array.isArray(types) || types.length !== 3) {
+    throw new Error('Expected an array of three action types.');
+  }
+  if (types.some(type => typeof type !== 'string')) {
+    throw new Error('Expected action types to be strings.');
+  }
 
-    const actionWith = (data) => {
-      const finalAction = {
-        ...action,
-        ...data,
-      };
-      delete finalAction[CALL_API];
-      return finalAction;
+  const actionWith = data => {
+    const finalAction = {
+      ...action,
+      ...data,
     };
-
-    const [requestType, successType, failureType] = types;
-    next(actionWith({ type: requestType }));
-
-    const headers = {};
-    const token = store.getState().auth.token;
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
-    return axios({ method, url, data, headers })
-      .then(response => next(actionWith({
-        type: successType,
-        isSuccess: true,
-        response: response.data,
-      })))
-      .catch(error => next(actionWith({
-        type: failureType,
-        isError: true,
-        response: error.response,
-        errorMessage: error.message,
-      })));
+    delete finalAction[CALL_API];
+    return finalAction;
   };
-}
+
+  const [requestType, successType, failureType] = types;
+  next(actionWith({ type: requestType }));
+
+  const headers = {};
+  const token = store.getState().auth.token;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  return axios({ method, url, data, headers })
+    .then(response =>
+      next(
+        actionWith({
+          type: successType,
+          isSuccess: true,
+          response: response.data,
+        }),
+      ),
+    )
+    .catch(error =>
+      next(
+        actionWith({
+          type: failureType,
+          isError: true,
+          response: error.response,
+          errorMessage: error.message,
+        }),
+      ),
+    );
+};
+
+export default apiMiddleware;

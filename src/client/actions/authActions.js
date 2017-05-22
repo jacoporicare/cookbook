@@ -8,26 +8,20 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
-export function setAuthToken(token) {
-  return {
-    type: SET_AUTH_TOKEN,
-    token,
-  };
-}
+export const setAuthToken = token => ({
+  type: SET_AUTH_TOKEN,
+  token,
+});
 
-export function login(username, password) {
-  return {
-    [CALL_API]: {
-      types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
-      url: '/api/auth/local',
-      method: 'post',
-      data: { username, password },
-    },
-  };
-}
+export const login = (username, password) => ({
+  [CALL_API]: {
+    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
+    url: '/api/auth/local',
+    method: 'post',
+    data: { username, password },
+  },
+});
 
-export function logout() {
-  return {
-    type: LOGOUT,
-  };
-}
+export const logout = () => ({
+  type: LOGOUT,
+});

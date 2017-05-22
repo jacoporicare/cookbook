@@ -5,11 +5,11 @@ import './SearchBar.scss';
 class SearchBar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-  }
+  };
 
-  handleChange = (event) => {
+  handleChange = event => {
     this.props.onChange(event.target.value);
-  }
+  };
 
   render() {
     return (

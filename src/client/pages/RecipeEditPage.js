@@ -1,17 +1,37 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import toastr from 'toastr';
 import { parseValue } from '../utils';
-import { loadRecipe, createRecipe, saveRecipe } from '../actions/recipeDetailsActions';
-import { loadIngredients, loadSideDishes } from '../actions/autocompleteActions';
-import RecipeForm from '../components/RecipeForm/RecipeForm';
+import { recipeFetch } from '../components/RecipeDetail/actions';
+import { recipeSave } from '../components/RecipeEdit/actions';
+import {
+  loadIngredients,
+  loadSideDishes,
+} from '../actions/autocompleteActions';
+import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
-class RecipeEditPage extends React.Component {
+class RecipeEditPage extends Component {
+  static propTypes = {
+    isNew: PropTypes.bool,
+    slug: PropTypes.string,
+    recipe: PropTypes.object,
+    isFetching: PropTypes.bool,
+    isSaving: PropTypes.bool,
+    ingredientOptions: PropTypes.array.isRequired,
+    sideDishOptions: PropTypes.array.isRequired,
+    recipeFetch: PropTypes.func.isRequired,
+    recipeSave: PropTypes.func.isRequired,
+    loadIngredients: PropTypes.func.isRequired,
+    loadSideDishes: PropTypes.func.isRequired,
+    router: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -34,7 +54,7 @@ class RecipeEditPage extends React.Component {
     this.props.loadSideDishes();
 
     if (this.props.slug) {
-      this.props.loadRecipe(this.props.slug);
+      this.props.recipeFetch(this.props.slug);
     }
   }
 
@@ -53,11 +73,11 @@ class RecipeEditPage extends React.Component {
     window.onbeforeunload = undefined;
   }
 
-  checkChanged = (recipe) => {
+  checkChanged = recipe => {
     const changed = !_.isEqual(recipe, this.props.recipe);
 
     if (changed) {
-      window.onbeforeunload = (e) => {
+      window.onbeforeunload = e => {
         e.returnValue = confirmMsg; // eslint-disable-line no-param-reassign
         return confirmMsg;
       };
@@ -66,7 +86,7 @@ class RecipeEditPage extends React.Component {
     }
 
     return changed;
-  }
+  };
 
   validate(recipe) {
     const { title } = recipe;
@@ -96,16 +116,13 @@ class RecipeEditPage extends React.Component {
         changed: this.checkChanged(newRecipe),
       };
     });
-  }
+  };
 
   handleAddIngredient = (event, ingredient) => {
     this.setState(({ recipe }) => {
       const newRecipe = {
         ...recipe,
-        ingredients: [
-          ...recipe.ingredients,
-          ingredient,
-        ],
+        ingredients: [...recipe.ingredients, ingredient],
       };
 
       return {
@@ -113,7 +130,7 @@ class RecipeEditPage extends React.Component {
         changed: this.checkChanged(newRecipe),
       };
     });
-  }
+  };
 
   handleAddGroup = (event, group) => {
     this.setState(({ recipe }) => {
@@ -133,7 +150,7 @@ class RecipeEditPage extends React.Component {
         changed: this.checkChanged(newRecipe),
       };
     });
-  }
+  };
 
   handleRemoveIngredient = (event, index) => {
     event.preventDefault();
@@ -152,7 +169,7 @@ class RecipeEditPage extends React.Component {
         changed: this.checkChanged(newRecipe),
       };
     });
-  }
+  };
 
   handleSortIngredient = ({ oldIndex, newIndex }) => {
     this.setState(({ recipe }) => {
@@ -169,17 +186,16 @@ class RecipeEditPage extends React.Component {
         changed: this.checkChanged(newRecipe),
       };
     });
-  }
+  };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
 
     const { recipe } = this.state;
-    const { isNew, createRecipe, saveRecipe } = this.props;
+    const { recipeSave } = this.props;
 
-    const promise = (isNew ? createRecipe(recipe) : saveRecipe(recipe));
-    promise.then(action => this.handleSave(action));
-  }
+    recipeSave(recipe).then(action => this.handleSave(action));
+  };
 
   handleSave(action) {
     if (action.isSuccess) {
@@ -191,19 +207,29 @@ class RecipeEditPage extends React.Component {
 
   render() {
     const { recipe, errors, changed } = this.state;
-    const { isNew, isFetching, isSaving, ingredientOptions, sideDishOptions } = this.props;
+    const {
+      isNew,
+      isFetching,
+      isSaving,
+      ingredientOptions,
+      sideDishOptions,
+    } = this.props;
 
     if (!isNew && !recipe.slug) {
       return (
         <div className="container">
-          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
+          <SpinnerAlert
+            level="danger"
+            text="Recept nenalezen."
+            spinner={isFetching}
+          />
         </div>
       );
     }
 
     return (
       <div className="container">
-        <RecipeForm
+        <RecipeEdit
           recipe={recipe}
           ingredientOptions={ingredientOptions}
           sideDishOptions={sideDishOptions}
@@ -223,25 +249,8 @@ class RecipeEditPage extends React.Component {
   }
 }
 
-RecipeEditPage.propTypes = {
-  isNew: PropTypes.bool,
-  slug: PropTypes.string,
-  recipe: PropTypes.object,
-  isFetching: PropTypes.bool,
-  isSaving: PropTypes.bool,
-  ingredientOptions: PropTypes.array.isRequired,
-  sideDishOptions: PropTypes.array.isRequired,
-  loadRecipe: PropTypes.func.isRequired,
-  createRecipe: PropTypes.func.isRequired,
-  saveRecipe: PropTypes.func.isRequired,
-  loadIngredients: PropTypes.func.isRequired,
-  loadSideDishes: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state, ownProps) => {
-  const { autocomplete } = state;
+  const { autocomplete, recipeDetail, recipeEdit } = state;
   const ingredientOptions = autocomplete.ingredients.items;
   const sideDishOptions = autocomplete.sideDishes.items;
 
@@ -258,12 +267,9 @@ const mapStateToProps = (state, ownProps) => {
     };
   }
 
-  const { recipeDetails } = state;
-  const { isSaving } = recipeDetails;
-  const {
-    recipe = {},
-    isFetching = true,
-  } = recipeDetails[slug] || {};
+  const { isFetching, recipesBySlug } = recipeDetail;
+  const { isSaving } = recipeEdit;
+  const recipe = recipesBySlug[slug] || {};
 
   return {
     slug,
@@ -276,9 +282,8 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  loadRecipe,
-  createRecipe,
-  saveRecipe,
+  recipeFetch,
+  recipeSave,
   loadIngredients,
   loadSideDishes,
 };

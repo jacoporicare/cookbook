@@ -3,17 +3,25 @@ import PropTypes from 'prop-types';
 import './Spinner.scss';
 
 class Spinner extends React.Component {
+  static propTypes = {
+    delay: PropTypes.number,
+    overlay: PropTypes.bool,
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      visible: (props.delay < 1),
+      visible: props.delay < 1,
     };
   }
 
   componentDidMount() {
     if (!this.state.visible) {
-      this.timer = setTimeout(() => this.setState({ visible: true }), this.props.delay || 50);
+      this.timer = setTimeout(
+        () => this.setState({ visible: true }),
+        this.props.delay || 50,
+      );
     }
   }
 
@@ -41,10 +49,5 @@ class Spinner extends React.Component {
     );
   }
 }
-
-Spinner.propTypes = {
-  delay: PropTypes.number,
-  overlay: PropTypes.bool,
-};
 
 export default Spinner;

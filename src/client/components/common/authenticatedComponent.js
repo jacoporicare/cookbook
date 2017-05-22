@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const authenticatedComponent = (Component) => {
+const authenticatedComponent = Component => {
   class AuthenticatedComponent extends React.Component {
+    static propTypes = {
+      isAuthenticated: PropTypes.bool,
+      router: PropTypes.object.isRequired,
+    };
+
     componentWillMount() {
       if (!this.props.isAuthenticated) {
         this.props.router.push('/prihlaseni');
@@ -19,19 +24,11 @@ const authenticatedComponent = (Component) => {
     render() {
       return (
         <div>
-          {this.props.isAuthenticated
-            ? <Component {...this.props} />
-            : null
-          }
+          {this.props.isAuthenticated ? <Component {...this.props} /> : null}
         </div>
       );
     }
   }
-
-  AuthenticatedComponent.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    router: PropTypes.object.isRequired,
-  };
 
   const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,

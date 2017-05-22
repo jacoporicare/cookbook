@@ -7,7 +7,7 @@ import {
   LOGOUT,
 } from '../actions/authActions';
 
-export default function authReducer(state = initialState.auth, action) {
+const authReducer = (state = initialState.auth, action) => {
   switch (action.type) {
     case SET_AUTH_TOKEN:
       return {
@@ -42,4 +42,6 @@ export default function authReducer(state = initialState.auth, action) {
     default:
       return state;
   }
-}
+};
+
+export default authReducer;

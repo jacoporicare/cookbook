@@ -13,10 +13,22 @@ import NotFoundPage from './pages/NotFoundPage';
 export default (
   <Route path="/" component={AppPage}>
     <IndexRoute component={authenticatedComponent(RecipeListPage)} />
-    <Route path="recept/:slug" component={authenticatedComponent(RecipeDetailPage)} />
-    <Route path="recept/:slug/upravit" component={authenticatedComponent(RecipeEditPage)} />
-    <Route path="novy-recept" component={authenticatedComponent(RecipeEditPage)} />
-    <Route path="prilohy" component={authenticatedComponent(SideDishListPage)} />
+    <Route
+      path="recept/:slug"
+      component={authenticatedComponent(RecipeDetailPage)}
+    />
+    <Route
+      path="recept/:slug/upravit"
+      component={authenticatedComponent(RecipeEditPage)}
+    />
+    <Route
+      path="novy-recept"
+      component={authenticatedComponent(RecipeEditPage)}
+    />
+    <Route
+      path="prilohy"
+      component={authenticatedComponent(SideDishListPage)}
+    />
     <Route path="prihlaseni" component={LoginPage} />
     <Route path="odhlaseni" component={authenticatedComponent(LogoutPage)} />
     <Route path="*" component={NotFoundPage} />

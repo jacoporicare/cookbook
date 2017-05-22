@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class IngredientsGroupForm extends React.Component {
-  handleKeyPress = (event) => {
+class IngredientGroupForm extends Component {
+  static propTypes = {
+    group: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
+  };
+
+  handleKeyPress = event => {
     if (event.which === 13) {
       event.preventDefault();
 
@@ -10,7 +16,7 @@ class IngredientsGroupForm extends React.Component {
         this.props.onAdd(event);
       }
     }
-  }
+  };
 
   render() {
     const { group, onChange, onAdd } = this.props;
@@ -43,10 +49,4 @@ class IngredientsGroupForm extends React.Component {
   }
 }
 
-IngredientsGroupForm.propTypes = {
-  group: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
-};
-
-export default IngredientsGroupForm;
+export default IngredientGroupForm;

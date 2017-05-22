@@ -1,4 +1,4 @@
-export default class HtmlBuilder {
+class HtmlBuilder {
   constructor() {
     this.result = [];
     this.opened = [];
@@ -22,7 +22,8 @@ export default class HtmlBuilder {
   }
 
   closeAll() {
-    while (this.opened.length) this.close();
+    while (this.opened.length)
+      this.close();
   }
 
   isOpen(tag) {
@@ -44,3 +45,5 @@ export default class HtmlBuilder {
     return html.match(/<([^\s>]+).*>/)[1];
   }
 }
+
+export default HtmlBuilder;

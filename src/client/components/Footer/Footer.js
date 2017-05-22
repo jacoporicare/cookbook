@@ -3,7 +3,7 @@ import React from 'react';
 const Footer = () => (
   <div className="container">
     <hr />
-    <p>&copy; {new Date().getFullYear()} &middot; Žrádelník</p>
+    <p>© {new Date().getFullYear()} · Žrádelník</p>
   </div>
 );
 

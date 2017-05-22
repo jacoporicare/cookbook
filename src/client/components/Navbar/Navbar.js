@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 import NavItem from '../NavItem/NavItem';
 
-class Navbar extends React.Component {
+class Navbar extends Component {
+  static propTypes = {
+    userName: PropTypes.string,
+    isAuthenticated: PropTypes.bool,
+    isFetchingUser: PropTypes.bool,
+  };
+
   constructor(props) {
     super(props);
 
@@ -14,7 +20,7 @@ class Navbar extends React.Component {
 
   handleCollapseToggle = () => {
     this.setState(({ collapsed }) => ({ collapsed: !collapsed }));
-  }
+  };
 
   render() {
     const { userName, isAuthenticated, isFetchingUser } = this.props;
@@ -25,7 +31,11 @@ class Navbar extends React.Component {
         <div className="container">
 
           <div className="navbar-header">
-            <button className="navbar-toggle" type="button" onClick={this.handleCollapseToggle}>
+            <button
+              className="navbar-toggle"
+              type="button"
+              onClick={this.handleCollapseToggle}
+            >
               <span className="icon-bar" />
               <span className="icon-bar" />
               <span className="icon-bar" />
@@ -33,7 +43,10 @@ class Navbar extends React.Component {
             <IndexLink to="/" className="navbar-brand">Žrádelník</IndexLink>
           </div>
 
-          <div className={`navbar-collapse ${collapsed ? 'collapse' : ''}`} id="navbar-main">
+          <div
+            className={`navbar-collapse ${collapsed ? 'collapse' : ''}`}
+            id="navbar-main"
+          >
             {isAuthenticated &&
               <div>
                 <ul className="nav navbar-nav">
@@ -42,16 +55,14 @@ class Navbar extends React.Component {
                 <ul className="nav navbar-nav navbar-right">
                   <li>
                     <a>
-                      {isFetchingUser ?
-                        <i className="fa fa-spin fa-spinner" /> :
-                        <span><i className="fa fa-user" /> {userName}</span>
-                      }
+                      {isFetchingUser
+                        ? <i className="fa fa-spin fa-spinner" />
+                        : <span><i className="fa fa-user" /> {userName}</span>}
                     </a>
                   </li>
                   <li><Link to="/odhlaseni">Odhlásit</Link></li>
                 </ul>
-              </div>
-            }
+              </div>}
           </div>
 
         </div>
@@ -59,11 +70,5 @@ class Navbar extends React.Component {
     );
   }
 }
-
-Navbar.propTypes = {
-  userName: PropTypes.string,
-  isAuthenticated: PropTypes.bool,
-  isFetchingUser: PropTypes.bool,
-};
 
 export default Navbar;

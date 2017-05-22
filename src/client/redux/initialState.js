@@ -11,20 +11,24 @@ export default {
     },
   },
   recipeList: {
-    recipes: [],
     isFetching: false,
+    recipes: [],
   },
-  recipeDetails: {
+  recipeDetail: {
+    isFetching: false,
+    recipesBySlug: {},
+  },
+  recipeEdit: {
     isSaving: false,
   },
   autocomplete: {
     ingredients: {
-      items: [],
       isFetching: false,
+      items: [],
     },
     sideDishes: {
-      items: [],
       isFetching: false,
+      items: [],
     },
   },
 };

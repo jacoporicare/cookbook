@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parseValue } from '../../utils';
-import IngredientsList from './IngredientsList';
-import IngredientsForm from './IngredientsForm';
-import IngredientsGroupForm from './IngredientsGroupForm';
+import IngredientList from './IngredientList';
+import IngredientForm from './IngredientForm';
+import IngredientGroupForm from './IngredientGroupForm';
 
 const initialIngredient = {
   name: '',
@@ -11,7 +11,16 @@ const initialIngredient = {
   amountUnit: '',
 };
 
-class Ingredients extends React.Component {
+class IngredientEdit extends Component {
+  static propTypes = {
+    items: PropTypes.array.isRequired,
+    ingredientOptions: PropTypes.array.isRequired,
+    onAdd: PropTypes.func.isRequired,
+    onAddGroup: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+    onSort: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -32,21 +41,21 @@ class Ingredients extends React.Component {
         [name]: parseValue(value, type),
       },
     }));
-  }
+  };
 
-  handleGroupChange = (event) => {
+  handleGroupChange = event => {
     this.setState({ group: event.target.value });
-  }
+  };
 
-  handleAddIngredient = (event) => {
+  handleAddIngredient = event => {
     this.props.onAdd(event, this.state.ingredient);
     this.setState({ ingredient: initialIngredient });
-  }
+  };
 
-  handleAddGroup = (event) => {
+  handleAddGroup = event => {
     this.props.onAddGroup(event, this.state.group);
     this.setState({ group: '' });
-  }
+  };
 
   render() {
     const { items, ingredientOptions, onRemove, onSort } = this.props;
@@ -54,21 +63,14 @@ class Ingredients extends React.Component {
 
     return (
       <div>
-        {items.length > 0 ?
-          <IngredientsList
-            items={items}
-            onRemove={onRemove}
-            onSort={onSort}
-          /> :
-          <div className="alert alert-info">Zatím žádné ingredience.</div>
-        }
-        <IngredientsForm
+        <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+        <IngredientForm
           ingredient={ingredient}
           ingredientOptions={ingredientOptions}
           onChange={this.handleIngredientChange}
           onAdd={this.handleAddIngredient}
         />
-        <IngredientsGroupForm
+        <IngredientGroupForm
           group={group}
           onChange={this.handleGroupChange}
           onAdd={this.handleAddGroup}
@@ -78,13 +80,4 @@ class Ingredients extends React.Component {
   }
 }
 
-Ingredients.propTypes = {
-  items: PropTypes.array.isRequired,
-  ingredientOptions: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onAddGroup: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onSort: PropTypes.func.isRequired,
-};
-
-export default Ingredients;
+export default IngredientEdit;

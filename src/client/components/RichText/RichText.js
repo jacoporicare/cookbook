@@ -3,25 +3,25 @@ import PropTypes from 'prop-types';
 import HtmlBuilder from './htmlBuilder';
 import './RichText.scss';
 
-function formatText(value) {
-  return value
+const formatText = value =>
+  value
     .replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>')
     .replace(/_([^_\n]+)_/g, '<em>$1</em>')
     .replace(/`([^`\n]+)`/g, '<code>$1</code>');
-}
 
-function getHtml(text) {
+const getHtml = text => {
   if (!text) {
     return null;
   }
 
-  const lines = text.replace(/[\u00A0-\u9999<>&]/gi, i => `&#${i.charCodeAt(0)};`) // encode HTML
+  const lines = text
+    .replace(/[\u00A0-\u9999<>&]/gi, i => `&#${i.charCodeAt(0)};`) // encode HTML
     .split(/\n/g);
 
   const hb = new HtmlBuilder();
   let stepNo = 1;
 
-  lines.forEach((l) => {
+  lines.forEach(l => {
     let line = l.trim();
 
     if (line === '' && hb.isOpen('li')) {
@@ -55,11 +55,13 @@ function getHtml(text) {
   });
 
   return hb.getHtml();
-}
+};
 
+/* eslint-disable react/no-danger */
 const RichText = ({ text }) => (
-  <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} /> // eslint-disable-line react/no-danger
+  <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} />
 );
+/* eslint-enable react/no-danger */
 
 RichText.propTypes = {
   text: PropTypes.string,

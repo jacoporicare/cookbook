@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 import removeDiacritics from 'javascript-remove-diacritics';
+import { deleteNullKeys } from '../../utils';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
-import Ingredients from './Ingredients';
-import { deleteNullKeys } from '../../utils';
+import IngredientEdit from './IngredientEdit';
 
-class RecipeForm extends React.Component {
+class RecipeEdit extends Component {
+  static propTypes = {
+    recipe: PropTypes.object.isRequired,
+    ingredientOptions: PropTypes.array.isRequired,
+    sideDishOptions: PropTypes.array.isRequired,
+    errors: PropTypes.object.isRequired,
+    changed: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    onAddIngredient: PropTypes.func.isRequired,
+    onAddGroup: PropTypes.func.isRequired,
+    onRemoveIngredient: PropTypes.func.isRequired,
+    onSortIngredient: PropTypes.func.isRequired,
+    isNew: PropTypes.bool,
+    isSaving: PropTypes.bool,
+  };
+
   constructor(props) {
     super(props);
 
@@ -24,21 +40,22 @@ class RecipeForm extends React.Component {
     if (value) {
       const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
-        sideDishOptions: this.props.sideDishOptions
-          .filter(sd => removeDiacritics.replace(sd).toLowerCase().includes(valueLowerCase)),
+        sideDishOptions: this.props.sideDishOptions.filter(sd =>
+          removeDiacritics.replace(sd).toLowerCase().includes(valueLowerCase),
+        ),
       });
     }
-  }
+  };
 
   handleSuggestionsClearRequested = () => {
     this.setState({ sideDishOptions: [] });
-  }
+  };
 
-  handleKeyPress = (event) => {
+  handleKeyPress = event => {
     if (event.which === 13) {
       event.preventDefault();
     }
-  }
+  };
 
   renderSuggestion = suggestion => <span>{suggestion}</span>;
 
@@ -82,7 +99,7 @@ class RecipeForm extends React.Component {
               disabled={!title || hasError || isSaving || !changed}
             >
               <i className="fa fa-save" />{' '}
-              {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
+              {isSaving ? <span>Ukládání…</span> : 'Uložit'}
             </button>
           </span>
         </h1>
@@ -90,7 +107,9 @@ class RecipeForm extends React.Component {
         <fieldset>
           <div className={`form-group ${errors.title ? 'has-error' : ''}`}>
             <input
-              ref={(titleInput) => { this.titleInput = titleInput; }}
+              ref={titleInput => {
+                this.titleInput = titleInput;
+              }}
               type="text"
               name="title"
               value={title}
@@ -98,7 +117,8 @@ class RecipeForm extends React.Component {
               className="form-control"
               placeholder="Název"
             />
-            {errors.title && <span className="text-danger">Název je povinný</span>}
+            {errors.title &&
+              <span className="text-danger">Název je povinný</span>}
           </div>
         </fieldset>
 
@@ -140,15 +160,20 @@ class RecipeForm extends React.Component {
                 <label htmlFor="sideDish">Příloha</label>
                 <Autosuggest
                   suggestions={sideDishOptions}
-                  onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+                  onSuggestionsFetchRequested={
+                    this.handleSuggestionsFetchRequested
+                  }
+                  onSuggestionsClearRequested={
+                    this.handleSuggestionsClearRequested
+                  }
                   getSuggestionValue={s => s}
                   renderSuggestion={this.renderSuggestion}
                   inputProps={{
                     id: 'sideDish',
                     name: 'sideDish',
                     value: sideDish,
-                    onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
+                    onChange: (event, selectEvent) =>
+                      onChange(event, selectEvent, 'sideDish'),
                     onKeyPress: this.handleKeyPress,
                     className: 'form-control',
                   }}
@@ -161,7 +186,7 @@ class RecipeForm extends React.Component {
           <div className="col-md-4">
             <fieldset>
               <legend>Ingredience</legend>
-              <Ingredients
+              <IngredientEdit
                 items={ingredients}
                 ingredientOptions={ingredientOptions}
                 onAdd={onAddIngredient}
@@ -201,7 +226,7 @@ class RecipeForm extends React.Component {
                 disabled={!title || hasError || isSaving || !changed}
               >
                 <i className="fa fa-save" />{' '}
-                {isSaving ? <span>Ukládání&hellip;</span> : 'Uložit'}
+                {isSaving ? <span>Ukládání…</span> : 'Uložit'}
               </button>
             </p>
           </div>
@@ -217,20 +242,4 @@ class RecipeForm extends React.Component {
   }
 }
 
-RecipeForm.propTypes = {
-  recipe: PropTypes.object.isRequired,
-  ingredientOptions: PropTypes.array.isRequired,
-  sideDishOptions: PropTypes.array.isRequired,
-  errors: PropTypes.object.isRequired,
-  changed: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onAddIngredient: PropTypes.func.isRequired,
-  onAddGroup: PropTypes.func.isRequired,
-  onRemoveIngredient: PropTypes.func.isRequired,
-  onSortIngredient: PropTypes.func.isRequired,
-  isNew: PropTypes.bool,
-  isSaving: PropTypes.bool,
-};
-
-export default RecipeForm;
+export default RecipeEdit;

@@ -11,10 +11,10 @@ const RecipeListItem = ({ recipe }) => {
         <h4 className="text-primary">{title}</h4>
         {(preparationTime > 0 || !!sideDish) &&
           <ul className="cb-info-list text-muted">
-            {preparationTime > 0 && <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
+            {preparationTime > 0 &&
+              <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
             {!!sideDish && <li><i className="fa fa-spoon" /> {sideDish}</li>}
-          </ul>
-        }
+          </ul>}
       </Link>
     </div>
   );

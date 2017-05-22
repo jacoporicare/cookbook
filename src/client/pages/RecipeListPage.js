@@ -3,12 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import removeDiacritics from 'javascript-remove-diacritics';
-import { fetchRecipeList } from '../components/RecipeList/actions';
+import { recipeListFetch } from '../components/RecipeList/actions';
 import RecipeList from '../components/RecipeList/RecipeList';
 import SearchBar from '../components/SearchBar/SearchBar';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 class RecipeListPage extends Component {
+  static propTypes = {
+    recipes: PropTypes.array.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    recipeListFetch: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -19,7 +25,7 @@ class RecipeListPage extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchRecipeList();
+    this.props.recipeListFetch();
   }
 
   componentWillReceiveProps({ recipes }) {
@@ -44,13 +50,13 @@ class RecipeListPage extends Component {
     );
   }
 
-  handleSearchChange = (searchText) => {
+  handleSearchChange = searchText => {
     const { recipes } = this.props;
     this.setState({
       searchText,
       recipes: this.getFilteredRecipes(recipes, searchText),
     });
-  }
+  };
 
   render() {
     const { isFetching } = this.props;
@@ -72,32 +78,33 @@ class RecipeListPage extends Component {
           </div>
         </h1>
         <SearchBar onChange={this.handleSearchChange} />
-        {isEmpty ?
-          <SpinnerAlert
-            level="info"
-            spinner={isFetching}
-            text={searchText ? 'Nenalezen žádný recept.' : 'Zatím zde není žádný recept.'}
-          />
-          : <RecipeList recipes={recipes} />
-        }
+        {isEmpty
+          ? <SpinnerAlert
+              level="info"
+              spinner={isFetching}
+              text={
+                searchText
+                  ? 'Nenalezen žádný recept.'
+                  : 'Zatím zde není žádný recept.'
+              }
+            />
+          : <RecipeList recipes={recipes} />}
       </div>
     );
   }
 }
 
-RecipeListPage.propTypes = {
-  recipes: PropTypes.array.isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  fetchRecipeList: PropTypes.func.isRequired,
+const mapStateToProps = state => {
+  const { recipes, isFetching } = state.recipeList;
+
+  return {
+    recipes,
+    isFetching,
+  };
 };
 
-const mapStateToProps = state => ({
-  recipes: state.recipeList.recipes,
-  isFetching: state.recipeList.isFetching,
-});
-
 const mapDispatchToProps = {
-  fetchRecipeList,
+  recipeListFetch,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeListPage);
