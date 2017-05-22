@@ -198,10 +198,10 @@ class RecipeEditPage extends Component {
   };
 
   handleSave(action) {
-    if (action.isSuccess) {
+    if (action.payload && action.payload.recipe) {
       toastr.success('Recept úspěšně uložen');
       this.saved = true;
-      this.props.router.push(`/recept/${action.response.slug}`);
+      this.props.router.push(`/recept/${action.payload.recipe.slug}`);
     }
   }
 

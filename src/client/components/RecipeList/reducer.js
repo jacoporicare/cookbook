@@ -4,6 +4,7 @@ import {
   RECIPE_LIST_FETCH_SUCCESS,
   RECIPE_LIST_FETCH_FAILURE,
 } from './actions';
+import { RECIPE_SAVE_SUCCESS } from '../RecipeEdit/actions';
 import { RECIPE_DELETE_SUCCESS } from '../RecipeDetail/actions';
 
 const sortByTitle = (a, b) => a.title.localeCompare(b.title);
@@ -31,6 +32,19 @@ const recipeListReducer = (state = initialState.recipeList, action) => {
         ...state,
         isFetching: false,
       };
+
+    case RECIPE_SAVE_SUCCESS: {
+      const { recipe } = action.payload;
+      const recipes = [
+        ...state.recipes.filter(r => r._id !== recipe._id),
+        recipe,
+      ];
+
+      return {
+        ...state,
+        recipes: recipes.sort(sortByTitle),
+      };
+    }
 
     case RECIPE_DELETE_SUCCESS: {
       const { id } = action.payload;

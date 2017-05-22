@@ -1,12 +1,14 @@
 import expect from 'unexpected';
-import { recipeFetch, recipeFetchSuccess } from '../actions';
 import reducer from '../reducer';
+import { recipeFetch, recipeFetchSuccess } from '../actions';
 
 describe('RecipeDetail reducer', () => {
   it('starts fetching recipe', () => {
+    const stateBefore = undefined;
     const action = recipeFetch();
     const stateAfter = { isFetching: true, recipesBySlug: {} };
-    expect(reducer(undefined, action), 'to equal', stateAfter);
+
+    expect(reducer(stateBefore, action), 'to equal', stateAfter);
   });
 
   it('fetches recipe', () => {
@@ -18,6 +20,7 @@ describe('RecipeDetail reducer', () => {
         recept: { title: 'Recept' },
       },
     };
+
     expect(reducer(stateBefore, action), 'to equal', stateAfter);
   });
 });
