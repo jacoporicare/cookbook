@@ -1,6 +1,6 @@
 import initialState from '../../redux/initialState';
 import {
-  RECIPE_LIST_FETCH,
+  RECIPE_LIST_FETCH_REQUEST,
   RECIPE_LIST_FETCH_SUCCESS,
   RECIPE_LIST_FETCH_FAILURE,
 } from './actions';
@@ -11,7 +11,7 @@ const sortByTitle = (a, b) => a.title.localeCompare(b.title);
 
 const recipeListReducer = (state = initialState.recipeList, action) => {
   switch (action.type) {
-    case RECIPE_LIST_FETCH:
+    case RECIPE_LIST_FETCH_REQUEST:
       return {
         ...state,
         isFetching: true,

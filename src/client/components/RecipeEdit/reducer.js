@@ -1,13 +1,13 @@
 import initialState from '../../redux/initialState';
 import {
-  RECIPE_SAVE,
+  RECIPE_SAVE_REQUEST,
   RECIPE_SAVE_SUCCESS,
   RECIPE_SAVE_FAILURE,
 } from './actions';
 
 const recipeEditReducer = (state = initialState.recipeEdit, action) => {
   switch (action.type) {
-    case RECIPE_SAVE:
+    case RECIPE_SAVE_REQUEST:
       return {
         ...state,
         isSaving: true,

@@ -1,13 +1,13 @@
 import expect from 'unexpected';
 import reducer from '../reducer';
-import { recipeListFetch, recipeListFetchSuccess } from '../actions';
-import { recipeSaveSuccess } from '../../RecipeEdit/actions';
-import { recipeDeleteSuccess } from '../../RecipeDetail/actions';
+import { fetchRecipeListRequest, fetchRecipeListSuccess } from '../actions';
+import { saveRecipeSuccess } from '../../RecipeEdit/actions';
+import { deleteRecipeSuccess } from '../../RecipeDetail/actions';
 
 describe('RecipeList reducer', () => {
   it('starts fetching recipe list', () => {
     const stateBefore = undefined;
-    const action = recipeListFetch();
+    const action = fetchRecipeListRequest();
     const stateAfter = { isFetching: true, recipes: [] };
 
     expect(reducer(stateBefore, action), 'to equal', stateAfter);
@@ -15,7 +15,7 @@ describe('RecipeList reducer', () => {
 
   it('fetches recipe list and sort them by title', () => {
     const stateBefore = { isFetching: true, recipes: [] };
-    const action = recipeListFetchSuccess([
+    const action = fetchRecipeListSuccess([
       { _id: 1, title: 'z' },
       { _id: 2, title: 'a' },
     ]);
@@ -31,7 +31,7 @@ describe('RecipeList reducer', () => {
     const stateBefore = {
       recipes: [{ _id: 2, title: 'a' }, { _id: 1, title: 'z' }],
     };
-    const action = recipeSaveSuccess({ _id: 3, title: 'm' });
+    const action = saveRecipeSuccess({ _id: 3, title: 'm' });
     const stateAfter = {
       recipes: [
         { _id: 2, title: 'a' },
@@ -51,7 +51,7 @@ describe('RecipeList reducer', () => {
         { _id: 1, title: 'n' },
       ],
     };
-    const action = recipeSaveSuccess({ _id: 3, title: 'o' });
+    const action = saveRecipeSuccess({ _id: 3, title: 'o' });
     const stateAfter = {
       recipes: [
         { _id: 2, title: 'a' },
@@ -67,7 +67,7 @@ describe('RecipeList reducer', () => {
     const stateBefore = {
       recipes: [{ _id: 1, title: 'z' }, { _id: 2, title: 'a' }],
     };
-    const action = recipeDeleteSuccess(1);
+    const action = deleteRecipeSuccess(1);
     const stateAfter = {
       recipes: [{ _id: 2, title: 'a' }],
     };
