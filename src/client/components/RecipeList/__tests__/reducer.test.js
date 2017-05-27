@@ -6,9 +6,9 @@ import { deleteRecipeSuccess } from '../../RecipeDeleteModal/actions';
 
 describe('RecipeList reducer', () => {
   it('starts fetching recipe list', () => {
-    const stateBefore = undefined;
+    const stateBefore = {};
     const action = fetchRecipeListRequest();
-    const stateAfter = { isFetching: true, recipes: [] };
+    const stateAfter = { isFetching: true };
 
     expect(reducer(stateBefore, action), 'to equal', stateAfter);
   });

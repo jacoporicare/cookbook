@@ -4,9 +4,9 @@ import { fetchRecipeRequest, fetchRecipeSuccess } from '../actions';
 
 describe('RecipeDetail reducer', () => {
   it('starts fetching recipe', () => {
-    const stateBefore = undefined;
+    const stateBefore = {};
     const action = fetchRecipeRequest();
-    const stateAfter = { isFetching: true, recipesBySlug: {} };
+    const stateAfter = { isFetching: true };
 
     expect(reducer(stateBefore, action), 'to equal', stateAfter);
   });
