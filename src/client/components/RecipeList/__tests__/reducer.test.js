@@ -2,7 +2,7 @@ import expect from 'unexpected';
 import reducer from '../reducer';
 import { fetchRecipeListRequest, fetchRecipeListSuccess } from '../actions';
 import { saveRecipeSuccess } from '../../RecipeEdit/actions';
-import { deleteRecipeSuccess } from '../../RecipeDetail/actions';
+import { deleteRecipeSuccess } from '../../RecipeDeleteModal/actions';
 
 describe('RecipeList reducer', () => {
   it('starts fetching recipe list', () => {

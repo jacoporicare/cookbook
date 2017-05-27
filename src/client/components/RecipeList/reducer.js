@@ -5,7 +5,7 @@ import {
   RECIPE_LIST_FETCH_FAILURE,
 } from './actions';
 import { RECIPE_SAVE_SUCCESS } from '../RecipeEdit/actions';
-import { RECIPE_DELETE_SUCCESS } from '../RecipeDetail/actions';
+import { RECIPE_DELETE_SUCCESS } from '../RecipeDeleteModal/actions';
 
 const sortByTitle = (a, b) => a.title.localeCompare(b.title);
 
