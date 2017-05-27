@@ -20,15 +20,13 @@ export default {
   },
   recipeEdit: {
     isSaving: false,
-  },
-  autocomplete: {
-    ingredients: {
+    ingredientList: {
       isFetching: false,
-      items: [],
+      ingredients: [],
     },
-    sideDishes: {
+    sideDishList: {
       isFetching: false,
-      items: [],
+      sideDishes: [],
     },
   },
 };

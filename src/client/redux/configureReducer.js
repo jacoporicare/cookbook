@@ -6,7 +6,6 @@ import user from '../reducers/userReducer';
 import recipeList from '../components/RecipeList/reducer';
 import recipeDetail from '../components/RecipeDetail/reducer';
 import recipeEdit from '../components/RecipeEdit/reducer';
-import autocomplete from '../reducers/autocompleteReducer';
 
 const configureReducer = () =>
   combineReducers({
@@ -17,7 +16,6 @@ const configureReducer = () =>
     recipeList,
     recipeDetail,
     recipeEdit,
-    autocomplete,
   });
 
 export default configureReducer;

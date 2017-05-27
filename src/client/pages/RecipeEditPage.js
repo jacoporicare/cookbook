@@ -5,11 +5,11 @@ import _ from 'lodash';
 import toastr from 'toastr';
 import { parseValue } from '../utils';
 import { fetchRecipe } from '../components/RecipeDetail/actions';
-import { saveRecipe } from '../components/RecipeEdit/actions';
 import {
-  loadIngredients,
-  loadSideDishes,
-} from '../actions/autocompleteActions';
+  saveRecipe,
+  fetchIngredientList,
+  fetchSideDishList,
+} from '../components/RecipeEdit/actions';
 import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
@@ -26,8 +26,8 @@ class RecipeEditPage extends Component {
     sideDishOptions: PropTypes.array.isRequired,
     fetchRecipe: PropTypes.func.isRequired,
     saveRecipe: PropTypes.func.isRequired,
-    loadIngredients: PropTypes.func.isRequired,
-    loadSideDishes: PropTypes.func.isRequired,
+    fetchIngredientList: PropTypes.func.isRequired,
+    fetchSideDishList: PropTypes.func.isRequired,
     router: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
   };
@@ -50,8 +50,8 @@ class RecipeEditPage extends Component {
       () => (this.state.changed && !this.saved ? confirmMsg : undefined),
     );
 
-    this.props.loadIngredients();
-    this.props.loadSideDishes();
+    this.props.fetchIngredientList();
+    this.props.fetchSideDishList();
 
     if (this.props.slug) {
       this.props.fetchRecipe(this.props.slug);
@@ -250,9 +250,14 @@ class RecipeEditPage extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { autocomplete, recipeDetail, recipeEdit } = state;
-  const ingredientOptions = autocomplete.ingredients.items;
-  const sideDishOptions = autocomplete.sideDishes.items;
+  const {
+    recipeDetail: { isFetching, recipesBySlug },
+    recipeEdit: {
+      isSaving,
+      ingredientList: { ingredients },
+      sideDishList: { sideDishes },
+    },
+  } = state;
 
   const { slug } = ownProps.params;
 
@@ -262,13 +267,11 @@ const mapStateToProps = (state, ownProps) => {
       recipe: {
         ingredients: [],
       },
-      ingredientOptions,
-      sideDishOptions,
+      ingredientOptions: ingredients,
+      sideDishOptions: sideDishes,
     };
   }
 
-  const { isFetching, recipesBySlug } = recipeDetail;
-  const { isSaving } = recipeEdit;
   const recipe = recipesBySlug[slug] || {};
 
   return {
@@ -276,16 +279,16 @@ const mapStateToProps = (state, ownProps) => {
     recipe,
     isFetching,
     isSaving,
-    ingredientOptions,
-    sideDishOptions,
+    ingredientOptions: ingredients,
+    sideDishOptions: sideDishes,
   };
 };
 
 const mapDispatchToProps = {
   fetchRecipe,
   saveRecipe,
-  loadIngredients,
-  loadSideDishes,
+  fetchIngredientList,
+  fetchSideDishList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeEditPage);

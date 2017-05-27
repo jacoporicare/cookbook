@@ -8,7 +8,11 @@ describe('RecipeEdit reducer', () => {
     const action = saveRecipeRequest();
     const stateAfter = { isSaving: true };
 
-    expect(reducer(stateBefore, action), 'to equal', stateAfter);
+    expect(
+      reducer(stateBefore, action).isSaving,
+      'to equal',
+      stateAfter.isSaving,
+    );
   });
 
   it('saves recipe', () => {
@@ -16,6 +20,10 @@ describe('RecipeEdit reducer', () => {
     const action = saveRecipeSuccess();
     const stateAfter = { isSaving: false };
 
-    expect(reducer(stateBefore, action), 'to equal', stateAfter);
+    expect(
+      reducer(stateBefore, action).isSaving,
+      'to equal',
+      stateAfter.isSaving,
+    );
   });
 });
