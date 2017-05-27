@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import cookie from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
 import { login } from '../actions/authActions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
@@ -10,6 +10,7 @@ class LoginPage extends React.Component {
     isSubmitting: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired,
     router: PropTypes.object.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
   };
 
   constructor(props) {
@@ -31,17 +32,19 @@ class LoginPage extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+
+    const { login, router, cookies } = this.props;
     const { username, password, rememberMe } = this.state;
 
-    this.props.login(username, password).then(action => {
+    login(username, password).then(action => {
       if (action.isSuccess) {
         const cookieOpts = { path: '/' };
         if (rememberMe) {
           cookieOpts.expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
         }
-        cookie.save('token', action.response.token, cookieOpts);
+        cookies.set('token', action.response.token, cookieOpts);
 
-        this.props.router.push('/');
+        router.push('/');
       }
     });
   };
@@ -73,4 +76,6 @@ const mapDispatchToProps = {
   login,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withCookies(LoginPage),
+);

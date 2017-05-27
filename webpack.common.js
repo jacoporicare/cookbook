@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
@@ -25,9 +24,9 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            'css-loader?sourceMap',
-            'postcss-loader',
-            'sass-loader?sourceMap',
+            { loader: 'css-loader', options: { sourceMap: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
+            { loader: 'sass-loader', options: { sourceMap: true } },
           ],
         }),
       },
@@ -36,8 +35,8 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            'css-loader?sourceMap',
-            'postcss-loader',
+            { loader: 'css-loader', options: { sourceMap: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
           ],
         }),
       },
@@ -52,11 +51,6 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({
       options: {
         context: '/',
-        postcss: [
-          autoprefixer({
-            browsers: ['last 3 versions'],
-          }),
-        ],
       },
     }),
 

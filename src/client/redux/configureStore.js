@@ -16,17 +16,12 @@ const configureStoreProd = initialState =>
   );
 
 const configureStoreDev = initialState => {
-  const devMiddlewares = [
-    require('redux-immutable-state-invariant')(), // eslint-disable-line global-require, import/no-extraneous-dependencies
-    ...middlewares,
-  ];
-
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(...devMiddlewares)),
+    composeEnhancers(applyMiddleware(...middlewares)),
   );
 
   return store;
