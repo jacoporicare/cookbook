@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
-import { resetErrorMessage } from '../actions/errorMessageActions';
+import { resetErrorMessage } from '../components/ErrorMessage/actions';
 import { getCurrentUser } from '../actions/userActions';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
