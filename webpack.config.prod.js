@@ -4,7 +4,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
-const commonConfig = require('./webpack.common');
+const commonConfig = require('./webpack.config.common');
 
 module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
