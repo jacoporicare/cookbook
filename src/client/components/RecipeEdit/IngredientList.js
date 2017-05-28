@@ -53,7 +53,12 @@ const SortableList = SortableContainer(({ items, onRemove }) => (
   <ul className="list-group cb-ingredient-list">
     {items.map((ingredient, index) => (
       <SortableItem
-        key={index}
+        key={
+          ingredient.name +
+            ingredient.amount +
+            ingredient.amountUnit +
+            ingredient.isGroup
+        }
         index={index}
         itemIndex={index}
         ingredient={ingredient}
