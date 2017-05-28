@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API v2');
+export const ERROR = Symbol('Call API Error');
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
@@ -35,7 +36,12 @@ const apiMiddleware = store => next => action => {
 
   return axios({ method, url, data, headers })
     .then(response => next(success(response.data)))
-    .catch(error => next(failure(error.message, error.response)));
+    .catch(error =>
+      next({
+        ...failure(error.message, error.response),
+        [ERROR]: error,
+      }),
+    );
 };
 
 export default apiMiddleware;

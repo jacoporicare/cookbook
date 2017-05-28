@@ -1,12 +1,15 @@
-import initialState from '../redux/initialState';
-import { RESET_ERROR_MESSAGE } from '../actions/errorMessageActions';
+import initialState from '../../redux/initialState';
+import { ERROR } from '../../middleware/api2';
+import { RESET_ERROR_MESSAGE } from './actions';
 
 const errorMessageReducer = (state = initialState.errorMessage, action) => {
-  const { type, isError, response, errorMessage } = action;
+  const { type, [ERROR]: error } = action;
 
   if (type === RESET_ERROR_MESSAGE) {
     return initialState.errorMessage;
-  } else if (isError) {
+  } else if (error) {
+    const { response, message } = error;
+
     if (response) {
       const { status, data } = response;
 
@@ -19,11 +22,11 @@ const errorMessageReducer = (state = initialState.errorMessage, action) => {
       }
     }
 
-    if (errorMessage === 'Network Error') {
+    if (message === 'Network Error') {
       return 'Nastaly problémy s připojením';
     }
 
-    return errorMessage || 'Nastala neočekávaná chyba';
+    return message || 'Nastala neočekávaná chyba';
   }
 
   return state;

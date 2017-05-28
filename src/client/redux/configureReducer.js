@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import errorMessage from '../reducers/errorMessageReducer';
+import errorMessage from '../components/ErrorMessage/reducer';
 import auth from '../reducers/authReducer';
 import user from '../reducers/userReducer';
 import recipeList from '../components/RecipeList/reducer';
