@@ -32,10 +32,29 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        exclude: /\.module\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             { loader: 'css-loader', options: { sourceMap: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
+          ],
+        }),
+      },
+      {
+        test: /\.module.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+              },
+            },
             { loader: 'postcss-loader', options: { sourceMap: true } },
           ],
         }),
@@ -50,7 +69,7 @@ module.exports = {
   plugins: [
     new webpack.LoaderOptionsPlugin({
       options: {
-        context: '/',
+        context: __dirname,
       },
     }),
 

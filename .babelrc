@@ -11,7 +11,8 @@
     "stage-1"
   ],
   "plugins": [
-    "lodash"
+    "lodash",
+    "react-css-modules"
   ],
   "env": {
     "test": {

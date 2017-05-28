@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Spinner.scss';
+import './Spinner.module.css';
 
 class Spinner extends React.Component {
   static propTypes = {
@@ -37,13 +37,13 @@ class Spinner extends React.Component {
     const { overlay } = this.props;
 
     return (
-      <div className={overlay ? 'spinner-overlay' : ''}>
-        <div className="spinner">
-          <div className="rect1" />{' '}
-          <div className="rect2" />{' '}
-          <div className="rect3" />{' '}
-          <div className="rect4" />{' '}
-          <div className="rect5" />
+      <div styleName={overlay ? 'overlay' : ''}>
+        <div styleName="spinner">
+          <div styleName="rect" />{' '}
+          <div styleName="rect rect2" />{' '}
+          <div styleName="rect rect3" />{' '}
+          <div styleName="rect rect4" />{' '}
+          <div styleName="rect rect5" />
         </div>
       </div>
     );
