@@ -10,7 +10,7 @@ module.exports = webpackMerge(commonConfig, {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
-    publicPath: 'http://localhost:3001/',
+    publicPath: 'http://localhost:4000/',
   },
 
   plugins: [
@@ -23,7 +23,7 @@ module.exports = webpackMerge(commonConfig, {
   devServer: {
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/api': 'http://localhost:4001',
     },
   },
 });

@@ -7,6 +7,8 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const commonConfig = require('./webpack.config.common');
 
 module.exports = webpackMerge(commonConfig, {
+  bail: true,
+
   devtool: 'source-map',
 
   output: {

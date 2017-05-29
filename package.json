@@ -5,15 +5,15 @@
   "scripts": {
     "start": "node index",
     "dev": "run-p dev:server dev:webpack",
-    "dev:server": "nodemon src/server --watch src/server --exec babel-node",
-    "dev:webpack": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress --colors --config webpack.config.dev.js --port 3001",
+    "dev:server": "cross-env NODE_ENV=development PORT=4001 nodemon src/server --watch src/server --exec babel-node",
+    "dev:webpack": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress --colors --config webpack.config.dev.js --port 4000",
     "build": "run-s clean build:server build:copy build:webpack",
     "build:server": "babel src/server -d dist",
     "build:copy": "shx cp package.json Dockerfile dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress --colors --config webpack.config.prod.js",
     "clean": "shx rm -rf dist",
     "test": "jest",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "yarn test -- --watch"
   },
   "dependencies": {
     "axios": "^0.16.1",
