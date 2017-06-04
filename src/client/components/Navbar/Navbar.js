@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link, IndexLink } from 'react-router';
-import NavItem from '../NavItem/NavItem';
+import { IndexLink } from 'react-router';
+import LoggedUser from './LoggedUser';
 
 class Navbar extends Component {
   static propTypes = {
@@ -48,21 +48,7 @@ class Navbar extends Component {
             id="navbar-main"
           >
             {isAuthenticated &&
-              <div>
-                <ul className="nav navbar-nav">
-                  <NavItem to="/prilohy">Přílohy</NavItem>
-                </ul>
-                <ul className="nav navbar-nav navbar-right">
-                  <li>
-                    <a>
-                      {isFetchingUser
-                        ? <i className="fa fa-spin fa-spinner" />
-                        : <span><i className="fa fa-user" /> {userName}</span>}
-                    </a>
-                  </li>
-                  <li><Link to="/odhlaseni">Odhlásit</Link></li>
-                </ul>
-              </div>}
+              <LoggedUser isFetching={isFetchingUser} userName={userName} />}
           </div>
 
         </div>

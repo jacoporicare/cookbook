@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import errorMessage from '../components/ErrorMessage/reducer';
-import auth from '../reducers/authReducer';
-import user from '../reducers/userReducer';
+import auth from '../components/Auth/reducer';
+import navbar from '../components/Navbar/reducer';
 import recipeList from '../components/RecipeList/reducer';
 import recipeDetail from '../components/RecipeDetail/reducer';
 import recipeEdit from '../components/RecipeEdit/reducer';
@@ -12,7 +12,7 @@ const configureReducer = () =>
     routing: routerReducer,
     errorMessage,
     auth,
-    user,
+    navbar,
     recipeList,
     recipeDetail,
     recipeEdit,

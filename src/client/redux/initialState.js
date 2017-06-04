@@ -5,10 +5,9 @@ export default {
     isAuthenticated: false,
     token: null,
   },
-  user: {
-    currentUser: {
-      isFetching: false,
-    },
+  navbar: {
+    isFetchingUser: false,
+    user: null,
   },
   recipeList: {
     isFetching: false,

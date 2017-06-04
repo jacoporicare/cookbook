@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withCookies, Cookies } from 'react-cookie';
-import { logout } from '../actions/authActions';
+import { logout } from '../components/Auth/actions';
 
 class LogoutPage extends React.Component {
   static propTypes = {

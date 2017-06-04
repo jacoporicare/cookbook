@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import authenticatedComponent from './components/common/authenticatedComponent';
+import authenticatedComponent from './components/Auth/authenticatedComponent';
 import AppPage from './pages/AppPage';
 import RecipeListPage from './pages/RecipeListPage';
 import RecipeDetailPage from './pages/RecipeDetailPage';

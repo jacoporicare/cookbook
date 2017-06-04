@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
 import { resetErrorMessage } from '../components/ErrorMessage/actions';
-import { getCurrentUser } from '../actions/userActions';
+import { fetchUser } from '../components/Navbar/actions';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 
@@ -11,21 +11,27 @@ class AppPage extends React.Component {
   static propTypes = {
     children: PropTypes.element,
     isAuthenticated: PropTypes.bool,
-    userName: PropTypes.string,
+    user: PropTypes.object,
     isFetchingUser: PropTypes.bool,
     errorMessage: PropTypes.string,
     resetErrorMessage: PropTypes.func.isRequired,
-    getCurrentUser: PropTypes.func.isRequired,
+    fetchUser: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
-    if (this.props.isAuthenticated && !this.props.userName) {
-      this.props.getCurrentUser();
+    const { isAuthenticated, user, fetchUser } = this.props;
+
+    if (isAuthenticated && !user) {
+      fetchUser();
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { errorMessage: oldErrorMessage, resetErrorMessage } = this.props;
+    const {
+      errorMessage: oldErrorMessage,
+      resetErrorMessage,
+      fetchUser,
+    } = this.props;
     const { errorMessage } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
@@ -33,19 +39,19 @@ class AppPage extends React.Component {
       resetErrorMessage();
     }
 
-    if (nextProps.isAuthenticated && !nextProps.userName) {
-      this.props.getCurrentUser();
+    if (nextProps.isAuthenticated && !nextProps.user) {
+      fetchUser();
     }
   }
 
   render() {
-    const { isAuthenticated, userName, isFetchingUser, children } = this.props;
+    const { isAuthenticated, user, isFetchingUser, children } = this.props;
 
     return (
       <div>
         <Navbar
           isAuthenticated={isAuthenticated}
-          userName={userName}
+          userName={user ? user.name : null}
           isFetchingUser={isFetchingUser}
         />
         {children}
@@ -58,13 +64,13 @@ class AppPage extends React.Component {
 const mapStateToProps = state => ({
   errorMessage: state.errorMessage,
   isAuthenticated: state.auth.isAuthenticated,
-  userName: state.user.currentUser.name,
-  isFetchingUser: state.user.currentUser.isFetching,
+  user: state.navbar.user,
+  isFetchingUser: state.navbar.isFetchingUser,
 });
 
 const mapDispatchToProps = {
   resetErrorMessage,
-  getCurrentUser,
+  fetchUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppPage);

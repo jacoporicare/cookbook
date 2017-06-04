@@ -6,7 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import { withCookies, Cookies } from 'react-cookie';
 import configureStore from './redux/configureStore';
-import { setAuthToken } from './actions/authActions';
+import { setAuthToken } from './components/Auth/actions';
 import routes from './routes';
 
 import './App.scss';
@@ -21,6 +21,7 @@ class App extends Component {
   componentWillMount() {
     const { cookies } = this.props;
     const token = cookies.get('token');
+
     if (token) {
       store.dispatch(setAuthToken(token));
     }

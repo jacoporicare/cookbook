@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withCookies, Cookies } from 'react-cookie';
-import { login } from '../actions/authActions';
+import { login } from '../components/Auth/actions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
 class LoginPage extends React.Component {
@@ -25,6 +25,7 @@ class LoginPage extends React.Component {
 
   handleChange = event => {
     const { name, value, type, checked } = event.target;
+
     this.setState({
       [name]: type === 'checkbox' ? checked : value,
     });
@@ -37,12 +38,12 @@ class LoginPage extends React.Component {
     const { username, password, rememberMe } = this.state;
 
     login(username, password).then(action => {
-      if (action.isSuccess) {
+      if (action.payload && action.payload.user) {
         const cookieOpts = { path: '/' };
         if (rememberMe) {
           cookieOpts.expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
         }
-        cookies.set('token', action.response.token, cookieOpts);
+        cookies.set('token', action.payload.token, cookieOpts);
 
         router.push('/');
       }

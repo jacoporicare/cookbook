@@ -1,11 +1,11 @@
-import initialState from '../redux/initialState';
+import initialState from '../../redux/initialState';
 import {
   SET_AUTH_TOKEN,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
-} from '../actions/authActions';
+} from './actions';
 
 const authReducer = (state = initialState.auth, action) => {
   switch (action.type) {
@@ -27,7 +27,7 @@ const authReducer = (state = initialState.auth, action) => {
         ...state,
         isSubmitting: false,
         isAuthenticated: true,
-        token: action.response.token,
+        token: action.payload.token,
       };
 
     case LOGIN_FAILURE:
