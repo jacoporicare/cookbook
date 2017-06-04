@@ -1,4 +1,4 @@
-import { CALL_API } from '../../middleware/api2';
+import { CALL_API } from '../../middleware/api';
 
 export const RECIPE_FETCH_REQUEST = 'RECIPE.FETCH.REQUEST';
 export const RECIPE_FETCH_SUCCESS = 'RECIPE.FETCH.SUCCESS';

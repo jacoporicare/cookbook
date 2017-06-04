@@ -1,4 +1,4 @@
-import { CALL_API } from '../../middleware/api2';
+import { CALL_API } from '../../middleware/api';
 
 export const NAVBAR_USER_FETCH_REQUEST = 'NAVBAR.USER.FETCH.REQUEST';
 export const NAVBAR_USER_FETCH_SUCCESS = 'NAVBAR.USER.FETCH.SUCCESS';

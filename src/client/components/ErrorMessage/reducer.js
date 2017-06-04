@@ -1,5 +1,5 @@
 import initialState from '../../redux/initialState';
-import { ERROR } from '../../middleware/api2';
+import { ERROR } from '../../middleware/api';
 import { RESET_ERROR_MESSAGE } from './actions';
 
 const errorMessageReducer = (state = initialState.errorMessage, action) => {

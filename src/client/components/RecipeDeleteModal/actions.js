@@ -1,4 +1,4 @@
-import { CALL_API } from '../../middleware/api2';
+import { CALL_API } from '../../middleware/api';
 
 export const RECIPE_DELETE_REQUEST = 'RECIPE.DELETE.REQUEST';
 export const RECIPE_DELETE_SUCCESS = 'RECIPE.DELETE.SUCCESS';

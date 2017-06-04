@@ -1,4 +1,4 @@
-import { CALL_API } from '../../middleware/api2';
+import { CALL_API } from '../../middleware/api';
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 
