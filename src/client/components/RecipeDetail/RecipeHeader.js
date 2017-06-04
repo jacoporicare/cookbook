@@ -9,7 +9,7 @@ const RecipeHeader = ({
   preparationTime,
   sideDish,
   onDeleteShow,
-}) =>
+}) => (
   <div>
     <h1 className="page-header clearfix">
       {title}
@@ -25,7 +25,8 @@ const RecipeHeader = ({
     </h1>
 
     <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
-  </div>;
+  </div>
+);
 
 RecipeHeader.propTypes = {
   slug: PropTypes.string.isRequired,
