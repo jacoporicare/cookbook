@@ -1,20 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
+import './RecipeList.module.scss';
 
 const RecipeListItem = ({ recipe }) => {
   const { slug, title, preparationTime, sideDish } = recipe;
 
   return (
     <div className="col-sm-6 col-md-4">
-      <Link to={`/recept/${slug}`} className="recipe">
-        <h4 className="text-primary">{title}</h4>
-        {(preparationTime > 0 || !!sideDish) &&
-          <ul className="cb-info-list text-muted">
-            {preparationTime > 0 &&
-              <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
-            {!!sideDish && <li><i className="fa fa-spoon" /> {sideDish}</li>}
-          </ul>}
+      <Link to={`/recept/${slug}`} styleName="box">
+        <h4 styleName="title">{title}</h4>
+        <div styleName="info">
+          <RecipeInfo
+            preparationTime={preparationTime}
+            sideDish={sideDish}
+            placeholder="žádné údaje"
+          />
+        </div>
       </Link>
     </div>
   );

@@ -78,6 +78,7 @@
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.0.2",
     "postcss-loader": "^2.0.5",
+    "postcss-scss": "^1.0.0",
     "react-test-renderer": "^15.4.2",
     "sass-loader": "^6.0.5",
     "shx": "^0.2.2",

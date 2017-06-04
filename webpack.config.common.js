@@ -21,10 +21,30 @@ module.exports = {
       },
       {
         test: /\.scss$/,
+        exclude: /\.module\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             { loader: 'css-loader', options: { sourceMap: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
+            { loader: 'sass-loader', options: { sourceMap: true } },
+          ],
+        }),
+      },
+      {
+        test: /\.module.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                modules: true,
+                importLoaders: 2,
+                localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+              },
+            },
             { loader: 'postcss-loader', options: { sourceMap: true } },
             { loader: 'sass-loader', options: { sourceMap: true } },
           ],

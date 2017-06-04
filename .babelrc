@@ -12,7 +12,11 @@
   ],
   "plugins": [
     "lodash",
-    "react-css-modules"
+    ["react-css-modules", {
+      "filetypes": {
+        ".scss": "postcss-scss"
+      }
+    }]
   ],
   "env": {
     "test": {

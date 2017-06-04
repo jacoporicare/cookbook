@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 const RecipeHeader = ({
   slug,
@@ -8,7 +9,7 @@ const RecipeHeader = ({
   preparationTime,
   sideDish,
   onDeleteShow,
-}) => (
+}) =>
   <div>
     <h1 className="page-header clearfix">
       {title}
@@ -23,13 +24,8 @@ const RecipeHeader = ({
       </span>
     </h1>
 
-    <ul className="cb-info-list">
-      {preparationTime > 0 &&
-        <li><i className="fa fa-clock-o" /> {preparationTime} min</li>}
-      {!!sideDish && <li><i className="fa fa-spoon" /> {sideDish}</li>}
-    </ul>
-  </div>
-);
+    <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
+  </div>;
 
 RecipeHeader.propTypes = {
   slug: PropTypes.string.isRequired,
