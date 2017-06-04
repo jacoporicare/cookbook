@@ -7,7 +7,7 @@ $cb-recipe-border-color: #f0f0f0;
   .recipe {
     display: block;
     border: 1px solid $cb-recipe-border-color;
-    border-radius: 2px;
+    border-radius: 4px;
     box-shadow: 0 0 12px 2px $cb-recipe-border-color;
     margin-bottom: ($cb-recipe-spacing * 2);
     padding: $cb-recipe-spacing;
