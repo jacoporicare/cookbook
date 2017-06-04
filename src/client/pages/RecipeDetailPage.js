@@ -48,9 +48,10 @@ class RecipeDetailPage extends Component {
   };
 
   handleDeleteConfirm = () => {
-    this.props.deleteRecipe(this.props.recipe._id);
-    toastr.success('Recept úspěšně smazán');
-    this.props.router.push('/');
+    this.props.deleteRecipe(this.props.recipe._id).then(() => {
+      toastr.success('Recept úspěšně smazán');
+      this.props.router.push('/');
+    });
   };
 
   render() {
