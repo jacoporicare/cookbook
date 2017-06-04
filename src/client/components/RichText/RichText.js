@@ -58,9 +58,8 @@ const getHtml = text => {
 };
 
 /* eslint-disable react/no-danger */
-const RichText = ({ text }) => (
-  <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} />
-);
+const RichText = ({ text }) =>
+  <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} />;
 /* eslint-enable react/no-danger */
 
 RichText.propTypes = {

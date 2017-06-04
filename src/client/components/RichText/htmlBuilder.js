@@ -17,18 +17,25 @@ class HtmlBuilder {
 
   close() {
     const tag = this.opened.pop();
-    if (!tag) return;
+
+    if (!tag) {
+      return;
+    }
+
     this.result.push(`</${tag}>`);
   }
 
   closeAll() {
-    while (this.opened.length)
+    while (this.opened.length) {
       this.close();
+    }
   }
 
   isOpen(tag) {
     for (let i = this.opened.length - 1; i >= 0; i--) {
-      if (this.opened[i] === tag) return true;
+      if (this.opened[i] === tag) {
+        return true;
+      }
     }
 
     return false;
@@ -36,7 +43,9 @@ class HtmlBuilder {
 
   getHtml() {
     this.closeAll();
-    if (this.result[this.result.length - 1] === '<br>') this.result.pop();
+    if (this.result[this.result.length - 1] === '<br>') {
+      this.result.pop();
+    }
 
     return this.result.join('');
   }

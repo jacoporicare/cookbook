@@ -6,11 +6,11 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc';
 
-const Handle = SortableHandle(() => (
+const Handle = SortableHandle(() =>
   <div className="pull-right text-muted cb-sortable-handle">
     <i className="fa fa-bars" />
-  </div>
-));
+  </div>,
+);
 
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
   const { name, amount, amountUnit, isGroup } = ingredient;
@@ -49,24 +49,24 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
   );
 });
 
-const SortableList = SortableContainer(({ items, onRemove }) => (
+const SortableList = SortableContainer(({ items, onRemove }) =>
   <ul className="list-group cb-ingredient-list">
-    {items.map((ingredient, index) => (
+    {items.map((ingredient, index) =>
       <SortableItem
         key={
           ingredient.name +
-            ingredient.amount +
-            ingredient.amountUnit +
-            ingredient.isGroup
+          ingredient.amount +
+          ingredient.amountUnit +
+          ingredient.isGroup
         }
         index={index}
         itemIndex={index}
         ingredient={ingredient}
         onRemove={onRemove}
-      />
-    ))}
-  </ul>
-));
+      />,
+    )}
+  </ul>,
+);
 
 const IngredientList = ({ items, onRemove, onSort }) => {
   if (items.length === 0) {

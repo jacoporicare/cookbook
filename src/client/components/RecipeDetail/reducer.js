@@ -53,7 +53,6 @@ const recipeDetailReducer = (state = initialState.recipeDetail, action) => {
     //     isSaving: false,
     //   };
 
-
     default:
       return state;
   }

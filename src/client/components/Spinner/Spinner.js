@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Spinner.module.css';
+import './Spinner.module.scss';
 
 class Spinner extends React.Component {
   static propTypes = {

@@ -7,8 +7,7 @@ import { deleteRecipe } from '../components/RecipeDeleteModal/actions';
 import { findRecipeBySlug } from '../components/RecipeList/reducer';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
-import RecipeDeleteModal
-  from '../components/RecipeDeleteModal/RecipeDeleteModal';
+import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal';
 import Spinner from '../components/Spinner/Spinner';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
