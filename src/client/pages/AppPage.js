@@ -32,14 +32,14 @@ class AppPage extends React.Component {
       resetErrorMessage,
       fetchUser,
     } = this.props;
-    const { errorMessage } = nextProps;
+    const { errorMessage, isAuthenticated, user, isFetchingUser } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
       toastr.error(errorMessage);
       resetErrorMessage();
     }
 
-    if (nextProps.isAuthenticated && !nextProps.user) {
+    if (isAuthenticated && !user && !isFetchingUser) {
       fetchUser();
     }
   }
