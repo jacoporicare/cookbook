@@ -8,13 +8,15 @@ machine:
 
 dependencies:
   override:
-    - yarn
+    - cd server && yarn
+    - cd client && yarn
   cache_directories:
     - ~/.cache/yarn
 
 test:
   override:
-    - yarn test
+    - cd server && yarn test
+    - cd client && yarn test
 
 deployment:
   production:
