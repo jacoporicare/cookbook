@@ -14,6 +14,7 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin({
       filename: '[name].css',
       disable: true,
@@ -21,9 +22,14 @@ module.exports = webpackMerge(commonConfig, {
   ],
 
   devServer: {
+    compress: true,
     historyApiFallback: true,
+    hot: true,
+    overlay: true,
+    port: 4000,
     proxy: {
       '/api': 'http://localhost:4001',
     },
+    stats: 'errors-only',
   },
 });

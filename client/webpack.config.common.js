@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    vendor: './src/client/vendor.js',
-    app: './src/client/index.js',
+    vendor: './src/vendor.js',
+    app: './src/index.js',
   },
 
   module: {
@@ -99,7 +99,7 @@ module.exports = {
     }),
 
     new HtmlWebpackPlugin({
-      template: './src/client/index.html',
+      template: './src/index.html',
     }),
 
     new webpack.DefinePlugin({

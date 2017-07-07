@@ -11,8 +11,10 @@ module.exports = webpackMerge(commonConfig, {
 
   devtool: 'source-map',
 
+  stats: 'minimal',
+
   output: {
-    path: path.join(__dirname, 'dist/public'),
+    path: path.join(__dirname, 'dist'),
     filename: '[name].[chunkhash].js',
     publicPath: '/',
   },
@@ -33,7 +35,7 @@ module.exports = webpackMerge(commonConfig, {
     }),
 
     new FaviconsWebpackPlugin({
-      logo: './src/client/piggy.png',
+      logo: './src/piggy.png',
       title: 'Žrádelník',
       icons: {
         android: true,
