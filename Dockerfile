@@ -12,4 +12,4 @@ COPY ./client/dist/ ./public/
 
 EXPOSE 3000
 
-CMD ["yarn", "start"]
+CMD ["node", "/srv/app"]
