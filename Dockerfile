@@ -6,9 +6,9 @@ RUN mkdir -p /srv/app
 WORKDIR /srv/app
 
 COPY package.json /srv/app
-RUN npm install
+RUN yarn
 COPY . /srv/app
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]
