@@ -22,11 +22,11 @@ const authenticatedComponent = Component => {
     }
 
     render() {
-      return (
-        <div>
-          {this.props.isAuthenticated ? <Component {...this.props} /> : null}
-        </div>
-      );
+      if (!this.props.isAuthenticated) {
+        return null;
+      }
+
+      return <Component {...this.props} />;
     }
   }
 
