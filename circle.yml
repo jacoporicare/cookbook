@@ -22,14 +22,14 @@ deployment:
   production:
     branch: master
     commands:
-      - ./docker/build.sh latest
+      - ./docker/build.sh -c latest
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - ./docker/push.sh latest
       - ./docker/update.sh latest
   development:
     branch: develop
     commands:
-      - ./docker/build.sh dev
+      - ./docker/build.sh -c dev
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - ./docker/push.sh dev
       - ./docker/update.sh dev
