@@ -23,7 +23,6 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
   return (
     <li className={className}>
       <div className="row">
-
         <div className="col-xs-2">
           <a href="" onClick={e => onRemove(e, itemIndex)}>
             <i className="fa fa-trash" />
@@ -32,7 +31,9 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
 
         {!isGroup &&
           <div className="col-xs-3 text-right">
-            <b>{amount}&nbsp;{amountUnit}</b>
+            <b>
+              {amount}&nbsp;{amountUnit}
+            </b>
           </div>}
 
         {!isGroup
@@ -41,7 +42,9 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
               <Handle />
             </div>
           : <div className="col-xs-10">
-              <b>{name}</b>
+              <b>
+                {name}
+              </b>
               <Handle />
             </div>}
       </div>

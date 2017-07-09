@@ -44,7 +44,10 @@ class IngredientForm extends Component {
     }
   };
 
-  renderSuggestion = suggestion => <span>{suggestion}</span>;
+  renderSuggestion = suggestion =>
+    <span>
+      {suggestion}
+    </span>;
 
   render() {
     const { ingredientOptions } = this.state;
@@ -53,9 +56,7 @@ class IngredientForm extends Component {
 
     return (
       <div className="panel panel-default">
-        <div className="panel-heading">
-          Přidat ingredienci
-        </div>
+        <div className="panel-heading">Přidat ingredienci</div>
         <div className="panel-body">
           <div className="row">
             <div className="col-xs-6">

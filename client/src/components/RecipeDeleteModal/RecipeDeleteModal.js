@@ -11,7 +11,9 @@ const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }) =>
       Určitě smazat recept <strong>{recipeTitle}</strong>?
     </Modal.Body>
     <Modal.Footer>
-      <Button bsStyle="danger" onClick={onConfirm}>Smazat</Button>
+      <Button bsStyle="danger" onClick={onConfirm}>
+        Smazat
+      </Button>
       <Button onClick={onClose}>Zrušit</Button>
     </Modal.Footer>
   </Modal>;

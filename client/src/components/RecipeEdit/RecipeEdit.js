@@ -57,7 +57,10 @@ class RecipeEdit extends Component {
     }
   };
 
-  renderSuggestion = suggestion => <span>{suggestion}</span>;
+  renderSuggestion = suggestion =>
+    <span>
+      {suggestion}
+    </span>;
 
   render() {
     const {
@@ -179,7 +182,6 @@ class RecipeEdit extends Component {
                   }}
                 />
               </div>
-
             </fieldset>
           </div>
 
@@ -211,8 +213,12 @@ class RecipeEdit extends Component {
                 />
                 <div className="help-block text-right">
                   <ul className="list-inline">
-                    <li><strong>*tučně*</strong></li>
-                    <li><em>_kurzíva_</em></li>
+                    <li>
+                      <strong>*tučně*</strong>
+                    </li>
+                    <li>
+                      <em>_kurzíva_</em>
+                    </li>
                     <li>*) seznam</li>
                   </ul>
                 </div>
@@ -236,7 +242,6 @@ class RecipeEdit extends Component {
           <legend>Náhled postupu</legend>
           <RichText text={directions} />
         </fieldset>
-
       </form>
     );
   }

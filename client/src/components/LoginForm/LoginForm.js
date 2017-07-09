@@ -20,7 +20,9 @@ const LoginForm = ({
       <div className="col-md-4">
         <form onSubmit={onSubmit} className="form">
           <div className="form-group">
-            <label htmlFor="username" className="control-label">Uživatel</label>
+            <label htmlFor="username" className="control-label">
+              Uživatel
+            </label>
             <input
               type="text"
               name="username"
@@ -31,7 +33,9 @@ const LoginForm = ({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password" className="control-label">Heslo</label>
+            <label htmlFor="password" className="control-label">
+              Heslo
+            </label>
             <input
               type="password"
               name="password"

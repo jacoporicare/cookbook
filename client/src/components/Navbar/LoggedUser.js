@@ -13,10 +13,14 @@ const LoggedUser = ({ isFetching, userName }) =>
         <a>
           {isFetching
             ? <i className="fa fa-spin fa-spinner" />
-            : <span><i className="fa fa-user" /> {userName}</span>}
+            : <span>
+                <i className="fa fa-user" /> {userName}
+              </span>}
         </a>
       </li>
-      <li><Link to="/odhlaseni">Odhlásit</Link></li>
+      <li>
+        <Link to="/odhlaseni">Odhlásit</Link>
+      </li>
     </ul>
   </div>;
 

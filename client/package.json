@@ -7,7 +7,8 @@
     "prebuild": "shx rm -rf dist",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "jest",
-    "test:watch": "yarn test -- --watch"
+    "test:watch": "yarn test -- --watch",
+    "prettier": "prettier --single-quote --trailing-comma all --write 'src/**/*.js'"
   },
   "dependencies": {
     "axios": "^0.16.2",
@@ -63,6 +64,7 @@
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.6",
     "postcss-scss": "^1.0.2",
+    "prettier": "^1.5.2",
     "react-test-renderer": "^15.6.1",
     "sass-loader": "^6.0.6",
     "shx": "^0.2.2",

@@ -29,7 +29,6 @@ class Navbar extends Component {
     return (
       <div className="navbar navbar-default navbar-static-top">
         <div className="container">
-
           <div className="navbar-header">
             <button
               className="navbar-toggle"
@@ -40,7 +39,9 @@ class Navbar extends Component {
               <span className="icon-bar" />
               <span className="icon-bar" />
             </button>
-            <IndexLink to="/" className="navbar-brand">Žrádelník</IndexLink>
+            <IndexLink to="/" className="navbar-brand">
+              Žrádelník
+            </IndexLink>
           </div>
 
           <div
@@ -50,7 +51,6 @@ class Navbar extends Component {
             {isAuthenticated &&
               <LoggedUser isFetching={isFetchingUser} userName={userName} />}
           </div>
-
         </div>
       </div>
     );

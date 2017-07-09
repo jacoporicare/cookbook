@@ -33,9 +33,8 @@ class IngredientList extends Component {
     const servingCount = Number.parseInt(event.target.value, 10);
 
     this.setState({
-      servingCount: !Number.isNaN(servingCount) && servingCount > 0
-        ? servingCount
-        : '',
+      servingCount:
+        !Number.isNaN(servingCount) && servingCount > 0 ? servingCount : '',
     });
   };
 
@@ -52,9 +51,7 @@ class IngredientList extends Component {
         {!!initialServingCount &&
           <div className="form-group">
             <div className="input-group">
-              <div className="input-group-addon">
-                Počet porcí
-              </div>
+              <div className="input-group-addon">Počet porcí</div>
               <input
                 type="number"
                 value={servingCount}
@@ -77,13 +74,19 @@ class IngredientList extends Component {
             return (
               <li key={_id} className={className}>
                 {isGroup
-                  ? <b>{name}</b>
+                  ? <b>
+                      {name}
+                    </b>
                   : <div className="row">
                       <div className="col-xs-3 text-right">
                         {(amount || amountUnit) &&
-                          <b>{this.getAmount(amount)}&nbsp;{amountUnit}</b>}
+                          <b>
+                            {this.getAmount(amount)}&nbsp;{amountUnit}
+                          </b>}
                       </div>
-                      <div className="col-xs-9">{name}</div>
+                      <div className="col-xs-9">
+                        {name}
+                      </div>
                     </div>}
               </li>
             );

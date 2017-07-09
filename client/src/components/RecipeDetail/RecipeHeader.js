@@ -16,8 +16,7 @@ const RecipeHeader = ({
       <span className="pull-right">
         <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
           <i className="fa fa-edit" /> Upravit
-        </Link>
-        {' '}
+        </Link>{' '}
         <button className="btn btn-danger" onClick={onDeleteShow}>
           <i className="fa fa-trash" /> Smazat
         </button>

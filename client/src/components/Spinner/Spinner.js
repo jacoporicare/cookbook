@@ -39,10 +39,8 @@ class Spinner extends React.Component {
     return (
       <div styleName={overlay ? 'overlay' : ''}>
         <div styleName="spinner">
-          <div styleName="rect" />{' '}
-          <div styleName="rect rect2" />{' '}
-          <div styleName="rect rect3" />{' '}
-          <div styleName="rect rect4" />{' '}
+          <div styleName="rect" /> <div styleName="rect rect2" />{' '}
+          <div styleName="rect rect3" /> <div styleName="rect rect4" />{' '}
           <div styleName="rect rect5" />
         </div>
       </div>

@@ -67,9 +67,7 @@ class RecipeListPage extends Component {
       <div className="container">
         <h1 className="page-header clearfix">
           <div className="row">
-            <div className="col-md-6">
-              Recepty
-            </div>
+            <div className="col-md-6">Recepty</div>
             <div className="col-md-6 text-right">
               <Link to="/novy-recept" className="btn btn-primary">
                 <i className="fa fa-plus-circle" /> Nový recept

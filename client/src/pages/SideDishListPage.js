@@ -2,11 +2,9 @@ import React from 'react';
 
 const SideDishListPage = () =>
   <div className="container">
-
     <h1 className="page-header">Přílohy</h1>
 
     <table className="table table-hover" style={{ width: 'auto' }}>
-
       <thead>
         <tr>
           <th>Název</th>
@@ -47,9 +45,7 @@ const SideDishListPage = () =>
           <td className="text-right" />
         </tr>
       </tbody>
-
     </table>
-
   </div>;
 
 export default SideDishListPage;

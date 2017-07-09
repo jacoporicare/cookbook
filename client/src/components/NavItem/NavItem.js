@@ -11,7 +11,9 @@ const NavItem = (
 
   return (
     <li className={isActive ? activeClassName || 'active' : ''}>
-      <LinkComponent to={to} {...props}>{children}</LinkComponent>
+      <LinkComponent to={to} {...props}>
+        {children}
+      </LinkComponent>
     </li>
   );
 };
