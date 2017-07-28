@@ -9,7 +9,7 @@ services:
       - cookbook-dev
 
   cookbook-web-dev:
-    image: jacoporicare/cookbook:dev
+    image: docker.jakubricar.cz/cookbook:dev
     container_name: cookbook-web-dev
     restart: always
     networks:

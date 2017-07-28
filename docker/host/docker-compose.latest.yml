@@ -11,7 +11,7 @@ services:
       - ~/cookbook/data:/data/db
 
   cookbook-web:
-    image: jacoporicare/cookbook:latest
+    image: docker.jakubricar.cz/cookbook:latest
     container_name: cookbook-web
     restart: always
     networks:

@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-docker push "jacoporicare/cookbook:$1"
+docker push "docker.jakubricar.cz/cookbook:$1"

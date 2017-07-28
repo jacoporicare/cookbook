@@ -23,7 +23,7 @@ yarn build
 
 cd ..
 if $ci; then
-  docker build --rm=false -t "jacoporicare/cookbook:$1" .
+  docker build --rm=false -t "docker.jakubricar.cz/cookbook:$1" .
 else
-  docker build -t "jacoporicare/cookbook:$1" .
+  docker build -t "docker.jakubricar.cz/cookbook:$1" .
 fi
