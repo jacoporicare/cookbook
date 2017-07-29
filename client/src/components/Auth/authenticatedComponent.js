@@ -9,7 +9,7 @@ const authenticatedComponent = Component => {
       router: PropTypes.object.isRequired,
     };
 
-    componentWillMount() {
+    componentDidMount() {
       if (!this.props.isAuthenticated) {
         this.props.router.push('/prihlaseni');
       }
