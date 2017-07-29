@@ -18,7 +18,7 @@ class AppPage extends React.Component {
     fetchUser: PropTypes.func.isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { isAuthenticated, user, fetchUser } = this.props;
 
     if (isAuthenticated && !user) {

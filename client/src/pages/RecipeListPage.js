@@ -24,7 +24,7 @@ class RecipeListPage extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchRecipeList();
   }
 

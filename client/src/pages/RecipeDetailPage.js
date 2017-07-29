@@ -30,7 +30,7 @@ class RecipeDetailPage extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchRecipe(this.props.slug);
   }
 

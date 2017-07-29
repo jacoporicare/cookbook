@@ -44,7 +44,7 @@ class RecipeEditPage extends Component {
     this.saved = false;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.router.setRouteLeaveHook(
       this.props.route,
       () => (this.state.changed && !this.saved ? confirmMsg : undefined),

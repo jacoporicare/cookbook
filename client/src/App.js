@@ -18,7 +18,7 @@ class App extends Component {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { cookies } = this.props;
     const token = cookies.get('token');
 
