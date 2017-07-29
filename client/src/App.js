@@ -18,8 +18,10 @@ class App extends Component {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
   };
 
-  componentDidMount() {
-    const { cookies } = this.props;
+  constructor(props) {
+    super(props);
+
+    const { cookies } = props;
     const token = cookies.get('token');
 
     if (token) {
