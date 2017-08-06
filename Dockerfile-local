@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 4000 4001
 
-CMD ./start-dev.sh
+CMD ["./start-dev.sh"]
