@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  db:
+    image: mongo:3.4
+    volumes:
+      - ~/dev/private/mongo_data:/data/db
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-local
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    volumes:
+      - ./client/src:/srv/app/client/src
+      - ./server/src:/srv/app/server/src
+    environment:
+      - MONGO_URI=mongodb://db/cookbook

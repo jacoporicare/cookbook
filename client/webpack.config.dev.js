@@ -24,6 +24,7 @@ module.exports = webpackMerge(commonConfig, {
   devServer: {
     compress: true,
     historyApiFallback: true,
+    host: '0.0.0.0',
     hot: true,
     overlay: true,
     port: 4000,

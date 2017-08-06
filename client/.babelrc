@@ -1,31 +1,37 @@
 {
   "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ["last 3 versions", "> 5%", "safari >= 7"]
-      },
-      "modules": false,
-      "useBuiltIns": true
-    }],
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["last 3 versions", "> 5%", "safari >= 7"]
+        },
+        "modules": false,
+        "useBuiltIns": true
+      }
+    ],
     "react",
     "stage-1"
   ],
   "plugins": [
     "lodash",
-    ["react-css-modules", {
-      "filetypes": {
-        ".scss": "postcss-scss"
+    [
+      "react-css-modules",
+      {
+        "filetypes": {
+          ".scss": {
+            "syntax": "postcss-scss"
+          }
+        }
       }
-    }]
+    ]
   ],
   "env": {
     "test": {
       "plugins": ["transform-es2015-modules-commonjs"]
     },
     "production": {
-      "plugins": [
-        "transform-react-remove-prop-types"
-      ]
+      "plugins": ["transform-react-remove-prop-types"]
     }
   }
 }
