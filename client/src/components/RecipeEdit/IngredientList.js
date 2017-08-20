@@ -32,7 +32,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
         {!isGroup &&
           <div className="col-xs-3 text-right">
             <b>
-              {amount}&nbsp;{amountUnit}
+              {amount ? amount.toLocaleString('cs') : ''}&nbsp;{amountUnit}
             </b>
           </div>}
 
@@ -56,12 +56,7 @@ const SortableList = SortableContainer(({ items, onRemove }) =>
   <ul className="list-group cb-ingredient-list">
     {items.map((ingredient, index) =>
       <SortableItem
-        key={
-          ingredient.name +
-          ingredient.amount +
-          ingredient.amountUnit +
-          ingredient.isGroup
-        }
+        key={index} // eslint-disable-line react/no-array-index-key
         index={index}
         itemIndex={index}
         ingredient={ingredient}

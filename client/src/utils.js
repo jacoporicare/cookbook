@@ -1,7 +1,7 @@
 export const parseValue = (value, type) => {
   switch (type) {
     case 'number': {
-      const parsedValue = Number.parseInt(value, 10);
+      const parsedValue = Number.parseFloat(value);
       return !Number.isNaN(parsedValue) ? parsedValue : '';
     }
 
