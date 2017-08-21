@@ -5,7 +5,7 @@ ENV NODE_ENV production
 RUN mkdir -p /srv/app
 WORKDIR /srv/app
 
-COPY ./server/package.json ./
+COPY ./server/package.json ./server/yarn.lock ./
 RUN yarn && yarn cache clean
 COPY ./server/dist/ ./
 COPY ./client/dist/ ./public/
