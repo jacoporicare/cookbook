@@ -84,6 +84,7 @@ class RecipeEdit extends Component {
       servingCount = '',
       sideDish = '',
       directions = '',
+      isMarkdown = false,
       ingredients = [],
     } = deleteNullKeys(recipe);
 
@@ -211,16 +212,37 @@ class RecipeEdit extends Component {
                   rows="20"
                   className="form-control"
                 />
-                <div className="help-block text-right">
-                  <ul className="list-inline">
-                    <li>
-                      <strong>*tučně*</strong>
-                    </li>
-                    <li>
-                      <em>_kurzíva_</em>
-                    </li>
-                    <li>*) seznam</li>
-                  </ul>
+                <div className="help-block clearfix">
+                  <div className="pull-left">
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="isMarkdown"
+                        checked={isMarkdown}
+                        onChange={onChange}
+                      />{' '}
+                      Markdown
+                    </label>
+                  </div>
+                  <div className="pull-right">
+                    {!isMarkdown
+                      ? <ul className="list-inline">
+                          <li>
+                            <strong>*tučně*</strong>
+                          </li>
+                          <li>
+                            <em>_kurzíva_</em>
+                          </li>
+                          <li>*) seznam</li>
+                        </ul>
+                      : <a
+                          href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Otevřít návod
+                        </a>}
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -240,7 +262,7 @@ class RecipeEdit extends Component {
 
         <fieldset>
           <legend>Náhled postupu</legend>
-          <RichText text={directions} />
+          <RichText text={directions} isMarkdown={isMarkdown} />
         </fieldset>
       </form>
     );

@@ -2,9 +2,10 @@
 
 exports[`<RichText /> converts formatted text to HTML 1`] = `
 <div
+  className="cb-rich-text"
   dangerouslySetInnerHTML={
     Object {
-      "__html": "<strong>bold</strong> is <strong>bold</strong><br><ul class=\\"cb-steps\\"><li><span class=\\"cb-step\\">1</span>list</li><li><span class=\\"cb-step\\">2</span>list2<br>list2 <strong>new</strong> line</li><li><span class=\\"cb-step\\">3</span><strong>list3</strong><br>still list3</li></ul>text <em>underlined</em> &#60;b&#62;no dang'e'ou\\"r\\"s&#60;/b&#62;<br><br>and some spacing<br><br><br>",
+      "__html": "<strong>bold</strong> is <strong>bold</strong><br><ol><li>list</li><li>list2<br>list2 <strong>new</strong> line</li><li><strong>list3</strong><br>still list3</li></ol>text <em>underlined</em> &#60;b&#62;no dang'e'ou\\"r\\"s&#60;/b&#62;<br><br>and some spacing<br><br><br>",
     }
   }
 />

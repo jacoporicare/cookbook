@@ -100,14 +100,14 @@ class RecipeEditPage extends Component {
   }
 
   handleChange = (event, selectEvent, targetName) => {
-    const name = targetName || event.target.name;
-    const value = selectEvent ? selectEvent.newValue : event.target.value;
-    const type = event.target.type;
+    const { name, value, type, checked } = event.target;
+    const key = targetName || name;
+    const rawValue = selectEvent ? selectEvent.newValue : value;
 
     this.setState(({ recipe }) => {
       const newRecipe = {
         ...recipe,
-        [name]: parseValue(value, type),
+        [key]: type === 'checkbox' ? checked : parseValue(rawValue, type),
       };
 
       return {
@@ -238,6 +238,7 @@ class RecipeEditPage extends Component {
           isNew={isNew}
           isSaving={isSaving}
           onChange={this.handleChange}
+          onIsMarkdownChange={this.handleIsMarkdownChange}
           onAddIngredient={this.handleAddIngredient}
           onAddGroup={this.handleAddGroup}
           onRemoveIngredient={this.handleRemoveIngredient}

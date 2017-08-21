@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
 import HtmlBuilder from './htmlBuilder';
 import './RichText.scss';
 
@@ -19,13 +20,12 @@ const getHtml = text => {
     .split(/\n/g);
 
   const hb = new HtmlBuilder();
-  let stepNo = 1;
 
   lines.forEach(l => {
     let line = l.trim();
 
     if (line === '' && hb.isOpen('li')) {
-      hb.closeAll(); // empty line after list item - close "li" and "ul"
+      hb.closeAll(); // empty line after list item - close "li" and "ol"
       return;
     }
 
@@ -34,12 +34,11 @@ const getHtml = text => {
         hb.close();
       }
 
-      if (!hb.isOpen('ul')) {
-        hb.open('<ul class="cb-steps">');
-        stepNo = 1;
+      if (!hb.isOpen('ol')) {
+        hb.open('<ol>');
       }
 
-      hb.open(`<li><span class="cb-step">${stepNo++}</span>`);
+      hb.open(`<li>`);
       line = line.substring(2).trim();
     } else if (hb.isOpen('li')) {
       hb.write('<br>');
@@ -58,12 +57,18 @@ const getHtml = text => {
 };
 
 /* eslint-disable react/no-danger */
-const RichText = ({ text }) =>
-  <div dangerouslySetInnerHTML={{ __html: getHtml(text) }} />;
+const RichText = ({ text, isMarkdown }) =>
+  isMarkdown
+    ? <ReactMarkdown source={text} className="cb-rich-text" />
+    : <div
+        className="cb-rich-text"
+        dangerouslySetInnerHTML={{ __html: getHtml(text) }}
+      />;
 /* eslint-enable react/no-danger */
 
 RichText.propTypes = {
   text: PropTypes.string,
+  isMarkdown: PropTypes.bool,
 };
 
 export default RichText;
