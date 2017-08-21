@@ -6,10 +6,10 @@ RUN mkdir -p /srv/app
 WORKDIR /srv/app
 
 COPY ./server/package.json ./
-RUN yarn
+RUN yarn && yarn cache clean
 COPY ./server/dist/ ./
 COPY ./client/dist/ ./public/
 
 EXPOSE 3000
 
-CMD ["node", "/srv/app"]
+CMD ["yarn", "start"]
