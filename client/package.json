@@ -3,9 +3,9 @@
   "version": "0.2.2",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
+    "dev": "webpack-dev-server --config webpack.config.dev.js",
     "prebuild": "shx rm -rf dist",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
     "prettier": "prettier --single-quote --trailing-comma all --write 'src/**/*.js'"
@@ -46,7 +46,6 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
-    "cross-env": "^5.0.4",
     "css-loader": "^0.28.4",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^15.1.0",

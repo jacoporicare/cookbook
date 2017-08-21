@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd server
-yarn start &
+yarn dev &
 
 cd ../client
-yarn start
+yarn dev

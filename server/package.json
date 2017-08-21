@@ -3,7 +3,8 @@
   "version": "0.2.2",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development PORT=4001 nodemon src --watch src --exec babel-node",
+    "start": "node index",
+    "dev": "nodemon src --watch src --exec babel-node",
     "prebuild": "shx rm -rf dist",
     "build": "babel src -d dist",
     "test": "jest",
@@ -27,7 +28,6 @@
     "babel-jest": "^20.0.3",
     "babel-preset-env": "^1.5.1",
     "babel-preset-stage-1": "^6.16.0",
-    "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-config-prettier": "^2.1.1",
