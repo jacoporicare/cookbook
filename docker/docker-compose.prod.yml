@@ -1,25 +1,23 @@
-version: '2'
+version: '3'
 
 services:
-  cookbook-db:
+  db:
     image: mongo:3.4
-    container_name: cookbook-db
     restart: always
     networks:
       - cookbook
     volumes:
       - ~/cookbook/data:/data/db
 
-  cookbook-web:
+  web:
     image: docker.jakubricar.cz/cookbook:latest
-    container_name: cookbook-web
     restart: always
     networks:
       - cookbook
       - web
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://cookbook-db/cookbook
+      - MONGO_URI=mongodb://db/cookbook
       - VIRTUAL_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_EMAIL=***REMOVED***

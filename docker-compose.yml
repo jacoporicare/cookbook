@@ -7,8 +7,7 @@ services:
       - ~/dev/private/mongo_data:/data/db
 
   server:
-    build:
-      context: ./server
+    build: ./server
     depends_on:
       - db
     volumes:
@@ -17,8 +16,7 @@ services:
       - MONGO_URI=mongodb://db/cookbook
 
   client:
-    build:
-      context: ./client
+    build: ./client
     depends_on:
       - server
     ports:

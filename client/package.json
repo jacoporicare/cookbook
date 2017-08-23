@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --config webpack.config.dev.js",
-    "prebuild": "shx rm -rf dist",
+    "prebuild": "rm -rf dist",
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
@@ -67,7 +67,6 @@
     "prettier": "^1.5.3",
     "react-test-renderer": "^15.6.1",
     "sass-loader": "^6.0.6",
-    "shx": "^0.2.2",
     "style-loader": "^0.18.2",
     "unexpected": "^10.33.1",
     "url-loader": "^0.5.9",

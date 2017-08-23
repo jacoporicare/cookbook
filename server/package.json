@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index",
     "dev": "nodemon src --watch src --exec babel-node",
-    "prebuild": "shx rm -rf dist",
+    "prebuild": "rm -rf dist",
     "build": "babel src -d dist",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
@@ -35,7 +35,6 @@
     "jest": "^20.0.4",
     "nodemon": "^1.11.0",
     "prettier": "^1.5.2",
-    "shx": "^0.2.2",
     "unexpected": "^10.29.0"
   }
 }
