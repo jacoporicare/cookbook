@@ -13,6 +13,18 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
           docker push "docker.jakubricar.cz/cookbook:dev"
           ssh -o StrictHostKeyChecking=no ricar@jakubricar.cz "./cookbook/start.sh dev"
+  build_prod:
+    docker:
+      - image: circleci/node:6.11.0
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 17.06.1-ce
+      - run: |
+          docker build -t "docker.jakubricar.cz/cookbook:latest" .
+          docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
+          docker push "docker.jakubricar.cz/cookbook:latest"
+          ssh -o StrictHostKeyChecking=no ricar@jakubricar.cz "./cookbook/start.sh prod"
 
 workflows:
   version: 2
@@ -22,3 +34,9 @@ workflows:
           filters:
             branches:
               only: develop
+  build_prod:
+    jobs:
+      - build_prod:
+          filters:
+            branches:
+              only: master
