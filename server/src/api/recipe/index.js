@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import slug from 'slug';
+import { auth } from '../../auth/auth.service';
 import Recipe from './recipe.model';
 
 function toSlug(title) {
@@ -103,7 +104,7 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
   Recipe.create(recipe)
@@ -111,7 +112,7 @@ router.post('/', (req, res) => {
     .catch(err => res.status(500).send(getError(err)));
 });
 
-router.post('/:id', (req, res) => {
+router.post('/:id', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
   Recipe.findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
@@ -119,7 +120,7 @@ router.post('/:id', (req, res) => {
     .catch(err => res.status(500).send(getError(err)));
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth(), (req, res) => {
   Recipe.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
     .catch(err => res.status(500).send(err));
