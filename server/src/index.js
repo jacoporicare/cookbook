@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -6,13 +7,25 @@ import mongoose from 'mongoose';
 import config from './config';
 import routes from './routes';
 
-const app = express();
-
 mongoose.Promise = Promise;
 mongoose.connect(config.mongo.uri);
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);
 });
+
+const app = express();
+
+app.use(
+  cors((req, callback) => {
+    const origin = req.header('Origin');
+    const allow =
+      origin &&
+      (origin.endsWith('.jakubricar.cz') ||
+        origin === 'https://jacoporicare.github.io');
+
+    callback(null, { origin: allow });
+  }),
+);
 
 // Used for production build
 app.use(express.static(path.join(__dirname, 'public')));
