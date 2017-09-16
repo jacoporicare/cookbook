@@ -60,7 +60,9 @@ router.get('/', (req, res) => {
   query.select('_id title slug preparationTime sideDish');
 
   query
-    .then(results => res.send(results))
+    .then(results =>
+      res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
+    )
     .catch(err => res.status(500).send(err));
 });
 
