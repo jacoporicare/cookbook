@@ -238,7 +238,6 @@ class RecipeEditPage extends Component {
           isNew={isNew}
           isSaving={isSaving}
           onChange={this.handleChange}
-          onIsMarkdownChange={this.handleIsMarkdownChange}
           onAddIngredient={this.handleAddIngredient}
           onAddGroup={this.handleAddGroup}
           onRemoveIngredient={this.handleRemoveIngredient}

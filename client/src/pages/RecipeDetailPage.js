@@ -77,7 +77,6 @@ class RecipeDetailPage extends Component {
       ingredients,
       servingCount,
       directions,
-      isMarkdown,
     } = recipe;
 
     return (
@@ -96,7 +95,6 @@ class RecipeDetailPage extends Component {
                 ingredients={ingredients}
                 servingCount={servingCount}
                 directions={directions}
-                isMarkdown={isMarkdown}
               />}
         </div>
         <RecipeDeleteModal

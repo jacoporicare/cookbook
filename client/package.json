@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.config.dev.js",
+    "dev": "PORT=4000 API_URL=http://localhost:4001 webpack-dev-server --config webpack.config.dev.js",
     "prebuild": "rm -rf dist",
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "jest",

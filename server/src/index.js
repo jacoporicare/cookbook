@@ -8,7 +8,7 @@ import config from './config';
 import routes from './routes';
 
 mongoose.Promise = Promise;
-mongoose.connect(config.mongo.uri);
+mongoose.connect(config.mongo.uri, { useMongoClient: true });
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);
 });

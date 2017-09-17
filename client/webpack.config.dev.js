@@ -4,7 +4,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const commonConfig = require('./webpack.config.common');
 
-const { PORT, API_URL } = process.env;
+const { PORT = 4000, API_URL = 'http://localhost:4001' } = process.env;
 
 module.exports = webpackMerge(commonConfig, {
   devtool: 'eval-source-map',
@@ -26,7 +26,6 @@ module.exports = webpackMerge(commonConfig, {
   devServer: {
     compress: true,
     historyApiFallback: true,
-    host: '0.0.0.0',
     hot: true,
     overlay: true,
     port: PORT,

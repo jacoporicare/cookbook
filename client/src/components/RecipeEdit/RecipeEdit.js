@@ -84,7 +84,6 @@ class RecipeEdit extends Component {
       servingCount = '',
       sideDish = '',
       directions = '',
-      isMarkdown = false,
       ingredients = [],
     } = deleteNullKeys(recipe);
 
@@ -213,35 +212,14 @@ class RecipeEdit extends Component {
                   className="form-control"
                 />
                 <div className="help-block clearfix">
-                  <div className="pull-left">
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="isMarkdown"
-                        checked={isMarkdown}
-                        onChange={onChange}
-                      />{' '}
-                      Markdown
-                    </label>
-                  </div>
                   <div className="pull-right">
-                    {!isMarkdown
-                      ? <ul className="list-inline">
-                          <li>
-                            <strong>*tučně*</strong>
-                          </li>
-                          <li>
-                            <em>_kurzíva_</em>
-                          </li>
-                          <li>*) seznam</li>
-                        </ul>
-                      : <a
-                          href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Otevřít návod
-                        </a>}
+                    <a
+                      href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Návod na Markdown
+                    </a>
                   </div>
                 </div>
               </div>
@@ -262,7 +240,7 @@ class RecipeEdit extends Component {
 
         <fieldset>
           <legend>Náhled postupu</legend>
-          <RichText text={directions} isMarkdown={isMarkdown} />
+          <RichText text={directions} />
         </fieldset>
       </form>
     );
