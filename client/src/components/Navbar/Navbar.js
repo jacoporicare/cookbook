@@ -48,8 +48,9 @@ class Navbar extends Component {
             className={`navbar-collapse ${collapsed ? 'collapse' : ''}`}
             id="navbar-main"
           >
-            {isAuthenticated &&
-              <LoggedUser isFetching={isFetchingUser} userName={userName} />}
+            {isAuthenticated && (
+              <LoggedUser isFetching={isFetchingUser} userName={userName} />
+            )}
           </div>
         </div>
       </div>

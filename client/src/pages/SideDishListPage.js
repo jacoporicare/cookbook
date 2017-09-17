@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SideDishListPage = () =>
+const SideDishListPage = () => (
   <div className="container">
     <h1 className="page-header">Přílohy</h1>
 
@@ -46,6 +46,7 @@ const SideDishListPage = () =>
         </tr>
       </tbody>
     </table>
-  </div>;
+  </div>
+);
 
 export default SideDishListPage;

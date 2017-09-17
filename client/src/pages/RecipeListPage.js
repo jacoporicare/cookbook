@@ -76,17 +76,19 @@ class RecipeListPage extends Component {
           </div>
         </h1>
         <SearchBar onChange={this.handleSearchChange} />
-        {isEmpty
-          ? <SpinnerAlert
-              level="info"
-              spinner={isFetching}
-              text={
-                searchText
-                  ? 'Nenalezen žádný recept.'
-                  : 'Zatím zde není žádný recept.'
-              }
-            />
-          : <RecipeList recipes={recipes} />}
+        {isEmpty ? (
+          <SpinnerAlert
+            level="info"
+            spinner={isFetching}
+            text={
+              searchText
+                ? 'Nenalezen žádný recept.'
+                : 'Zatím zde není žádný recept.'
+            }
+          />
+        ) : (
+          <RecipeList recipes={recipes} />
+        )}
       </div>
     );
   }

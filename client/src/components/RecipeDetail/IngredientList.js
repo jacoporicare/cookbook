@@ -26,7 +26,8 @@ class IngredientList extends Component {
 
     return (amount /
       this.props.servingCount *
-      this.state.servingCount).toLocaleString('cs');
+      this.state.servingCount
+    ).toLocaleString('cs');
   }
 
   handleServingCountChange = event => {
@@ -48,7 +49,7 @@ class IngredientList extends Component {
 
     return (
       <div>
-        {!!initialServingCount &&
+        {!!initialServingCount && (
           <div className="form-group">
             <div className="input-group">
               <div className="input-group-addon">Počet porcí</div>
@@ -60,7 +61,8 @@ class IngredientList extends Component {
                 className="form-control"
               />
             </div>
-          </div>}
+          </div>
+        )}
 
         <ul className="list-group cb-ingredient-list">
           {ingredients.map(ingredient => {
@@ -73,21 +75,20 @@ class IngredientList extends Component {
 
             return (
               <li key={_id} className={className}>
-                {isGroup
-                  ? <b>
-                      {name}
-                    </b>
-                  : <div className="row">
-                      <div className="col-xs-3 text-right">
-                        {(amount || amountUnit) &&
+                {isGroup ? (
+                  <b>{name}</b>
+                ) : (
+                  <div className="row">
+                    <div className="col-xs-3 text-right">
+                      {(amount || amountUnit) && (
                           <b>
                             {this.getAmount(amount)}&nbsp;{amountUnit}
-                          </b>}
-                      </div>
-                      <div className="col-xs-9">
-                        {name}
-                      </div>
-                    </div>}
+                          </b>
+                        )}
+                    </div>
+                    <div className="col-xs-9">{name}</div>
+                  </div>
+                )}
               </li>
             );
           })}

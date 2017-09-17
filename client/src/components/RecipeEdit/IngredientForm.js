@@ -24,7 +24,10 @@ class IngredientForm extends Component {
       const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
         ingredientOptions: this.props.ingredientOptions.filter(i =>
-          removeDiacritics.replace(i).toLowerCase().includes(valueLowerCase),
+          removeDiacritics
+            .replace(i)
+            .toLowerCase()
+            .includes(valueLowerCase),
         ),
       });
     }
@@ -44,10 +47,7 @@ class IngredientForm extends Component {
     }
   };
 
-  renderSuggestion = suggestion =>
-    <span>
-      {suggestion}
-    </span>;
+  renderSuggestion = suggestion => <span>{suggestion}</span>;
 
   render() {
     const { ingredientOptions } = this.state;

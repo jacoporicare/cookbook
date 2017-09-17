@@ -6,11 +6,11 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc';
 
-const Handle = SortableHandle(() =>
+const Handle = SortableHandle(() => (
   <div className="pull-right text-muted cb-sortable-handle">
     <i className="fa fa-bars" />
-  </div>,
-);
+  </div>
+));
 
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
   const { name, amount, amountUnit, isGroup } = ingredient;
@@ -29,42 +29,43 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }) => {
           </a>
         </div>
 
-        {!isGroup &&
+        {!isGroup && (
           <div className="col-xs-3 text-right">
             <b>
               {amount ? amount.toLocaleString('cs') : ''}&nbsp;{amountUnit}
             </b>
-          </div>}
+          </div>
+        )}
 
-        {!isGroup
-          ? <div className="col-xs-7">
-              {name}
-              <Handle />
-            </div>
-          : <div className="col-xs-10">
-              <b>
-                {name}
-              </b>
-              <Handle />
-            </div>}
+        {!isGroup ? (
+          <div className="col-xs-7">
+            {name}
+            <Handle />
+          </div>
+        ) : (
+          <div className="col-xs-10">
+            <b>{name}</b>
+            <Handle />
+          </div>
+        )}
       </div>
     </li>
   );
 });
 
-const SortableList = SortableContainer(({ items, onRemove }) =>
+const SortableList = SortableContainer(({ items, onRemove }) => (
   <ul className="list-group cb-ingredient-list">
-    {items.map((ingredient, index) =>
+    {items.map((ingredient, index) => (
       <SortableItem
         key={index} // eslint-disable-line react/no-array-index-key
         index={index}
         itemIndex={index}
         ingredient={ingredient}
         onRemove={onRemove}
-      />,
-    )}
-  </ul>,
-);
+      />
+    ))}
+  </ul>
+));
 
 const IngredientList = ({ items, onRemove, onSort }) => {
   if (items.length === 0) {

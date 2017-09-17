@@ -41,7 +41,10 @@ class RecipeEdit extends Component {
       const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
         sideDishOptions: this.props.sideDishOptions.filter(sd =>
-          removeDiacritics.replace(sd).toLowerCase().includes(valueLowerCase),
+          removeDiacritics
+            .replace(sd)
+            .toLowerCase()
+            .includes(valueLowerCase),
         ),
       });
     }
@@ -57,10 +60,7 @@ class RecipeEdit extends Component {
     }
   };
 
-  renderSuggestion = suggestion =>
-    <span>
-      {suggestion}
-    </span>;
+  renderSuggestion = suggestion => <span>{suggestion}</span>;
 
   render() {
     const {
@@ -120,8 +120,9 @@ class RecipeEdit extends Component {
               className="form-control"
               placeholder="Název"
             />
-            {errors.title &&
-              <span className="text-danger">Název je povinný</span>}
+            {errors.title && (
+              <span className="text-danger">Název je povinný</span>
+            )}
           </div>
         </fieldset>
 

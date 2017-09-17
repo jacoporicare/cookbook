@@ -89,13 +89,15 @@ class RecipeDetailPage extends Component {
             sideDish={sideDish}
             onDeleteShow={this.handleDeleteShow}
           />
-          {isFetching && !hasDetail
-            ? <Spinner />
-            : <RecipeDetail
-                ingredients={ingredients}
-                servingCount={servingCount}
-                directions={directions}
-              />}
+          {isFetching && !hasDetail ? (
+            <Spinner />
+          ) : (
+            <RecipeDetail
+              ingredients={ingredients}
+              servingCount={servingCount}
+              directions={directions}
+            />
+          )}
         </div>
         <RecipeDeleteModal
           show={showDeleteModal}

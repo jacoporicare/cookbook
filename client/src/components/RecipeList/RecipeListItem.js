@@ -10,9 +10,7 @@ const RecipeListItem = ({ recipe }) => {
   return (
     <div className="col-sm-6 col-md-4">
       <Link to={`/recept/${slug}`} styleName="box">
-        <h4 styleName="title">
-          {title}
-        </h4>
+        <h4 styleName="title">{title}</h4>
         <div styleName="info">
           <RecipeInfo
             preparationTime={preparationTime}

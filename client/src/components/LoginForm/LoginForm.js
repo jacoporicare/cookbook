@@ -9,7 +9,7 @@ const LoginForm = ({
   isSubmitting,
   onChange,
   onSubmit,
-}) =>
+}) => (
   <div>
     {isSubmitting && <Spinner overlay />}
     <div className="row">
@@ -68,7 +68,8 @@ const LoginForm = ({
         </form>
       </div>
     </div>
-  </div>;
+  </div>
+);
 
 LoginForm.propTypes = {
   username: PropTypes.string.isRequired,

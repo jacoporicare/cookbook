@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 
-const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }) =>
+const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }) => (
   <Modal show={show} onHide={onClose}>
     <Modal.Header closeButton>
       <Modal.Title>Smazat recept</Modal.Title>
@@ -16,7 +16,8 @@ const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }) =>
       </Button>
       <Button onClick={onClose}>Zrušit</Button>
     </Modal.Footer>
-  </Modal>;
+  </Modal>
+);
 
 RecipeDeleteModal.propTypes = {
   show: PropTypes.bool,

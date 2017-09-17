@@ -4,23 +4,21 @@ import './RecipeInfo.module.scss';
 
 const RecipeInfo = ({ preparationTime, sideDish, placeholder }) => {
   if (!preparationTime && !sideDish) {
-    return placeholder
-      ? <div>
-          {placeholder}
-        </div>
-      : null;
+    return placeholder ? <div>{placeholder}</div> : null;
   }
 
   return (
     <ul styleName="info">
-      {preparationTime > 0 &&
+      {preparationTime > 0 && (
         <li>
           <i className="fa fa-clock-o" /> {preparationTime} min
-        </li>}
-      {!!sideDish &&
+        </li>
+      )}
+      {!!sideDish && (
         <li>
           <i className="fa fa-spoon" /> {sideDish}
-        </li>}
+        </li>
+      )}
     </ul>
   );
 };
