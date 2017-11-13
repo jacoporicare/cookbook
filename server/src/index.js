@@ -15,17 +15,7 @@ mongoose.connection.on('error', () => {
 
 const app = express();
 
-app.use(
-  cors((req, callback) => {
-    const origin = req.header('Origin');
-    const allow =
-      origin &&
-      (origin.endsWith('.jakubricar.cz') ||
-        origin === 'https://jacoporicare.github.io');
-
-    callback(null, { origin: allow });
-  }),
-);
+app.use(cors());
 
 // Used for production build
 app.use(express.static(path.join(__dirname, 'public')));
