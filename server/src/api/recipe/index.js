@@ -49,20 +49,14 @@ router.get('/', (req, res) => {
       .map(s => new RegExp(s.trim(), 'i'));
 
     query = Recipe.find({
-      $or: [
-        { title: { $in: q } },
-        { sideDish: { $in: q } },
-        { 'ingredients.name': { $in: q } },
-      ],
+      $or: [{ title: { $in: q } }, { sideDish: { $in: q } }, { 'ingredients.name': { $in: q } }],
     });
   }
 
   query.select('_id title slug preparationTime sideDish');
 
   query
-    .then(results =>
-      res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
-    )
+    .then(results => res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))))
     .catch(err => res.status(500).send(err));
 });
 
@@ -75,11 +69,7 @@ router.get('/ingredients', (req, res) => {
 router.get('/side-dishes', (req, res) => {
   Recipe.distinct('sideDish')
     .then(results =>
-      res.send(
-        results
-          .filter(sd => sd && sd !== '')
-          .sort((a, b) => a.localeCompare(b, 'cs')),
-      ),
+      res.send(results.filter(sd => sd && sd !== '').sort((a, b) => a.localeCompare(b, 'cs'))),
     )
     .catch(err => res.status(500).send(err));
 });
@@ -100,7 +90,14 @@ router.get('/:id', (req, res) => {
       }
 
       Recipe.findById(id)
-        .then(result => res.send(result))
+        .then(result => {
+          if (!result) {
+            res.status(404).end();
+            return;
+          }
+
+          res.send(result);
+        })
         .catch(err => res.status(500).send(err));
     })
     .catch(err => res.status(500).send(err));

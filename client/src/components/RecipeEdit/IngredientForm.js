@@ -91,31 +91,21 @@ class IngredientForm extends Component {
             <div className="input-group">
               <Autosuggest
                 suggestions={ingredientOptions}
-                onSuggestionsFetchRequested={
-                  this.handleSuggestionsFetchRequested
-                }
-                onSuggestionsClearRequested={
-                  this.handleSuggestionsClearRequested
-                }
+                onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
                 getSuggestionValue={s => s}
                 renderSuggestion={this.renderSuggestion}
                 inputProps={{
                   name: 'name',
                   value: name,
-                  onChange: (event, selectEvent) =>
-                    onChange(event, selectEvent, 'name'),
+                  onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
                   onKeyPress: this.handleKeyPress,
                   className: 'form-control',
                   placeholder: 'Název',
                 }}
               />
               <div className="input-group-btn">
-                <button
-                  type="button"
-                  onClick={onAdd}
-                  className="btn btn-primary"
-                  disabled={!name}
-                >
+                <button type="button" onClick={onAdd} className="btn btn-primary" disabled={!name}>
                   <i className="fa fa-plus" /> Přidat
                 </button>
               </div>

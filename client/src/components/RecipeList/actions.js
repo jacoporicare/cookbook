@@ -25,11 +25,7 @@ export const fetchRecipeListFailure = (errorMessage, response) => ({
 
 export const fetchRecipeList = () => ({
   [CALL_API]: {
-    actions: [
-      fetchRecipeListRequest,
-      fetchRecipeListSuccess,
-      fetchRecipeListFailure,
-    ],
+    actions: [fetchRecipeListRequest, fetchRecipeListSuccess, fetchRecipeListFailure],
     url: '/api/recipes',
   },
 });

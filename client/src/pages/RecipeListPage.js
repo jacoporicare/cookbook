@@ -80,11 +80,7 @@ class RecipeListPage extends Component {
           <SpinnerAlert
             level="info"
             spinner={isFetching}
-            text={
-              searchText
-                ? 'Nenalezen žádný recept.'
-                : 'Zatím zde není žádný recept.'
-            }
+            text={searchText ? 'Nenalezen žádný recept.' : 'Zatím zde není žádný recept.'}
           />
         ) : (
           <RecipeList recipes={recipes} />

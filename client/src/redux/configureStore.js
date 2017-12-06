@@ -8,15 +8,10 @@ const rootReducer = configureReducer();
 const middlewares = [thunk, api2];
 
 const configureStoreProd = initialState =>
-  createStore(
-    rootReducer,
-    initialState,
-    compose(applyMiddleware(...middlewares)),
-  );
+  createStore(rootReducer, initialState, compose(applyMiddleware(...middlewares)));
 
 const configureStoreDev = initialState => {
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(
     rootReducer,
     initialState,
@@ -27,8 +22,6 @@ const configureStoreDev = initialState => {
 };
 
 const configureStore =
-  process.env.NODE_ENV === 'production'
-    ? configureStoreProd
-    : configureStoreDev;
+  process.env.NODE_ENV === 'production' ? configureStoreProd : configureStoreDev;
 
 export default configureStore;

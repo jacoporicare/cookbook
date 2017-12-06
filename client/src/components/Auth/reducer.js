@@ -1,11 +1,5 @@
 import initialState from '../../redux/initialState';
-import {
-  SET_AUTH_TOKEN,
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  LOGOUT,
-} from './actions';
+import { SET_AUTH_TOKEN, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from './actions';
 
 const authReducer = (state = initialState.auth, action) => {
   switch (action.type) {

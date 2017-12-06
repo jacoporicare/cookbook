@@ -31,9 +31,6 @@ RecipeSchema.virtual('creationDate').get(function getCreationDate() {
  * Validations
  */
 
-RecipeSchema.path('title').validate(
-  title => title.length,
-  'Nadpis musí být vyplněný',
-);
+RecipeSchema.path('title').validate(title => title.length, 'Nadpis musí být vyplněný');
 
 export default mongoose.model('Recipe', RecipeSchema);

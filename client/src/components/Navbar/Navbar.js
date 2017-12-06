@@ -30,11 +30,7 @@ class Navbar extends Component {
       <div className="navbar navbar-default navbar-static-top">
         <div className="container">
           <div className="navbar-header">
-            <button
-              className="navbar-toggle"
-              type="button"
-              onClick={this.handleCollapseToggle}
-            >
+            <button className="navbar-toggle" type="button" onClick={this.handleCollapseToggle}>
               <span className="icon-bar" />
               <span className="icon-bar" />
               <span className="icon-bar" />
@@ -44,13 +40,8 @@ class Navbar extends Component {
             </IndexLink>
           </div>
 
-          <div
-            className={`navbar-collapse ${collapsed ? 'collapse' : ''}`}
-            id="navbar-main"
-          >
-            {isAuthenticated && (
-              <LoggedUser isFetching={isFetchingUser} userName={userName} />
-            )}
+          <div className={`navbar-collapse ${collapsed ? 'collapse' : ''}`} id="navbar-main">
+            {isAuthenticated && <LoggedUser isFetching={isFetchingUser} userName={userName} />}
           </div>
         </div>
       </div>

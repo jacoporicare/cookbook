@@ -27,11 +27,7 @@ class AppPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      errorMessage: oldErrorMessage,
-      resetErrorMessage,
-      fetchUser,
-    } = this.props;
+    const { errorMessage: oldErrorMessage, resetErrorMessage, fetchUser } = this.props;
     const { errorMessage, isAuthenticated, user, isFetchingUser } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {

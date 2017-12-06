@@ -26,11 +26,7 @@ export const fetchRecipeFailure = (errorMessage, response) => ({
 
 export const fetchRecipe = slug => ({
   [CALL_API]: {
-    actions: [
-      fetchRecipeRequest,
-      recipe => fetchRecipeSuccess(recipe, slug),
-      fetchRecipeFailure,
-    ],
+    actions: [fetchRecipeRequest, recipe => fetchRecipeSuccess(recipe, slug), fetchRecipeFailure],
     url: `/api/recipes/${slug}`,
   },
 });

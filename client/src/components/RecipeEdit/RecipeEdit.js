@@ -101,8 +101,7 @@ class RecipeEdit extends Component {
               className="btn btn-success"
               disabled={!title || hasError || isSaving || !changed}
             >
-              <i className="fa fa-save" />{' '}
-              {isSaving ? <span>Ukládání…</span> : 'Uložit'}
+              <i className="fa fa-save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
             </button>
           </span>
         </h1>
@@ -120,9 +119,7 @@ class RecipeEdit extends Component {
               className="form-control"
               placeholder="Název"
             />
-            {errors.title && (
-              <span className="text-danger">Název je povinný</span>
-            )}
+            {errors.title && <span className="text-danger">Název je povinný</span>}
           </div>
         </fieldset>
 
@@ -164,20 +161,15 @@ class RecipeEdit extends Component {
                 <label htmlFor="sideDish">Příloha</label>
                 <Autosuggest
                   suggestions={sideDishOptions}
-                  onSuggestionsFetchRequested={
-                    this.handleSuggestionsFetchRequested
-                  }
-                  onSuggestionsClearRequested={
-                    this.handleSuggestionsClearRequested
-                  }
+                  onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
                   getSuggestionValue={s => s}
                   renderSuggestion={this.renderSuggestion}
                   inputProps={{
                     id: 'sideDish',
                     name: 'sideDish',
                     value: sideDish,
-                    onChange: (event, selectEvent) =>
-                      onChange(event, selectEvent, 'sideDish'),
+                    onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
                     onKeyPress: this.handleKeyPress,
                     className: 'form-control',
                   }}
@@ -232,8 +224,7 @@ class RecipeEdit extends Component {
                 className="btn btn-success btn-lg"
                 disabled={!title || hasError || isSaving || !changed}
               >
-                <i className="fa fa-save" />{' '}
-                {isSaving ? <span>Ukládání…</span> : 'Uložit'}
+                <i className="fa fa-save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
               </button>
             </p>
           </div>

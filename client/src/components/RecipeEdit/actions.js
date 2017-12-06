@@ -53,11 +53,7 @@ export const fetchIngredientListFailure = () => ({
 
 export const fetchIngredientList = () => ({
   [CALL_API]: {
-    actions: [
-      fetchIngredientListRequest,
-      fetchIngredientListSuccess,
-      fetchIngredientListFailure,
-    ],
+    actions: [fetchIngredientListRequest, fetchIngredientListSuccess, fetchIngredientListFailure],
     url: '/api/recipes/ingredients',
   },
 });
@@ -79,11 +75,7 @@ export const fetchSideDishListFailure = () => ({
 
 export const fetchSideDishList = () => ({
   [CALL_API]: {
-    actions: [
-      fetchSideDishListRequest,
-      fetchSideDishListSuccess,
-      fetchSideDishListFailure,
-    ],
+    actions: [fetchSideDishListRequest, fetchSideDishListSuccess, fetchSideDishListFailure],
     url: '/api/recipes/side-dishes',
   },
 });

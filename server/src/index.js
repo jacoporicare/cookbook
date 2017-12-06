@@ -25,8 +25,6 @@ app.use(cookieParser());
 
 app.use(routes);
 
-app.all('*', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/index.html')),
-);
+app.all('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
 app.listen(config.port, () => console.log(`Server running on ${config.port}`)); // eslint-disable-line no-console

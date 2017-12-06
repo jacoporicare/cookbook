@@ -3,13 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
-const RecipeHeader = ({
-  slug,
-  title,
-  preparationTime,
-  sideDish,
-  onDeleteShow,
-}) => (
+const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }) => (
   <div>
     <h1 className="page-header clearfix">
       {title}

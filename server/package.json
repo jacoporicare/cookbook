@@ -9,7 +9,7 @@
     "build": "babel src -d dist && cp package.json yarn.lock dist",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
-    "prettier": "prettier --single-quote --trailing-comma all --write 'src/**/*.js'"
+    "prettier": "prettier --write 'src/**/*.js'"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

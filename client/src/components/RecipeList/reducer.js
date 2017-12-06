@@ -35,10 +35,7 @@ const recipeListReducer = (state = initialState.recipeList, action) => {
 
     case RECIPE_SAVE_SUCCESS: {
       const { recipe } = action.payload;
-      const recipes = [
-        ...state.recipes.filter(r => r._id !== recipe._id),
-        recipe,
-      ];
+      const recipes = [...state.recipes.filter(r => r._id !== recipe._id), recipe];
 
       return {
         ...state,

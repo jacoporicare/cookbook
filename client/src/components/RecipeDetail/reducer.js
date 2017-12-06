@@ -1,9 +1,5 @@
 import initialState from '../../redux/initialState';
-import {
-  RECIPE_FETCH_REQUEST,
-  RECIPE_FETCH_SUCCESS,
-  RECIPE_FETCH_FAILURE,
-} from './actions';
+import { RECIPE_FETCH_REQUEST, RECIPE_FETCH_SUCCESS, RECIPE_FETCH_FAILURE } from './actions';
 
 const recipeDetailReducer = (state = initialState.recipeDetail, action) => {
   switch (action.type) {

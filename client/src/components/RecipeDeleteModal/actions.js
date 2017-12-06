@@ -21,11 +21,7 @@ export const deleteRecipeFailure = () => ({
 
 export const deleteRecipe = id => ({
   [CALL_API]: {
-    actions: [
-      deleteRecipeRequest,
-      () => deleteRecipeSuccess(id),
-      deleteRecipeFailure,
-    ],
+    actions: [deleteRecipeRequest, () => deleteRecipeSuccess(id), deleteRecipeFailure],
     url: `/api/recipes/${id}`,
     method: 'delete',
   },

@@ -59,11 +59,7 @@ class RecipeDetailPage extends Component {
     if (!recipe) {
       return (
         <div className="container">
-          <SpinnerAlert
-            level="danger"
-            text="Recept nenalezen."
-            spinner={isFetching}
-          />
+          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
         </div>
       );
     }

@@ -77,6 +77,4 @@ const mapDispatchToProps = {
   login,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withCookies(LoginPage),
-);
+export default connect(mapStateToProps, mapDispatchToProps)(withCookies(LoginPage));

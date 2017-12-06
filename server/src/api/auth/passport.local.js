@@ -22,9 +22,7 @@ router.post('/', (req, res, next) => {
     const error = err || info;
     if (error) return res.status(401).json(error);
     if (!user)
-      return res
-        .status(404)
-        .json({ message: 'Něco se pokazilo, prosím, zkuste to znovu.' });
+      return res.status(404).json({ message: 'Něco se pokazilo, prosím, zkuste to znovu.' });
 
     res.json({ token: user.id });
   })(req, res, next);

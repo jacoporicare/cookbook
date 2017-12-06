@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 
 const Handle = SortableHandle(() => (
   <div className="pull-right text-muted cb-sortable-handle">
@@ -72,14 +68,7 @@ const IngredientList = ({ items, onRemove, onSort }) => {
     return <div className="alert alert-info">Zatím žádné ingredience.</div>;
   }
 
-  return (
-    <SortableList
-      items={items}
-      onRemove={onRemove}
-      onSortEnd={onSort}
-      useDragHandle
-    />
-  );
+  return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;
 };
 
 IngredientList.propTypes = {

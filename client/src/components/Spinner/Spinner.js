@@ -18,10 +18,7 @@ class Spinner extends React.Component {
 
   componentDidMount() {
     if (!this.state.visible) {
-      this.timer = setTimeout(
-        () => this.setState({ visible: true }),
-        this.props.delay || 50,
-      );
+      this.timer = setTimeout(() => this.setState({ visible: true }), this.props.delay || 50);
     }
   }
 
@@ -39,9 +36,8 @@ class Spinner extends React.Component {
     return (
       <div styleName={overlay ? 'overlay' : ''}>
         <div styleName="spinner">
-          <div styleName="rect" /> <div styleName="rect rect2" />{' '}
-          <div styleName="rect rect3" /> <div styleName="rect rect4" />{' '}
-          <div styleName="rect rect5" />
+          <div styleName="rect" /> <div styleName="rect rect2" /> <div styleName="rect rect3" />{' '}
+          <div styleName="rect rect4" /> <div styleName="rect rect5" />
         </div>
       </div>
     );

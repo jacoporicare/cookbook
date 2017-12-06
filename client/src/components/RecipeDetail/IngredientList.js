@@ -24,18 +24,14 @@ class IngredientList extends Component {
       return amount.toLocaleString('cs');
     }
 
-    return (amount /
-      this.props.servingCount *
-      this.state.servingCount
-    ).toLocaleString('cs');
+    return (amount / this.props.servingCount * this.state.servingCount).toLocaleString('cs');
   }
 
   handleServingCountChange = event => {
     const servingCount = Number.parseInt(event.target.value, 10);
 
     this.setState({
-      servingCount:
-        !Number.isNaN(servingCount) && servingCount > 0 ? servingCount : '',
+      servingCount: !Number.isNaN(servingCount) && servingCount > 0 ? servingCount : '',
     });
   };
 
@@ -81,10 +77,10 @@ class IngredientList extends Component {
                   <div className="row">
                     <div className="col-xs-3 text-right">
                       {(amount || amountUnit) && (
-                          <b>
-                            {this.getAmount(amount)}&nbsp;{amountUnit}
-                          </b>
-                        )}
+                        <b>
+                          {this.getAmount(amount)}&nbsp;{amountUnit}
+                        </b>
+                      )}
                     </div>
                     <div className="col-xs-9">{name}</div>
                   </div>

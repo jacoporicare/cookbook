@@ -34,12 +34,7 @@ class IngredientGroupForm extends Component {
             placeholder="Nová skupina"
           />
           <div className="input-group-btn">
-            <button
-              type="button"
-              onClick={onAdd}
-              className="btn btn-default"
-              disabled={!group}
-            >
+            <button type="button" onClick={onAdd} className="btn btn-default" disabled={!group}>
               <i className="fa fa-plus" /> Přidat
             </button>
           </div>

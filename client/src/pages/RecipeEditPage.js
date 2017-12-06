@@ -207,22 +207,12 @@ class RecipeEditPage extends Component {
 
   render() {
     const { recipe, errors, changed } = this.state;
-    const {
-      isNew,
-      isFetching,
-      isSaving,
-      ingredientOptions,
-      sideDishOptions,
-    } = this.props;
+    const { isNew, isFetching, isSaving, ingredientOptions, sideDishOptions } = this.props;
 
     if (!isNew && !recipe.slug) {
       return (
         <div className="container">
-          <SpinnerAlert
-            level="danger"
-            text="Recept nenalezen."
-            spinner={isFetching}
-          />
+          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
         </div>
       );
     }
@@ -252,11 +242,7 @@ class RecipeEditPage extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {
     recipeDetail: { isFetching, recipesBySlug },
-    recipeEdit: {
-      isSaving,
-      ingredientList: { ingredients },
-      sideDishList: { sideDishes },
-    },
+    recipeEdit: { isSaving, ingredientList: { ingredients }, sideDishList: { sideDishes } },
   } = state;
 
   const { slug } = ownProps.params;
