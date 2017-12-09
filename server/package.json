@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node index",
-    "dev": "PORT=4001 nodemon src --watch src --exec babel-node",
+    "dev": "../scripts/mongo.sh && PORT=4001 nodemon src --watch src --exec babel-node",
     "prebuild": "rm -rf dist",
     "build": "babel src -d dist && cp package.json yarn.lock dist",
     "test": "jest",
