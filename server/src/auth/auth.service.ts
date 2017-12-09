@@ -1,9 +1,18 @@
-import jwt from 'jsonwebtoken';
-import expressJwt from 'express-jwt';
-import compose from 'composable-middleware';
+import * as jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import * as expressJwt from 'express-jwt';
+import compose = require('composable-middleware');
+
 import config from '../config';
 
-const users = [
+export interface User {
+  id: number;
+  username: string;
+  name: string;
+  password: string;
+}
+
+const users: User[] = [
   {
     id: 1,
     username: 'kubik',
@@ -19,21 +28,21 @@ const users = [
 ];
 
 export function fakeAuth() {
-  return (req, res, next) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     req.user = users[0];
     next();
   };
 }
 
-export function checkUser(username, password) {
+export function checkUser(username: string, password: string) {
   return users.find(u => u.username === username && u.password === password);
 }
 
-export function findUserById(id) {
+export function findUserById(id: number) {
   return users.find(u => u.id === id);
 }
 
-export function signToken(id) {
+export function signToken(id: number) {
   return jwt.sign({ _id: id }, config.secrets.auth, { expiresIn: '1y' });
 }
 
@@ -53,7 +62,7 @@ export function auth() {
       next();
     })
     .use(expressJwt({ secret: config.secrets.auth }))
-    .use((err, req, res, next) => {
+    .use((err: any, req: Request, res: Response, next: NextFunction) => {
       if (err.name === 'UnauthorizedError') {
         res.status(401).end();
         return;

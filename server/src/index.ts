@@ -1,13 +1,13 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
+import * as express from 'express';
+import * as cors from 'cors';
+import * as path from 'path';
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
+import * as mongoose from 'mongoose';
 import config from './config';
 import routes from './routes';
 
-mongoose.Promise = Promise;
+(<any>mongoose).Promise = global.Promise;
 mongoose.connect(config.mongo.uri, { useMongoClient: true });
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);

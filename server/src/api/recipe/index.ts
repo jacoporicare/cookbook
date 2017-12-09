@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
-import slug from 'slug';
+import * as mongoose from 'mongoose';
+import * as slug from 'slug';
 import { auth } from '../../auth/auth.service';
-import Recipe from './recipe.model';
+import RecipeModel, { Recipe } from './recipe.model';
 
-function toSlug(title) {
-  return slug(title.trim(), { mode: 'rfc3986' });
+function toSlug(title: string) {
+  return slug(title.trim(), slug.defaults.modes.rfc3986);
 }
 
-function getError(err) {
+function getError(err: any) {
   if (err.code === 11000) {
     return {
       code: 11000,
@@ -19,7 +19,7 @@ function getError(err) {
   return err;
 }
 
-function getRecipe({ body: recipe, user }) {
+function getRecipe({ body: recipe, user }: { body: Recipe; user?: any }) {
   return {
     ...recipe,
     user: user.name,
@@ -41,34 +41,35 @@ router.get('/', (req, res) => {
   let query;
 
   if (!req.query.q) {
-    query = Recipe.find();
+    query = RecipeModel.find();
   } else {
-    const q = req.query.q
+    const q = (<string>req.query.q)
       .split(',')
       .filter(s => s.trim() !== '')
       .map(s => new RegExp(s.trim(), 'i'));
 
-    query = Recipe.find({
+    query = RecipeModel.find({
       $or: [{ title: { $in: q } }, { sideDish: { $in: q } }, { 'ingredients.name': { $in: q } }],
     });
   }
 
-  query.select('_id title slug preparationTime sideDish');
-
   query
-    .then(results => res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))))
+    .select('_id title slug preparationTime sideDish')
+    .then((results: Recipe[]) =>
+      res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
+    )
     .catch(err => res.status(500).send(err));
 });
 
 router.get('/ingredients', (req, res) => {
-  Recipe.distinct('ingredients.name')
-    .then(results => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
+  RecipeModel.distinct('ingredients.name')
+    .then((results: string[]) => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
     .catch(err => res.status(500).send(err));
 });
 
 router.get('/side-dishes', (req, res) => {
-  Recipe.distinct('sideDish')
-    .then(results =>
+  RecipeModel.distinct('sideDish')
+    .then((results: string[]) =>
       res.send(results.filter(sd => sd && sd !== '').sort((a, b) => a.localeCompare(b, 'cs'))),
     )
     .catch(err => res.status(500).send(err));
@@ -77,7 +78,7 @@ router.get('/side-dishes', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
 
-  Recipe.findOne({ slug: id })
+  RecipeModel.findOne({ slug: id })
     .then(result => {
       if (result) {
         res.send(result);
@@ -89,7 +90,7 @@ router.get('/:id', (req, res) => {
         return;
       }
 
-      Recipe.findById(id)
+      RecipeModel.findById(id)
         .then(result => {
           if (!result) {
             res.status(404).end();
@@ -106,7 +107,7 @@ router.get('/:id', (req, res) => {
 router.post('/', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
-  Recipe.create(recipe)
+  RecipeModel.create(recipe)
     .then(recipe => res.status(201).send(recipe))
     .catch(err => res.status(500).send(getError(err)));
 });
@@ -114,13 +115,13 @@ router.post('/', auth(), (req, res) => {
 router.post('/:id', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
-  Recipe.findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
+  RecipeModel.findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
     .then(recipe => res.send(recipe))
     .catch(err => res.status(500).send(getError(err)));
 });
 
 router.delete('/:id', auth(), (req, res) => {
-  Recipe.findByIdAndRemove(req.params.id)
+  RecipeModel.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
     .catch(err => res.status(500).send(err));
 });

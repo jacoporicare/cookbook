@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { auth } from '../../auth/auth.service';
 
-const router = new Router();
+const router = Router();
 
 router.get('/me', auth(), (req, res) => {
   res.json({

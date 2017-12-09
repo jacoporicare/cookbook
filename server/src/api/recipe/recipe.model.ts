@@ -1,4 +1,23 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
+
+export type Recipe = mongoose.Document & {
+  user: string;
+  title: string;
+  slug: string;
+  directions?: string;
+  sideDish?: string;
+  preparationTime?: number;
+  servingCount?: number;
+  lastModifiedDate: Date;
+  ingredients: [
+    {
+      amount: number;
+      amountUnit: string;
+      name: string;
+      isGroup: boolean;
+    }
+  ];
+};
 
 const RecipeSchema = new mongoose.Schema({
   user: { type: String, required: true },
@@ -31,6 +50,6 @@ RecipeSchema.virtual('creationDate').get(function getCreationDate() {
  * Validations
  */
 
-RecipeSchema.path('title').validate(title => title.length, 'Nadpis musí být vyplněný');
+RecipeSchema.path('title').validate((title: string) => title.length, 'Nadpis musí být vyplněný');
 
 export default mongoose.model('Recipe', RecipeSchema);
