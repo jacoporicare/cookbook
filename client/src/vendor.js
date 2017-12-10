@@ -1,19 +1,22 @@
-import 'axios';
-import 'babel-polyfill';
-import 'jquery';
-import 'lodash';
-import 'react';
-import 'react-autosuggest';
-import 'react-bootstrap';
-import 'react-cookie';
-import 'react-dom';
-import 'react-redux';
-import 'react-router';
-import 'react-router-redux';
-import 'react-router-scroll';
-import 'react-sortable-hoc';
-import 'redux';
-import 'redux-thunk';
-import 'toastr';
-
-import './vendor.scss';
+module.exports = [
+  'axios',
+  'babel-polyfill',
+  'javascript-remove-diacritics',
+  'jquery',
+  'lodash',
+  'prop-types',
+  'react',
+  'react-autosuggest',
+  'react-bootstrap',
+  'react-cookie',
+  'react-dom',
+  'react-markdown',
+  'react-redux',
+  'react-router',
+  'react-router-redux',
+  'react-router-scroll',
+  'react-sortable-hoc',
+  'redux',
+  'redux-thunk',
+  'toastr',
+];

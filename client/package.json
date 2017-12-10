@@ -3,9 +3,8 @@
   "version": "0.2.2",
   "private": true,
   "scripts": {
-    "dev": "PORT=4000 API_URL=http://localhost:4001 webpack-dev-server --config webpack.config.dev.js",
-    "prebuild": "rm -rf dist",
-    "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
     "prettier": "prettier --write 'src/**/*.js'"
@@ -47,6 +46,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
+    "chalk": "^2.3.0",
     "css-loader": "^0.28.4",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^15.1.0",
@@ -58,6 +58,7 @@
     "extract-text-webpack-plugin": "^2.1.2",
     "favicons-webpack-plugin": "^0.0.7",
     "file-loader": "^0.11.2",
+    "fs-extra": "^4.0.3",
     "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^20.0.4",
@@ -71,9 +72,7 @@
     "unexpected": "^10.33.1",
     "url-loader": "^0.5.9",
     "webpack": "^3.4.1",
-    "webpack-dev-server": "^2.6.1",
-    "webpack-md5-hash": "0.0.5",
-    "webpack-merge": "^4.1.0"
+    "webpack-dev-server": "^2.6.1"
   },
   "jest": {
     "moduleNameMapper": {

@@ -2,16 +2,16 @@
 
 export NODE_ENV=production
 
-root=$(dirname $0)/..
-dist=$root/dist
+ROOT=$(dirname $0)/..
+DIST=$ROOT/dist
 
-rm -rf $dist
-mkdir -p $dist/public
+rm -rf $DIST
+mkdir -p $DIST/public
 
-cd $root/server
+cd $ROOT/server
 yarn build
-cp -r dist/* $dist
+cp -r dist/* $DIST
 
-cd $root/client
+cd $ROOT/client
 yarn build
-cp -r dist/* $dist/public
+cp -r dist/* $DIST/public

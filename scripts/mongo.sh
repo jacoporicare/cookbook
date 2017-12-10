@@ -1,8 +1,9 @@
+#!/bin/sh
+
 CONTAINER_NAME=mongo
 
 if [[ -n $(docker ps -a | grep -E "Exited.*$CONTAINER_NAME$") ]]; then
   docker start $CONTAINER_NAME
-  echo 'Mongo is running...'
 elif [[ -z $(docker ps | grep "$CONTAINER_NAME$") ]]; then
   docker run -d \
     --name $CONTAINER_NAME \
