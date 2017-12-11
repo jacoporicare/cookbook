@@ -29,7 +29,7 @@ const apiMiddleware = store => next => action => {
   next(request());
 
   const headers = {};
-  const token = store.getState().auth.token;
+  const { token } = store.getState().auth;
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }

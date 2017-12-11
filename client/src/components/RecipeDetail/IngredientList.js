@@ -62,7 +62,7 @@ class IngredientList extends Component {
 
         <ul className="list-group cb-ingredient-list">
           {ingredients.map(ingredient => {
-            const { _id, isGroup, name, amount, amountUnit } = ingredient;
+            const { _id: id, isGroup, name, amount, amountUnit } = ingredient;
 
             let className = 'list-group-item';
             if (isGroup) {
@@ -70,7 +70,7 @@ class IngredientList extends Component {
             }
 
             return (
-              <li key={_id} className={className}>
+              <li key={id} className={className}>
                 {isGroup ? (
                   <b>{name}</b>
                 ) : (

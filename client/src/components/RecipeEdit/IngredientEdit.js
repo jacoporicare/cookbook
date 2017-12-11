@@ -33,7 +33,7 @@ class IngredientEdit extends Component {
   handleIngredientChange = (event, selectEvent, targetName) => {
     const name = targetName || event.target.name;
     const value = selectEvent ? selectEvent.newValue : event.target.value;
-    const type = event.target.type;
+    const { type } = event.target;
 
     this.setState(({ ingredient }) => ({
       ingredient: {
