@@ -66,16 +66,11 @@ function createCompiler() {
     console.log('Compiling...');
   });
 
-  let isFirstCompile = true;
-
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.plugin('done', stats => {
     clearConsole();
 
-    // We have switched off the default Webpack output in WebpackDevServer
-    // options so we are going to "massage" the warnings and errors and present
-    // them in a readable focused way.
     const messages = stats.toJson({}, true);
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
     if (isSuccessful) {
@@ -99,17 +94,8 @@ function createCompiler() {
     if (messages.warnings.length) {
       console.log(chalk.yellow('Compiled with warnings.\n'));
       console.log(messages.warnings.join('\n\n'));
-
-      // Teach some ESLint tricks.
-      console.log(
-        '\nSearch for the ' +
-          chalk.underline(chalk.yellow('keywords')) +
-          ' to learn more about each warning.',
-      );
-      console.log(
-        'To ignore, add ' + chalk.cyan('// eslint-disable-next-line') + ' to the line before.\n',
-      );
     }
   });
+
   return compiler;
 }

@@ -63,7 +63,7 @@ module.exports = {
           {
             test: /\.css$/,
             exclude: /\.module\.css$/,
-            use: ['style-loader', { loader: 'css-loader' }, { loader: 'postcss-loader' }],
+            use: ['style-loader', 'css-loader', 'postcss-loader'],
           },
           {
             test: /\.module.css$/,
