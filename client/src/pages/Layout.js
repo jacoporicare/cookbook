@@ -5,9 +5,10 @@ import toastr from 'toastr';
 import { resetErrorMessage } from '../components/ErrorMessage/actions';
 import { fetchUser } from '../components/Navbar/actions';
 import Navbar from '../components/Navbar/Navbar';
+import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
-class AppPage extends React.Component {
+class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.element,
     isAuthenticated: PropTypes.bool,
@@ -16,6 +17,7 @@ class AppPage extends React.Component {
     errorMessage: PropTypes.string,
     resetErrorMessage: PropTypes.func.isRequired,
     fetchUser: PropTypes.func.isRequired,
+    fetchUserError: PropTypes.bool,
   };
 
   componentDidMount() {
@@ -28,14 +30,14 @@ class AppPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { errorMessage: oldErrorMessage, resetErrorMessage, fetchUser } = this.props;
-    const { errorMessage, isAuthenticated, user, isFetchingUser } = nextProps;
+    const { errorMessage, isAuthenticated, user, isFetchingUser, fetchUserError } = nextProps;
 
     if (errorMessage && errorMessage !== oldErrorMessage) {
       toastr.error(errorMessage);
       resetErrorMessage();
     }
 
-    if (isAuthenticated && !user && !isFetchingUser) {
+    if (isAuthenticated && !user && !isFetchingUser && !fetchUserError) {
       fetchUser();
     }
   }
@@ -45,11 +47,12 @@ class AppPage extends React.Component {
 
     return (
       <div>
-        <Navbar
+        <Header
           isAuthenticated={isAuthenticated}
           userName={user ? user.name : null}
           isFetchingUser={isFetchingUser}
         />
+        {isAuthenticated && <Navbar />}
         {children}
         <Footer />
       </div>
@@ -62,6 +65,7 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.navbar.user,
   isFetchingUser: state.navbar.isFetchingUser,
+  fetchUserError: state.navbar.error,
 });
 
 const mapDispatchToProps = {
@@ -69,4 +73,4 @@ const mapDispatchToProps = {
   fetchUser,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppPage);
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

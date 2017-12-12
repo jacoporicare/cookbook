@@ -38,16 +38,18 @@ const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onS
               required
             />
           </div>
-          <div className="checkbox">
-            <label>
-              <input type="checkbox" name="rememberMe" checked={rememberMe} onChange={onChange} />
-              Neodhlašovat
-            </label>
-          </div>
-          <div>
-            <button type="submit" className="btn btn-lg btn-primary" disabled={isSubmitting}>
-              Přihlásit
-            </button>
+          <div className="clearfix">
+            <div className="checkbox pull-left">
+              <label>
+                <input type="checkbox" name="rememberMe" checked={rememberMe} onChange={onChange} />
+                Neodhlašovat
+              </label>
+            </div>
+            <div className="pull-right">
+              <button type="submit" className="btn btn-success" disabled={isSubmitting}>
+                Přihlásit
+              </button>
+            </div>
           </div>
         </form>
       </div>

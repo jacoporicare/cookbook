@@ -8,6 +8,7 @@ export default {
   navbar: {
     isFetchingUser: false,
     user: null,
+    error: false,
   },
   recipeList: {
     isFetching: false,

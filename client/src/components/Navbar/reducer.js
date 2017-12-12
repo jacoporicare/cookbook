@@ -25,6 +25,7 @@ const navbarReducer = (state = initialState.navbar, action) => {
       return {
         ...state,
         isFetchingUser: false,
+        error: true,
       };
 
     case LOGIN_SUCCESS:

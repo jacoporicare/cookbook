@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 
-const NavItem = (
-  { index, onlyActiveOnIndex, to, activeClassName, children, ...props },
-  { router },
-) => {
-  const isActive = router.isActive(to, onlyActiveOnIndex);
-  const LinkComponent = index ? Link : IndexLink;
+const NavItem = ({ index, to, activeClassName, children, ...props }, { router }) => {
+  const isActive = router.isActive(to, index);
+  const LinkComponent = !index ? Link : IndexLink;
 
   return (
     <li className={isActive ? activeClassName || 'active' : ''}>
@@ -20,7 +17,6 @@ const NavItem = (
 
 NavItem.propTypes = {
   index: PropTypes.bool,
-  onlyActiveOnIndex: PropTypes.bool,
   to: PropTypes.string.isRequired,
   activeClassName: PropTypes.string,
   children: PropTypes.node,

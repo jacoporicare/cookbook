@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 import removeDiacritics from 'javascript-remove-diacritics';
+import { Link } from 'react-router';
+
 import { deleteNullKeys } from '../../utils';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
@@ -102,7 +104,10 @@ class RecipeEdit extends Component {
               disabled={!title || hasError || isSaving || !changed}
             >
               <i className="fa fa-save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
-            </button>
+            </button>{' '}
+            <Link to={isNew ? '/' : `/recept/${recipe.slug}`} className="btn btn-default">
+              Zrušit
+            </Link>
           </span>
         </h1>
 
