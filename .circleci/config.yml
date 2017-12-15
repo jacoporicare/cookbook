@@ -42,7 +42,6 @@ jobs:
     docker:
       - image: circleci/node:8.5.0
     steps:
-      - checkout
       - setup_remote_docker:
           version: 17.07.0-ce
       - attach_workspace:
@@ -60,7 +59,6 @@ jobs:
     docker:
       - image: circleci/node:8.5.0
     steps:
-      - checkout
       - setup_remote_docker:
           version: 17.07.0-ce
       - attach_workspace:
