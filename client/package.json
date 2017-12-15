@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "build": "node scripts/build.js",
-    "test": "jest",
+    "test": "node scripts/test.js",
     "test:watch": "yarn test -- --watch",
     "prettier": "prettier --write 'src/**/*.js'"
   },
@@ -75,8 +75,23 @@
     "webpack-dev-server": "^2.9.7"
   },
   "jest": {
-    "moduleNameMapper": {
-      "\\.(css|scss|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js"
-    }
+    "mapCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.js?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
+    ],
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$"
+    ]
   }
 }
