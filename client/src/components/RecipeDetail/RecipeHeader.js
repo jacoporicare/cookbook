@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
+
+import './RecipeHeader.module.css';
 
 const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }) => (
   <div>
@@ -17,7 +20,11 @@ const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }) 
       </span>
     </h1>
 
-    <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
+    {(preparationTime || sideDish) && (
+      <div styleName="recipe-info">
+        <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
+      </div>
+    )}
   </div>
 );
 

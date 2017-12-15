@@ -10,7 +10,6 @@ module.exports = {
     '/api': API_URL,
   },
   quiet: true,
-  stats: 'errors-only',
   watchOptions: {
     ignored: /node_modules/,
   },

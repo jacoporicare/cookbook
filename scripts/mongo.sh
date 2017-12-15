@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 CONTAINER_NAME=mongo
 
 if [[ -n $(docker ps -a | grep -E "Exited.*$CONTAINER_NAME$") ]]; then

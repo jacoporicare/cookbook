@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export NODE_ENV=production
 
 ROOT=$(dirname $0)/..

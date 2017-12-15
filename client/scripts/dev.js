@@ -22,14 +22,13 @@ const devServerConfig = require('../config/webpackDevServer.config');
 const compiler = createCompiler();
 const devServer = new WebpackDevServer(compiler, devServerConfig);
 
+clearConsole();
+console.log(chalk.cyan('Starting the development server...\n'));
+
 devServer.listen(process.env.PORT, err => {
   if (err) {
     return console.log(err);
   }
-
-  clearConsole();
-
-  console.log(chalk.cyan('Starting the development server...\n'));
 });
 
 ['SIGINT', 'SIGTERM'].forEach(sig => {
