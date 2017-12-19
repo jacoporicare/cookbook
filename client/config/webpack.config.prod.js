@@ -16,6 +16,19 @@ module.exports = {
     app: './src/index.js',
     vendor: vendor.concat('./src/vendor.scss'),
   },
+  resolve: {
+    extensions: [
+      '.web.ts',
+      '.ts',
+      '.web.tsx',
+      '.tsx',
+      '.web.js',
+      '.js',
+      '.json',
+      '.web.jsx',
+      '.jsx',
+    ],
+  },
   output: {
     path: path.join(__dirname, '../dist'),
     filename: 'static/js/[name].[chunkhash].js',

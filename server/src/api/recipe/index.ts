@@ -32,6 +32,7 @@ function getRecipe({ body: recipe, user }: { body: Recipe; user?: any }) {
           name: ingredient.name.trim(),
         }))
       : undefined,
+    lastModifiedDate: Date.now(),
   };
 }
 

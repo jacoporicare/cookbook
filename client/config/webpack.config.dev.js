@@ -7,8 +7,21 @@ const vendor = require('../src/vendor');
 module.exports = {
   devtool: 'eval-source-map',
   entry: {
-    app: ['webpack-dev-server/client?/', 'webpack/hot/dev-server', './src/index.js'],
+    app: ['webpack-dev-server/client?/', 'webpack/hot/dev-server', './src/index.tsx'],
     vendor: vendor.concat('./src/vendor.scss'),
+  },
+  resolve: {
+    extensions: [
+      '.web.ts',
+      '.ts',
+      '.web.tsx',
+      '.tsx',
+      '.web.js',
+      '.js',
+      '.json',
+      '.web.jsx',
+      '.jsx',
+    ],
   },
   output: {
     path: path.join(__dirname, '../dist'),
@@ -21,10 +34,16 @@ module.exports = {
     strictExportPresence: true,
     rules: [
       {
-        test: /\.jsx?$/,
-        loader: 'eslint-loader',
+        test: /\.(ts|tsx)$/,
+        loader: require.resolve('tslint-loader'),
         enforce: 'pre',
-        exclude: /node_modules/,
+        include: path.resolve(__dirname, '../src'),
+      },
+      {
+        test: /\.js$/,
+        loader: require.resolve('source-map-loader'),
+        enforce: 'pre',
+        include: path.resolve(__dirname, '../src'),
       },
       {
         oneOf: [
@@ -37,9 +56,31 @@ module.exports = {
             },
           },
           {
-            test: /\.jsx?$/,
-            loader: 'babel-loader',
-            exclude: /node_modules/,
+            test: /\.(ts|tsx)$/,
+            include: path.resolve(__dirname, '../src'),
+            use: [
+              {
+                loader: require.resolve('babel-loader'),
+                options: {
+                  presets: ['react'],
+                  plugins: [
+                    [
+                      'babel-plugin-react-css-modules',
+                      {
+                        filetypes: {
+                          '.scss': {
+                            syntax: 'postcss-scss',
+                          },
+                        },
+                      },
+                    ],
+                  ],
+                },
+              },
+              {
+                loader: require.resolve('ts-loader'),
+              },
+            ],
           },
           {
             test: /\.scss$/,
