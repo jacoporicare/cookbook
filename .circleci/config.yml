@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8.5.0
+      - image: circleci/node:8.9
     steps:
       - checkout
       - run:
@@ -40,7 +40,7 @@ jobs:
 
   deploy_development:
     docker:
-      - image: circleci/node:8.5.0
+      - image: circleci/node:8.9
     steps:
       - checkout
       - setup_remote_docker:
@@ -58,7 +58,7 @@ jobs:
 
   deploy_production:
     docker:
-      - image: circleci/node:8.5.0
+      - image: circleci/node:8.9
     steps:
       - checkout
       - setup_remote_docker:
