@@ -42,7 +42,7 @@ class Layout extends React.Component<Props> {
 
     return (
       <div>
-        <Notifications />
+        <Notifications options={{ zIndex: 1100 }} />
         <Header
           isAuthenticated={isAuthenticated}
           userName={user ? user.name : undefined}
