@@ -8,6 +8,7 @@ function toSlug(title: string) {
   return slug(title.trim(), slug.defaults.modes.rfc3986);
 }
 
+// tslint:disable-next-line no-any
 function getError(err: any) {
   if (err.code === 11000) {
     return {

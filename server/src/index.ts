@@ -9,7 +9,8 @@ import routes from './routes';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-(<any>mongoose).Promise = global.Promise;
+// tslint:disable-next-line no-any
+(mongoose as any).Promise = global.Promise;
 mongoose.connect(config.mongo.uri, { useMongoClient: true });
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);
@@ -32,5 +33,4 @@ if (isProduction) {
   app.all('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 }
 
-// eslint-disable-next-line no-console
 app.listen(config.port, () => console.log(`Server running on ${config.port}`));

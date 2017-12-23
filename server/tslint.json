@@ -1,21 +1,40 @@
 {
   "rules": {
+    "array-type": [true, "array"],
+    "arrow-return-shorthand": true,
     "class-name": true,
     "comment-format": [true, "check-space"],
+    "curly": true,
+    "eofline": true,
+    "forin": true,
     "indent": [true, "spaces"],
-    "one-line": [true, "check-open-brace", "check-whitespace"],
+    "interface-name": [true, "never-prefix"],
+    "interface-over-type-literal": true,
+    "jsdoc-format": true,
+    "no-any": true,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-consecutive-blank-lines": true,
+    "no-construct": true,
+    "no-debugger": true,
+    "no-internal-module": true,
+    "no-duplicate-variable": true,
+    "no-null-keyword": true,
+    "no-empty": true,
+    "no-eval": true,
+    "no-string-literal": true,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": true,
     "no-var-keyword": true,
+    "no-unused-expression": true,
+    "one-line": [true, "check-catch", "check-else", "check-open-brace", "check-whitespace"],
+    "prefer-const": true,
     "quotemark": [true, "single", "avoid-escape"],
+    "radix": true,
+    "switch-default": true,
     "semicolon": [true, "always", "ignore-bound-class-methods"],
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-module",
-      "check-separator",
-      "check-type"
-    ],
+    "triple-equals": [true, "allow-null-check"],
+    "typedef": [true, "parameter", "property-declaration"],
     "typedef-whitespace": [
       true,
       {
@@ -24,19 +43,16 @@
         "parameter": "nospace",
         "property-declaration": "nospace",
         "variable-declaration": "nospace"
-      },
-      {
-        "call-signature": "onespace",
-        "index-signature": "onespace",
-        "parameter": "onespace",
-        "property-declaration": "onespace",
-        "variable-declaration": "onespace"
       }
     ],
-    "no-internal-module": true,
-    "no-trailing-whitespace": true,
-    "no-null-keyword": true,
-    "prefer-const": true,
-    "jsdoc-format": true
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-module",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ]
   }
 }

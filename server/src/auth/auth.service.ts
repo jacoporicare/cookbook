@@ -47,38 +47,41 @@ export function signToken(id: number) {
 }
 
 export function auth() {
-  return compose()
-    .use((req, res, next) => {
-      // allow access_token to be passed through query parameter as well
-      if (req.query && req.query.access_token) {
-        req.headers.authorization = `Bearer ${req.query.access_token}`;
-      }
+  return (
+    compose()
+      .use((req, res, next) => {
+        // allow access_token to be passed through query parameter as well
+        if (req.query && req.query.access_token) {
+          req.headers.authorization = `Bearer ${req.query.access_token}`;
+        }
 
-      // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
-      if (req.query && typeof req.headers.authorization === 'undefined') {
-        req.headers.authorization = `Bearer ${req.cookies.token}`;
-      }
+        // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
+        if (req.query && typeof req.headers.authorization === 'undefined') {
+          req.headers.authorization = `Bearer ${req.cookies.token}`;
+        }
 
-      next();
-    })
-    .use(expressJwt({ secret: config.secrets.auth }))
-    .use((err: any, req: Request, res: Response, next: NextFunction) => {
-      if (err.name === 'UnauthorizedError') {
-        res.status(401).end();
-        return;
-      }
+        next();
+      })
+      .use(expressJwt({ secret: config.secrets.auth }))
+      // tslint:disable-next-line no-any
+      .use((err: any, req: Request, res: Response, next: NextFunction) => {
+        if (err.name === 'UnauthorizedError') {
+          res.status(401).end();
+          return;
+        }
 
-      next();
-    })
-    .use((req, res, next) => {
-      const user = findUserById(req.user._id);
+        next();
+      })
+      .use((req, res, next) => {
+        const user = findUserById(req.user._id);
 
-      if (!user) {
-        res.status(401).end();
-        return;
-      }
+        if (!user) {
+          res.status(401).end();
+          return;
+        }
 
-      req.user = user;
-      next();
-    });
+        req.user = user;
+        next();
+      })
+  );
 }

@@ -74,7 +74,7 @@ function createCompiler() {
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
     if (isSuccessful) {
       console.log(chalk.green('Compiled successfully!\n\n'));
-      console.log(`http://localhost:${process.env.PORT}/`);
+      console.log(`URL: ${chalk.cyan(`http://localhost:${process.env.PORT}/`)}`);
     }
 
     // If errors exist, only show errors.
