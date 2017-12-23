@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import toastr from 'toastr';
+import { notify } from 'react-notify-toast';
 
 import { StoreState } from './types';
 
@@ -9,7 +9,7 @@ export function handleError(error: AxiosError | string) {
   }
 
   if (typeof error === 'string') {
-    toastr.error(error);
+    notify.show(error, 'error');
     return;
   }
 
@@ -19,22 +19,22 @@ export function handleError(error: AxiosError | string) {
     const { status, data } = response;
 
     if (status === 500 && data && data.code === 11000) {
-      toastr.warning('Název již existuje');
+      notify.show('Název již existuje', 'error');
       return;
     }
 
     if (status === 401) {
-      toastr.error('Nesprávný uživatel nebo heslo');
+      notify.show('Nesprávný uživatel nebo heslo', 'error');
       return;
     }
   }
 
   if (message === 'Network Error') {
-    toastr.error('Nastaly problémy s připojením');
+    notify.show('Nastaly problémy s připojením', 'error');
     return;
   }
 
-  toastr.error(message || 'Nastala neočekávaná chyba');
+  notify.show(message || 'Nastala neočekávaná chyba', 'error');
 }
 
 type GetState = () => StoreState;

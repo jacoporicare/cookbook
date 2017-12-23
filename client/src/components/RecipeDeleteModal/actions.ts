@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { notify } from 'react-notify-toast';
 
 import { StoreState } from '../../types';
 import api, { handleError } from '../../api';
@@ -29,7 +30,10 @@ export function deleteRecipe(id: string) {
 
     return api(getState)
       .delete(`/api/recipes/${id}`)
-      .then(() => dispatch(deleteRecipeSuccess(id)))
+      .then(() => {
+        notify.show('Recept úspěšně smazán', 'success');
+        return dispatch(deleteRecipeSuccess(id));
+      })
       .catch(error => {
         handleError(error);
         return dispatch(deleteRecipeFailure());

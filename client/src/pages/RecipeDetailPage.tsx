@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import toastr from 'toastr';
 
 import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
@@ -54,7 +53,6 @@ class RecipeDetailPage extends Component<Props, State> {
 
   handleDeleteConfirm = () => {
     this.props.deleteRecipe(this.props.recipe._id).then(() => {
-      toastr.success('Recept úspěšně smazán');
       this.props.router.push('/');
     });
   };

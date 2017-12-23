@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import toastr from 'toastr';
+import { notify } from 'react-notify-toast';
 
 import { RecipeDetail, Ingredient, StoreState } from '../../types';
 import { undefinedToNull } from '../../utils';
@@ -47,7 +47,7 @@ export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams) {
     return api(getState)
       .post<RecipeDetail>(id ? `/api/recipes/${id}` : '/api/recipes', undefinedToNull(recipe))
       .then(({ data }) => {
-        toastr.success('Recept úspěšně uložen');
+        notify.show('Recept úspěšně uložen', 'success');
         return dispatch(saveRecipeSuccess(data));
       })
       .catch(error => {

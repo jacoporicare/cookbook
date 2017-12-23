@@ -2,6 +2,7 @@ import React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
+import Notifications from 'react-notify-toast';
 
 import { User, StoreState } from '../types';
 import { fetchUser, NavbarAction } from '../components/Navbar/actions';
@@ -41,6 +42,7 @@ class Layout extends React.Component<Props> {
 
     return (
       <div>
+        <Notifications />
         <Header
           isAuthenticated={isAuthenticated}
           userName={user ? user.name : undefined}
