@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import Modal from 'react-modal';
 
 interface Props {
   show: boolean;
@@ -9,19 +9,39 @@ interface Props {
 }
 
 const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }: Props) => (
-  <Modal show={show} onHide={onClose}>
-    <Modal.Header closeButton>
-      <Modal.Title>Smazat recept</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      Určitě smazat recept <strong>{recipeTitle}</strong>?
-    </Modal.Body>
-    <Modal.Footer>
-      <Button bsStyle="danger" onClick={onConfirm}>
-        Smazat
-      </Button>
-      <Button onClick={onClose}>Zrušit</Button>
-    </Modal.Footer>
+  <Modal
+    isOpen={show}
+    onRequestClose={onClose}
+    overlayClassName="modal"
+    className="modal-dialog"
+    // bodyOpenClassName="modal-open"
+    ariaHideApp={false}
+    style={{
+      overlay: {
+        display: 'block',
+        backgroundColor: 'rgba(0,0,0, 0.3)',
+      },
+    }}
+  >
+    <div className="modal-content">
+      <div className="modal-header">
+        <button type="button" className="close" onClick={onClose}>
+          &times;
+        </button>
+        <h4 className="modal-title">Smazat recept</h4>
+      </div>
+      <div className="modal-body">
+        Určitě smazat recept <strong>{recipeTitle}</strong>?
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-danger" onClick={onConfirm}>
+          Smazat
+        </button>
+        <button type="button" className="btn btn-default" onClick={onClose}>
+          Zrušit
+        </button>
+      </div>
+    </div>
   </Modal>
 );
 

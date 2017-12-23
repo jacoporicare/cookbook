@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+export = Notifications;
+
 declare namespace Notifications {
   interface Color {
     color: string;
@@ -38,5 +40,3 @@ declare namespace Notifications {
 }
 
 declare class Notifications extends React.Component<Notifications.Props> {}
-
-export = Notifications;
