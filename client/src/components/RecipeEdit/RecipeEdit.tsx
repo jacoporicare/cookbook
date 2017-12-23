@@ -1,12 +1,13 @@
-import React, { KeyboardEvent, FormEventHandler } from 'react';
-import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import removeDiacritics from 'javascript-remove-diacritics';
-import { Link } from 'react-router';
+import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
 import RichText from '../RichText/RichText';
 import Spinner from '../Spinner/Spinner';
+import Header from './Header';
+import Title from './Title';
+import BasicInfo from './BasicInfo';
+import Directions from './Directions';
 import IngredientEdit, {
   AddIngredientEventHandler,
   AddGroupEventHandler,
@@ -34,61 +35,18 @@ interface Props {
   isSaving: boolean;
 }
 
-interface State {
-  sideDishOptions: string[];
-}
-
-class RecipeEdit extends React.Component<Props, State> {
-  titleInput: HTMLInputElement | null;
-
-  state = {
-    sideDishOptions: [],
-  };
-
-  componentDidMount() {
-    if (this.titleInput) {
-      this.titleInput.focus();
-    }
-  }
-
-  handleSuggestionsFetchRequested = ({ value }: SuggestionsFetchRequestedParams) => {
-    if (!value) {
-      return;
-    }
-
-    const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
-    this.setState({
-      sideDishOptions: this.props.sideDishOptions.filter(sd =>
-        removeDiacritics
-          .replace(sd)
-          .toLowerCase()
-          .includes(valueLowerCase),
-      ),
-    });
-  };
-
-  handleSuggestionsClearRequested = () => {
-    this.setState({ sideDishOptions: [] });
-  };
-
-  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    }
-  };
-
-  renderSuggestion = (suggestion: string) => <span>{suggestion}</span>;
-
+class RecipeEdit extends React.Component<Props> {
   render() {
     const {
       slug,
-      title = '',
-      preparationTime = '',
-      servingCount = '',
-      sideDish = '',
-      directions = '',
+      title,
+      preparationTime,
+      servingCount,
+      sideDish,
+      directions,
       ingredients,
       ingredientOptions,
+      sideDishOptions,
       changed,
       isNew,
       isSaving,
@@ -99,97 +57,28 @@ class RecipeEdit extends React.Component<Props, State> {
       onRemoveIngredient,
       onSortIngredient,
     } = this.props;
-    const { sideDishOptions } = this.state;
 
     return (
       <form onSubmit={onSubmit} className="form">
         {isSaving && <Spinner overlay />}
 
-        <h1 className="page-header clearfix">
-          {title || (isNew ? 'Nový recept' : 'Název receptu')}
-          <span className="pull-right">
-            <button
-              type="submit"
-              className="btn btn-success"
-              disabled={!title || isSaving || !changed}
-            >
-              <i className="fa fa-save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
-            </button>{' '}
-            <Link to={isNew && slug ? '/' : `/recept/${slug}`} className="btn btn-default">
-              Zrušit
-            </Link>
-          </span>
-        </h1>
+        <Header title={title} isNew={isNew} isSaving={isSaving} changed={changed} slug={slug} />
 
         <fieldset>
-          <div className={`form-group ${!title ? 'has-error' : ''}`}>
-            <input
-              ref={titleInput => {
-                this.titleInput = titleInput;
-              }}
-              type="text"
-              name="title"
-              value={title}
-              onChange={onChange}
-              className="form-control"
-              placeholder="Název"
-            />
-            {!title && <span className="text-danger">Název je povinný</span>}
-          </div>
+          <Title title={title} onChange={onChange} />
         </fieldset>
 
         <div className="row">
           <div className="col-md-2">
             <fieldset>
               <legend>Základní údaje</legend>
-
-              <div className="form-group">
-                <label htmlFor="preparationTime">Doba přípravy</label>
-                <div className="input-group">
-                  <input
-                    type="number"
-                    min="1"
-                    id="preparationTime"
-                    name="preparationTime"
-                    value={preparationTime}
-                    onChange={onChange}
-                    className="form-control"
-                  />
-                  <span className="input-group-addon">min</span>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="servingCount">Počet porcí</label>
-                <input
-                  type="number"
-                  min="1"
-                  id="servingCount"
-                  name="servingCount"
-                  value={servingCount}
-                  onChange={onChange}
-                  className="form-control"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="sideDish">Příloha</label>
-                <Autosuggest
-                  suggestions={sideDishOptions}
-                  onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-                  getSuggestionValue={s => s}
-                  renderSuggestion={this.renderSuggestion}
-                  inputProps={{
-                    id: 'sideDish',
-                    name: 'sideDish',
-                    value: sideDish,
-                    onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
-                    onKeyPress: this.handleKeyPress,
-                    className: 'form-control',
-                  }}
-                />
-              </div>
+              <BasicInfo
+                preparationTime={preparationTime}
+                servingCount={servingCount}
+                sideDish={sideDish}
+                sideDishOptions={sideDishOptions}
+                onChange={onChange}
+              />
             </fieldset>
           </div>
 
@@ -210,27 +99,7 @@ class RecipeEdit extends React.Component<Props, State> {
           <div className="col-md-6">
             <fieldset>
               <legend>Postup</legend>
-              <div className="form-group">
-                <textarea
-                  id="directions"
-                  name="directions"
-                  value={directions}
-                  onChange={onChange}
-                  rows={20}
-                  className="form-control"
-                />
-                <div className="help-block clearfix">
-                  <div className="pull-right">
-                    <a
-                      href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Návod na Markdown
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <Directions directions={directions} onChange={onChange} />
             </fieldset>
 
             <p className="text-right">

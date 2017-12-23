@@ -121,7 +121,7 @@ router.post('/', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
   RecipeModel.create(recipe)
-    .then(recipe => res.status(201).send(recipe))
+    .then(recipe => res.status(201).send(deleteNullValues(recipe)))
     .catch(err => res.status(500).send(getError(err)));
 });
 
@@ -129,7 +129,14 @@ router.post('/:id', auth(), (req, res) => {
   const recipe = getRecipe(req);
 
   RecipeModel.findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
-    .then(recipe => res.send(recipe))
+    .then(recipe => {
+      if (!recipe) {
+        res.status(404).end();
+        return;
+      }
+
+      res.send(deleteNullValues(recipe));
+    })
     .catch(err => res.status(500).send(getError(err)));
 });
 
