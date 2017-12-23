@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import toastr from 'toastr';
 
 import { RecipeDetail, Ingredient, StoreState } from '../../types';
-import { undefinedKeysToNull } from '../../utils';
+import { undefinedToNull } from '../../utils';
 import api, { handleError } from '../../api';
 
 export type RecipeEditAction =
@@ -45,7 +45,7 @@ export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams) {
     dispatch(saveRecipeRequest());
 
     return api(getState)
-      .post<RecipeDetail>(id ? `/api/recipes/${id}` : '/api/recipes', undefinedKeysToNull(recipe))
+      .post<RecipeDetail>(id ? `/api/recipes/${id}` : '/api/recipes', undefinedToNull(recipe))
       .then(({ data }) => {
         toastr.success('Recept úspěšně uložen');
         return dispatch(saveRecipeSuccess(data));

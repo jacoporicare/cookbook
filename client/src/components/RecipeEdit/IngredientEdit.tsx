@@ -2,7 +2,6 @@ import React, { ChangeEvent } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
-import { parseValue } from '../../utils';
 import IngredientList from './IngredientList';
 import IngredientForm from './IngredientForm';
 import IngredientGroupForm from './IngredientGroupForm';
@@ -36,17 +35,26 @@ class IngredientEdit extends React.Component<Props, State> {
 
   handleIngredientChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
     const name = targetName || event.currentTarget.name;
-
-    if (name !== 'name' && name !== 'amount' && name !== 'amountUnit') {
-      return;
-    }
-
     const value = selectEvent ? selectEvent.newValue : event.currentTarget.value;
-    const { type } = event.currentTarget;
 
-    this.setState({
-      [name]: parseValue(value, type),
-    });
+    switch (name) {
+      case 'name':
+        this.setState({ name: value });
+        break;
+
+      case 'amount': {
+        const parsed = Number.parseFloat(value);
+        this.setState({ amount: Number.isNaN(parsed) ? undefined : parsed });
+        break;
+      }
+
+      case 'amountUnit':
+        this.setState({ amountUnit: value });
+        break;
+
+      default:
+        break;
+    }
   };
 
   handleGroupChange = (event: ChangeEvent<HTMLInputElement>) => {

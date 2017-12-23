@@ -1,29 +1,8 @@
-export function parseValue(value: string, type: string) {
-  switch (type) {
-    case 'number': {
-      const parsedValue = Number.parseFloat(value);
-      return !Number.isNaN(parsedValue) ? parsedValue : '';
-    }
-
-    default:
-      return value;
-  }
-}
-
-export function deleteNullKeys<T>(obj: T): T {
-  Object.keys(obj).forEach(key => {
-    if (obj[key] === null) {
-      delete obj[key];
-    }
-  });
-
-  return obj;
-}
-
 /**
- * Useful when converting an object to JSON - e.g. let the API knows which keys should be cleared.
+ * Object -> JSON: undefined to null because undefined is not valid JSON value
  */
-export function undefinedKeysToNull<T>(obj: T): T {
+export function undefinedToNull<T>(o: T): T {
+  const obj = Object.assign({}, o);
   Object.keys(obj).forEach(key => {
     if (obj[key] === undefined) {
       obj[key] = null;

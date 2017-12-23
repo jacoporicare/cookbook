@@ -1,6 +1,13 @@
-import * as mongoose from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-export type Recipe = mongoose.Document & {
+export interface Ingredient {
+  amount: number;
+  amountUnit: string;
+  name: string;
+  isGroup: boolean;
+}
+
+export interface Recipe {
   user: string;
   title: string;
   slug: string;
@@ -9,17 +16,12 @@ export type Recipe = mongoose.Document & {
   preparationTime?: number;
   servingCount?: number;
   lastModifiedDate: Date;
-  ingredients: [
-    {
-      amount: number;
-      amountUnit: string;
-      name: string;
-      isGroup: boolean;
-    }
-  ];
-};
+  ingredients: Ingredient[];
+}
 
-const RecipeSchema = new mongoose.Schema({
+export type RecipeDocument = Document & Recipe;
+
+const RecipeSchema = new Schema({
   user: { type: String, required: true },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
@@ -42,7 +44,7 @@ const RecipeSchema = new mongoose.Schema({
  * Virtuals
  */
 
-RecipeSchema.virtual('creationDate').get(function getCreationDate() {
+RecipeSchema.virtual('creationDate').get(function(this: Document) {
   return this._id.getTimestamp();
 });
 
@@ -52,4 +54,4 @@ RecipeSchema.virtual('creationDate').get(function getCreationDate() {
 
 RecipeSchema.path('title').validate((title: string) => title.length, 'Nadpis musí být vyplněný');
 
-export default mongoose.model('Recipe', RecipeSchema);
+export default model('Recipe', RecipeSchema);

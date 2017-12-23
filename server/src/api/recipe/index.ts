@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import * as mongoose from 'mongoose';
 import * as slug from 'slug';
-import { auth } from '../../auth/auth.service';
-import RecipeModel, { Recipe } from './recipe.model';
+import { auth, User } from '../../auth/auth.service';
+import RecipeModel, { RecipeDocument, Recipe } from './recipe.model';
 
 function toSlug(title: string) {
   return slug(title.trim(), slug.defaults.modes.rfc3986);
@@ -19,10 +19,10 @@ function getError(err: any) {
   return err;
 }
 
-function getRecipe({ body: recipe, user }: { body: Recipe; user?: any }) {
+function getRecipe({ body: recipe, user }: { body: Recipe; user?: User }): Recipe {
   return {
     ...recipe,
-    user: user.name,
+    user: user ? user.name : '',
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
     sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
@@ -31,9 +31,21 @@ function getRecipe({ body: recipe, user }: { body: Recipe; user?: any }) {
           ...ingredient,
           name: ingredient.name.trim(),
         }))
-      : undefined,
-    lastModifiedDate: Date.now(),
+      : [],
+    lastModifiedDate: new Date(),
   };
+}
+
+function deleteNullValues(o: mongoose.Document): Recipe {
+  const obj = o.toJSON() as Recipe;
+
+  Object.keys(obj).forEach(key => {
+    if (obj[key] === null) {
+      delete obj[key];
+    }
+  });
+
+  return obj;
 }
 
 const router = Router();
@@ -56,8 +68,8 @@ router.get('/', (req, res) => {
 
   query
     .select('_id title slug preparationTime sideDish')
-    .then((results: Recipe[]) =>
-      res.send(results.sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
+    .then((results: RecipeDocument[]) =>
+      res.send(results.map(deleteNullValues).sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
     )
     .catch(err => res.status(500).send(err));
 });
@@ -82,7 +94,7 @@ router.get('/:id', (req, res) => {
   RecipeModel.findOne({ slug: id })
     .then(result => {
       if (result) {
-        res.send(result);
+        res.send(deleteNullValues(result));
         return;
       }
 
@@ -98,7 +110,7 @@ router.get('/:id', (req, res) => {
             return;
           }
 
-          res.send(result);
+          res.send(deleteNullValues(result));
         })
         .catch(err => res.status(500).send(err));
     })

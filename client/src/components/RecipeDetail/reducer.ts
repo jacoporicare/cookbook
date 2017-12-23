@@ -1,5 +1,4 @@
 import { RecipeDetail } from '../../types';
-import { deleteNullKeys } from '../../utils';
 import { RecipeDetailAction } from './actions';
 
 export interface RecipeDetailState {
@@ -33,7 +32,7 @@ function recipeDetailReducer(
         isFetching: false,
         recipesBySlug: {
           ...state.recipesBySlug,
-          [slug]: deleteNullKeys(recipe),
+          [slug]: recipe,
         },
       };
     }

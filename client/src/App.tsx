@@ -19,8 +19,7 @@ class App extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    const { cookies } = props;
-    const token = cookies.get('token');
+    const token = props.cookies.get('token');
 
     if (token) {
       store.dispatch(setAuthToken(token));
