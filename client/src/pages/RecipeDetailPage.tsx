@@ -39,6 +39,12 @@ class RecipeDetailPage extends Component<Props, State> {
     this.props.fetchRecipe(this.props.slug);
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.slug !== this.props.slug) {
+      this.props.fetchRecipe(nextProps.slug);
+    }
+  }
+
   handleDeleteShow = () => {
     this.setState({
       showDeleteModal: true,
