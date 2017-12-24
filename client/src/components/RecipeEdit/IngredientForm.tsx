@@ -1,6 +1,6 @@
 import React, { KeyboardEvent } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import removeDiacritics from 'javascript-remove-diacritics';
+import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
@@ -24,14 +24,8 @@ class IngredientForm extends React.Component<Props, State> {
 
   handleSuggestionsFetchRequested = ({ value }: SuggestionsFetchRequestedParams) => {
     if (value) {
-      const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
       this.setState({
-        ingredientOptions: this.props.ingredientOptions.filter(i =>
-          removeDiacritics
-            .replace(i)
-            .toLowerCase()
-            .includes(valueLowerCase),
-        ),
+        ingredientOptions: matchSorter(this.props.ingredientOptions, value),
       });
     }
   };

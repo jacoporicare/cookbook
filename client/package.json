@@ -15,7 +15,7 @@
     "bootstrap-sass": "^3.3.7",
     "font-awesome": "^4.7.0",
     "history": "^3.3.0",
-    "javascript-remove-diacritics": "^1.0.0",
+    "match-sorter": "^2.2.0",
     "react": "^16.2.0",
     "react-autosuggest": "^9.3.2",
     "react-cookie": "^2.0.8",

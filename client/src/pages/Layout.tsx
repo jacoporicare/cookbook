@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
 
-import { User, StoreState } from '../types';
+import { User, Recipe, StoreState } from '../types';
+import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
 import { fetchUser, NavbarAction } from '../components/Navbar/actions';
-import Navbar from '../components/Navbar/Navbar';
 import Header from '../components/Header/Header';
+import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 
 interface Props extends RouteComponentProps<{}, {}> {
@@ -16,15 +17,21 @@ interface Props extends RouteComponentProps<{}, {}> {
   user: User | undefined;
   isFetchingUser: boolean;
   fetchUserError: boolean;
+  recipes: Recipe[];
   fetchUser: () => Promise<NavbarAction>;
+  fetchRecipeList: () => Promise<RecipeListAction>;
 }
 
 class Layout extends React.Component<Props> {
   componentDidMount() {
-    const { isAuthenticated, user, fetchUser } = this.props;
+    const { isAuthenticated, user, fetchUser, fetchRecipeList } = this.props;
 
-    if (isAuthenticated && !user) {
-      fetchUser();
+    if (isAuthenticated) {
+      if (!user) {
+        fetchUser();
+      }
+
+      fetchRecipeList();
     }
   }
 
@@ -32,10 +39,20 @@ class Layout extends React.Component<Props> {
     const { fetchUser } = this.props;
     const { isAuthenticated, user, isFetchingUser, fetchUserError } = nextProps;
 
-    if (isAuthenticated && !user && !isFetchingUser && !fetchUserError) {
-      fetchUser();
+    if (isAuthenticated) {
+      if (!user && !isFetchingUser && !fetchUserError) {
+        fetchUser();
+      }
+
+      if (!this.props.isAuthenticated) {
+        fetchRecipeList();
+      }
     }
   }
+
+  handleRecipeSelected = (slug: string) => {
+    this.props.router.push(`/recept/${slug}`);
+  };
 
   render() {
     const { isAuthenticated, user, isFetchingUser, router, children } = this.props;
@@ -47,6 +64,8 @@ class Layout extends React.Component<Props> {
           isAuthenticated={isAuthenticated}
           userName={user ? user.name : undefined}
           isFetchingUser={isFetchingUser}
+          recipes={this.props.recipes}
+          onRecipeSelected={this.handleRecipeSelected}
         />
         {isAuthenticated && <Navbar router={router} />}
         {children}
@@ -61,10 +80,12 @@ const mapStateToProps = (state: StoreState) => ({
   user: state.navbar.user,
   isFetchingUser: state.navbar.isFetchingUser,
   fetchUserError: state.navbar.error,
+  recipes: state.recipeList.recipes,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
   fetchUser: () => dispatch(fetchUser()),
+  fetchRecipeList: () => dispatch(fetchRecipeList()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

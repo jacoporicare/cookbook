@@ -1,6 +1,6 @@
 import React from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import removeDiacritics from 'javascript-remove-diacritics';
+import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
@@ -17,20 +17,16 @@ interface State {
 }
 
 class BasicInfo extends React.Component<Props, State> {
-  handleSuggestionsFetchRequested = ({ value }: SuggestionsFetchRequestedParams) => {
-    if (!value) {
-      return;
-    }
+  state = {
+    sideDishOptions: [],
+  };
 
-    const valueLowerCase = removeDiacritics.replace(value).toLowerCase();
-    this.setState({
-      sideDishOptions: this.props.sideDishOptions.filter(sd =>
-        removeDiacritics
-          .replace(sd)
-          .toLowerCase()
-          .includes(valueLowerCase),
-      ),
-    });
+  handleSuggestionsFetchRequested = ({ value }: SuggestionsFetchRequestedParams) => {
+    if (value) {
+      this.setState({
+        sideDishOptions: matchSorter(this.props.sideDishOptions, value),
+      });
+    }
   };
 
   handleSuggestionsClearRequested = () => {
@@ -38,13 +34,9 @@ class BasicInfo extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      preparationTime = '',
-      servingCount = '',
-      sideDish = '',
-      sideDishOptions,
-      onChange,
-    } = this.props;
+    const { preparationTime = '', servingCount = '', sideDish = '', onChange } = this.props;
+    const { sideDishOptions } = this.state;
+
     return (
       <div>
         <div className="form-group">

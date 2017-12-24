@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import removeDiacritics from 'javascript-remove-diacritics';
+import matchSorter from 'match-sorter';
 
 import { StoreState, Recipe } from '../types';
-import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
 import RecipeList from '../components/RecipeList/RecipeList';
 import SearchBar from '../components/SearchBar/SearchBar';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
@@ -13,7 +11,6 @@ import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 interface Props {
   recipes: Recipe[];
   isFetching: boolean;
-  fetchRecipeList: () => Promise<RecipeListAction>;
 }
 
 interface State {
@@ -30,10 +27,6 @@ class RecipeListPage extends Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    this.props.fetchRecipeList();
-  }
-
   componentWillReceiveProps({ recipes }: Props) {
     if (recipes !== this.props.recipes) {
       const { searchText } = this.state;
@@ -48,12 +41,7 @@ class RecipeListPage extends Component<Props, State> {
       return recipes;
     }
 
-    return recipes.filter(r =>
-      removeDiacritics
-        .replace(r.title)
-        .toLowerCase()
-        .includes(removeDiacritics.replace(searchText)),
-    );
+    return matchSorter(recipes, searchText, { keys: ['title'] });
   }
 
   handleSearchChange = (searchText?: string) => {
@@ -105,8 +93,4 @@ const mapStateToProps = (state: StoreState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
-  fetchRecipeList: () => dispatch(fetchRecipeList()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeListPage);
+export default connect(mapStateToProps)(RecipeListPage);

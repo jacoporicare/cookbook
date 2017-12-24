@@ -2,7 +2,7 @@ module.exports = [
   'axios',
   'babel-polyfill',
   'history',
-  'javascript-remove-diacritics',
+  'match-sorter',
   'react',
   'react-autosuggest',
   'react-cookie',
