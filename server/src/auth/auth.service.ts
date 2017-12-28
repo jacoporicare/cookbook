@@ -3,14 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import * as expressJwt from 'express-jwt';
 import compose = require('composable-middleware');
 
+import { User } from '../types';
 import config from '../config';
-
-export interface User {
-  id: number;
-  username: string;
-  name: string;
-  password: string;
-}
 
 const users: User[] = [
   {

@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import * as mongoose from 'mongoose';
 import * as slug from 'slug';
-import { auth, User } from '../../auth/auth.service';
+
+import { User } from '../../types';
+import { auth } from '../../auth/auth.service';
 import RecipeModel, { RecipeDocument, Recipe } from './recipe.model';
 
 function toSlug(title: string) {
