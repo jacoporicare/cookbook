@@ -36,7 +36,7 @@ class Layout extends React.Component<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { fetchUser } = this.props;
+    const { fetchUser, fetchRecipeList } = this.props;
     const { isAuthenticated, user, isFetchingUser, fetchUserError } = nextProps;
 
     if (isAuthenticated) {
