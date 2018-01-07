@@ -18,6 +18,7 @@ interface Props extends RouteComponentProps<{}, {}> {
   isFetchingUser: boolean;
   fetchUserError: boolean;
   recipes: Recipe[];
+  isFetchingRecipes: boolean;
   fetchUser: () => Promise<NavbarAction>;
   fetchRecipeList: () => Promise<RecipeListAction>;
 }
@@ -37,14 +38,14 @@ class Layout extends React.Component<Props> {
 
   componentWillReceiveProps(nextProps: Props) {
     const { fetchUser, fetchRecipeList } = this.props;
-    const { isAuthenticated, user, isFetchingUser, fetchUserError } = nextProps;
+    const { isAuthenticated, user, isFetchingUser, fetchUserError, isFetchingRecipes } = nextProps;
 
     if (isAuthenticated) {
       if (!user && !isFetchingUser && !fetchUserError) {
         fetchUser();
       }
 
-      if (!this.props.isAuthenticated) {
+      if (!this.props.isAuthenticated && !isFetchingRecipes) {
         fetchRecipeList();
       }
     }
@@ -81,6 +82,7 @@ const mapStateToProps = (state: StoreState) => ({
   isFetchingUser: state.navbar.isFetchingUser,
   fetchUserError: state.navbar.error,
   recipes: state.recipeList.recipes,
+  isFetchingRecipes: state.recipeList.isFetching,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
