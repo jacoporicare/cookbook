@@ -14,7 +14,7 @@ interface Props {
 }
 
 const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }: Props) => (
-  <div>
+  <>
     <h1 className="page-header clearfix">
       {title}
       <span className="pull-right">
@@ -32,7 +32,7 @@ const RecipeHeader = ({ slug, title, preparationTime, sideDish, onDeleteShow }: 
         <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
       </div>
     )}
-  </div>
+  </>
 );
 
 export default RecipeHeader;

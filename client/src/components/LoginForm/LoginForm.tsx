@@ -12,7 +12,7 @@ interface Props {
 }
 
 const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onSubmit }: Props) => (
-  <div>
+  <>
     {isSubmitting && <Spinner overlay />}
     <div className="row">
       <div className="col-sm-12">
@@ -63,7 +63,7 @@ const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onS
         </form>
       </div>
     </div>
-  </div>
+  </>
 );
 
 export default LoginForm;

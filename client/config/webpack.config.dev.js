@@ -62,7 +62,7 @@ module.exports = {
               {
                 loader: require.resolve('babel-loader'),
                 options: {
-                  presets: ['react'],
+                  presets: ['@babel/preset-react'],
                   plugins: [
                     [
                       'babel-plugin-react-css-modules',

@@ -59,7 +59,7 @@ class IngredientList extends Component<Props, State> {
     }
 
     return (
-      <div>
+      <>
         {!!initialServingCount && (
           <div className="form-group">
             <div className="input-group">
@@ -104,7 +104,7 @@ class IngredientList extends Component<Props, State> {
             );
           })}
         </ul>
-      </div>
+      </>
     );
   }
 }

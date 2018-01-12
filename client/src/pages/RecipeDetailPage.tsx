@@ -86,7 +86,7 @@ class RecipeDetailPage extends Component<Props, State> {
     } = recipe;
 
     return (
-      <div>
+      <>
         <div className="container">
           <RecipeHeader
             slug={slug}
@@ -111,7 +111,7 @@ class RecipeDetailPage extends Component<Props, State> {
           onClose={this.handleDeleteClose}
           onConfirm={this.handleDeleteConfirm}
         />
-      </div>
+      </>
     );
   }
 }

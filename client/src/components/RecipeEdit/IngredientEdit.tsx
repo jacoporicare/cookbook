@@ -92,7 +92,7 @@ class IngredientEdit extends React.Component<Props, State> {
     const { name, amount, amountUnit, group } = this.state;
 
     return (
-      <div>
+      <>
         <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
         <IngredientForm
           name={name}
@@ -107,7 +107,7 @@ class IngredientEdit extends React.Component<Props, State> {
           onChange={this.handleGroupChange}
           onAdd={this.handleAddGroup}
         />
-      </div>
+      </>
     );
   }
 }

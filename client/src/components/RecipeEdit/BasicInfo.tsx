@@ -38,7 +38,7 @@ class BasicInfo extends React.Component<Props, State> {
     const { sideDishOptions } = this.state;
 
     return (
-      <div>
+      <>
         <div className="form-group">
           <label htmlFor="preparationTime">Doba přípravy</label>
           <div className="input-group">
@@ -90,7 +90,7 @@ class BasicInfo extends React.Component<Props, State> {
             }}
           />
         </div>
-      </div>
+      </>
     );
   }
 }

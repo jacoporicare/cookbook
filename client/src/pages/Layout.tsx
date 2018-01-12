@@ -59,7 +59,7 @@ class Layout extends React.Component<Props> {
     const { isAuthenticated, user, isFetchingUser, router, children } = this.props;
 
     return (
-      <div>
+      <>
         <Notifications options={{ zIndex: 1100 }} />
         <Header
           isAuthenticated={isAuthenticated}
@@ -71,7 +71,7 @@ class Layout extends React.Component<Props> {
         {isAuthenticated && <Navbar router={router} />}
         {children}
         <Footer />
-      </div>
+      </>
     );
   }
 }
