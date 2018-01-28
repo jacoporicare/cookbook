@@ -7,7 +7,7 @@ services:
     networks:
       - cookbook
     volumes:
-      - ~/cookbook/data:/data/db
+      - /srv/docker/cookbook/data:/data/db
 
   web:
     image: docker.jakubricar.cz/cookbook:latest

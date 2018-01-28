@@ -54,7 +54,7 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
             docker push "docker.jakubricar.cz/cookbook:dev"
       - deploy:
-          command: "ssh -o StrictHostKeyChecking=no ricar@jakubricar.cz './cookbook/start.sh dev'"
+          command: "ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh dev'"
 
   deploy_production:
     docker:
@@ -72,7 +72,7 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
             docker push "docker.jakubricar.cz/cookbook:latest"
       - deploy:
-          command: "ssh -o StrictHostKeyChecking=no ricar@jakubricar.cz './cookbook/start.sh prod'"
+          command: "ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh prod'"
 
 workflows:
   version: 2
