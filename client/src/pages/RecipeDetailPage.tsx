@@ -21,9 +21,10 @@ interface Props extends RouteComponentProps<Params, {}> {
   slug: string;
   recipe: RecipeDetailType;
   isFetching: boolean;
+  hasDetail: boolean;
+  isAuthenticated: boolean;
   fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
   deleteRecipe: (id: string) => Promise<RecipeDeleteAction>;
-  hasDetail: boolean;
 }
 
 interface State {
@@ -64,7 +65,7 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   render() {
-    const { recipe, isFetching, hasDetail } = this.props;
+    const { recipe, isFetching, hasDetail, isAuthenticated } = this.props;
 
     if (!recipe) {
       return (
@@ -93,6 +94,7 @@ class RecipeDetailPage extends Component<Props, State> {
             title={title}
             preparationTime={preparationTime}
             sideDish={sideDish}
+            isAuthenticated={isAuthenticated}
             onDeleteShow={this.handleDeleteShow}
           />
           {isFetching && !hasDetail ? (
@@ -117,6 +119,7 @@ class RecipeDetailPage extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
+  const { isAuthenticated } = state.auth;
   const { isFetching, recipesBySlug } = state.recipeDetail;
   const { slug } = ownProps.params;
   const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
@@ -127,6 +130,7 @@ const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params
     isFetching,
     recipe,
     hasDetail,
+    isAuthenticated,
   };
 };
 

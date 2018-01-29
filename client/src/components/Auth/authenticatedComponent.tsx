@@ -13,14 +13,19 @@ const authenticatedComponent = (Component: React.ComponentType) => {
   class AuthenticatedComponent extends React.Component<Props> {
     componentWillMount() {
       if (!this.props.isAuthenticated) {
-        this.props.router.push('/prihlaseni');
+        this.redirect();
       }
     }
 
     componentWillReceiveProps(nextProps: Props) {
       if (!nextProps.isAuthenticated) {
-        this.props.router.push('/prihlaseni');
+        this.redirect();
       }
+    }
+
+    redirect() {
+      const backUrl = encodeURIComponent(window.location.pathname);
+      this.props.router.push(`/prihlaseni?u=${backUrl}`);
     }
 
     render() {

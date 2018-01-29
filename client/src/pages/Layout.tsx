@@ -27,12 +27,10 @@ class Layout extends React.Component<Props> {
   componentDidMount() {
     const { isAuthenticated, user, fetchUser, fetchRecipeList } = this.props;
 
-    if (isAuthenticated) {
-      if (!user) {
-        fetchUser();
-      }
+    fetchRecipeList();
 
-      fetchRecipeList();
+    if (isAuthenticated && !user) {
+      fetchUser();
     }
   }
 
@@ -68,7 +66,7 @@ class Layout extends React.Component<Props> {
           recipes={this.props.recipes}
           onRecipeSelected={this.handleRecipeSelected}
         />
-        {isAuthenticated && <Navbar router={router} />}
+        <Navbar router={router} />
         {children}
         <Footer />
       </>

@@ -1,19 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withCookies, CookiesProps } from 'react-cookie';
+import { RouteComponentProps } from 'react-router';
 
 import { logout, AuthAction } from '../components/Auth/actions';
 
-interface Props extends CookiesProps {
+interface Props extends CookiesProps, RouteComponentProps<{}, {}> {
   logout: () => AuthAction;
 }
 
 class LogoutPage extends React.Component<Props> {
   componentDidMount() {
-    const { cookies, logout } = this.props;
+    const { cookies, router, location, logout } = this.props;
     cookies.remove('token');
     logout();
-    // this.props.router.push('/prihlaseni');
+    router.push(location.query.u || '/');
   }
 
   render() {

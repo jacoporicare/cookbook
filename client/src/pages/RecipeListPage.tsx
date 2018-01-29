@@ -11,6 +11,7 @@ import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 interface Props {
   recipes: Recipe[];
   isFetching: boolean;
+  isAuthenticated: boolean;
 }
 
 interface State {
@@ -53,7 +54,7 @@ class RecipeListPage extends Component<Props, State> {
   };
 
   render() {
-    const { isFetching } = this.props;
+    const { isFetching, isAuthenticated } = this.props;
     const { recipes, searchText } = this.state;
     const isEmpty = recipes.length === 0;
 
@@ -62,11 +63,13 @@ class RecipeListPage extends Component<Props, State> {
         <h1 className="page-header clearfix">
           <div className="row">
             <div className="col-md-6">Recepty</div>
-            <div className="col-md-6 text-right">
-              <Link to="/novy-recept" className="btn btn-primary">
-                <i className="fa fa-plus-circle" /> Nový recept
-              </Link>
-            </div>
+            {isAuthenticated && (
+              <div className="col-md-6 text-right">
+                <Link to="/novy-recept" className="btn btn-primary">
+                  <i className="fa fa-plus-circle" /> Nový recept
+                </Link>
+              </div>
+            )}
           </div>
         </h1>
         <SearchBar onChange={this.handleSearchChange} />
@@ -86,10 +89,12 @@ class RecipeListPage extends Component<Props, State> {
 
 const mapStateToProps = (state: StoreState) => {
   const { recipes, isFetching } = state.recipeList;
+  const { isAuthenticated } = state.auth;
 
   return {
     recipes,
     isFetching,
+    isAuthenticated,
   };
 };
 

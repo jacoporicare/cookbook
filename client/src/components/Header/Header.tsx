@@ -32,16 +32,16 @@ const Header = ({
           <img src={cow} alt="Kráva" styleName="icon" />
         </IndexLink>
       </h1>
-      {isAuthenticated && (
-        <div styleName="search">
-          <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
-        </div>
-      )}
-      {isAuthenticated && (
-        <div styleName="user-info">
-          <UserInfo userName={userName} isFetchingUser={isFetchingUser} />
-        </div>
-      )}
+      <div styleName="search">
+        <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
+      </div>
+      <div styleName="user-info">
+        <UserInfo
+          isAuthenticated={isAuthenticated}
+          userName={userName}
+          isFetchingUser={isFetchingUser}
+        />
+      </div>
     </div>
   </div>
 );

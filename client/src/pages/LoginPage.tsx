@@ -50,7 +50,7 @@ class LoginPage extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { login, router, cookies } = this.props;
+    const { login, router, cookies, location } = this.props;
     const { username, password, rememberMe } = this.state;
 
     login(username, password).then(action => {
@@ -62,7 +62,7 @@ class LoginPage extends React.Component<Props, State> {
         }
 
         cookies.set('token', action.payload.token, cookieOpts);
-        router.push('/');
+        router.push(location.query.u || '/');
       }
     });
   };
