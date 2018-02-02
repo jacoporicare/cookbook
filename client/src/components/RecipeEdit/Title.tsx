@@ -8,7 +8,7 @@ interface Props {
 }
 
 class Title extends React.Component<Props> {
-  titleInput: HTMLInputElement | null;
+  titleInput?: HTMLInputElement | null;
 
   componentDidMount() {
     if (this.titleInput) {

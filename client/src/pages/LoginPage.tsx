@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import { withCookies, CookiesProps, CookieSetOptions } from 'react-cookie';
 
 import { StoreState } from '../types';
+import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { login, AuthAction } from '../components/Auth/actions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
@@ -72,16 +73,19 @@ class LoginPage extends React.Component<Props, State> {
     const { isSubmitting } = this.props;
 
     return (
-      <div className="container">
-        <LoginForm
-          username={username}
-          password={password}
-          rememberMe={rememberMe}
-          isSubmitting={isSubmitting}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
-      </div>
+      <>
+        <DocumentTitle title="Přihlášení" />
+        <div className="container">
+          <LoginForm
+            username={username}
+            password={password}
+            rememberMe={rememberMe}
+            isSubmitting={isSubmitting}
+            onChange={this.handleChange}
+            onSubmit={this.handleSubmit}
+          />
+        </div>
+      </>
     );
   }
 }

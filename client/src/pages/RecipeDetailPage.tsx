@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
+import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import { deleteRecipe, RecipeDeleteAction } from '../components/RecipeDeleteModal/actions';
 import { findRecipeBySlug } from '../components/RecipeList/reducer';
@@ -88,6 +89,7 @@ class RecipeDetailPage extends Component<Props, State> {
 
     return (
       <>
+        <DocumentTitle title={title} />
         <div className="container">
           <RecipeHeader
             slug={slug}

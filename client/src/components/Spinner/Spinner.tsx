@@ -12,7 +12,7 @@ interface State {
 }
 
 class Spinner extends React.Component<Props, State> {
-  timer: number;
+  timer?: number;
 
   constructor(props: Props) {
     super(props);
@@ -32,7 +32,9 @@ class Spinner extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer);
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   }
 
   render() {

@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
 
 import { User, Recipe, StoreState } from '../types';
+import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
 import { fetchUser, NavbarAction } from '../components/Navbar/actions';
 import Header from '../components/Header/Header';
@@ -58,6 +59,7 @@ class Layout extends React.Component<Props> {
 
     return (
       <>
+        <DocumentTitle />
         <Notifications options={{ zIndex: 1100 }} />
         <Header
           isAuthenticated={isAuthenticated}

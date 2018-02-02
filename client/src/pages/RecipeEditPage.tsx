@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 
 import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
+import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import {
   saveRecipe,
@@ -268,28 +269,31 @@ class RecipeEditPage extends React.Component<Props, State> {
     }
 
     return (
-      <div className="container">
-        <RecipeEdit
-          slug={slug}
-          title={title}
-          preparationTime={preparationTime}
-          servingCount={servingCount}
-          sideDish={sideDish}
-          directions={directions}
-          ingredients={ingredients}
-          ingredientOptions={ingredientOptions}
-          sideDishOptions={sideDishOptions}
-          changed={changed}
-          isNew={isNew}
-          isSaving={isSaving}
-          onChange={this.handleChange}
-          onAddIngredient={this.handleAddIngredient}
-          onAddGroup={this.handleAddGroup}
-          onRemoveIngredient={this.handleRemoveIngredient}
-          onSortIngredient={this.handleSortIngredient}
-          onSubmit={this.handleSubmit}
-        />
-      </div>
+      <>
+        <DocumentTitle title={!title && isNew ? 'Nový recept' : title} />
+        <div className="container">
+          <RecipeEdit
+            slug={slug}
+            title={title}
+            preparationTime={preparationTime}
+            servingCount={servingCount}
+            sideDish={sideDish}
+            directions={directions}
+            ingredients={ingredients}
+            ingredientOptions={ingredientOptions}
+            sideDishOptions={sideDishOptions}
+            changed={changed}
+            isNew={isNew}
+            isSaving={isSaving}
+            onChange={this.handleChange}
+            onAddIngredient={this.handleAddIngredient}
+            onAddGroup={this.handleAddGroup}
+            onRemoveIngredient={this.handleRemoveIngredient}
+            onSortIngredient={this.handleSortIngredient}
+            onSubmit={this.handleSubmit}
+          />
+        </div>
+      </>
     );
   }
 }
