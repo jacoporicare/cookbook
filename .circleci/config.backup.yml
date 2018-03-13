@@ -10,9 +10,9 @@ jobs:
           name: Update yarn
           command: "sudo npm install -g yarn@latest"
       - restore_cache:
-          key: v1-dependency-cache-server-{{ checksum "server/yarn.lock" }}
+          key: v1-dependency-cache-server-{{ checksum "server/package.json" }}
       - restore_cache:
-          key: v1-dependency-cache-client-{{ checksum "client/yarn.lock" }}
+          key: v1-dependency-cache-client-{{ checksum "client/package.json" }}
       - run:
           name: Install dependencies - server
           command: "cd server && yarn"
@@ -20,11 +20,11 @@ jobs:
           name: Install dependencies - client
           command: "cd client && yarn"
       - save_cache:
-          key: v1-dependency-cache-server-{{ checksum "server/yarn.lock" }}
+          key: v1-dependency-cache-server-{{ checksum "server/package.json" }}
           paths:
             - server/node_modules
       - save_cache:
-          key: v1-dependency-cache-client-{{ checksum "client/yarn.lock" }}
+          key: v1-dependency-cache-client-{{ checksum "client/package.json" }}
           paths:
             - client/node_modules
       - run:
@@ -38,23 +38,23 @@ jobs:
           paths:
             - dist/*
 
-  # deploy_development:
-  #   docker:
-  #     - image: circleci/node:8.9
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker:
-  #         version: 17.07.0-ce
-  #     - attach_workspace:
-  #         at: .
-  #     - run:
-  #         name: Docker build and push
-  #         command: |
-  #           docker build -t "docker.jakubricar.cz/cookbook:dev" .
-  #           docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
-  #           docker push "docker.jakubricar.cz/cookbook:dev"
-  #     - deploy:
-  #         command: "ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh dev'"
+  deploy_development:
+    docker:
+      - image: circleci/node:8.9
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 17.07.0-ce
+      - attach_workspace:
+          at: .
+      - run:
+          name: Docker build and push
+          command: |
+            docker build -t "docker.jakubricar.cz/cookbook:dev" .
+            docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
+            docker push "docker.jakubricar.cz/cookbook:dev"
+      - deploy:
+          command: "ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh dev'"
 
   deploy_production:
     docker:
@@ -79,12 +79,12 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      # - deploy_development:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only: develop
+      - deploy_development:
+          requires:
+            - build
+          filters:
+            branches:
+              only: develop
       - deploy_production:
           requires:
             - build
