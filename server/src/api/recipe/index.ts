@@ -163,4 +163,16 @@ router.delete('/:id', auth(), (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+router.post('/change-author/:slug/:userId', auth(), (req, res) => {
+  const { slug, userId } = req.params;
+
+  RecipeModel.findOneAndUpdate({ slug }, { $set: { userId } })
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
+});
+
 export default router;
