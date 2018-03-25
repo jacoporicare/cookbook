@@ -19,7 +19,7 @@ describe('RecipeDetail reducer', () => {
         title: 'Recept',
         ingredients: [],
         lastModifiedDate: '2017-12-23T00:02:39.994Z',
-        user: 'Kubik',
+        userId: 1,
       },
       'recept',
     );
@@ -32,7 +32,7 @@ describe('RecipeDetail reducer', () => {
           lastModifiedDate: '2017-12-23T00:02:39.994Z',
           slug: 'recept',
           title: 'Recept',
-          user: 'Kubik',
+          userId: 1,
         },
       },
     };

@@ -6,26 +6,19 @@ import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import './RecipeHeader.module.css';
 
 interface Props {
-  slug: string;
-  title: string;
+  canEdit: boolean;
   preparationTime?: number;
   sideDish?: string;
-  isAuthenticated: boolean;
+  slug: string;
+  title: string;
   onDeleteShow: () => void;
 }
 
-const RecipeHeader = ({
-  slug,
-  title,
-  preparationTime,
-  sideDish,
-  isAuthenticated,
-  onDeleteShow,
-}: Props) => (
+const RecipeHeader = ({ canEdit, preparationTime, sideDish, slug, title, onDeleteShow }: Props) => (
   <>
     <h1 className="page-header clearfix">
       {title}
-      {isAuthenticated && (
+      {canEdit && (
         <span className="pull-right">
           <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
             <i className="fa fa-edit" /> Upravit

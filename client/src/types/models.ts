@@ -16,7 +16,7 @@ export interface RecipeDetail extends Recipe {
   directions?: string;
   servingCount?: number;
   lastModifiedDate: string;
-  user: string;
+  userId: number;
   ingredients: Ingredient[];
 }
 

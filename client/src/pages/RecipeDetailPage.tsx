@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
-import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
+import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import { deleteRecipe, RecipeDeleteAction } from '../components/RecipeDeleteModal/actions';
@@ -19,13 +19,13 @@ interface Params {
 }
 
 interface Props extends RouteComponentProps<Params, {}> {
-  slug: string;
-  recipe: RecipeDetailType;
-  isFetching: boolean;
-  hasDetail: boolean;
-  isAuthenticated: boolean;
-  fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
   deleteRecipe: (id: string) => Promise<RecipeDeleteAction>;
+  fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
+  hasDetail: boolean;
+  isFetching: boolean;
+  recipe: RecipeDetailType;
+  slug: string;
+  user: User | undefined;
 }
 
 interface State {
@@ -66,7 +66,7 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   render() {
-    const { recipe, isFetching, hasDetail, isAuthenticated } = this.props;
+    const { recipe, isFetching, hasDetail, user } = this.props;
 
     if (!recipe) {
       return (
@@ -78,13 +78,14 @@ class RecipeDetailPage extends Component<Props, State> {
 
     const { showDeleteModal } = this.state;
     const {
+      directions,
+      ingredients,
+      preparationTime,
+      servingCount,
+      sideDish,
       slug,
       title,
-      preparationTime,
-      sideDish,
-      ingredients,
-      servingCount,
-      directions,
+      userId,
     } = recipe;
 
     return (
@@ -92,11 +93,11 @@ class RecipeDetailPage extends Component<Props, State> {
         <DocumentTitle title={title} />
         <div className="container">
           <RecipeHeader
-            slug={slug}
-            title={title}
+            canEdit={user ? user.id === userId : false}
             preparationTime={preparationTime}
             sideDish={sideDish}
-            isAuthenticated={isAuthenticated}
+            slug={slug}
+            title={title}
             onDeleteShow={this.handleDeleteShow}
           />
           {isFetching && !hasDetail ? (
@@ -121,18 +122,18 @@ class RecipeDetailPage extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
-  const { isAuthenticated } = state.auth;
+  const { user } = state.auth;
   const { isFetching, recipesBySlug } = state.recipeDetail;
   const { slug } = ownProps.params;
   const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
   const hasDetail = Boolean(recipesBySlug[slug]);
 
   return {
-    slug,
+    hasDetail,
     isFetching,
     recipe,
-    hasDetail,
-    isAuthenticated,
+    slug,
+    user,
   };
 };
 

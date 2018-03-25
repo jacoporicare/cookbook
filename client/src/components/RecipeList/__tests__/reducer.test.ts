@@ -37,7 +37,7 @@ describe('RecipeList reducer', () => {
       title: 'm',
       ingredients: [],
       lastModifiedDate: '2017-12-23T00:02:39.994Z',
-      user: 'Kubik',
+      userId: 1,
     });
     const stateAfter = {
       isFetching: false,
@@ -49,7 +49,7 @@ describe('RecipeList reducer', () => {
           lastModifiedDate: '2017-12-23T00:02:39.994Z',
           slug: 'm',
           title: 'm',
-          user: 'Kubik',
+          userId: 1,
         },
         { _id: '1', slug: 'z', title: 'z' },
       ],
@@ -73,7 +73,7 @@ describe('RecipeList reducer', () => {
       lastModifiedDate: '2017-12-23T00:02:39.994Z',
       slug: 'o',
       title: 'o',
-      user: 'Kubik',
+      userId: 1,
     });
     const stateAfter = {
       isFetching: false,
@@ -85,7 +85,7 @@ describe('RecipeList reducer', () => {
           lastModifiedDate: '2017-12-23T00:02:39.994Z',
           slug: 'o',
           title: 'o',
-          user: 'Kubik',
+          userId: 1,
         },
         { _id: '1', slug: 'z', title: 'z' },
       ],

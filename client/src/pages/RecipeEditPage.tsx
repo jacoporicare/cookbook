@@ -4,7 +4,13 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 
-import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
+import {
+  RecipeDetail,
+  Ingredient,
+  StoreState,
+  AutosuggestChangeEventHandler,
+  User,
+} from '../types';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import {
@@ -31,6 +37,8 @@ interface Props extends RouteComponentProps<Params, {}> {
   isSaving: boolean;
   ingredientOptions: string[];
   sideDishOptions: string[];
+  user: User | undefined;
+  isFetchingUser: boolean;
   fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
   saveRecipe: (id: string | undefined, recipe: SaveRecipeParams) => Promise<RecipeEditAction>;
   fetchIngredientList: () => Promise<RecipeEditAction>;
@@ -95,6 +103,16 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    if (
+      !nextProps.isFetching &&
+      !nextProps.isFetchingUser &&
+      nextProps.user &&
+      nextProps.recipe &&
+      nextProps.user.id !== nextProps.recipe.userId
+    ) {
+      this.props.router.push(`/recept/${nextProps.recipe.slug}`);
+    }
+
     if (this.props.recipe !== nextProps.recipe) {
       if (nextProps.recipe) {
         this.setState({
@@ -299,7 +317,7 @@ class RecipeEditPage extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
-  const { recipeDetail, recipeEdit } = state;
+  const { recipeDetail, recipeEdit, auth } = state;
   const { isFetching, recipesBySlug } = recipeDetail;
   const { isSaving, ingredientList: { ingredients }, sideDishList: { sideDishes } } = recipeEdit;
   const { slug } = ownProps.params;
@@ -314,6 +332,8 @@ const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params
     isSaving,
     ingredientOptions: ingredients,
     sideDishOptions: sideDishes,
+    user: auth.user,
+    isFetchingUser: auth.isFetchingUser,
   };
 };
 

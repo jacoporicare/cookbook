@@ -33,7 +33,7 @@ describe('RecipeEdit reducer', () => {
       title: 'Recept',
       ingredients: [],
       lastModifiedDate: '2017-12-23T00:02:39.994Z',
-      user: 'Kubik',
+      userId: 1,
     });
     const stateAfter = {
       isSaving: false,
