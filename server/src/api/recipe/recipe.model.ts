@@ -8,7 +8,7 @@ export interface Ingredient {
 }
 
 export interface Recipe {
-  user: string;
+  userId: number;
   title: string;
   slug: string;
   directions?: string;
@@ -22,7 +22,7 @@ export interface Recipe {
 export type RecipeDocument = Document & Recipe;
 
 const RecipeSchema = new Schema({
-  user: { type: String, required: true },
+  userId: { type: Number, required: true },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
   directions: String,
