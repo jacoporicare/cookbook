@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as slug from 'slug';
 
 import { User } from '../../types';
-import { auth } from '../../auth/auth.service';
+import { auth, findUserById } from '../../auth/auth.service';
 import RecipeModel, { RecipeDocument, Recipe } from './recipe.model';
 
 function toSlug(title: string) {
@@ -51,6 +51,15 @@ function deleteNullValues(o: mongoose.Document): Recipe {
   return obj;
 }
 
+function appendUserName(recipe: Recipe): Recipe {
+  const user = findUserById(recipe.userId);
+
+  return {
+    ...recipe,
+    userName: user ? user.name : '',
+  };
+}
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -70,9 +79,14 @@ router.get('/', (req, res) => {
   }
 
   query
-    .select('_id title slug preparationTime sideDish')
+    .select('_id title slug preparationTime sideDish userId')
     .then((results: RecipeDocument[]) =>
-      res.send(results.map(deleteNullValues).sort((a, b) => a.title.localeCompare(b.title, 'cs'))),
+      res.send(
+        results
+          .map(deleteNullValues)
+          .map(appendUserName)
+          .sort((a, b) => a.title.localeCompare(b.title, 'cs')),
+      ),
     )
     .catch(err => res.status(500).send(err));
 });
@@ -97,7 +111,7 @@ router.get('/:id', (req, res) => {
   RecipeModel.findOne({ slug: id })
     .then(result => {
       if (result) {
-        res.send(deleteNullValues(result));
+        res.send(appendUserName(deleteNullValues(result)));
         return;
       }
 
@@ -113,7 +127,7 @@ router.get('/:id', (req, res) => {
             return;
           }
 
-          res.send(deleteNullValues(result));
+          res.send(appendUserName(deleteNullValues(result)));
         })
         .catch(err => res.status(500).send(err));
     })

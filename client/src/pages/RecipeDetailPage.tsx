@@ -86,6 +86,7 @@ class RecipeDetailPage extends Component<Props, State> {
       slug,
       title,
       userId,
+      userName,
     } = recipe;
 
     return (
@@ -107,6 +108,7 @@ class RecipeDetailPage extends Component<Props, State> {
               ingredients={ingredients}
               servingCount={servingCount}
               directions={directions}
+              userName={userName}
             />
           )}
         </div>

@@ -19,6 +19,12 @@ const users: User[] = [
     name: 'Terezka',
     password: 'zeryk',
   },
+  {
+    id: 3,
+    username: 'sklenik',
+    name: 'Skleník',
+    password: 'jachym',
+  },
 ];
 
 export function fakeAuth() {

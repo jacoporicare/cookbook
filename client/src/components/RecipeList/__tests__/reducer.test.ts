@@ -15,12 +15,15 @@ describe('RecipeList reducer', () => {
   it('fetches recipe list and sort them by title', () => {
     const stateBefore = { isFetching: true, recipes: [] };
     const action = fetchRecipeListSuccess([
-      { _id: '1', slug: 'z', title: 'z' },
-      { _id: '2', slug: 'a', title: 'a' },
+      { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
+      { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
     ]);
     const stateAfter = {
       isFetching: false,
-      recipes: [{ _id: '2', slug: 'a', title: 'a' }, { _id: '1', slug: 'z', title: 'z' }],
+      recipes: [
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
+      ],
     };
 
     expect(reducer(stateBefore, action)).toEqual(stateAfter);
@@ -29,7 +32,10 @@ describe('RecipeList reducer', () => {
   it('adds recipe to the list and re-sort', () => {
     const stateBefore = {
       isFetching: false,
-      recipes: [{ _id: '2', slug: 'a', title: 'a' }, { _id: '1', slug: 'z', title: 'z' }],
+      recipes: [
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
+      ],
     };
     const action = saveRecipeSuccess({
       _id: '3',
@@ -38,11 +44,12 @@ describe('RecipeList reducer', () => {
       ingredients: [],
       lastModifiedDate: '2017-12-23T00:02:39.994Z',
       userId: 1,
+      userName: 'Kubík',
     });
     const stateAfter = {
       isFetching: false,
       recipes: [
-        { _id: '2', slug: 'a', title: 'a' },
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
         {
           _id: '3',
           ingredients: [],
@@ -50,8 +57,9 @@ describe('RecipeList reducer', () => {
           slug: 'm',
           title: 'm',
           userId: 1,
+          userName: 'Kubík',
         },
-        { _id: '1', slug: 'z', title: 'z' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
       ],
     };
 
@@ -62,9 +70,9 @@ describe('RecipeList reducer', () => {
     const stateBefore = {
       isFetching: false,
       recipes: [
-        { _id: '2', slug: 'a', title: 'a' },
-        { _id: '3', slug: 'm', title: 'm' },
-        { _id: '1', slug: 'z', title: 'z' },
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
+        { _id: '3', slug: 'm', title: 'm', userId: 1, userName: 'Kubík' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
       ],
     };
     const action = saveRecipeSuccess({
@@ -74,11 +82,12 @@ describe('RecipeList reducer', () => {
       slug: 'o',
       title: 'o',
       userId: 1,
+      userName: 'Kubík',
     });
     const stateAfter = {
       isFetching: false,
       recipes: [
-        { _id: '2', slug: 'a', title: 'a' },
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
         {
           _id: '3',
           ingredients: [],
@@ -86,8 +95,9 @@ describe('RecipeList reducer', () => {
           slug: 'o',
           title: 'o',
           userId: 1,
+          userName: 'Kubík',
         },
-        { _id: '1', slug: 'z', title: 'z' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
       ],
     };
 
@@ -97,12 +107,15 @@ describe('RecipeList reducer', () => {
   it('deletes recipe from the list', () => {
     const stateBefore = {
       isFetching: false,
-      recipes: [{ _id: '2', slug: 'a', title: 'a' }, { _id: '1', slug: 'z', title: 'z' }],
+      recipes: [
+        { _id: '2', slug: 'a', title: 'a', userId: 1, userName: 'Kubík' },
+        { _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' },
+      ],
     };
     const action = deleteRecipeSuccess('2');
     const stateAfter = {
       isFetching: false,
-      recipes: [{ _id: '1', slug: 'z', title: 'z' }],
+      recipes: [{ _id: '1', slug: 'z', title: 'z', userId: 1, userName: 'Kubík' }],
     };
 
     expect(reducer(stateBefore, action)).toEqual(stateAfter);

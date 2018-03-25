@@ -10,6 +10,8 @@ export interface Recipe {
   slug: string;
   sideDish?: string;
   preparationTime?: number;
+  userId: number;
+  userName: string;
 }
 
 export interface RecipeDetail extends Recipe {
@@ -17,6 +19,7 @@ export interface RecipeDetail extends Recipe {
   servingCount?: number;
   lastModifiedDate: string;
   userId: number;
+  userName: string;
   ingredients: Ingredient[];
 }
 
