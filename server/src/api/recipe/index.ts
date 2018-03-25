@@ -25,7 +25,7 @@ function getError(err: any) {
 function getRecipe({ body: recipe, user }: { body: Recipe; user?: User }): Recipe {
   return {
     ...recipe,
-    userId: user ? user.id : 0,
+    userId: recipe.userId || (user ? user.id : 0),
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
     sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,

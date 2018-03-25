@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
-import './RecipeHeader.module.css';
+import './styles/RecipeHeader.module.css';
 
 interface Props {
   canEdit: boolean;

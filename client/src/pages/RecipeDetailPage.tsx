@@ -80,6 +80,7 @@ class RecipeDetailPage extends Component<Props, State> {
     const {
       directions,
       ingredients,
+      lastModifiedDate,
       preparationTime,
       servingCount,
       sideDish,
@@ -109,6 +110,7 @@ class RecipeDetailPage extends Component<Props, State> {
               servingCount={servingCount}
               directions={directions}
               userName={userName}
+              lastModifiedDate={lastModifiedDate}
             />
           )}
         </div>

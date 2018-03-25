@@ -4,20 +4,30 @@ import { Ingredient } from '../../types';
 import RichText from '../RichText/RichText';
 import IngredientList from './IngredientList';
 
+import './styles/RecipeDetail.module.css';
+
 interface Props {
   ingredients?: Ingredient[];
   servingCount?: number;
   directions?: string;
   userName: string;
+  lastModifiedDate: string;
 }
 
-const RecipeDetail = ({ ingredients, servingCount, directions, userName }: Props) => (
+const RecipeDetail = ({
+  ingredients,
+  servingCount,
+  directions,
+  userName,
+  lastModifiedDate,
+}: Props) => (
   <div className="cb-recipe-detail">
     <div className="row">
       <div className="col-md-3 col-sm-4">
         <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        <p>
-          <span className="text-muted">Autor:</span> {userName}
+        <p styleName="info">
+          <i className="fa fa-user text-muted" /> {userName},{' '}
+          {new Date(lastModifiedDate).toLocaleDateString('cs')}
         </p>
       </div>
 
