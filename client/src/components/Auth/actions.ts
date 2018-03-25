@@ -13,7 +13,10 @@ export type AuthAction =
   | { type: 'LOGIN_FORM.LOGIN.REQUEST' }
   | { type: 'LOGIN_FORM.LOGIN.SUCCESS'; payload: { token: string; user: User } }
   | { type: 'LOGIN_FORM.LOGIN.FAILURE' }
-  | { type: 'LOGOUT' };
+  | { type: 'LOGOUT' }
+  | { type: 'AUTH.USER.FETCH.REQUEST' }
+  | { type: 'AUTH.USER.FETCH.SUCCESS'; payload: { user: User } }
+  | { type: 'AUTH.USER.FETCH.FAILURE' };
 
 export const setAuthToken = (token: string): AuthAction => ({
   type: 'SET_AUTH_TOKEN',
@@ -55,3 +58,32 @@ export function login(username: string, password: string) {
 export const logout = (): AuthAction => ({
   type: 'LOGOUT',
 });
+
+export const fetchUserRequest = (): AuthAction => ({
+  type: 'AUTH.USER.FETCH.REQUEST',
+});
+
+export const fetchUserSuccess = (user: User): AuthAction => ({
+  type: 'AUTH.USER.FETCH.SUCCESS',
+  payload: {
+    user,
+  },
+});
+
+export const fetchUserFailure = (): AuthAction => ({
+  type: 'AUTH.USER.FETCH.FAILURE',
+});
+
+export function fetchUser() {
+  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+    dispatch(fetchUserRequest());
+
+    return api(getState)
+      .get<User>('/api/users/me')
+      .then(({ data }) => dispatch(fetchUserSuccess(data)))
+      .catch(error => {
+        handleError(error);
+        return dispatch(fetchUserFailure());
+      });
+  };
+}

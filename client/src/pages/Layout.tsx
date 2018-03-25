@@ -7,7 +7,7 @@ import Notifications from 'react-notify-toast';
 import { User, Recipe, StoreState } from '../types';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
-import { fetchUser, NavbarAction } from '../components/Navbar/actions';
+import { fetchUser, AuthAction } from '../components/Auth/actions';
 import Header from '../components/Header/Header';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}, {}> {
   fetchUserError: boolean;
   recipes: Recipe[];
   isFetchingRecipes: boolean;
-  fetchUser: () => Promise<NavbarAction>;
+  fetchUser: () => Promise<AuthAction>;
   fetchRecipeList: () => Promise<RecipeListAction>;
 }
 
@@ -78,9 +78,9 @@ class Layout extends React.Component<Props> {
 
 const mapStateToProps = (state: StoreState) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  user: state.navbar.user,
-  isFetchingUser: state.navbar.isFetchingUser,
-  fetchUserError: state.navbar.error,
+  user: state.auth.user,
+  isFetchingUser: state.auth.isFetchingUser,
+  fetchUserError: state.auth.error,
   recipes: state.recipeList.recipes,
   isFetchingRecipes: state.recipeList.isFetching,
 });
