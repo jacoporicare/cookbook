@@ -16,9 +16,9 @@ const RecipeDetail = ({ ingredients, servingCount, directions, userName }: Props
     <div className="row">
       <div className="col-md-3 col-sm-4">
         <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        <div>
+        <p>
           <span className="text-muted">Autor:</span> {userName}
-        </div>
+        </p>
       </div>
 
       <div className="col-md-9 col-sm-8">
