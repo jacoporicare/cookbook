@@ -6,8 +6,7 @@ import Autosuggest, {
 import matchSorter from 'match-sorter';
 
 import { Recipe } from '../../types';
-
-import './RecipeSearch.module.css';
+import SearchInput from '../SearchInput/SearchInput';
 
 interface Props {
   recipes: Recipe[];
@@ -63,7 +62,7 @@ class RecipeSearch extends React.Component<Props, State> {
     const { value, suggestions } = this.state;
 
     return (
-      <div styleName="search">
+      <SearchInput>
         <Autosuggest
           suggestions={suggestions}
           highlightFirstSuggestion
@@ -79,7 +78,7 @@ class RecipeSearch extends React.Component<Props, State> {
             className: 'form-control',
           }}
         />
-      </div>
+      </SearchInput>
     );
   }
 }
