@@ -18,6 +18,8 @@ export interface Recipe {
   servingCount?: number;
   lastModifiedDate: Date;
   ingredients: Ingredient[];
+  image?: Buffer;
+  hasImage?: boolean;
 }
 
 export type RecipeDocument = Document & Recipe;
@@ -39,6 +41,8 @@ const RecipeSchema = new Schema({
       isGroup: Boolean,
     },
   ],
+  image: { type: Buffer, select: false },
+  hasImage: Boolean,
 });
 
 /**
@@ -55,4 +59,4 @@ RecipeSchema.virtual('creationDate').get(function(this: Document) {
 
 RecipeSchema.path('title').validate((title: string) => title.length, 'Nadpis musí být vyplněný');
 
-export default model('Recipe', RecipeSchema);
+export default model<RecipeDocument>('Recipe', RecipeSchema);

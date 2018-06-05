@@ -26,6 +26,7 @@ if (isProduction) {
 }
 
 app.use(bodyParser.json());
+app.use(bodyParser.raw());
 app.use(cookieParser());
 
 app.use(routes);
