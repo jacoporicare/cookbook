@@ -1,12 +1,40 @@
+FROM node:8.9-alpine as server-builder
+
+WORKDIR /srv/src
+
+ENV NODE_ENV development
+COPY server/package.json server/yarn.lock ./
+RUN yarn
+
+ENV NODE_ENV production
+COPY server .
+RUN yarn build
+
+FROM node:8.9-alpine as client-builder
+
+WORKDIR /srv/src
+
+ENV NODE_ENV development
+COPY client/package.json client/yarn.lock ./
+RUN yarn
+
+ENV NODE_ENV production
+COPY client .
+RUN yarn build
+
+
 FROM node:8.9-alpine
 
 ENV NODE_ENV production
 
 WORKDIR /srv/app
 
-COPY dist/package.json dist/yarn.lock ./
+COPY --from=server-builder /srv/src/package.json /srv/src/yarn.lock ./
 RUN yarn
-COPY dist/ ./
+COPY --from=server-builder /srv/src/dist .
+
+COPY --from=client-builder /srv/src/dist public
+
 
 EXPOSE 3000
 
