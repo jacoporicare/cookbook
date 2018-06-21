@@ -1,4 +1,4 @@
-FROM node:8.9-alpine as server-builder
+FROM node:8.11 as server-builder
 
 WORKDIR /srv/src
 
@@ -10,7 +10,7 @@ ENV NODE_ENV production
 COPY server .
 RUN yarn build
 
-FROM node:8.9-alpine as client-builder
+FROM node:8.11 as client-builder
 
 WORKDIR /srv/src
 
@@ -23,7 +23,7 @@ COPY client .
 RUN yarn build
 
 
-FROM node:8.9-alpine
+FROM node:8.11
 
 ENV NODE_ENV production
 
