@@ -64,7 +64,7 @@ function appendUserName(recipe: Recipe): Recipe {
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   let query: mongoose.DocumentQuery<RecipeDocument[], RecipeDocument>;
 
   if (!req.query.q) {
@@ -80,152 +80,170 @@ router.get('/', (req, res) => {
     });
   }
 
-  query
-    .select('_id title slug preparationTime sideDish hasImage userId')
-    .then(results =>
-      res.send(
-        results
-          .map(deleteNullValues)
-          .map(appendUserName)
-          .sort((a, b) => a.title.localeCompare(b.title, 'cs')),
-      ),
-    )
-    .catch(err => res.status(500).send(err));
+  try {
+    const recipes = await query.select('_id title slug preparationTime sideDish hasImage userId');
+
+    res.send(
+      recipes
+        .map(deleteNullValues)
+        .map(appendUserName)
+        .sort((a, b) => a.title.localeCompare(b.title, 'cs')),
+    );
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.get('/ingredients', (req, res) => {
-  recipeModel
-    .distinct('ingredients.name')
-    .then((results: string[]) => res.send(results.sort((a, b) => a.localeCompare(b, 'cs'))))
-    .catch(err => res.status(500).send(err));
+router.get('/ingredients', async (req, res) => {
+  try {
+    const ingredients: string[] = await recipeModel.distinct('ingredients.name');
+
+    res.send(ingredients.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs')));
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.get('/side-dishes', (req, res) => {
-  recipeModel
-    .distinct('sideDish')
-    .then((results: string[]) =>
-      res.send(results.filter(sd => sd && sd !== '').sort((a, b) => a.localeCompare(b, 'cs'))),
-    )
-    .catch(err => res.status(500).send(err));
+router.get('/side-dishes', async (req, res) => {
+  try {
+    const sideDishes: string[] = await recipeModel.distinct('sideDish');
+
+    res.send(sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs')));
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  recipeModel
-    .findOne({ slug: id })
-    .then(result => {
-      if (result) {
-        return res.send(appendUserName(deleteNullValues(result)));
-      }
+  try {
+    let recipe = await recipeModel.findOne({ slug: id });
 
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).end();
-      }
+    if (recipe) {
+      return res.send(appendUserName(deleteNullValues(recipe)));
+    }
 
-      recipeModel
-        .findById(id)
-        .then(result => {
-          if (!result) {
-            res.status(404).end();
-            return;
-          }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).end();
+    }
 
-          res.send(appendUserName(deleteNullValues(result)));
-        })
-        .catch(err => res.status(500).send(err));
-    })
-    .catch(err => res.status(500).send(err));
+    recipe = await recipeModel.findById(id);
+
+    if (!recipe) {
+      return res.status(404).end();
+    }
+
+    res.send(appendUserName(deleteNullValues(recipe)));
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.get('/:slug/image-:size', (req, res) => {
+router.get('/:slug/image-:size', async (req, res) => {
   const { slug, size } = req.params;
 
-  recipeModel
-    .findOne({ slug })
-    .select('image')
-    .then(result => {
-      if (!result || !result.image) {
-        return res.status(404).end();
-      }
+  try {
+    const recipe = await recipeModel.findOne({ slug }).select('image');
 
-      const contentType = fileType(result.image).mime;
+    if (!recipe || !recipe.image) {
+      return res.status(404).end();
+    }
 
-      if (size !== 'thumb') {
-        return res.contentType(contentType).send(result.image);
-      }
+    const contentType = fileType(recipe.image).mime;
 
-      sharp(result.image)
-        .resize(200, 200)
-        .toBuffer()
-        .then(newImage => res.contentType(contentType).send(newImage))
-        .catch(err => res.status(500).send(err));
-    })
-    .catch(err => res.status(500).send(err));
+    if (size !== 'thumb') {
+      return res.contentType(contentType).send(recipe.image);
+    }
+
+    const newImage = await sharp(recipe.image)
+      .resize(200, 200)
+      .toBuffer();
+
+    res.contentType(contentType).send(newImage);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.post('/', auth(), (req, res) => {
+router.post('/', auth(), async (req, res) => {
   const recipe = getRecipe(req);
 
-  recipeModel
-    .create(recipe)
-    .then(recipe => res.status(201).send(deleteNullValues(recipe)))
-    .catch(err => res.status(500).send(getError(err)));
+  try {
+    const newRecipe = await recipeModel.create(recipe);
+
+    res.status(201).send(deleteNullValues(newRecipe));
+  } catch (err) {
+    res.status(500).send(getError(err));
+  }
 });
 
-router.post('/:id', auth(), (req, res) => {
+router.post('/:id', auth(), async (req, res) => {
   const recipe = getRecipe(req);
 
-  recipeModel
-    .findByIdAndUpdate(req.params.id, { $set: recipe }, { new: true })
-    .then(recipe => {
-      if (!recipe) {
-        return res.status(404).end();
-      }
+  try {
+    const newRecipe = await recipeModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: recipe },
+      { new: true },
+    );
 
-      res.send(deleteNullValues(recipe));
-    })
-    .catch(err => res.status(500).send(getError(err)));
+    if (!newRecipe) {
+      return res.status(404).end();
+    }
+
+    res.send(deleteNullValues(newRecipe));
+  } catch (err) {
+    res.status(500).send(getError(err));
+  }
 });
 
-router.post('/:id/image', (req, res) => {
-  recipeModel
-    .findByIdAndUpdate(req.params.id, { $set: { image: req.body, hasImage: true } })
-    .then(recipe => {
-      if (!recipe) {
-        return res.status(404).end();
-      }
+router.post('/:id/image', async (req, res) => {
+  try {
+    const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
+      $set: { image: req.body, hasImage: true },
+    });
 
-      res.status(201).end();
-    })
-    .catch(err => res.status(500).send(err));
+    if (!recipe) {
+      return res.status(404).end();
+    }
+
+    res.status(201).end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.delete('/:id', auth(), (req, res) => {
-  recipeModel
-    .findByIdAndRemove(req.params.id)
-    .then(() => res.status(204).end())
-    .catch(err => res.status(500).send(err));
+router.delete('/:id', auth(), async (req, res) => {
+  try {
+    await recipeModel.findByIdAndRemove(req.params.id);
+
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.delete('/:id/image', (req, res) => {
-  recipeModel
-    .findByIdAndUpdate(req.params.id, { $unset: { image: '', hasImage: '' } })
-    .then(recipe => res.status(204).end())
-    .catch(err => res.status(500).send(err));
+router.delete('/:id/image', async (req, res) => {
+  try {
+    await recipeModel.findByIdAndUpdate(req.params.id, { $unset: { image: '', hasImage: '' } });
+
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-router.post('/change-author/:slug/:userId', auth(), (req, res) => {
+router.post('/change-author/:slug/:userId', auth(), async (req, res) => {
   const { slug, userId } = req.params;
 
-  recipeModel
-    .findOneAndUpdate({ slug }, { $set: { userId } })
-    .then(() => {
-      res.status(204).end();
-    })
-    .catch(() => {
-      res.status(500).end();
-    });
+  try {
+    await recipeModel.findOneAndUpdate({ slug }, { $set: { userId } });
+
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 export default router;
