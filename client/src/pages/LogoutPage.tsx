@@ -5,9 +5,10 @@ import { RouteComponentProps } from 'react-router';
 
 import { logout, AuthAction } from '../components/Auth/actions';
 
-interface Props extends CookiesProps, RouteComponentProps<{}, {}> {
-  logout: () => AuthAction;
-}
+type Props = CookiesProps &
+  RouteComponentProps<{}, {}> & {
+    logout: () => AuthAction;
+  };
 
 class LogoutPage extends React.Component<Props> {
   componentDidMount() {
@@ -26,4 +27,7 @@ const mapDispatchToProps = {
   logout,
 };
 
-export default connect(null, mapDispatchToProps)(withCookies(LogoutPage));
+export default connect(
+  null,
+  mapDispatchToProps,
+)(withCookies(LogoutPage));

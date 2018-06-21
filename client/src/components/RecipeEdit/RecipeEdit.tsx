@@ -14,7 +14,7 @@ import IngredientEdit, {
   RemoveEventHandler,
 } from './IngredientEdit';
 
-interface Props {
+type Props = {
   slug?: string;
   title?: string;
   preparationTime?: number;
@@ -33,7 +33,7 @@ interface Props {
   onSortIngredient: SortEndHandler;
   isNew: boolean;
   isSaving: boolean;
-}
+};
 
 class RecipeEdit extends React.Component<Props> {
   render() {

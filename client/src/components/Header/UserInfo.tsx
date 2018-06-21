@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 
 import './UserInfo.module.css';
 
-interface Props {
+type Props = {
   isAuthenticated: boolean;
   userName?: string;
   isFetchingUser: boolean;
-}
+};
 
 const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) => {
   const backUrl = encodeURIComponent(window.location.pathname);

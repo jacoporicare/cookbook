@@ -14,11 +14,11 @@ import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal
 import Spinner from '../components/Spinner/Spinner';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
-interface Params {
+type Params = {
   slug: string;
-}
+};
 
-interface Props extends RouteComponentProps<Params, {}> {
+type Props = RouteComponentProps<Params, {}> & {
   deleteRecipe: (id: string) => Promise<RecipeDeleteAction>;
   fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
   hasDetail: boolean;
@@ -26,11 +26,11 @@ interface Props extends RouteComponentProps<Params, {}> {
   recipe: RecipeDetailType;
   slug: string;
   user: User | undefined;
-}
+};
 
-interface State {
+type State = {
   showDeleteModal: boolean;
-}
+};
 
 class RecipeDetailPage extends Component<Props, State> {
   state = {
@@ -146,4 +146,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
   deleteRecipe: (id: string) => dispatch(deleteRecipe(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeDetailPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RecipeDetailPage);

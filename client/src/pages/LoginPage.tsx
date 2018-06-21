@@ -9,16 +9,17 @@ import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { login, AuthAction } from '../components/Auth/actions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
-interface Props extends CookiesProps, RouteComponentProps<{}, {}> {
-  isSubmitting: boolean;
-  login: (username: string, password: string) => Promise<AuthAction>;
-}
+type Props = CookiesProps &
+  RouteComponentProps<{}, {}> & {
+    isSubmitting: boolean;
+    login: (username: string, password: string) => Promise<AuthAction>;
+  };
 
-interface State {
+type State = {
   username: string;
   password: string;
   rememberMe: boolean;
-}
+};
 
 class LoginPage extends React.Component<Props, State> {
   state = {
@@ -98,4 +99,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
   login: (username: string, password: string) => dispatch(login(username, password)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withCookies(LoginPage));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withCookies(LoginPage));

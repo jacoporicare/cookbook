@@ -6,9 +6,9 @@ import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 import './RecipeList.module.scss';
 
-interface Props {
+type Props = {
   recipe: Recipe;
-}
+};
 
 const RecipeListItem = ({ recipe }: Props) => {
   const { slug, title, preparationTime, sideDish } = recipe;

@@ -12,7 +12,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // tslint:disable-next-line no-any
 (mongoose as any).Promise = global.Promise;
-mongoose.connect(config.mongo.uri, { useMongoClient: true });
+mongoose.connect(
+  config.mongo.uri,
+  { useMongoClient: true },
+);
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);
 });

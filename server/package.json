@@ -7,7 +7,7 @@
     "dev": "../scripts/mongo.sh && PORT=4001 tsc-watch --onSuccess 'nodemon dist'",
     "prebuild": "rm -rf dist",
     "build": "tsc && cp package.json yarn.lock dist",
-    "prettier": "prettier --write 'src/**/*.js'"
+    "prettier": "prettier --write 'src/**/*.{js,ts,tsx}'"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

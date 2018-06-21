@@ -4,18 +4,18 @@ import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
-interface Props {
+type Props = {
   name?: string;
   amount?: number;
   amountUnit?: string;
   ingredientOptions: string[];
   onChange: AutosuggestChangeEventHandler;
   onAdd: () => void;
-}
+};
 
-interface State {
+type State = {
   ingredientOptions: string[];
-}
+};
 
 class IngredientForm extends React.Component<Props, State> {
   state = {

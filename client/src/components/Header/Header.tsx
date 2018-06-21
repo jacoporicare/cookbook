@@ -9,13 +9,13 @@ import cow from './cow.png';
 
 import './Header.module.css';
 
-interface Props {
+type Props = {
   userName?: string;
   isAuthenticated: boolean;
   isFetchingUser: boolean;
   recipes: Recipe[];
   onRecipeSelected: (slug: string) => void;
-}
+};
 
 const Header = ({
   userName,

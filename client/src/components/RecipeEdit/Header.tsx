@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-interface Props {
+type Props = {
   title?: string;
   isNew: boolean;
   isSaving: boolean;
   changed: boolean;
   slug?: string;
-}
+};
 
 const Header = ({ title, isNew, isSaving, changed, slug }: Props) => (
   <h1 className="page-header clearfix">

@@ -2,9 +2,9 @@ import React, { ChangeEvent } from 'react';
 
 import SearchInput from '../SearchInput/SearchInput';
 
-interface Props {
+type Props = {
   onChange: (value: string) => void;
-}
+};
 
 class SearchBar extends React.Component<Props> {
   handleChange = (event: ChangeEvent<HTMLInputElement>) => {

@@ -3,10 +3,10 @@ import { Dispatch } from 'redux';
 import { User, StoreState } from '../../types';
 import api, { handleError } from '../../api';
 
-interface LoginResponse {
+type LoginResponse = {
   token: string;
   user: User;
-}
+};
 
 export type AuthAction =
   | { type: 'SET_AUTH_TOKEN'; payload: { token: string } }

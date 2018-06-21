@@ -2,14 +2,14 @@ import React, { Component, ChangeEvent } from 'react';
 
 import { Ingredient } from '../../types';
 
-interface Props {
+type Props = {
   ingredients?: Ingredient[];
   servingCount?: number;
-}
+};
 
-interface State {
+type State = {
   servingCount: string;
-}
+};
 
 class IngredientList extends Component<Props, State> {
   constructor(props: Props) {
@@ -36,8 +36,7 @@ class IngredientList extends Component<Props, State> {
     }
 
     return (
-      amount /
-      this.props.servingCount *
+      (amount / this.props.servingCount) *
       Number.parseInt(this.state.servingCount, 10)
     ).toLocaleString('cs');
   }

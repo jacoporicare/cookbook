@@ -2,14 +2,14 @@ import React from 'react';
 
 import './Spinner.module.scss';
 
-interface Props {
+type Props = {
   delay?: number;
   overlay?: boolean;
-}
+};
 
-interface State {
+type State = {
   visible: boolean;
-}
+};
 
 class Spinner extends React.Component<Props, State> {
   timer?: number;

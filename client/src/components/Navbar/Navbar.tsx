@@ -3,13 +3,13 @@ import { InjectedRouter } from 'react-router';
 
 import NavItem from '../NavItem/NavItem';
 
-interface Props {
+type Props = {
   router: InjectedRouter;
-}
+};
 
-interface State {
+type State = {
   collapsed: boolean;
-}
+};
 
 class Navbar extends Component<Props, State> {
   state = {

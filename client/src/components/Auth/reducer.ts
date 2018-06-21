@@ -1,14 +1,14 @@
 import { User } from '../../types';
 import { AuthAction } from './actions';
 
-export interface AuthState {
+export type AuthState = {
   isAuthenticated: boolean;
   token?: string;
   isSubmitting: boolean;
   isFetchingUser: boolean;
   user?: User;
   error: boolean;
-}
+};
 
 const initialState: AuthState = {
   isAuthenticated: false,

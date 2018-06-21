@@ -1,13 +1,13 @@
 import { Document, Schema, model } from 'mongoose';
 
-export interface Ingredient {
+export type Ingredient = {
   amount: number;
   amountUnit: string;
   name: string;
   isGroup: boolean;
-}
+};
 
-export interface Recipe {
+export type Recipe = {
   userId: number;
   userName: string;
   title: string;
@@ -20,7 +20,7 @@ export interface Recipe {
   ingredients: Ingredient[];
   image?: Buffer;
   hasImage?: boolean;
-}
+};
 
 export type RecipeDocument = Document & Recipe;
 

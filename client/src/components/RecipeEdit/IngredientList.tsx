@@ -10,14 +10,14 @@ import { Ingredient } from '../../types';
 
 type RemoveHandler = (index: number) => void;
 
-interface SortableListProps {
+type SortableListProps = {
   items: Ingredient[];
   onRemove: RemoveHandler;
-}
+};
 
-interface Props extends SortableListProps {
+type Props = SortableListProps & {
   onSort: SortEndHandler;
-}
+};
 
 const Handle = SortableHandle(() => (
   <div className="pull-right text-muted cb-sortable-handle">
@@ -25,11 +25,11 @@ const Handle = SortableHandle(() => (
   </div>
 ));
 
-interface SortableItemProps {
+type SortableItemProps = {
   itemIndex: number;
   ingredient: Ingredient;
   onRemove: RemoveHandler;
-}
+};
 
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
   const { name, amount, amountUnit, isGroup } = ingredient;

@@ -1,10 +1,10 @@
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
 
-interface Props {
+type Props = {
   group?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onAdd: () => void;
-}
+};
 
 class IngredientGroupForm extends React.Component<Props> {
   handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {

@@ -8,16 +8,16 @@ import RecipeList from '../components/RecipeList/RecipeList';
 import SearchBar from '../components/SearchBar/SearchBar';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
-interface Props {
+type Props = {
   recipes: Recipe[];
   isFetching: boolean;
   isAuthenticated: boolean;
-}
+};
 
-interface State {
+type State = {
   searchText?: string;
   recipes: Recipe[];
-}
+};
 
 class RecipeListPage extends Component<Props, State> {
   constructor(props: Props) {

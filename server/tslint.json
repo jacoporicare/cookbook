@@ -9,7 +9,6 @@
     "forin": true,
     "indent": [true, "spaces"],
     "interface-name": [true, "never-prefix"],
-    "interface-over-type-literal": true,
     "jsdoc-format": true,
     "no-any": true,
     "no-arg": true,

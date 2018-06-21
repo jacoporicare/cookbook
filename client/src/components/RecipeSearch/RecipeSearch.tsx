@@ -8,15 +8,15 @@ import matchSorter from 'match-sorter';
 import { Recipe } from '../../types';
 import SearchInput from '../SearchInput/SearchInput';
 
-interface Props {
+type Props = {
   recipes: Recipe[];
   onSelected: (slug: string) => void;
-}
+};
 
-interface State {
+type State = {
   value: string;
   suggestions: Recipe[];
-}
+};
 
 class RecipeSearch extends React.Component<Props, State> {
   state = {

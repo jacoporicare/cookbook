@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 
 import { StoreState } from '../../types';
 
-interface Props {
+type Props = {
   isAuthenticated: boolean;
   router: InjectedRouter;
-}
+};
 
 const authenticatedComponent = (Component: React.ComponentType) => {
   class AuthenticatedComponent extends React.Component<Props> {

@@ -25,11 +25,11 @@ import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
-interface Params {
+type Params = {
   slug?: string;
-}
+};
 
-interface Props extends RouteComponentProps<Params, {}> {
+type Props = RouteComponentProps<Params, {}> & {
   isNew: boolean;
   slug: string | undefined;
   recipe: RecipeDetail | undefined;
@@ -43,9 +43,9 @@ interface Props extends RouteComponentProps<Params, {}> {
   saveRecipe: (id: string | undefined, recipe: SaveRecipeParams) => Promise<RecipeEditAction>;
   fetchIngredientList: () => Promise<RecipeEditAction>;
   fetchSideDishList: () => Promise<RecipeEditAction>;
-}
+};
 
-interface State {
+type State = {
   changed: boolean;
   title?: string;
   preparationTime?: number;
@@ -53,7 +53,7 @@ interface State {
   sideDish?: string;
   directions?: string;
   ingredients: Ingredient[];
-}
+};
 
 class RecipeEditPage extends React.Component<Props, State> {
   saved = false;
@@ -319,7 +319,11 @@ class RecipeEditPage extends React.Component<Props, State> {
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
   const { recipeDetail, recipeEdit, auth } = state;
   const { isFetching, recipesBySlug } = recipeDetail;
-  const { isSaving, ingredientList: { ingredients }, sideDishList: { sideDishes } } = recipeEdit;
+  const {
+    isSaving,
+    ingredientList: { ingredients },
+    sideDishList: { sideDishes },
+  } = recipeEdit;
   const { slug } = ownProps.params;
 
   const recipe = slug ? recipesBySlug[slug] : undefined;
@@ -344,4 +348,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
   fetchSideDishList: () => dispatch(fetchSideDishList()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeEditPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RecipeEditPage);

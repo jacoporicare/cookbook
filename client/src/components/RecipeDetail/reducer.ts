@@ -1,12 +1,12 @@
 import { RecipeDetail } from '../../types';
 import { RecipeDetailAction } from './actions';
 
-export interface RecipeDetailState {
+export type RecipeDetailState = {
   isFetching: boolean;
   recipesBySlug: {
     [slug: string]: RecipeDetail;
   };
-}
+};
 
 const initialState: RecipeDetailState = {
   isFetching: false,

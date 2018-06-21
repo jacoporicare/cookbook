@@ -3,9 +3,11 @@ import { RecipeListState } from '../components/RecipeList/reducer';
 import { RecipeDetailState } from '../components/RecipeDetail/reducer';
 import { RecipeEditState } from '../components/RecipeEdit/reducer';
 
-export default interface StoreState {
+type StoreState = {
   auth: AuthState;
   recipeList: RecipeListState;
   recipeDetail: RecipeDetailState;
   recipeEdit: RecipeEditState;
 };
+
+export default StoreState;

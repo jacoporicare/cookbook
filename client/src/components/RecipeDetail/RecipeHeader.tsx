@@ -5,14 +5,14 @@ import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 import './styles/RecipeHeader.module.css';
 
-interface Props {
+type Props = {
   canEdit: boolean;
   preparationTime?: number;
   sideDish?: string;
   slug: string;
   title: string;
   onDeleteShow: () => void;
-}
+};
 
 const RecipeHeader = ({ canEdit, preparationTime, sideDish, slug, title, onDeleteShow }: Props) => (
   <>

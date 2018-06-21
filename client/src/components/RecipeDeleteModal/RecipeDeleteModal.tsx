@@ -1,12 +1,12 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-interface Props {
+type Props = {
   show: boolean;
   recipeTitle: string;
   onClose: () => void;
   onConfirm: () => void;
-}
+};
 
 const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }: Props) => (
   <Modal

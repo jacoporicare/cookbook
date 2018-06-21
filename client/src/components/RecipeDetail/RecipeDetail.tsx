@@ -6,13 +6,13 @@ import IngredientList from './IngredientList';
 
 import './styles/RecipeDetail.module.css';
 
-interface Props {
+type Props = {
   ingredients?: Ingredient[];
   servingCount?: number;
   directions?: string;
   userName: string;
   lastModifiedDate: string;
-}
+};
 
 const RecipeDetail = ({
   ingredients,

@@ -31,14 +31,14 @@ export const saveRecipeFailure = (): RecipeEditAction => ({
   type: 'RECIPE.SAVE.FAILURE',
 });
 
-export interface SaveRecipeParams {
+export type SaveRecipeParams = {
   title: string;
   sideDish?: string;
   preparationTime?: number;
   directions?: string;
   servingCount?: number;
   ingredients: Ingredient[];
-}
+};
 
 export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams) {
   return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {

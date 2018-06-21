@@ -14,21 +14,21 @@ export type AddIngredientEventHandler = (
 export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
 
-interface Props {
+type Props = {
   items: Ingredient[];
   ingredientOptions: string[];
   onAdd: AddIngredientEventHandler;
   onAddGroup: AddGroupEventHandler;
   onRemove: RemoveEventHandler;
   onSort: SortEndHandler;
-}
+};
 
-interface State {
+type State = {
   name?: string;
   amount?: number;
   amountUnit?: string;
   group?: string;
-}
+};
 
 class IngredientEdit extends React.Component<Props, State> {
   state: State = {};

@@ -2,14 +2,14 @@ import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
 import Spinner from '../Spinner/Spinner';
 
-interface Props {
+type Props = {
   username: string;
   password: string;
   rememberMe: boolean;
   isSubmitting: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onSubmit: FormEventHandler<HTMLFormElement>;
-}
+};
 
 const LoginForm = ({ username, password, rememberMe, isSubmitting, onChange, onSubmit }: Props) => (
   <>

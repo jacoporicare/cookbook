@@ -2,10 +2,10 @@ import React from 'react';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
-interface Props {
+type Props = {
   directions?: string;
   onChange: AutosuggestChangeEventHandler;
-}
+};
 
 const Directions = ({ directions = '', onChange }: Props) => (
   <div className="form-group">

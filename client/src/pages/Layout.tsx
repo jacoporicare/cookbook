@@ -12,7 +12,7 @@ import Header from '../components/Header/Header';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 
-interface Props extends RouteComponentProps<{}, {}> {
+type Props = RouteComponentProps<{}, {}> & {
   children: React.ReactNode;
   isAuthenticated: boolean;
   user: User | undefined;
@@ -22,7 +22,7 @@ interface Props extends RouteComponentProps<{}, {}> {
   isFetchingRecipes: boolean;
   fetchUser: () => Promise<AuthAction>;
   fetchRecipeList: () => Promise<RecipeListAction>;
-}
+};
 
 class Layout extends React.Component<Props> {
   componentDidMount() {
@@ -90,4 +90,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
   fetchRecipeList: () => dispatch(fetchRecipeList()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Layout);

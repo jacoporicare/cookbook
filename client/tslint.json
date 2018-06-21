@@ -11,7 +11,6 @@
     "forin": true,
     "indent": [true, "spaces"],
     "interface-name": [true, "never-prefix"],
-    "interface-over-type-literal": true,
     "jsdoc-format": true,
     "jsx-boolean-value": [true, "never"],
     "jsx-no-lambda": false,

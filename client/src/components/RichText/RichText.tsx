@@ -3,9 +3,9 @@ import ReactMarkdown from 'react-markdown';
 
 import './RichText.scss';
 
-interface Props {
+type Props = {
   text?: string;
-}
+};
 
 const RichText = ({ text = '' }: Props) => <ReactMarkdown source={text} className="cb-rich-text" />;
 

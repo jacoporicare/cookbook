@@ -3,10 +3,10 @@ import { RecipeListAction } from './actions';
 import { RecipeEditAction } from '../RecipeEdit/actions';
 import { RecipeDeleteAction } from '../RecipeDeleteModal/actions';
 
-export interface RecipeListState {
+export type RecipeListState = {
   isFetching: boolean;
   recipes: Recipe[];
-}
+};
 
 const initialState: RecipeListState = {
   isFetching: false,

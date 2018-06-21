@@ -4,17 +4,17 @@ import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
-interface Props {
+type Props = {
   preparationTime?: number;
   servingCount?: number;
   sideDish?: string;
   sideDishOptions: string[];
   onChange: AutosuggestChangeEventHandler;
-}
+};
 
-interface State {
+type State = {
   sideDishOptions: string[];
-}
+};
 
 class BasicInfo extends React.Component<Props, State> {
   state = {

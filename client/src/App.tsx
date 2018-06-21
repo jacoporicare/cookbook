@@ -11,7 +11,7 @@ import routes from './routes';
 
 import './App.scss';
 
-interface Props extends CookiesProps {}
+type Props = CookiesProps;
 
 const store = configureStore();
 

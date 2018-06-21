@@ -3,9 +3,9 @@ import React from 'react';
 import { Recipe } from '../../types';
 import RecipeListItem from './RecipeListItem';
 
-interface Props {
+type Props = {
   recipes: Recipe[];
-}
+};
 
 const RecipeList = ({ recipes }: Props) => (
   <div className="row">

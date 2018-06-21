@@ -2,10 +2,10 @@ import React from 'react';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 
-interface Props {
+type Props = {
   title?: string;
   onChange: AutosuggestChangeEventHandler;
-}
+};
 
 class Title extends React.Component<Props> {
   titleInput?: HTMLInputElement | null;

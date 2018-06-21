@@ -1,6 +1,6 @@
 import { RecipeEditAction } from './actions';
 
-export interface RecipeEditState {
+export type RecipeEditState = {
   isSaving: boolean;
   ingredientList: {
     isFetching: boolean;
@@ -10,7 +10,7 @@ export interface RecipeEditState {
     isFetching: boolean;
     sideDishes: string[];
   };
-}
+};
 
 const initialState: RecipeEditState = {
   isSaving: false,

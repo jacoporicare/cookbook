@@ -2,11 +2,11 @@ import React from 'react';
 
 import './RecipeInfo.module.scss';
 
-interface Props {
+type Props = {
   preparationTime?: number;
   sideDish?: string;
   placeholder?: React.ReactNode;
-}
+};
 
 function formatTime(time: number) {
   const hours = Math.floor(time / 60);
