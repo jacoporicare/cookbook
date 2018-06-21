@@ -6,26 +6,35 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Docker build
+          command: |
+            docker build -t "docker.jakubricar.cz/cookbook:$CIRCLE_BUILD_NUM" .
+
+  build_deploy_prod:
+    machine: true
+    steps:
+      - checkout
+      - run:
           name: Docker build and push
           command: |
             docker build -t "docker.jakubricar.cz/cookbook:latest" .
             docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
             docker push "docker.jakubricar.cz/cookbook:latest"
-
-  deploy_production:
-    machine: true
-    steps:
       - deploy:
-          command: "ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh prod'"
+          command: |
+            ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh prod'
 
 workflows:
   version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: master
   build_and_deploy:
     jobs:
-      - build
-      - deploy_production:
-          requires:
-            - build
+      - build_deploy_prod:
           filters:
             branches:
               only: master
