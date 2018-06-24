@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
-import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
+import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
 import { getImageUrl } from '../utils';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
@@ -19,15 +19,19 @@ type Params = {
   slug: string;
 };
 
-type Props = RouteComponentProps<Params, {}> & {
-  deleteRecipe: (id: string) => Promise<RecipeDeleteAction>;
-  fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
+type StateProps = {
   hasDetail: boolean;
   isFetching: boolean;
   recipe: RecipeDetailType;
   slug: string;
-  user: User | undefined;
 };
+
+type DispatchProps = {
+  deleteRecipe: (id: string) => Promise<RecipeDeleteAction>;
+  fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
+};
+
+type Props = StateProps & DispatchProps & RouteComponentProps<Params, {}>;
 
 type State = {
   showDeleteModal: boolean;
@@ -67,7 +71,7 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   render() {
-    const { recipe, isFetching, hasDetail, user } = this.props;
+    const { recipe, isFetching, hasDetail } = this.props;
 
     if (!recipe) {
       return (
@@ -87,8 +91,6 @@ class RecipeDetailPage extends Component<Props, State> {
       sideDish,
       slug,
       title,
-      userId,
-      userName,
       hasImage,
     } = recipe;
 
@@ -100,7 +102,6 @@ class RecipeDetailPage extends Component<Props, State> {
         <DocumentTitle title={title} />
         <div className="container">
           <RecipeHeader
-            canEdit={user ? user.id === userId : false}
             preparationTime={preparationTime}
             sideDish={sideDish}
             slug={slug}
@@ -114,7 +115,6 @@ class RecipeDetailPage extends Component<Props, State> {
               ingredients={ingredients}
               servingCount={servingCount}
               directions={directions}
-              userName={userName}
               lastModifiedDate={lastModifiedDate}
               imageUrl={imageUrl}
               imageFullUrl={imageFullUrl}
@@ -132,8 +132,7 @@ class RecipeDetailPage extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
-  const { user } = state.auth;
+function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
   const { isFetching, recipesBySlug } = state.recipeDetail;
   const { slug } = ownProps.params;
   const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
@@ -144,14 +143,15 @@ const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params
     isFetching,
     recipe,
     slug,
-    user,
   };
-};
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
-  fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
-  deleteRecipe: (id: string) => dispatch(deleteRecipe(id)),
-});
+function mapDispatchToProps(dispatch: Dispatch<StoreState>): DispatchProps {
+  return {
+    fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
+    deleteRecipe: (id: string) => dispatch(deleteRecipe(id)),
+  };
+}
 
 export default connect(
   mapStateToProps,

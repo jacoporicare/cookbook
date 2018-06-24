@@ -6,7 +6,6 @@ import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import './styles/RecipeHeader.module.css';
 
 type Props = {
-  canEdit: boolean;
   preparationTime?: number;
   sideDish?: string;
   slug: string;
@@ -14,20 +13,18 @@ type Props = {
   onDeleteShow: () => void;
 };
 
-const RecipeHeader = ({ canEdit, preparationTime, sideDish, slug, title, onDeleteShow }: Props) => (
+const RecipeHeader = ({ preparationTime, sideDish, slug, title, onDeleteShow }: Props) => (
   <>
     <h1 className="page-header clearfix">
       {title}
-      {canEdit && (
-        <span className="pull-right">
-          <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
-            <i className="fa fa-edit" /> Upravit
-          </Link>{' '}
-          <button className="btn btn-danger" onClick={onDeleteShow}>
-            <i className="fa fa-trash" /> Smazat
-          </button>
-        </span>
-      )}
+      <span className="pull-right">
+        <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
+          <i className="fa fa-edit" /> Upravit
+        </Link>{' '}
+        <button className="btn btn-danger" onClick={onDeleteShow}>
+          <i className="fa fa-trash" /> Smazat
+        </button>
+      </span>
     </h1>
 
     {(preparationTime || sideDish) && (

@@ -40,7 +40,7 @@ export type SaveRecipeParams = {
   ingredients: Ingredient[];
 };
 
-export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams) {
+export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams, hasNewImage: boolean) {
   return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
     dispatch(saveRecipeRequest());
 
@@ -48,7 +48,7 @@ export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams) {
       .post<RecipeDetail>(id ? `/api/recipes/${id}` : '/api/recipes', undefinedToNull(recipe))
       .then(({ data }) => {
         notify.show('Recept úspěšně uložen', 'success');
-        return dispatch(saveRecipeSuccess(data));
+        return dispatch(saveRecipeSuccess(hasNewImage ? { ...data, hasImage: true } : data));
       })
       .catch(error => {
         handleError(error);

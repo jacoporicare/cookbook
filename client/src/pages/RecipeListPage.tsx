@@ -8,11 +8,13 @@ import RecipeList from '../components/RecipeList/RecipeList';
 import SearchBar from '../components/SearchBar/SearchBar';
 import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
 
-type Props = {
+type StateProps = {
   recipes: Recipe[];
   isFetching: boolean;
   isAuthenticated: boolean;
 };
+
+type Props = StateProps;
 
 type State = {
   searchText?: string;
@@ -87,7 +89,7 @@ class RecipeListPage extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: StoreState) => {
+function mapStateToProps(state: StoreState): StateProps {
   const { recipes, isFetching } = state.recipeList;
   const { isAuthenticated } = state.auth;
 
@@ -96,6 +98,6 @@ const mapStateToProps = (state: StoreState) => {
     isFetching,
     isAuthenticated,
   };
-};
+}
 
 export default connect(mapStateToProps)(RecipeListPage);

@@ -10,7 +10,6 @@ type Props = {
   ingredients?: Ingredient[];
   servingCount?: number;
   directions?: string;
-  userName: string;
   lastModifiedDate: string;
   imageUrl?: string;
   imageFullUrl?: string;
@@ -20,7 +19,6 @@ const RecipeDetail = ({
   ingredients,
   servingCount,
   directions,
-  userName,
   lastModifiedDate,
   imageUrl,
   imageFullUrl,
@@ -29,10 +27,7 @@ const RecipeDetail = ({
     <div className="row">
       <div className="col-md-3 col-sm-4">
         <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        <p styleName="info">
-          <i className="fa fa-user text-muted" /> {userName},{' '}
-          {new Date(lastModifiedDate).toLocaleDateString('cs')}
-        </p>
+        <p styleName="info">{new Date(lastModifiedDate).toLocaleDateString('cs')}</p>
       </div>
 
       <div className="col-md-9 col-sm-8">

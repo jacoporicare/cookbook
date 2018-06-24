@@ -5,13 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 import axios from 'axios';
 
-import {
-  RecipeDetail,
-  Ingredient,
-  StoreState,
-  AutosuggestChangeEventHandler,
-  User,
-} from '../types';
+import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
 import { getImageUrl } from '../utils';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
@@ -31,7 +25,7 @@ type Params = {
   slug?: string;
 };
 
-type Props = RouteComponentProps<Params, {}> & {
+type StateProps = {
   isNew: boolean;
   slug: string | undefined;
   recipe: RecipeDetail | undefined;
@@ -39,13 +33,20 @@ type Props = RouteComponentProps<Params, {}> & {
   isSaving: boolean;
   ingredientOptions: string[];
   sideDishOptions: string[];
-  user: User | undefined;
-  isFetchingUser: boolean;
+};
+
+type DispatchProps = {
   fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
-  saveRecipe: (id: string | undefined, recipe: SaveRecipeParams) => Promise<RecipeEditAction>;
+  saveRecipe: (
+    id: string | undefined,
+    recipe: SaveRecipeParams,
+    hasNewImage: boolean,
+  ) => Promise<RecipeEditAction>;
   fetchIngredientList: () => Promise<RecipeEditAction>;
   fetchSideDishList: () => Promise<RecipeEditAction>;
 };
+
+type Props = StateProps & DispatchProps & RouteComponentProps<Params, {}>;
 
 type State = {
   changed: boolean;
@@ -110,32 +111,25 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (
-      !nextProps.isFetching &&
-      !nextProps.isFetchingUser &&
-      nextProps.user &&
-      nextProps.recipe &&
-      nextProps.user.id !== nextProps.recipe.userId
-    ) {
-      this.props.router.push(`/recept/${nextProps.recipe.slug}`);
+    if (this.props.recipe === nextProps.recipe) {
+      return;
     }
 
-    if (this.props.recipe !== nextProps.recipe) {
-      if (nextProps.recipe) {
-        this.setState(this.getRecipeState(nextProps.recipe));
-      } else {
-        this.setState({
-          title: undefined,
-          preparationTime: undefined,
-          servingCount: undefined,
-          sideDish: undefined,
-          directions: undefined,
-          ingredients: [],
-          newImage: undefined,
-          isSavingImage: false,
-        });
-      }
+    if (nextProps.recipe) {
+      this.setState(this.getRecipeState(nextProps.recipe));
+      return;
     }
+
+    this.setState({
+      title: undefined,
+      preparationTime: undefined,
+      servingCount: undefined,
+      sideDish: undefined,
+      directions: undefined,
+      ingredients: [],
+      newImage: undefined,
+      isSavingImage: false,
+    });
   }
 
   componentDidUpdate() {
@@ -245,21 +239,33 @@ class RecipeEditPage extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { title, preparationTime, servingCount, sideDish, directions, ingredients } = this.state;
-    const { recipe, saveRecipe } = this.props;
-
-    if (!title) {
-      return;
-    }
-
-    saveRecipe(recipe && recipe._id, {
+    const {
       title,
       preparationTime,
       servingCount,
       sideDish,
       directions,
       ingredients,
-    }).then(action => this.handleSave(action));
+      newImage,
+    } = this.state;
+    const { recipe, saveRecipe } = this.props;
+
+    if (!title) {
+      return;
+    }
+
+    saveRecipe(
+      recipe && recipe._id,
+      {
+        title,
+        preparationTime,
+        servingCount,
+        sideDish,
+        directions,
+        ingredients,
+      },
+      Boolean(newImage),
+    ).then(action => this.handleSave(action));
   };
 
   handleSave(action: RecipeEditAction) {
@@ -352,8 +358,8 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params, {}>) => {
-  const { recipeDetail, recipeEdit, auth } = state;
+function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
+  const { recipeDetail, recipeEdit } = state;
   const { isFetching, recipesBySlug } = recipeDetail;
   const {
     isSaving,
@@ -365,24 +371,25 @@ const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<Params
   const recipe = slug ? recipesBySlug[slug] : undefined;
 
   return {
-    isNew: !slug,
-    slug,
-    recipe,
-    isFetching,
-    isSaving,
     ingredientOptions: ingredients,
+    isFetching,
+    isNew: !slug,
+    isSaving,
+    recipe,
     sideDishOptions: sideDishes,
-    user: auth.user,
-    isFetchingUser: auth.isFetchingUser,
+    slug,
   };
-};
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
-  fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
-  saveRecipe: (id: string | undefined, recipe: RecipeDetail) => dispatch(saveRecipe(id, recipe)),
-  fetchIngredientList: () => dispatch(fetchIngredientList()),
-  fetchSideDishList: () => dispatch(fetchSideDishList()),
-});
+function mapDispatchToProps(dispatch: Dispatch<StoreState>): DispatchProps {
+  return {
+    fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
+    saveRecipe: (id: string | undefined, recipe: RecipeDetail, hasNewImage: boolean) =>
+      dispatch(saveRecipe(id, recipe, hasNewImage)),
+    fetchIngredientList: () => dispatch(fetchIngredientList()),
+    fetchSideDishList: () => dispatch(fetchSideDishList()),
+  };
+}
 
 export default connect(
   mapStateToProps,
