@@ -12,12 +12,13 @@ export type Recipe = {
   preparationTime?: number;
   userId: number;
   userName: string;
+  hasImage?: boolean;
+  lastModifiedDate: string;
 };
 
 export type RecipeDetail = Recipe & {
   directions?: string;
   servingCount?: number;
-  lastModifiedDate: string;
   userId: number;
   userName: string;
   ingredients: Ingredient[];

@@ -13,49 +13,54 @@ import IngredientEdit, {
   AddGroupEventHandler,
   RemoveEventHandler,
 } from './IngredientEdit';
+import ImageUpload from '../ImageUpload/ImageUpload';
 
 type Props = {
-  slug?: string;
-  title?: string;
+  changed: boolean;
+  directions?: string;
+  imageUrl?: string;
+  ingredientOptions: string[];
+  ingredients: Ingredient[];
+  isNew: boolean;
+  isSaving: boolean;
+  onAddGroup: AddGroupEventHandler;
+  onAddIngredient: AddIngredientEventHandler;
+  onChange: AutosuggestChangeEventHandler;
+  onImageChange: (data: ArrayBuffer) => void;
+  onRemoveIngredient: RemoveEventHandler;
+  onSortIngredient: SortEndHandler;
+  onSubmit: FormEventHandler<HTMLFormElement>;
   preparationTime?: number;
   servingCount?: number;
   sideDish?: string;
-  directions?: string;
-  ingredients: Ingredient[];
-  ingredientOptions: string[];
   sideDishOptions: string[];
-  changed: boolean;
-  onChange: AutosuggestChangeEventHandler;
-  onSubmit: FormEventHandler<HTMLFormElement>;
-  onAddIngredient: AddIngredientEventHandler;
-  onAddGroup: AddGroupEventHandler;
-  onRemoveIngredient: RemoveEventHandler;
-  onSortIngredient: SortEndHandler;
-  isNew: boolean;
-  isSaving: boolean;
+  slug?: string;
+  title?: string;
 };
 
 class RecipeEdit extends React.Component<Props> {
   render() {
     const {
-      slug,
-      title,
+      changed,
+      directions,
+      imageUrl,
+      ingredientOptions,
+      ingredients,
+      isNew,
+      isSaving,
+      onAddGroup,
+      onAddIngredient,
+      onChange,
+      onImageChange,
+      onRemoveIngredient,
+      onSortIngredient,
+      onSubmit,
       preparationTime,
       servingCount,
       sideDish,
-      directions,
-      ingredients,
-      ingredientOptions,
       sideDishOptions,
-      changed,
-      isNew,
-      isSaving,
-      onChange,
-      onSubmit,
-      onAddIngredient,
-      onAddGroup,
-      onRemoveIngredient,
-      onSortIngredient,
+      slug,
+      title,
     } = this.props;
 
     return (
@@ -116,6 +121,7 @@ class RecipeEdit extends React.Component<Props> {
 
         <fieldset>
           <legend>Náhled postupu</legend>
+          <ImageUpload imageUrl={imageUrl} onImageChange={onImageChange} />
           <RichText text={directions} />
         </fieldset>
       </form>

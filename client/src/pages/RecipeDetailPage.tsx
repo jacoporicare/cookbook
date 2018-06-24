@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
+import { getImageUrl } from '../utils';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import { deleteRecipe, RecipeDeleteAction } from '../components/RecipeDeleteModal/actions';
@@ -88,7 +89,11 @@ class RecipeDetailPage extends Component<Props, State> {
       title,
       userId,
       userName,
+      hasImage,
     } = recipe;
+
+    const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : undefined;
+    const imageFullUrl = hasImage ? getImageUrl(slug, lastModifiedDate, 'full') : undefined;
 
     return (
       <>
@@ -111,6 +116,8 @@ class RecipeDetailPage extends Component<Props, State> {
               directions={directions}
               userName={userName}
               lastModifiedDate={lastModifiedDate}
+              imageUrl={imageUrl}
+              imageFullUrl={imageFullUrl}
             />
           )}
         </div>

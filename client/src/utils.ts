@@ -11,3 +11,13 @@ export function undefinedToNull<T>(o: T): T {
 
   return obj;
 }
+
+export function getImageUrl(
+  slug: string,
+  lastModifiedDate: string,
+  size: 'full' | 'thumb' = 'thumb',
+) {
+  const ts = new Date(lastModifiedDate).valueOf();
+
+  return `/api/recipes/${slug}/image-${size}?${ts}`;
+}

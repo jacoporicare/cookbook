@@ -81,7 +81,9 @@ router.get('/', async (req, res) => {
   }
 
   try {
-    const recipes = await query.select('_id title slug preparationTime sideDish hasImage userId');
+    const recipes = await query.select(
+      '_id title slug preparationTime sideDish hasImage lastModifiedDate userId',
+    );
 
     res.send(
       recipes
@@ -157,7 +159,7 @@ router.get('/:slug/image-:size', async (req, res) => {
     }
 
     const newImage = await sharp(recipe.image)
-      .resize(200, 200)
+      .resize(400, 400)
       .toBuffer();
 
     res.contentType(contentType).send(newImage);

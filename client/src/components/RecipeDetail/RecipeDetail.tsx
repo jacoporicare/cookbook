@@ -12,6 +12,8 @@ type Props = {
   directions?: string;
   userName: string;
   lastModifiedDate: string;
+  imageUrl?: string;
+  imageFullUrl?: string;
 };
 
 const RecipeDetail = ({
@@ -20,6 +22,8 @@ const RecipeDetail = ({
   directions,
   userName,
   lastModifiedDate,
+  imageUrl,
+  imageFullUrl,
 }: Props) => (
   <div className="cb-recipe-detail">
     <div className="row">
@@ -32,6 +36,11 @@ const RecipeDetail = ({
       </div>
 
       <div className="col-md-9 col-sm-8">
+        {imageUrl && (
+          <a href={imageFullUrl} target="_blank" className="hidden-xs">
+            <img src={imageUrl} styleName="image" />
+          </a>
+        )}
         {directions ? (
           <RichText text={directions} />
         ) : (
@@ -39,6 +48,11 @@ const RecipeDetail = ({
         )}
       </div>
     </div>
+    {imageUrl && (
+      <a href={imageFullUrl} target="_blank" className="visible-xs">
+        <img src={imageUrl} styleName="image-xs" />
+      </a>
+    )}
   </div>
 );
 

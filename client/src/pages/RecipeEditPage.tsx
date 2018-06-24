@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
+import axios from 'axios';
 
 import {
   RecipeDetail,
@@ -11,6 +12,7 @@ import {
   AutosuggestChangeEventHandler,
   User,
 } from '../types';
+import { getImageUrl } from '../utils';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import {
@@ -53,6 +55,8 @@ type State = {
   sideDish?: string;
   directions?: string;
   ingredients: Ingredient[];
+  newImage?: ArrayBuffer;
+  isSavingImage: boolean;
 };
 
 class RecipeEditPage extends React.Component<Props, State> {
@@ -63,6 +67,7 @@ class RecipeEditPage extends React.Component<Props, State> {
 
     this.state = {
       changed: false,
+      isSavingImage: false,
       ingredients: [],
       ...(props.recipe && this.getRecipeState(props.recipe)),
     };
@@ -83,6 +88,8 @@ class RecipeEditPage extends React.Component<Props, State> {
       sideDish,
       directions,
       ingredients,
+      newImage: undefined,
+      isSavingImage: false,
     };
   }
 
@@ -115,9 +122,7 @@ class RecipeEditPage extends React.Component<Props, State> {
 
     if (this.props.recipe !== nextProps.recipe) {
       if (nextProps.recipe) {
-        this.setState({
-          ...this.getRecipeState(nextProps.recipe),
-        });
+        this.setState(this.getRecipeState(nextProps.recipe));
       } else {
         this.setState({
           title: undefined,
@@ -126,6 +131,8 @@ class RecipeEditPage extends React.Component<Props, State> {
           sideDish: undefined,
           directions: undefined,
           ingredients: [],
+          newImage: undefined,
+          isSavingImage: false,
         });
       }
     }
@@ -231,6 +238,10 @@ class RecipeEditPage extends React.Component<Props, State> {
     });
   };
 
+  handleImageChange = (data: ArrayBuffer) => {
+    this.setState({ changed: true, newImage: data });
+  };
+
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -253,9 +264,28 @@ class RecipeEditPage extends React.Component<Props, State> {
 
   handleSave(action: RecipeEditAction) {
     if (action.type === 'RECIPE.SAVE.SUCCESS' && action.payload && action.payload.recipe) {
-      this.saved = true;
-      this.props.router.push(`/recept/${action.payload.recipe.slug}`);
+      const { _id, slug } = action.payload.recipe;
+      const { newImage } = this.state;
+
+      if (!newImage) {
+        this.completeSave(slug);
+        return;
+      }
+
+      this.setState({ isSavingImage: true });
+
+      axios
+        .post(`/api/recipes/${_id}/image`, newImage, {
+          headers: { 'Content-Type': 'application/octet-stream' },
+        })
+        .then(() => this.completeSave(slug))
+        .catch(() => this.completeSave(slug));
     }
+  }
+
+  completeSave(slug: string) {
+    this.saved = true;
+    this.props.router.push(`/recept/${slug}`);
   }
 
   render() {
@@ -267,6 +297,7 @@ class RecipeEditPage extends React.Component<Props, State> {
       sideDish,
       directions,
       ingredients,
+      isSavingImage,
     } = this.state;
     const {
       isNew,
@@ -286,29 +317,34 @@ class RecipeEditPage extends React.Component<Props, State> {
       );
     }
 
+    const imageUrl =
+      slug && recipe && recipe.hasImage ? getImageUrl(slug, recipe.lastModifiedDate) : undefined;
+
     return (
       <>
         <DocumentTitle title={!title && isNew ? 'Nový recept' : title} />
         <div className="container">
           <RecipeEdit
-            slug={slug}
-            title={title}
-            preparationTime={preparationTime}
-            servingCount={servingCount}
-            sideDish={sideDish}
-            directions={directions}
-            ingredients={ingredients}
-            ingredientOptions={ingredientOptions}
-            sideDishOptions={sideDishOptions}
             changed={changed}
+            directions={directions}
+            imageUrl={imageUrl}
+            ingredientOptions={ingredientOptions}
+            ingredients={ingredients}
             isNew={isNew}
-            isSaving={isSaving}
-            onChange={this.handleChange}
-            onAddIngredient={this.handleAddIngredient}
+            isSaving={isSaving || isSavingImage}
             onAddGroup={this.handleAddGroup}
+            onAddIngredient={this.handleAddIngredient}
+            onChange={this.handleChange}
+            onImageChange={this.handleImageChange}
             onRemoveIngredient={this.handleRemoveIngredient}
             onSortIngredient={this.handleSortIngredient}
             onSubmit={this.handleSubmit}
+            preparationTime={preparationTime}
+            servingCount={servingCount}
+            sideDish={sideDish}
+            sideDishOptions={sideDishOptions}
+            slug={slug}
+            title={title}
           />
         </div>
       </>

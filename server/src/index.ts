@@ -28,8 +28,8 @@ if (isProduction) {
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
+app.use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }));
 app.use(bodyParser.json());
-app.use(bodyParser.raw());
 app.use(cookieParser());
 
 app.use(routes);

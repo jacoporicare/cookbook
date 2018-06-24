@@ -1,3 +1,18 @@
 .info {
   margin-bottom: 20px;
 }
+
+.image {
+  width: 200px;
+  height: 200px;
+  float: right;
+  margin-left: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.image-xs {
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 15px;
+}

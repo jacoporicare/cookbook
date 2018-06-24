@@ -1,0 +1,32 @@
+.upload {
+  float: right;
+  margin-left: 15px;
+  position: relative;
+}
+
+.upload-text {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
+  z-index: 1;
+}
+
+.upload:hover .upload-text {
+  z-index: 3;
+}
+
+.preview {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-position: center center;
+  border-radius: 4px;
+  z-index: 2;
+}
