@@ -32,7 +32,7 @@ const RecipeDetail = ({
 
       <div className="col-md-9 col-sm-8">
         {imageUrl && (
-          <a href={imageFullUrl} target="_blank" className="hidden-xs">
+          <a href={imageFullUrl} target="_blank" styleName="image-link" className="hidden-xs">
             <img src={imageUrl} styleName="image" />
           </a>
         )}
