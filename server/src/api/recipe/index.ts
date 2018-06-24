@@ -3,6 +3,8 @@ import * as mongoose from 'mongoose';
 import * as slug from 'slug';
 import * as fileType from 'file-type';
 import * as sharp from 'sharp';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 import { User } from '../../types';
 import { auth, findUserById } from '../../auth/auth.service';
@@ -144,25 +146,34 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:slug/image-:size', async (req, res) => {
   const { slug, size } = req.params;
+  const thumbPath = `/tmp/cookbook/thumbs/${slug}.jpg`;
 
   try {
+    if (size === 'thumb' && fs.existsSync(thumbPath)) {
+      return res.sendFile(thumbPath);
+    }
+
     const recipe = await recipeModel.findOne({ slug }).select('image');
 
     if (!recipe || !recipe.image) {
       return res.status(404).end();
     }
 
-    const contentType = fileType(recipe.image).mime;
+    let image: Buffer | undefined = undefined;
 
-    if (size !== 'thumb') {
-      return res.contentType(contentType).send(recipe.image);
+    if (size === 'thumb') {
+      image = await sharp(recipe.image)
+        .resize(400, 400)
+        .jpeg()
+        .toBuffer();
+      await fs.mkdirs(path.dirname(thumbPath));
+      fs.writeFile(thumbPath, image);
+    } else {
+      image = recipe.image;
     }
 
-    const newImage = await sharp(recipe.image)
-      .resize(400, 400)
-      .toBuffer();
-
-    res.contentType(contentType).send(newImage);
+    const contentType = fileType(image).mime;
+    res.contentType(contentType).send(image);
   } catch (err) {
     res.status(500).send(err);
   }
