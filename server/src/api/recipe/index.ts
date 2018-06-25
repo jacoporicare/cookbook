@@ -64,6 +64,10 @@ function appendUserName(recipe: Recipe): Recipe {
   };
 }
 
+function getThumbPath(slug: string): string {
+  return `/tmp/cookbook/thumbs/${slug}.jpg`;
+}
+
 const router = Router();
 
 router.get('/', async (req, res) => {
@@ -146,7 +150,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:slug/image-:size', async (req, res) => {
   const { slug, size } = req.params;
-  const thumbPath = `/tmp/cookbook/thumbs/${slug}.jpg`;
+  const thumbPath = getThumbPath(slug);
 
   try {
     if (size === 'thumb' && fs.existsSync(thumbPath)) {
@@ -167,7 +171,7 @@ router.get('/:slug/image-:size', async (req, res) => {
         .jpeg()
         .toBuffer();
       await fs.mkdirs(path.dirname(thumbPath));
-      fs.writeFile(thumbPath, image);
+      fs.writeFile(thumbPath, image).catch(console.log);
     } else {
       image = recipe.image;
     }
@@ -221,6 +225,9 @@ router.post('/:id/image', async (req, res) => {
       return res.status(404).end();
     }
 
+    const thumbPath = getThumbPath(recipe.slug);
+    fs.remove(thumbPath).catch(console.log);
+
     res.status(201).end();
   } catch (err) {
     res.status(500).send(err);
@@ -229,7 +236,12 @@ router.post('/:id/image', async (req, res) => {
 
 router.delete('/:id', auth(), async (req, res) => {
   try {
-    await recipeModel.findByIdAndRemove(req.params.id);
+    const recipe = await recipeModel.findByIdAndRemove(req.params.id);
+
+    if (recipe) {
+      const thumbPath = getThumbPath(recipe.slug);
+      fs.remove(thumbPath).catch(console.log);
+    }
 
     res.status(204).end();
   } catch (err) {
@@ -239,7 +251,14 @@ router.delete('/:id', auth(), async (req, res) => {
 
 router.delete('/:id/image', async (req, res) => {
   try {
-    await recipeModel.findByIdAndUpdate(req.params.id, { $unset: { image: '', hasImage: '' } });
+    const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
+      $unset: { image: '', hasImage: '' },
+    });
+
+    if (recipe) {
+      const thumbPath = getThumbPath(recipe.slug);
+      fs.remove(thumbPath).catch(console.log);
+    }
 
     res.status(204).end();
   } catch (err) {
