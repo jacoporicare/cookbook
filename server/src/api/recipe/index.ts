@@ -215,7 +215,7 @@ router.post('/:id', auth(), async (req, res) => {
   }
 });
 
-router.post('/:id/image', async (req, res) => {
+router.post('/:id/image', auth(), async (req, res) => {
   try {
     const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
       $set: { image: req.body, hasImage: true },
@@ -249,7 +249,7 @@ router.delete('/:id', auth(), async (req, res) => {
   }
 });
 
-router.delete('/:id/image', async (req, res) => {
+router.delete('/:id/image', auth(), async (req, res) => {
   try {
     const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
       $unset: { image: '', hasImage: '' },
