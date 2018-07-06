@@ -11,13 +11,7 @@
     "strict": true,
     "strictFunctionTypes": false,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "src/types/ext/*"
-      ]
-    }
+    "noUnusedLocals": true
   },
   "include": [
     "src/**/*"

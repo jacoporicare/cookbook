@@ -1,5 +1,7 @@
-import { Router } from 'express';
+declare module 'composable-middleware' {
+  import { Router } from 'express';
 
-export = compose;
+  export = compose;
 
-declare function compose(): Router;
+  function compose(): Router;
+}
