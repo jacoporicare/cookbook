@@ -1,42 +1,44 @@
-import * as React from 'react';
+declare module 'react-notify-toast' {
+  import * as React from 'react';
 
-export = Notifications;
+  export = Notifications;
 
-declare namespace Notifications {
-  interface Color {
-    color: string;
-    backgroundColor: string;
-  }
-
-  interface Colors {
-    error: Color;
-    success: Color;
-    warning: Color;
-    info: Color;
-  }
-
-  interface Options {
-    wrapperId?: string;
-    animationDuration?: number;
-    timeout?: number;
-    zIndex?: number;
-    colors?: Colors;
-  }
-
-  interface Props {
-    options?: Options;
-  }
-
-  namespace notify {
+  namespace Notifications {
     interface Color {
-      background: string;
-      text: string;
+      color: string;
+      backgroundColor: string;
     }
 
-    type Type = 'success' | 'warning' | 'error' | 'custom';
+    interface Colors {
+      error: Color;
+      success: Color;
+      warning: Color;
+      info: Color;
+    }
 
-    function show(message: string, type?: Type, timeout?: number, color?: Color): void;
+    interface Options {
+      wrapperId?: string;
+      animationDuration?: number;
+      timeout?: number;
+      zIndex?: number;
+      colors?: Colors;
+    }
+
+    interface Props {
+      options?: Options;
+    }
+
+    namespace notify {
+      interface Color {
+        background: string;
+        text: string;
+      }
+
+      type Type = 'success' | 'warning' | 'error' | 'custom';
+
+      function show(message: string, type?: Type, timeout?: number, color?: Color): void;
+    }
   }
-}
 
-declare class Notifications extends React.Component<Notifications.Props> {}
+  class Notifications extends React.Component<Notifications.Props> {}
+}

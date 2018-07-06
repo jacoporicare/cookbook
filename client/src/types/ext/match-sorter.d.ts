@@ -1,7 +1,9 @@
-export = matchSorter;
+declare module 'match-sorter' {
+  export = matchSorter;
 
-interface Options {
-  keys?: string[];
+  interface Options {
+    keys?: string[];
+  }
+
+  function matchSorter<T>(arr: T[], s: string, options?: Options): T[];
 }
-
-declare function matchSorter<T>(arr: T[], s: string, options?: Options): T[];
