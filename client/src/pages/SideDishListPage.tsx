@@ -1,55 +1,22 @@
 import React from 'react';
+
+import { SideDish } from '../types';
 import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
+import SideDishList from '../components/SideDishList/SideDishList';
+
+const sideDishes: SideDish[] = [
+  { title: 'Brambory', sideWeight: '180 g' },
+  { title: 'Těstoviny', sideWeight: '70g', mainWeight: '85g' },
+  { title: 'Rýže', sideWeight: '60g', mainWeight: '75g' },
+  { title: 'Čočka', sideWeight: '60g', mainWeight: '75g' },
+  { title: 'Kuskus', sideWeight: '45g', mainWeight: '50g' },
+  { title: 'Polenta', sideWeight: '45g' },
+];
 
 const SideDishListPage = () => (
   <>
     <DocumentTitle title="Přílohy" />
-    <div className="container">
-      <h1 className="page-header">Přílohy</h1>
-
-      <table className="table table-hover" style={{ width: 'auto' }}>
-        <thead>
-          <tr>
-            <th>Název</th>
-            <th>Příloha</th>
-            <th>Hlavní</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>Brambory</td>
-            <td className="text-right">300 g</td>
-            <td className="text-right" />
-          </tr>
-          <tr>
-            <td>Těstoviny</td>
-            <td className="text-right">70 g</td>
-            <td className="text-right">100 g</td>
-          </tr>
-          <tr>
-            <td>Rýže</td>
-            <td className="text-right">70 g</td>
-            <td className="text-right">100 g</td>
-          </tr>
-          <tr>
-            <td>Čočka</td>
-            <td className="text-right">70 g</td>
-            <td className="text-right">100 g</td>
-          </tr>
-          <tr>
-            <td>Kuskus</td>
-            <td className="text-right">45 g</td>
-            <td className="text-right">70 g</td>
-          </tr>
-          <tr>
-            <td>Polenta</td>
-            <td className="text-right">45 g</td>
-            <td className="text-right" />
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <SideDishList sideDishes={sideDishes} />
   </>
 );
 
