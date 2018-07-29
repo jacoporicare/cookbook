@@ -64,7 +64,9 @@ class RecipeListPage extends Component<Props, State> {
       <div className="container">
         <h1 className="page-header clearfix">
           <div className="row">
-            <div className="col-md-6">Recepty</div>
+            <div className="col-md-6">
+              Recepty <small>({recipes.length})</small>
+            </div>
             {isAuthenticated && (
               <div className="col-md-6 text-right">
                 <Link to="/novy-recept" className="btn btn-primary">
