@@ -24,6 +24,7 @@ type StateProps = {
   isFetching: boolean;
   recipe: RecipeDetailType;
   slug: string;
+  isAuthenticated: boolean;
 };
 
 type DispatchProps = {
@@ -71,7 +72,7 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   render() {
-    const { recipe, isFetching, hasDetail } = this.props;
+    const { recipe, isFetching, hasDetail, isAuthenticated } = this.props;
 
     if (!recipe) {
       return (
@@ -106,6 +107,7 @@ class RecipeDetailPage extends Component<Props, State> {
             sideDish={sideDish}
             slug={slug}
             title={title}
+            isAuthenticated={isAuthenticated}
             onDeleteShow={this.handleDeleteShow}
           />
           {isFetching && !hasDetail ? (
@@ -134,6 +136,7 @@ class RecipeDetailPage extends Component<Props, State> {
 
 function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
   const { isFetching, recipesBySlug } = state.recipeDetail;
+  const { isAuthenticated } = state.auth;
   const { slug } = ownProps.params;
   const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
   const hasDetail = Boolean(recipesBySlug[slug]);
@@ -143,6 +146,7 @@ function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params
     isFetching,
     recipe,
     slug,
+    isAuthenticated,
   };
 }
 

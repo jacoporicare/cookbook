@@ -10,21 +10,31 @@ type Props = {
   sideDish?: string;
   slug: string;
   title: string;
+  isAuthenticated: boolean;
   onDeleteShow: () => void;
 };
 
-const RecipeHeader = ({ preparationTime, sideDish, slug, title, onDeleteShow }: Props) => (
+const RecipeHeader = ({
+  preparationTime,
+  sideDish,
+  slug,
+  title,
+  isAuthenticated,
+  onDeleteShow,
+}: Props) => (
   <>
     <h1 className="page-header clearfix">
       {title}
-      <span className="pull-right">
-        <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
-          <i className="fa fa-edit" /> Upravit
-        </Link>{' '}
-        <button className="btn btn-danger" onClick={onDeleteShow}>
-          <i className="fa fa-trash" /> Smazat
-        </button>
-      </span>
+      {isAuthenticated && (
+        <span className="pull-right">
+          <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
+            <i className="fa fa-edit" /> Upravit
+          </Link>{' '}
+          <button className="btn btn-danger" onClick={onDeleteShow}>
+            <i className="fa fa-trash" /> Smazat
+          </button>
+        </span>
+      )}
     </h1>
 
     {(preparationTime || sideDish) && (
