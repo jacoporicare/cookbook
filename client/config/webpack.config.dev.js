@@ -3,8 +3,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
-const vendor = require('../src/vendor');
-
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -47,8 +45,13 @@ module.exports = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
   entry: {
-    app: ['webpack-dev-server/client?/', 'webpack/hot/dev-server', './src/index.tsx'],
-    vendor: vendor.concat('./src/vendor.scss'),
+    vendor: './src/vendor.scss',
+    main: [
+      'webpack-dev-server/client?/',
+      'webpack/hot/dev-server',
+      'babel-polyfill',
+      './src/index.tsx',
+    ],
   },
   resolve: {
     extensions: [

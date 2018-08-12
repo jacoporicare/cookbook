@@ -5,8 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
-const vendor = require('../src/vendor');
-
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
 // style files regexes
@@ -58,8 +56,8 @@ module.exports = {
   bail: true,
   devtool: 'source-map',
   entry: {
-    app: './src/index.tsx',
-    vendor: vendor.concat('./src/vendor.scss'),
+    vendor: './src/vendor.scss',
+    main: ['babel-polyfill', './src/index.tsx'],
   },
   resolve: {
     extensions: [
