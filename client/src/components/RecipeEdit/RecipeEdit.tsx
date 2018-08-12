@@ -38,7 +38,7 @@ type Props = {
   title?: string;
 };
 
-class RecipeEdit extends React.Component<Props> {
+export default class RecipeEdit extends React.Component<Props> {
   render() {
     const {
       changed,
@@ -128,5 +128,3 @@ class RecipeEdit extends React.Component<Props> {
     );
   }
 }
-
-export default RecipeEdit;

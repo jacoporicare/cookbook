@@ -16,7 +16,7 @@ type State = {
   sideDishOptions: string[];
 };
 
-class BasicInfo extends React.Component<Props, State> {
+export default class BasicInfo extends React.Component<Props, State> {
   state = {
     sideDishOptions: [],
   };
@@ -94,5 +94,3 @@ class BasicInfo extends React.Component<Props, State> {
     );
   }
 }
-
-export default BasicInfo;

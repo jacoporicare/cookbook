@@ -7,7 +7,7 @@ type Props = {
   onChange: AutosuggestChangeEventHandler;
 };
 
-class Title extends React.Component<Props> {
+export default class Title extends React.Component<Props> {
   titleInput?: HTMLInputElement | null;
 
   componentDidMount() {
@@ -37,5 +37,3 @@ class Title extends React.Component<Props> {
     );
   }
 }
-
-export default Title;

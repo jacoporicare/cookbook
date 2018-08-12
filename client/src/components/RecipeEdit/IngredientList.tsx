@@ -103,12 +103,10 @@ const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) 
   </ul>
 ));
 
-const IngredientList = ({ items, onRemove, onSort }: Props) => {
+export default function IngredientList({ items, onRemove, onSort }: Props) {
   if (items.length === 0) {
     return <div className="alert alert-info">Zatím žádné ingredience.</div>;
   }
 
   return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;
-};
-
-export default IngredientList;
+}

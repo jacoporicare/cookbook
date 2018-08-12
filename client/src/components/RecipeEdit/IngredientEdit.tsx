@@ -30,7 +30,7 @@ type State = {
   group?: string;
 };
 
-class IngredientEdit extends React.Component<Props, State> {
+export default class IngredientEdit extends React.Component<Props, State> {
   state: State = {};
 
   handleIngredientChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
@@ -111,5 +111,3 @@ class IngredientEdit extends React.Component<Props, State> {
     );
   }
 }
-
-export default IngredientEdit;

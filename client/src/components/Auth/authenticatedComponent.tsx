@@ -9,7 +9,7 @@ type Props = {
   router: InjectedRouter;
 };
 
-const authenticatedComponent = (Component: React.ComponentType) => {
+export default function authenticatedComponent(Component: React.ComponentType) {
   class AuthenticatedComponent extends React.Component<Props> {
     componentWillMount() {
       if (!this.props.isAuthenticated) {
@@ -42,6 +42,4 @@ const authenticatedComponent = (Component: React.ComponentType) => {
   });
 
   return connect(mapStateToProps)(AuthenticatedComponent);
-};
-
-export default authenticatedComponent;
+}

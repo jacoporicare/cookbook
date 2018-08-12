@@ -11,7 +11,7 @@ type State = {
   collapsed: boolean;
 };
 
-class Navbar extends Component<Props, State> {
+export default class Navbar extends Component<Props, State> {
   state = {
     collapsed: true,
   };
@@ -50,5 +50,3 @@ class Navbar extends Component<Props, State> {
     );
   }
 }
-
-export default Navbar;

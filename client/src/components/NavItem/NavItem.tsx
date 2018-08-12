@@ -9,7 +9,14 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const NavItem = ({ index, to, isActive, activeClassName, children, ...props }: Props) => {
+export default function NavItem({
+  index,
+  to,
+  isActive,
+  activeClassName,
+  children,
+  ...props
+}: Props) {
   const LinkComponent = !index ? Link : IndexLink;
 
   return (
@@ -19,6 +26,4 @@ const NavItem = ({ index, to, isActive, activeClassName, children, ...props }: P
       </LinkComponent>
     </li>
   );
-};
-
-export default NavItem;
+}

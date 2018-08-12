@@ -8,7 +8,6 @@ type Props = {
   spinner?: boolean;
 };
 
-const SpinnerAlert = ({ level, text, spinner }: Props) =>
-  spinner ? <Spinner /> : <div className={`alert alert-${level}`}>{text}</div>;
-
-export default SpinnerAlert;
+export default function SpinnerAlert({ level, text, spinner }: Props) {
+  return spinner ? <Spinner /> : <div className={`alert alert-${level}`}>{text}</div>;
+}

@@ -13,11 +13,11 @@ const sideDishes: SideDish[] = [
   { title: 'Polenta', sideWeight: '45g' },
 ];
 
-const SideDishListPage = () => (
-  <>
-    <DocumentTitle title="Přílohy" />
-    <SideDishList sideDishes={sideDishes} />
-  </>
-);
-
-export default SideDishListPage;
+export default function SideDishListPage() {
+  return (
+    <>
+      <DocumentTitle title="Přílohy" />
+      <SideDishList sideDishes={sideDishes} />
+    </>
+  );
+}

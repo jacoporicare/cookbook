@@ -18,7 +18,7 @@ type State = {
   suggestions: Recipe[];
 };
 
-class RecipeSearch extends React.Component<Props, State> {
+export default class RecipeSearch extends React.Component<Props, State> {
   state = {
     value: '',
     suggestions: [],
@@ -82,5 +82,3 @@ class RecipeSearch extends React.Component<Props, State> {
     );
   }
 }
-
-export default RecipeSearch;

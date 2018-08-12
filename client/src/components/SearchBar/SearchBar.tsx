@@ -6,7 +6,7 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-class SearchBar extends React.Component<Props> {
+export default class SearchBar extends React.Component<Props> {
   handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.props.onChange(event.target.value);
   };
@@ -27,5 +27,3 @@ class SearchBar extends React.Component<Props> {
     );
   }
 }
-
-export default SearchBar;

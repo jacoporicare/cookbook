@@ -5,8 +5,6 @@ type Props = {
   title?: string;
 };
 
-const DocumentTitleWrapper = ({ title }: Props) => (
-  <DocumentTitle title={title ? `${title} - Žrádelník` : 'Žrádelník'} />
-);
-
-export default DocumentTitleWrapper;
+export default function DocumentTitleWrapper({ title }: Props) {
+  return <DocumentTitle title={title ? `${title} - Žrádelník` : 'Žrádelník'} />;
+}
