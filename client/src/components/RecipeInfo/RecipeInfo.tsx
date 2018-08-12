@@ -1,6 +1,5 @@
 import React from 'react';
-
-import './RecipeInfo.module.scss';
+import styled from 'react-emotion';
 
 type Props = {
   preparationTime?: number;
@@ -14,33 +13,49 @@ function formatTime(time: number) {
 
   if (hours > 0 && minutes === 0) {
     return `${hours} h`;
-  } else if (hours > 0 && minutes > 0) {
-    return `${hours} h ${minutes} min`;
-  } else {
-    return `${minutes} min`;
   }
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} h ${minutes} min`;
+  }
+
+  return `${minutes} min`;
 }
 
-const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) => {
+const List = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Item = styled.li`
+  display: inline;
+  & + &::before {
+    content: ' · ';
+  }
+`;
+
+export default function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
   }
 
   return (
-    <ul styleName="info">
+    <List>
       {preparationTime &&
         preparationTime > 0 && (
-          <li>
+          <Item>
             <i className="fa fa-clock-o" /> {formatTime(preparationTime)}
-          </li>
+          </Item>
         )}
       {!!sideDish && (
-        <li>
+        <Item>
           <i className="fa fa-spoon" /> {sideDish}
-        </li>
+        </Item>
       )}
-    </ul>
+    </List>
   );
-};
-
-export default RecipeInfo;
+}

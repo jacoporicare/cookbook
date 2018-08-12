@@ -1,3 +1,9 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
+
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/mixins/clearfix';
 
@@ -22,42 +28,6 @@ body {
 
 .modal-dialog {
   outline: none;
-}
-
-/**
- * Common
- */
-
-.cb-last {
-  margin-bottom: 0;
-}
-
-.cb-info-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  li {
-    display: inline;
-
-    & + li:before {
-      content: ' · ';
-    }
-  }
-}
-
-.cb-ingredient-list {
-  .row {
-    margin-left: -16px;
-    margin-right: -16px;
-  }
-
-  .cb-sortable-handle {
-    cursor: pointer;
-  }
 }
 
 /**

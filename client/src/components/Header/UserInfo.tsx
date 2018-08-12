@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-
-import './UserInfo.module.css';
+import { css } from 'emotion';
 
 type Props = {
   isAuthenticated: boolean;
@@ -9,7 +8,7 @@ type Props = {
   isFetchingUser: boolean;
 };
 
-const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) => {
+export default function UserInfo({ isAuthenticated, userName, isFetchingUser }: Props) {
   const backUrl = encodeURIComponent(window.location.pathname);
 
   if (!isAuthenticated) {
@@ -25,11 +24,15 @@ const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) => {
           <i className="fa fa-user" /> {userName}
         </>
       )}
-      <Link to={`/odhlaseni?u=${backUrl}`} styleName="sign-out">
+      <Link
+        to={`/odhlaseni?u=${backUrl}`}
+        className={css`
+          display: inline-block;
+          margin-left: 10px;
+        `}
+      >
         Odhlásit
       </Link>
     </>
   );
-};
-
-export default UserInfo;
+}

@@ -5,6 +5,7 @@ import {
   SortableHandle,
   SortEndHandler,
 } from 'react-sortable-hoc';
+import { cx, css } from 'emotion';
 
 import { Ingredient } from '../../types';
 
@@ -20,7 +21,7 @@ type Props = SortableListProps & {
 };
 
 const Handle = SortableHandle(() => (
-  <div className="pull-right text-muted cb-sortable-handle">
+  <div className="pull-right text-muted" style={{ cursor: 'pointer' }}>
     <i className="fa fa-bars" />
   </div>
 ));
@@ -41,7 +42,15 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 
   return (
     <li className={className}>
-      <div className="row">
+      <div
+        className={cx(
+          'row',
+          css`
+            margin-left: -16px;
+            margin-right: -16px;
+          `,
+        )}
+      >
         <div className="col-xs-2">
           <a
             href=""
@@ -57,7 +66,9 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
         {!isGroup && (
           <div className="col-xs-3 text-right">
             <b>
-              {amount ? amount.toLocaleString('cs') : ''}&nbsp;{amountUnit}
+              {amount ? amount.toLocaleString('cs') : ''}
+              &nbsp;
+              {amountUnit}
             </b>
           </div>
         )}
@@ -79,7 +90,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 });
 
 const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <ul className="list-group cb-ingredient-list">
+  <ul className="list-group">
     {items.map((ingredient, index) => (
       <SortableItem
         key={index}

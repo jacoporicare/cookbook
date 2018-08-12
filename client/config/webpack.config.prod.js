@@ -55,10 +55,7 @@ module.exports = {
   mode: 'production',
   bail: true,
   devtool: 'source-map',
-  entry: {
-    vendor: './src/vendor.scss',
-    main: ['babel-polyfill', './src/index.tsx'],
-  },
+  entry: ['babel-polyfill', './src/index.tsx'],
   resolve: {
     extensions: [
       '.web.ts',

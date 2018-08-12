@@ -83,7 +83,7 @@ class IngredientForm extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-          <div className="form-group cb-last">
+          <div className="form-group" style={{ marginBottom: 0 }}>
             <div className="input-group">
               <Autosuggest
                 suggestions={ingredientOptions}

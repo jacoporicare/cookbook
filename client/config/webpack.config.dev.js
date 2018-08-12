@@ -44,15 +44,12 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
 module.exports = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
-  entry: {
-    vendor: './src/vendor.scss',
-    main: [
-      'webpack-dev-server/client?/',
-      'webpack/hot/dev-server',
-      'babel-polyfill',
-      './src/index.tsx',
-    ],
-  },
+  entry: [
+    'webpack-dev-server/client?/',
+    'webpack/hot/dev-server',
+    'babel-polyfill',
+    './src/index.tsx',
+  ],
   resolve: {
     extensions: [
       '.web.ts',

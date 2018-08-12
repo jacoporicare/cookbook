@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import { cx, css } from 'emotion';
 
 import { Ingredient } from '../../types';
 
@@ -74,7 +75,7 @@ class IngredientList extends Component<Props, State> {
           </div>
         )}
 
-        <ul className="list-group cb-ingredient-list">
+        <ul className="list-group">
           {ingredients.map(ingredient => {
             const { _id: id, isGroup, name, amount, amountUnit } = ingredient;
 
@@ -88,11 +89,21 @@ class IngredientList extends Component<Props, State> {
                 {isGroup ? (
                   <b>{name}</b>
                 ) : (
-                  <div className="row">
+                  <div
+                    className={cx(
+                      'row',
+                      css`
+                        margin-left: -16px;
+                        margin-right: -16px;
+                      `,
+                    )}
+                  >
                     <div className="col-xs-3 text-right">
                       {(amount || amountUnit) && (
                         <b>
-                          {this.getAmount(amount)}&nbsp;{amountUnit}
+                          {this.getAmount(amount)}
+                          &nbsp;
+                          {amountUnit}
                         </b>
                       )}
                     </div>
