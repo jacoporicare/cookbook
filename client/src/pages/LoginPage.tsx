@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { withCookies, CookiesProps, CookieSetOptions } from 'react-cookie';
@@ -95,7 +95,7 @@ const mapStateToProps = (state: StoreState) => ({
   isSubmitting: state.auth.isSubmitting,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AuthAction>) => ({
   login: (username: string, password: string) => dispatch(login(username, password)),
 });
 

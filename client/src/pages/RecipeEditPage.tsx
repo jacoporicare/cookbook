@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 import axios from 'axios';
@@ -381,7 +381,9 @@ function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<StoreState>): DispatchProps {
+function mapDispatchToProps(
+  dispatch: ThunkDispatch<StoreState, {}, RecipeDetailAction>,
+): DispatchProps {
   return {
     fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
     saveRecipe: (id: string | undefined, recipe: RecipeDetail, hasNewImage: boolean) =>

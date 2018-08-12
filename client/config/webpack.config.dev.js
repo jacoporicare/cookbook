@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const vendor = require('../src/vendor');
 
 module.exports = {
+  mode: 'development',
   devtool: 'eval-source-map',
   entry: {
     app: ['webpack-dev-server/client?/', 'webpack/hot/dev-server', './src/index.tsx'],
@@ -144,12 +145,14 @@ module.exports = {
       },
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
+  ],
+  optimization: {
+    namedModules: true,
+    splitChunks: {
       name: 'vendor',
       minChunks: Infinity,
-    }),
-  ],
+    },
+  },
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {

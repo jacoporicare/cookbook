@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Dispatch } from 'redux';
+import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
@@ -150,7 +151,7 @@ function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<StoreState>): DispatchProps {
+function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, {}, AnyAction>): DispatchProps {
   return {
     fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
     deleteRecipe: (id: string) => dispatch(deleteRecipe(id)),

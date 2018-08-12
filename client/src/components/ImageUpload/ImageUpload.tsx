@@ -29,7 +29,9 @@ class ImageUpload extends React.Component<Props, State> {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.props.onImageChange(reader.result);
+      if (reader.result && typeof reader.result === 'object') {
+        this.props.onImageChange(reader.result);
+      }
     };
 
     reader.readAsArrayBuffer(file);

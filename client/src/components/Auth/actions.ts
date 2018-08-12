@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { User, StoreState } from '../../types';
 import api, { handleError } from '../../api';
@@ -42,7 +43,7 @@ export const loginFailure = (): AuthAction => ({
 });
 
 export function login(username: string, password: string) {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (dispatch: ThunkDispatch<StoreState, {}, AuthAction>, getState: () => StoreState) => {
     dispatch(loginRequest());
 
     return api(getState)
@@ -75,7 +76,7 @@ export const fetchUserFailure = (): AuthAction => ({
 });
 
 export function fetchUser() {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (dispatch: Dispatch, getState: () => StoreState) => {
     dispatch(fetchUserRequest());
 
     return api(getState)

@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { RecipeDetail, StoreState } from '../../types';
 import api, { handleError } from '../../api';
@@ -25,7 +25,10 @@ export const fetchRecipeFailure = (): RecipeDetailAction => ({
 });
 
 export function fetchRecipe(slug: string) {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (
+    dispatch: ThunkDispatch<StoreState, {}, RecipeDetailAction>,
+    getState: () => StoreState,
+  ) => {
     dispatch(fetchRecipeRequest());
 
     return api(getState)

@@ -10,6 +10,7 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 const cssPublicPath = Array(cssFilename.split('/').length).join('../');
 
 module.exports = {
+  mode: 'production',
   bail: true,
   devtool: 'source-map',
   entry: {
@@ -193,10 +194,6 @@ module.exports = {
     new ExtractTextPlugin({
       filename: cssFilename,
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity,
-    }),
     new FaviconsWebpackPlugin({
       logo: './src/piggy.png',
       title: 'Žrádelník',
@@ -213,8 +210,13 @@ module.exports = {
         windows: false,
       },
     }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
   ],
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      minChunks: Infinity,
+    },
+  },
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {

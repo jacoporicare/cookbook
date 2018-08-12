@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dispatch } from 'redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
@@ -85,7 +86,7 @@ const mapStateToProps = (state: StoreState) => ({
   isFetchingRecipes: state.recipeList.isFetching,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AnyAction>) => ({
   fetchUser: () => dispatch(fetchUser()),
   fetchRecipeList: () => dispatch(fetchRecipeList()),
 });

@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { notify } from 'react-notify-toast';
 
 import { StoreState } from '../../types';
@@ -25,7 +25,10 @@ export const deleteRecipeFailure = (): RecipeDeleteAction => ({
 });
 
 export function deleteRecipe(id: string) {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (
+    dispatch: ThunkDispatch<StoreState, {}, RecipeDeleteAction>,
+    getState: () => StoreState,
+  ) => {
     dispatch(deleteRecipeRequest());
 
     return api(getState)

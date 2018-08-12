@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { notify } from 'react-notify-toast';
 
 import { RecipeDetail, Ingredient, StoreState } from '../../types';
@@ -41,7 +41,10 @@ export type SaveRecipeParams = {
 };
 
 export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams, hasNewImage: boolean) {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (
+    dispatch: ThunkDispatch<StoreState, {}, RecipeEditAction>,
+    getState: () => StoreState,
+  ) => {
     dispatch(saveRecipeRequest());
 
     return api(getState)
@@ -73,7 +76,10 @@ export const fetchIngredientListFailure = (): RecipeEditAction => ({
 });
 
 export function fetchIngredientList() {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (
+    dispatch: ThunkDispatch<StoreState, {}, RecipeEditAction>,
+    getState: () => StoreState,
+  ) => {
     dispatch(fetchIngredientListRequest());
 
     return api(getState)
@@ -102,7 +108,10 @@ export const fetchSideDishListFailure = (): RecipeEditAction => ({
 });
 
 export function fetchSideDishList() {
-  return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+  return (
+    dispatch: ThunkDispatch<StoreState, {}, RecipeEditAction>,
+    getState: () => StoreState,
+  ) => {
     dispatch(fetchSideDishListRequest());
 
     return api(getState)
