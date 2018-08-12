@@ -1,12 +1,51 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 const vendor = require('../src/vendor');
 
+// style files regexes
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
+const sassRegex = /\.(scss|sass)$/;
+const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+// common function to get style loaders
+const getStyleLoaders = (cssOptions, preProcessor) => {
+  const loaders = [
+    require.resolve('style-loader'),
+    {
+      loader: require.resolve('css-loader'),
+      options: cssOptions,
+    },
+    {
+      // Options for PostCSS as we reference these options twice
+      // Adds vendor prefixing based on your specified browser support in
+      // package.json
+      loader: require.resolve('postcss-loader'),
+      options: {
+        // Necessary for external CSS imports to work
+        // https://github.com/facebook/create-react-app/issues/2677
+        ident: 'postcss',
+        plugins: () => [
+          require('postcss-flexbugs-fixes'),
+          autoprefixer({
+            flexbox: 'no-2009',
+          }),
+        ],
+      },
+    },
+  ];
+  if (preProcessor) {
+    loaders.push(require.resolve(preProcessor));
+  }
+  return loaders;
+};
+
 module.exports = {
   mode: 'development',
-  devtool: 'eval-source-map',
+  devtool: 'cheap-module-source-map',
   entry: {
     app: ['webpack-dev-server/client?/', 'webpack/hot/dev-server', './src/index.tsx'],
     vendor: vendor.concat('./src/vendor.scss'),
@@ -25,11 +64,22 @@ module.exports = {
     ],
   },
   output: {
-    path: path.join(__dirname, '../dist'),
     pathinfo: true,
     filename: 'static/js/[name].js',
     chunkFilename: 'static/js/[name].chunk.js',
     publicPath: '/',
+  },
+  optimization: {
+    // Automatically split vendor and commons
+    // https://twitter.com/wSokra/status/969633336732905474
+    // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+    splitChunks: {
+      chunks: 'all',
+      name: 'vendors',
+    },
+    // Keep the runtime chunk seperated to enable long term caching
+    // https://twitter.com/wSokra/status/969679223278505985
+    runtimeChunk: true,
   },
   module: {
     strictExportPresence: true,
@@ -65,8 +115,9 @@ module.exports = {
                 options: {
                   presets: ['@babel/preset-react'],
                   plugins: [
+                    'emotion',
                     [
-                      'babel-plugin-react-css-modules',
+                      'react-css-modules',
                       {
                         filetypes: {
                           '.scss': {
@@ -83,46 +134,55 @@ module.exports = {
               },
             ],
           },
+          // "postcss" loader applies autoprefixer to our CSS.
+          // "css" loader resolves paths in CSS and adds assets as dependencies.
+          // `MiniCSSExtractPlugin` extracts styles into CSS
+          // files. If you use code splitting, async bundles will have their own separate CSS chunk file.
+          // By default we support CSS Modules with the extension .module.css
           {
-            test: /\.scss$/,
-            exclude: /\.module\.scss$/,
-            use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+            test: cssRegex,
+            exclude: cssModuleRegex,
+            loader: getStyleLoaders({
+              importLoaders: 1,
+            }),
           },
+          // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
+          // using the extension .module.css
           {
-            test: /\.module.scss$/,
-            use: [
-              'style-loader',
+            test: cssModuleRegex,
+            loader: getStyleLoaders({
+              importLoaders: 1,
+              modules: true,
+              localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+            }),
+          },
+          // Opt-in support for SASS. The logic here is somewhat similar
+          // as in the CSS routine, except that "sass-loader" runs first
+          // to compile SASS files into CSS.
+          // By default we support SASS Modules with the
+          // extensions .module.scss or .module.sass
+          {
+            test: sassRegex,
+            exclude: sassModuleRegex,
+            loader: getStyleLoaders(
               {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 2,
-                  modules: true,
-                  localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
-                },
+                importLoaders: 2,
               },
-              'postcss-loader',
               'sass-loader',
-            ],
+            ),
           },
+          // Adds support for CSS Modules, but using SASS
+          // using the extension .module.scss or .module.sass
           {
-            test: /\.css$/,
-            exclude: /\.module\.css$/,
-            use: ['style-loader', 'css-loader', 'postcss-loader'],
-          },
-          {
-            test: /\.module.css$/,
-            use: [
-              'style-loader',
+            test: sassModuleRegex,
+            loader: getStyleLoaders(
               {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
-                  modules: true,
-                  localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
-                },
+                importLoaders: 2,
+                modules: true,
+                localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
               },
-              'postcss-loader',
-            ],
+              'sass-loader',
+            ),
           },
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
