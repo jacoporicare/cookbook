@@ -78,7 +78,6 @@
     "webpack-dev-server": "^3.1.5"
   },
   "jest": {
-    "mapCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
