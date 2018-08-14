@@ -10,8 +10,8 @@ type Props = {
 export const RecipeList = ({ recipes }: Props) => (
   <div className="row">
     {recipes.map(recipe => (
-      <RecipeListItem recipe={recipe} key={recipe._id} />
+      <RecipeListItem key={recipe._id} recipe={recipe} />
     ))}
-    {!recipes.length && <div className="alert alert-info">Zatím zde není žádný recept.</div>}
+    {recipes.length === 0 && <div className="alert alert-info">Zatím zde není žádný recept.</div>}
   </div>
 );

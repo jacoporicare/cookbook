@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { css } from 'emotion';
+import { Icon } from '../Icon/Icon';
 
 type Props = {
   isAuthenticated: boolean;
@@ -18,10 +19,10 @@ export const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) =
   return (
     <>
       {isFetchingUser ? (
-        <i className="fa fa-spin fa-spinner" />
+        <Icon icon="spinner" spin />
       ) : (
         <>
-          <i className="fa fa-user" /> {userName}
+          <Icon icon="user" /> {userName}
         </>
       )}
       <Link
@@ -35,4 +36,4 @@ export const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) =
       </Link>
     </>
   );
-}
+};

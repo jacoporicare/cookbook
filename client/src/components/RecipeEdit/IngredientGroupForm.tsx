@@ -1,5 +1,7 @@
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
 
+import { Icon } from '../Icon/Icon';
+
 type Props = {
   group?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
@@ -34,7 +36,7 @@ export class IngredientGroupForm extends React.Component<Props> {
           />
           <div className="input-group-btn">
             <button type="button" onClick={onAdd} className="btn btn-default" disabled={!group}>
-              <i className="fa fa-plus" /> Přidat
+              <Icon icon="plus" /> Přidat
             </button>
           </div>
         </div>

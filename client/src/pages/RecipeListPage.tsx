@@ -1,12 +1,13 @@
+import matchSorter from 'match-sorter';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import matchSorter from 'match-sorter';
 
-import { StoreState, Recipe } from '../types';
+import { Icon } from '../components/Icon/Icon';
 import { RecipeList } from '../components/RecipeList/RecipeList';
 import { SearchBar } from '../components/SearchBar/SearchBar';
 import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
+import { Recipe, StoreState } from '../types';
 
 type StateProps = {
   recipes: Recipe[];
@@ -70,7 +71,7 @@ class RecipeListPageBase extends Component<Props, State> {
             {isAuthenticated && (
               <div className="col-md-6 text-right">
                 <Link to="/novy-recept" className="btn btn-primary">
-                  <i className="fa fa-plus-circle" /> Nový recept
+                  <Icon icon="plus-circle" /> Nový recept
                 </Link>
               </div>
             )}

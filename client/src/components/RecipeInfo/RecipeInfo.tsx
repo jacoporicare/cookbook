@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
+import { RecipeInfoItem } from './RecipeInfoItem';
 
 type Props = {
   preparationTime?: number;
@@ -31,13 +32,6 @@ const List = styled.ul`
   text-overflow: ellipsis;
 `;
 
-const Item = styled.li`
-  display: inline;
-  & + &::before {
-    content: ' · ';
-  }
-`;
-
 export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) => {
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
@@ -47,15 +41,9 @@ export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) =>
     <List>
       {preparationTime &&
         preparationTime > 0 && (
-          <Item>
-            <i className="fa fa-clock-o" /> {formatTime(preparationTime)}
-          </Item>
+          <RecipeInfoItem icon="clock-o">{formatTime(preparationTime)}</RecipeInfoItem>
         )}
-      {!!sideDish && (
-        <Item>
-          <i className="fa fa-spoon" /> {sideDish}
-        </Item>
-      )}
+      {!!sideDish && <RecipeInfoItem icon="spoon">{sideDish}</RecipeInfoItem>}
     </List>
   );
-}
+};

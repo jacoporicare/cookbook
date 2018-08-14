@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import styled, { css } from 'react-emotion';
+import styled from 'react-emotion';
 
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
@@ -12,7 +12,7 @@ type Props = {
   recipe: Recipe;
 };
 
-const box = css`
+const StyledLink = styled(Link)`
   display: block;
   border: 1px solid #f0f0f0;
   border-radius: 4px;
@@ -58,7 +58,7 @@ export const RecipeListItem = ({ recipe }: Props) => {
 
   return (
     <div className="col-sm-6 col-md-4">
-      <Link to={`/recept/${slug}`} className={box}>
+      <StyledLink to={`/recept/${slug}`}>
         <Image style={{ backgroundImage: `url(${imageUrl})` }} />
         <BoxInner>
           <Title>{title}</Title>
@@ -70,7 +70,7 @@ export const RecipeListItem = ({ recipe }: Props) => {
             />
           </Info>
         </BoxInner>
-      </Link>
+      </StyledLink>
     </div>
   );
 };

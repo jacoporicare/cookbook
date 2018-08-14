@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { Icon } from '../Icon/Icon';
+
 type Props = {
   title?: string;
   isNew: boolean;
@@ -14,7 +16,7 @@ export const Header = ({ title, isNew, isSaving, changed, slug }: Props) => (
     {title || (isNew ? 'Nový recept' : 'Název receptu')}
     <span className="pull-right">
       <button type="submit" className="btn btn-success" disabled={!title || isSaving || !changed}>
-        <i className="fa fa-save" /> {isSaving ? 'Ukládání…' : 'Uložit'}
+        <Icon icon="save" /> {isSaving ? 'Ukládání…' : 'Uložit'}
       </button>{' '}
       <Link to={isNew ? '/' : `/recept/${slug}`} className="btn btn-default">
         Zrušit

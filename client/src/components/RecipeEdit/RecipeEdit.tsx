@@ -1,20 +1,21 @@
 import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
+import { AutosuggestChangeEventHandler, Ingredient } from '../../types';
+import { Icon } from '../Icon/Icon';
+import { ImageUpload } from '../ImageUpload/ImageUpload';
 import { RichText } from '../RichText/RichText';
 import { Spinner } from '../Spinner/Spinner';
-import { Header } from './Header';
-import { Title } from './Title';
 import { BasicInfo } from './BasicInfo';
 import { Directions } from './Directions';
+import { Header } from './Header';
 import {
-  IngredientEdit,
-  AddIngredientEventHandler,
   AddGroupEventHandler,
+  AddIngredientEventHandler,
+  IngredientEdit,
   RemoveEventHandler,
 } from './IngredientEdit';
-import { ImageUpload } from '../ImageUpload/ImageUpload';
+import { Title } from './Title';
 
 type Props = {
   changed: boolean;
@@ -114,7 +115,7 @@ export class RecipeEdit extends React.Component<Props> {
                 className="btn btn-success btn-lg"
                 disabled={!title || isSaving || !changed}
               >
-                <i className="fa fa-save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
+                <Icon icon="save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
               </button>
             </p>
           </div>

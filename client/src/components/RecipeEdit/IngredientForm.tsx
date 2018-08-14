@@ -3,6 +3,7 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
+import { Icon } from '../Icon/Icon';
 
 type Props = {
   name?: string;
@@ -102,7 +103,7 @@ export class IngredientForm extends React.Component<Props, State> {
               />
               <div className="input-group-btn">
                 <button type="button" onClick={onAdd} className="btn btn-primary" disabled={!name}>
-                  <i className="fa fa-plus" /> Přidat
+                  <Icon icon="plus" /> Přidat
                 </button>
               </div>
             </div>

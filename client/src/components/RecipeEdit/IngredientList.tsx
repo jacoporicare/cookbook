@@ -8,6 +8,7 @@ import {
 import { cx, css } from 'emotion';
 
 import { Ingredient } from '../../types';
+import { Icon } from '../Icon/Icon';
 
 type RemoveHandler = (index: number) => void;
 
@@ -22,7 +23,7 @@ type Props = SortableListProps & {
 
 const Handle = SortableHandle(() => (
   <div className="pull-right text-muted" style={{ cursor: 'pointer' }}>
-    <i className="fa fa-bars" />
+    <Icon icon="bars" />
   </div>
 ));
 
@@ -59,7 +60,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
               onRemove(itemIndex);
             }}
           >
-            <i className="fa fa-trash" />
+            <Icon icon="trash" />
           </a>
         </div>
 
@@ -109,4 +110,4 @@ export const IngredientList = ({ items, onRemove, onSort }: Props) => {
   }
 
   return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;
-}
+};
