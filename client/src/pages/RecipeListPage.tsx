@@ -4,9 +4,9 @@ import { Link } from 'react-router';
 import matchSorter from 'match-sorter';
 
 import { StoreState, Recipe } from '../types';
-import RecipeList from '../components/RecipeList/RecipeList';
-import SearchBar from '../components/SearchBar/SearchBar';
-import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
+import { RecipeList } from '../components/RecipeList/RecipeList';
+import { SearchBar } from '../components/SearchBar/SearchBar';
+import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
 
 type StateProps = {
   recipes: Recipe[];
@@ -21,7 +21,7 @@ type State = {
   recipes: Recipe[];
 };
 
-class RecipeListPage extends Component<Props, State> {
+class RecipeListPageBase extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -102,4 +102,4 @@ function mapStateToProps(state: StoreState): StateProps {
   };
 }
 
-export default connect(mapStateToProps)(RecipeListPage);
+export const RecipeListPage = connect(mapStateToProps)(RecipeListPageBase);

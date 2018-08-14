@@ -12,7 +12,7 @@ type State = {
   servingCount: string;
 };
 
-export default class IngredientList extends Component<Props, State> {
+export class IngredientList extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

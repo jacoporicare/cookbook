@@ -53,6 +53,6 @@ const richText = css`
   }
 `;
 
-export default function RichText({ text = '' }: Props) {
-  return <ReactMarkdown source={text} className={richText} />;
-}
+export const RichText = ({ text = '' }: Props) => (
+  <ReactMarkdown source={text} className={richText} />
+);

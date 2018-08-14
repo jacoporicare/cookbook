@@ -17,7 +17,7 @@ type State = {
   ingredientOptions: string[];
 };
 
-export default class IngredientForm extends React.Component<Props, State> {
+export class IngredientForm extends React.Component<Props, State> {
   state = {
     ingredientOptions: [],
   };

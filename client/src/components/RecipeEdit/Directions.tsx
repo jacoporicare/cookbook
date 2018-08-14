@@ -7,7 +7,7 @@ type Props = {
   onChange: AutosuggestChangeEventHandler;
 };
 
-export default function Directions({ directions = '', onChange }: Props) {
+export const Directions = ({ directions = '', onChange }: Props) => {
   return (
     <div className="form-group">
       <textarea

@@ -44,7 +44,7 @@ const Preview = styled.div`
   z-index: 2;
 `;
 
-export default class ImageUpload extends React.Component<Props, State> {
+export class ImageUpload extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

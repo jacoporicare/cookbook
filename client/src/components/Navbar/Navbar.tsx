@@ -11,7 +11,7 @@ type State = {
   collapsed: boolean;
 };
 
-export default class Navbar extends Component<Props, State> {
+export class Navbar extends Component<Props, State> {
   state = {
     collapsed: true,
   };

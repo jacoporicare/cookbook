@@ -6,7 +6,7 @@ type Props = {
   onAdd: () => void;
 };
 
-export default class IngredientGroupForm extends React.Component<Props> {
+export class IngredientGroupForm extends React.Component<Props> {
   handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();

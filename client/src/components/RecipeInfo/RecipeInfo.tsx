@@ -38,7 +38,7 @@ const Item = styled.li`
   }
 `;
 
-export default function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
+export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) => {
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
   }

@@ -2,9 +2,9 @@ import React, { ChangeEvent } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
-import IngredientList from './IngredientList';
-import IngredientForm from './IngredientForm';
-import IngredientGroupForm from './IngredientGroupForm';
+import { IngredientList } from './IngredientList';
+import { IngredientForm } from './IngredientForm';
+import { IngredientGroupForm } from './IngredientGroupForm';
 
 export type AddIngredientEventHandler = (
   name: string,
@@ -30,7 +30,7 @@ type State = {
   group?: string;
 };
 
-export default class IngredientEdit extends React.Component<Props, State> {
+export class IngredientEdit extends React.Component<Props, State> {
   state: State = {};
 
   handleIngredientChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {

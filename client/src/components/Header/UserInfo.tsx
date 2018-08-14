@@ -8,7 +8,7 @@ type Props = {
   isFetchingUser: boolean;
 };
 
-export default function UserInfo({ isAuthenticated, userName, isFetchingUser }: Props) {
+export const UserInfo = ({ isAuthenticated, userName, isFetchingUser }: Props) => {
   const backUrl = encodeURIComponent(window.location.pathname);
 
   if (!isAuthenticated) {

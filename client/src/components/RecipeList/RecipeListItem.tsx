@@ -4,7 +4,7 @@ import styled, { css } from 'react-emotion';
 
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
-import RecipeInfo from '../RecipeInfo/RecipeInfo';
+import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 
 import placeholder from './food-placeholder.png';
 
@@ -51,7 +51,7 @@ const Info = styled.div`
   color: #777;
 `;
 
-export default function RecipeListItem({ recipe }: Props) {
+export const RecipeListItem = ({ recipe }: Props) => {
   const { slug, title, preparationTime, sideDish, hasImage, lastModifiedDate } = recipe;
 
   const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
@@ -73,4 +73,4 @@ export default function RecipeListItem({ recipe }: Props) {
       </Link>
     </div>
   );
-}
+};

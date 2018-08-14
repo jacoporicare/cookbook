@@ -12,6 +12,6 @@ const Search = styled.div`
   }
 `;
 
-export default function SearchInput({ children }: { children?: React.ReactNode }) {
-  return <Search>{children}</Search>;
-}
+export const SearchInput = ({ children }: { children?: React.ReactNode }) => (
+  <Search>{children}</Search>
+);

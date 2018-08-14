@@ -6,12 +6,12 @@ import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
 
 import { User, Recipe, StoreState } from '../types';
-import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
+import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
 import { fetchUser, AuthAction } from '../components/Auth/actions';
-import Header from '../components/Header/Header';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
+import { Header } from '../components/Header/Header';
+import { Navbar } from '../components/Navbar/Navbar';
+import { Footer } from '../components/Footer/Footer';
 
 type Props = RouteComponentProps<{}, {}> & {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ type Props = RouteComponentProps<{}, {}> & {
   fetchRecipeList: () => Promise<RecipeListAction>;
 };
 
-class Layout extends React.Component<Props> {
+class LayoutBase extends React.Component<Props> {
   componentDidMount() {
     const { isAuthenticated, user, fetchUser, fetchRecipeList } = this.props;
 
@@ -91,7 +91,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AnyAction>) 
   fetchRecipeList: () => dispatch(fetchRecipeList()),
 });
 
-export default connect(
+export const Layout = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Layout);
+)(LayoutBase);

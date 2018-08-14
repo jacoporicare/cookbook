@@ -39,7 +39,7 @@ export function handleError(error: AxiosError | string) {
 
 type GetState = () => StoreState;
 
-function api(tokenOrState: string | StoreState | GetState): AxiosInstance {
+export default function api(tokenOrState: string | StoreState | GetState): AxiosInstance {
   const headers: { [key: string]: string } = {};
   // tslint:disable-next-line no-any
 
@@ -59,5 +59,3 @@ function api(tokenOrState: string | StoreState | GetState): AxiosInstance {
 
   return axios.create({ headers });
 }
-
-export default api;

@@ -5,9 +5,9 @@ import { RouteComponentProps } from 'react-router';
 import { withCookies, CookiesProps, CookieSetOptions } from 'react-cookie';
 
 import { StoreState } from '../types';
-import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
+import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
 import { login, AuthAction } from '../components/Auth/actions';
-import LoginForm from '../components/LoginForm/LoginForm';
+import { LoginForm } from '../components/LoginForm/LoginForm';
 
 type Props = CookiesProps &
   RouteComponentProps<{}, {}> & {
@@ -21,7 +21,7 @@ type State = {
   rememberMe: boolean;
 };
 
-class LoginPage extends React.Component<Props, State> {
+class LoginPageBase extends React.Component<Props, State> {
   state = {
     username: '',
     password: '',
@@ -99,7 +99,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AuthAction>)
   login: (username: string, password: string) => dispatch(login(username, password)),
 });
 
-export default connect(
+export const LoginPage = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withCookies(LoginPage));
+)(withCookies(LoginPageBase));

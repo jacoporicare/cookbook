@@ -1,10 +1,10 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
+import ReactDocumentTitle from 'react-document-title';
 
 type Props = {
   title?: string;
 };
 
-export default function DocumentTitleWrapper({ title }: Props) {
-  return <DocumentTitle title={title ? `${title} - Žrádelník` : 'Žrádelník'} />;
-}
+export const DocumentTitle = ({ title }: Props) => (
+  <ReactDocumentTitle title={title ? `${title} - Žrádelník` : 'Žrádelník'} />
+);

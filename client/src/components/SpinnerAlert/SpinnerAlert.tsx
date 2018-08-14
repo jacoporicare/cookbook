@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Spinner from '../Spinner/Spinner';
+import { Spinner } from '../Spinner/Spinner';
 
 type Props = {
   level: string;
@@ -8,6 +8,5 @@ type Props = {
   spinner?: boolean;
 };
 
-export default function SpinnerAlert({ level, text, spinner }: Props) {
-  return spinner ? <Spinner /> : <div className={`alert alert-${level}`}>{text}</div>;
-}
+export const SpinnerAlert = ({ level, text, spinner }: Props) =>
+  spinner ? <Spinner /> : <div className={`alert alert-${level}`}>{text}</div>;

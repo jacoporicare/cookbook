@@ -15,7 +15,7 @@ type Props = CookiesProps;
 
 const store = configureStore();
 
-class App extends Component<Props> {
+class AppBase extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
@@ -39,4 +39,4 @@ class App extends Component<Props> {
   }
 }
 
-export default withCookies(App);
+export const App = withCookies(AppBase);

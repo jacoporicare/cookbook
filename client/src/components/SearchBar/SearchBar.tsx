@@ -1,12 +1,12 @@
 import React, { ChangeEvent } from 'react';
 
-import SearchInput from '../SearchInput/SearchInput';
+import { SearchInput } from '../SearchInput/SearchInput';
 
 type Props = {
   onChange: (value: string) => void;
 };
 
-export default class SearchBar extends React.Component<Props> {
+export class SearchBar extends React.Component<Props> {
   handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.props.onChange(event.target.value);
   };

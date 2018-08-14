@@ -8,7 +8,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
+export const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }: Props) => {
   return (
     <Modal
       isOpen={show}

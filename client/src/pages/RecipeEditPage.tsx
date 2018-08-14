@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
 import { getImageUrl } from '../utils';
-import DocumentTitle from '../components/DocumentTitle/DocumentTitle';
+import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import {
   saveRecipe,
@@ -16,8 +16,8 @@ import {
   RecipeEditAction,
   SaveRecipeParams,
 } from '../components/RecipeEdit/actions';
-import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
-import SpinnerAlert from '../components/SpinnerAlert/SpinnerAlert';
+import { RecipeEdit } from '../components/RecipeEdit/RecipeEdit';
+import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -60,7 +60,7 @@ type State = {
   isSavingImage: boolean;
 };
 
-class RecipeEditPage extends React.Component<Props, State> {
+class RecipeEditPageBase extends React.Component<Props, State> {
   saved = false;
 
   constructor(props: Props) {
@@ -393,7 +393,7 @@ function mapDispatchToProps(
   };
 }
 
-export default connect(
+export const RecipeEditPage = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecipeEditPage);
+)(RecipeEditPageBase);

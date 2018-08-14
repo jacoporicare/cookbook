@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'react-emotion';
 
 import { Ingredient } from '../../types';
-import RichText from '../RichText/RichText';
-import IngredientList from './IngredientList';
+import { RichText } from '../RichText/RichText';
+import { IngredientList } from './IngredientList';
 
 type Props = {
   ingredients?: Ingredient[];
@@ -38,40 +38,38 @@ const ImageXs = styled.img`
   margin-top: 15px;
 `;
 
-export default function RecipeDetail({
+export const RecipeDetail = ({
   ingredients,
   servingCount,
   directions,
   lastModifiedDate,
   imageUrl,
   imageFullUrl,
-}: Props) {
-  return (
-    <>
-      <div className="row">
-        <div className="col-md-3 col-sm-4">
-          <IngredientList ingredients={ingredients} servingCount={servingCount} />
-          <Info>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Info>
-        </div>
-
-        <div className="col-md-9 col-sm-8">
-          {imageUrl && (
-            <ImageLink href={imageFullUrl} target="_blank" className="hidden-xs">
-              <Image src={imageUrl} />
-            </ImageLink>
-          )}
-          {directions ? (
-            <RichText text={directions} />
-          ) : (
-            <div className="alert alert-info">Žádný postup.</div>
-          )}
-        </div>
+}: Props) => (
+  <>
+    <div className="row">
+      <div className="col-md-3 col-sm-4">
+        <IngredientList ingredients={ingredients} servingCount={servingCount} />
+        <Info>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Info>
       </div>
-      {imageUrl && (
-        <a href={imageFullUrl} target="_blank" className="visible-xs">
-          <ImageXs src={imageUrl} />
-        </a>
-      )}
-    </>
-  );
-}
+
+      <div className="col-md-9 col-sm-8">
+        {imageUrl && (
+          <ImageLink href={imageFullUrl} target="_blank" className="hidden-xs">
+            <Image src={imageUrl} />
+          </ImageLink>
+        )}
+        {directions ? (
+          <RichText text={directions} />
+        ) : (
+          <div className="alert alert-info">Žádný postup.</div>
+        )}
+      </div>
+    </div>
+    {imageUrl && (
+      <a href={imageFullUrl} target="_blank" className="visible-xs">
+        <ImageXs src={imageUrl} />
+      </a>
+    )}
+  </>
+);

@@ -6,7 +6,7 @@ import Autosuggest, {
 import matchSorter from 'match-sorter';
 
 import { Recipe } from '../../types';
-import SearchInput from '../SearchInput/SearchInput';
+import { SearchInput } from '../SearchInput/SearchInput';
 
 type Props = {
   recipes: Recipe[];
@@ -18,7 +18,7 @@ type State = {
   suggestions: Recipe[];
 };
 
-export default class RecipeSearch extends React.Component<Props, State> {
+export class RecipeSearch extends React.Component<Props, State> {
   state = {
     value: '',
     suggestions: [],
