@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import { Icon } from '../Icon/Icon';
+import { PageHeading } from '../common/PageHeading';
+import { Icon } from '../common/Icon';
+import { Button, SuccessButton } from '../elements/Button';
 
 type Props = {
   title?: string;
@@ -11,16 +13,20 @@ type Props = {
   slug?: string;
 };
 
+const LinkButton = Button.withComponent(Link);
+
 export const Header = ({ title, isNew, isSaving, changed, slug }: Props) => (
-  <h1 className="page-header clearfix">
+  <PageHeading
+    buttons={
+      <>
+        <SuccessButton disabled={!title || isSaving || !changed}>
+          <Icon icon="save" regular />
+          {isSaving ? 'Ukládání…' : 'Uložit'}
+        </SuccessButton>
+        <LinkButton to={isNew ? '/' : `/recept/${slug}`}>Zrušit</LinkButton>
+      </>
+    }
+  >
     {title || (isNew ? 'Nový recept' : 'Název receptu')}
-    <span className="pull-right">
-      <button type="submit" className="btn btn-success" disabled={!title || isSaving || !changed}>
-        <Icon icon="save" /> {isSaving ? 'Ukládání…' : 'Uložit'}
-      </button>{' '}
-      <Link to={isNew ? '/' : `/recept/${slug}`} className="btn btn-default">
-        Zrušit
-      </Link>
-    </span>
-  </h1>
+  </PageHeading>
 );

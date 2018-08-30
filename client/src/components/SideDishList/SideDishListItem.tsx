@@ -1,13 +1,14 @@
 import React from 'react';
 
 import { SideDish } from '../../types';
+import { TableRow, TableCell } from '../elements/Table';
 
 type Props = SideDish;
 
 export const SideDishListItem = ({ title, sideWeight, mainWeight }: Props) => (
-  <tr>
-    <td>{title}</td>
-    <td className="text-right">{sideWeight}</td>
-    <td className="text-right">{mainWeight}</td>
-  </tr>
+  <TableRow>
+    <TableCell>{title}</TableCell>
+    <TableCell textAlign="right">{sideWeight}</TableCell>
+    <TableCell textAlign="right">{mainWeight}</TableCell>
+  </TableRow>
 );

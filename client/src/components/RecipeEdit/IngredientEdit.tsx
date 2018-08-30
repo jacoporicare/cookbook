@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
+import { Box, Text } from '../core';
 import { IngredientList } from './IngredientList';
 import { IngredientForm } from './IngredientForm';
 import { IngredientGroupForm } from './IngredientGroupForm';
@@ -28,6 +29,11 @@ type State = {
   amount?: number;
   amountUnit?: string;
   group?: string;
+};
+
+const Heading = Text.withComponent('h3');
+Heading.defaultProps = {
+  fontWeight: 300,
 };
 
 export class IngredientEdit extends React.Component<Props, State> {
@@ -93,20 +99,28 @@ export class IngredientEdit extends React.Component<Props, State> {
 
     return (
       <>
-        <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
-        <IngredientForm
-          name={name}
-          amount={amount}
-          amountUnit={amountUnit}
-          ingredientOptions={ingredientOptions}
-          onChange={this.handleIngredientChange}
-          onAdd={this.handleAddIngredient}
-        />
-        <IngredientGroupForm
-          group={group}
-          onChange={this.handleGroupChange}
-          onAdd={this.handleAddGroup}
-        />
+        <Box mb={3}>
+          <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+        </Box>
+        <Box mb={3}>
+          <Heading>Přidat ingredienci</Heading>
+          <IngredientForm
+            name={name}
+            amount={amount}
+            amountUnit={amountUnit}
+            ingredientOptions={ingredientOptions}
+            onChange={this.handleIngredientChange}
+            onAdd={this.handleAddIngredient}
+          />
+        </Box>
+        <Box>
+          <Heading>Přidat skupinu</Heading>
+          <IngredientGroupForm
+            group={group}
+            onChange={this.handleGroupChange}
+            onAdd={this.handleAddGroup}
+          />
+        </Box>
       </>
     );
   }

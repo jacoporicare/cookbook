@@ -1,13 +1,14 @@
 import React from 'react';
-import { IndexLink } from 'react-router';
+import { IndexLink, Link } from 'react-router';
 import styled, { css } from 'react-emotion';
 
-import { screenBreakpoints } from '../../const';
 import { Recipe } from '../../types';
+import { colors, theme } from '../../styles/colors';
+import { Box } from '../core';
+import { Icon } from '../common/Icon';
 import { RecipeSearch } from '../RecipeSearch/RecipeSearch';
-import { UserInfo } from './UserInfo';
-import pig from './pig.png';
 import cow from './cow.png';
+import pig from './pig.png';
 
 type Props = {
   userName?: string;
@@ -17,46 +18,49 @@ type Props = {
   onRecipeSelected: (slug: string) => void;
 };
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  height: 60px;
-`;
-
-const Logo = styled.h1`
-  flex: 1 1 auto;
-  margin: 0;
-  font-family: 'Amatic SC', cursive;
-  white-space: nowrap;
-
-  @media (min-width: ${screenBreakpoints.md}px) {
-    flex: 0 1 auto;
-  }
-`;
-
-const Icon = styled.img`
+const LogoIcon = styled.img`
   width: 40px;
   height: 40px;
+  margin: 0 4px;
 `;
 
-const Search = styled.div`
-  display: none;
+const NavItem = styled(Box)`
+  color: ${colors.gray600};
+  font-size: 20px;
+  font-weight: 300;
+  padding: 8px;
+  white-space: nowrap;
+`;
 
-  @media (min-width: ${screenBreakpoints.md}px) {
+const animatedUnderline = css`
+  &::after {
+    content: '';
     display: block;
-    flex: 1 1 auto;
-    padding: 0 30px;
-
-    .react-autosuggest__container {
-      max-width: 400px;
-      margin: 0 auto;
-    }
+    width: 100%;
+    margin-top: 4px;
+    height: 4px;
+    transition: transform 250ms ease;
+    transform: scaleX(0);
+    background-color: ${theme.primary};
+  }
+  &.active::after,
+  &:hover::after {
+    transform: scaleX(1);
   }
 `;
 
-const UserInfoContainer = styled.div`
-  text-align: right;
-`;
+const StyledLink = styled(NavItem)`
+  color: white;
+  text-decoration: none;
+  ${animatedUnderline};
+
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+`.withComponent(Link);
+
+const StyledIndexLink = StyledLink.withComponent(IndexLink);
 
 export const Header = ({
   userName,
@@ -65,32 +69,59 @@ export const Header = ({
   recipes,
   onRecipeSelected,
 }: Props) => (
-  <div className="container">
-    <Container>
-      <Logo>
+  <Box
+    bg={colors.gray1000}
+    color="white"
+    css={{
+      transition: 'all 200ms ease',
+    }}
+  >
+    <Box display="flex" justifyContent="space-between" p={[2, 3]} overflow={['auto', 'initial']}>
+      <Box display="flex" alignItems="center" css={{ transition: 'opacity 200ms ease' }}>
         <IndexLink
           to="/"
           className={css`
-            &,
+            display: flex;
+            align-items: center;
+            font-family: 'Amatic SC', cursive;
+            font-size: 36px;
+            color: white;
+
             &:hover {
-              color: #000;
+              color: white;
               text-decoration: none;
             }
           `}
         >
-          <Icon src={pig} alt="Prase" /> Žrádelník <Icon src={cow} alt="Kráva" />
+          <LogoIcon src={pig} alt="Prase" /> <Box display={['none', 'inline']}>Žrádelník</Box>{' '}
+          <LogoIcon src={cow} alt="Kráva" />
         </IndexLink>
-      </Logo>
-      <Search>
+      </Box>
+      <Box display="flex">
         <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
-      </Search>
-      <UserInfoContainer>
-        <UserInfo
-          isAuthenticated={isAuthenticated}
-          userName={userName}
-          isFetchingUser={isFetchingUser}
-        />
-      </UserInfoContainer>
-    </Container>
-  </div>
+        <StyledIndexLink to="/" activeClassName="active">
+          Recepty
+        </StyledIndexLink>
+        <StyledLink to="/prilohy" activeClassName="active">
+          Přílohy
+        </StyledLink>
+        <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
+        {!isAuthenticated ? (
+          <StyledLink
+            to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
+            activeClassName="active"
+          >
+            Přihlásit
+          </StyledLink>
+        ) : (
+          <>
+            <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
+            <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
+              <Icon icon="sign-out-alt" />
+            </StyledLink>
+          </>
+        )}
+      </Box>
+    </Box>
+  </Box>
 );

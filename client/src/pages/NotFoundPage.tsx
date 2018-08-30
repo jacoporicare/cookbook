@@ -1,8 +1,13 @@
 import React from 'react';
 
+import { WarningAlert } from '../components/elements/Alert';
+import { PageHeading } from '../components/common/PageHeading';
+
+const HeadingAlert = WarningAlert.withComponent('h3');
+
 export const NotFoundPage = () => (
-  <div className="container">
-    <h1 className="page-header">Nenalezeno</h1>
-    <h3 className="alert alert-warning">Toto není stránka, kterou hledáš.</h3>
-  </div>
+  <>
+    <PageHeading>Nenalezeno</PageHeading>
+    <HeadingAlert>Toto není stránka, kterou hledáš.</HeadingAlert>
+  </>
 );

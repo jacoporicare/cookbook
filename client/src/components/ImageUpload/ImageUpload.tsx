@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropzone, { ImageFile } from 'react-dropzone';
-import styled from 'react-emotion';
+import styled, { css } from 'react-emotion';
 
 type Props = {
   imageUrl?: string;
@@ -24,7 +24,7 @@ const Text = styled.div`
   z-index: 1;
 `;
 
-const Container = styled.div`
+const Wrapper = styled.div`
   float: right;
   margin-left: 15px;
   position: relative;
@@ -73,33 +73,34 @@ export class ImageUpload extends React.Component<Props, State> {
     const src = this.state.image || this.props.imageUrl;
 
     return (
-      <Container>
+      <Wrapper>
         <Dropzone
           multiple={false}
           onDrop={this.handleDrop}
           accept="image/*"
-          style={{
-            width: 204,
-            height: 204,
-            borderWidth: 2,
-            borderColor: 'rgb(102, 102, 102)',
-            borderStyle: 'dashed',
-            borderRadius: 4,
-            cursor: 'pointer',
-          }}
-          acceptStyle={{
-            borderStyle: 'solid',
-            borderColor: 'rgb(63, 195, 0)',
-          }}
-          rejectStyle={{
-            borderStyle: 'solid',
-            borderColor: 'rgb(195, 31, 31)',
-          }}
+          className={css`
+            width: 204px;
+            height: 204px;
+            border-width: 2px;
+            border-color: rgb(102, 102, 102);
+            border-style: dashed;
+            border-radius: 4px;
+            cursor: pointer;
+            overflow: hidden;
+          `}
+          acceptClassName={css`
+            border-style: solid;
+            border-color: rgb(63, 195, 0);
+          `}
+          rejectClassName={css`
+            border-style: solid;
+            border-color: rgb(195, 31, 31);
+          `}
         >
           {src && <Preview style={{ backgroundImage: `url(${src})` }} />}
           <Text>Klikni nebo sem přetáhni obrázek</Text>
         </Dropzone>
-      </Container>
+      </Wrapper>
     );
   }
 }

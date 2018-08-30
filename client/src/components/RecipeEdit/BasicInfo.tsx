@@ -3,6 +3,11 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
+import { Box } from '../core';
+import { Label } from '../elements/Label';
+import { Input, getInputStyle } from '../elements/Input';
+import { InputAddon } from '../elements/InputAddon';
+import { autosuggestStyle } from './autosuggestStyle';
 
 type Props = {
   preparationTime?: number;
@@ -39,37 +44,37 @@ export class BasicInfo extends React.Component<Props, State> {
 
     return (
       <>
-        <div className="form-group">
-          <label htmlFor="preparationTime">Doba přípravy</label>
-          <div className="input-group">
-            <input
+        <Box mb={3}>
+          <Label htmlFor="preparationTime">Doba přípravy</Label>
+          <Box display="flex">
+            <Input
               type="number"
               min="1"
               id="preparationTime"
               name="preparationTime"
               value={preparationTime}
               onChange={onChange}
-              className="form-control"
+              flex="auto"
+              hasAppendAddon
             />
-            <span className="input-group-addon">min</span>
-          </div>
-        </div>
+            <InputAddon isAppend>min</InputAddon>
+          </Box>
+        </Box>
 
-        <div className="form-group">
-          <label htmlFor="servingCount">Počet porcí</label>
-          <input
+        <Box mb={3}>
+          <Label htmlFor="servingCount">Počet porcí</Label>
+          <Input
             type="number"
             min="1"
             id="servingCount"
             name="servingCount"
             value={servingCount}
             onChange={onChange}
-            className="form-control"
           />
-        </div>
+        </Box>
 
-        <div className="form-group">
-          <label htmlFor="sideDish">Příloha</label>
+        <Box className={autosuggestStyle}>
+          <Label htmlFor="sideDish">Příloha</Label>
           <Autosuggest
             suggestions={sideDishOptions}
             onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
@@ -86,10 +91,10 @@ export class BasicInfo extends React.Component<Props, State> {
                   e.preventDefault();
                 }
               },
-              className: 'form-control',
+              className: getInputStyle(),
             }}
           />
-        </div>
+        </Box>
       </>
     );
   }

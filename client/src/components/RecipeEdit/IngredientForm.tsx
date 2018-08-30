@@ -3,7 +3,11 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Icon } from '../Icon/Icon';
+import { Input, getInputStyle } from '../elements/Input';
+import { Icon } from '../common/Icon';
+import { Box } from '../core';
+import { Button } from '../elements/Button';
+import { autosuggestStyle } from './autosuggestStyle';
 
 type Props = {
   name?: string;
@@ -52,64 +56,53 @@ export class IngredientForm extends React.Component<Props, State> {
     const { name = '', amount = '', amountUnit = '', onChange, onAdd } = this.props;
 
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">Přidat ingredienci</div>
-        <div className="panel-body">
-          <div className="row">
-            <div className="col-xs-6">
-              <div className="form-group">
-                <input
-                  type="number"
-                  name="amount"
-                  value={amount}
-                  onChange={onChange}
-                  onKeyPress={this.handleKeyPress}
-                  min="0"
-                  className="form-control"
-                  placeholder="Množství"
-                />
-              </div>
-            </div>
-            <div className="col-xs-6">
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="amountUnit"
-                  value={amountUnit}
-                  onChange={onChange}
-                  onKeyPress={this.handleKeyPress}
-                  className="form-control"
-                  placeholder="Jednotka"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <div className="input-group">
-              <Autosuggest
-                suggestions={ingredientOptions}
-                onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-                onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-                getSuggestionValue={s => s}
-                renderSuggestion={this.renderSuggestion}
-                inputProps={{
-                  name: 'name',
-                  value: name,
-                  onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
-                  onKeyPress: this.handleKeyPress,
-                  className: 'form-control',
-                  placeholder: 'Název',
-                }}
-              />
-              <div className="input-group-btn">
-                <button type="button" onClick={onAdd} className="btn btn-primary" disabled={!name}>
-                  <Icon icon="plus" /> Přidat
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <>
+        <Box display="flex" mb={2}>
+          <Box flex={1} pr={1}>
+            <Input
+              type="number"
+              name="amount"
+              value={amount}
+              onChange={onChange}
+              onKeyPress={this.handleKeyPress}
+              min="0"
+              placeholder="Množství"
+            />
+          </Box>
+          <Box flex={1} pl={1}>
+            <Input
+              type="text"
+              name="amountUnit"
+              value={amountUnit}
+              onChange={onChange}
+              onKeyPress={this.handleKeyPress}
+              placeholder="Jednotka"
+            />
+          </Box>
+        </Box>
+        <Box display="flex" mb={2}>
+          <Box flex="auto" className={autosuggestStyle}>
+            <Autosuggest
+              suggestions={ingredientOptions}
+              onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+              getSuggestionValue={s => s}
+              renderSuggestion={this.renderSuggestion}
+              inputProps={{
+                name: 'name',
+                value: name,
+                onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
+                onKeyPress: this.handleKeyPress,
+                className: getInputStyle({ hasAppendAddon: true }),
+                placeholder: 'Název',
+              }}
+            />
+          </Box>
+          <Button type="button" onClick={onAdd} disabled={!name} isAppendAddon>
+            <Icon icon="plus" /> Přidat
+          </Button>
+        </Box>
+      </>
     );
   }
 }

@@ -25,7 +25,7 @@ export const authenticatedComponent = (Component: React.ComponentType) => {
 
     redirect() {
       const backUrl = encodeURIComponent(window.location.pathname);
-      this.props.router.push(`/prihlaseni?u=${backUrl}`);
+      this.props.router.push(`/prihlaseni#u=${backUrl}`);
     }
 
     render() {
@@ -42,4 +42,4 @@ export const authenticatedComponent = (Component: React.ComponentType) => {
   });
 
   return connect(mapStateToProps)(AuthenticatedComponent);
-}
+};

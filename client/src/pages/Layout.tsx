@@ -6,12 +6,13 @@ import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
 
 import { User, Recipe, StoreState } from '../types';
-import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
+import { colors } from '../styles/colors';
+import { DocumentTitle } from '../components/common/DocumentTitle';
 import { fetchRecipeList, RecipeListAction } from '../components/RecipeList/actions';
 import { fetchUser, AuthAction } from '../components/Auth/actions';
 import { Header } from '../components/Header/Header';
-import { Navbar } from '../components/Navbar/Navbar';
 import { Footer } from '../components/Footer/Footer';
+import { Box } from '../components/core';
 
 type Props = RouteComponentProps<{}, {}> & {
   children: React.ReactNode;
@@ -56,7 +57,7 @@ class LayoutBase extends React.Component<Props> {
   };
 
   render() {
-    const { isAuthenticated, user, isFetchingUser, router, children } = this.props;
+    const { isAuthenticated, user, isFetchingUser, children } = this.props;
 
     return (
       <>
@@ -69,9 +70,12 @@ class LayoutBase extends React.Component<Props> {
           recipes={this.props.recipes}
           onRecipeSelected={this.handleRecipeSelected}
         />
-        <Navbar router={router} />
-        {children}
-        <Footer />
+        <Box p={[3, 4]}>
+          {children}
+          <Box mt={[3, 4]} pt={2} borderTop={`1px solid ${colors.gray200}`}>
+            <Footer />
+          </Box>
+        </Box>
       </>
     );
   }

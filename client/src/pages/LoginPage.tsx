@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import { withCookies, CookiesProps, CookieSetOptions } from 'react-cookie';
 
 import { StoreState } from '../types';
-import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
+import { DocumentTitle } from '../components/common/DocumentTitle';
 import { login, AuthAction } from '../components/Auth/actions';
 import { LoginForm } from '../components/LoginForm/LoginForm';
 
@@ -52,7 +52,7 @@ class LoginPageBase extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { login, router, cookies, location } = this.props;
+    const { login, router, cookies } = this.props;
     const { username, password, rememberMe } = this.state;
 
     login(username, password).then(action => {
@@ -62,9 +62,12 @@ class LoginPageBase extends React.Component<Props, State> {
         if (rememberMe) {
           cookieOpts.expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
         }
-
         cookies.set('token', action.payload.token, cookieOpts);
-        router.push(location.query.u || '/');
+        router.push(
+          window.location.hash.startsWith('#u=')
+            ? decodeURIComponent(window.location.hash.substring(3))
+            : '/',
+        );
       }
     });
   };
@@ -76,16 +79,14 @@ class LoginPageBase extends React.Component<Props, State> {
     return (
       <>
         <DocumentTitle title="Přihlášení" />
-        <div className="container">
-          <LoginForm
-            username={username}
-            password={password}
-            rememberMe={rememberMe}
-            isSubmitting={isSubmitting}
-            onChange={this.handleChange}
-            onSubmit={this.handleSubmit}
-          />
-        </div>
+        <LoginForm
+          username={username}
+          password={password}
+          rememberMe={rememberMe}
+          isSubmitting={isSubmitting}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
       </>
     );
   }

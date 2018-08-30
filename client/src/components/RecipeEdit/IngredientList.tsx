@@ -5,10 +5,13 @@ import {
   SortableHandle,
   SortEndHandler,
 } from 'react-sortable-hoc';
-import { cx, css } from 'emotion';
 
 import { Ingredient } from '../../types';
-import { Icon } from '../Icon/Icon';
+import { colors } from '../../styles/colors';
+import { Box } from '../core';
+import { InfoAlert } from '../elements/Alert';
+import { Icon } from '../common/Icon';
+import { darken } from 'polished';
 
 type RemoveHandler = (index: number) => void;
 
@@ -22,9 +25,19 @@ type Props = SortableListProps & {
 };
 
 const Handle = SortableHandle(() => (
-  <div className="pull-right text-muted" style={{ cursor: 'pointer' }}>
+  <Box
+    p={2}
+    css={`
+      color: ${colors.gray600};
+      cursor: pointer;
+
+      &:hover {
+        color: ${colors.gray900};
+      }
+    `}
+  >
     <Icon icon="bars" />
-  </div>
+  </Box>
 ));
 
 type SortableItemProps = {
@@ -33,65 +46,57 @@ type SortableItemProps = {
   onRemove: RemoveHandler;
 };
 
+const Item = Box.withComponent('li');
+
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
   const { name, amount, amountUnit, isGroup } = ingredient;
 
-  let className = 'list-group-item';
-  if (isGroup) {
-    className += ' list-group-item-warning';
-  }
-
   return (
-    <li className={className}>
-      <div
-        className={cx(
-          'row',
-          css`
-            margin-left: -16px;
-            margin-right: -16px;
-          `,
-        )}
+    <Item
+      display="flex"
+      bg={isGroup ? colors.gray200 : colors.white}
+      borderTop={`1px solid ${colors.gray300}`}
+    >
+      <Box
+        p={2}
+        css={`
+          color: ${colors.red};
+          cursor: pointer;
+          &:hover {
+            color: ${darken(0.1, colors.red)};
+          }
+        `}
+        onClick={() => {
+          onRemove(itemIndex);
+        }}
       >
-        <div className="col-xs-2">
-          <a
-            href=""
-            onClick={e => {
-              e.preventDefault();
-              onRemove(itemIndex);
-            }}
-          >
-            <Icon icon="trash" />
-          </a>
-        </div>
+        <Icon icon="trash" />
+      </Box>
 
-        {!isGroup && (
-          <div className="col-xs-3 text-right">
-            <b>
-              {amount ? amount.toLocaleString('cs') : ''}
-              &nbsp;
-              {amountUnit}
-            </b>
-          </div>
-        )}
-
-        {!isGroup ? (
-          <div className="col-xs-7">
+      {!isGroup ? (
+        <>
+          <Box flex={2} p={2} textAlign="right">
+            {amount ? amount.toLocaleString('cs') : ''}
+          </Box>
+          <Box flex={1} p={2} pl={0}>
+            {amountUnit}
+          </Box>
+          <Box flex={7} p={2}>
             {name}
-            <Handle />
-          </div>
-        ) : (
-          <div className="col-xs-10">
-            <b>{name}</b>
-            <Handle />
-          </div>
-        )}
-      </div>
-    </li>
+          </Box>
+        </>
+      ) : (
+        <Box flex={1} p={2} textAlign="center">
+          <b>{name}</b>
+        </Box>
+      )}
+      <Handle />
+    </Item>
   );
 });
 
 const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <ul className="list-group">
+  <ul css={{ listStyle: 'none', margin: 0, padding: 0 }}>
     {items.map((ingredient, index) => (
       <SortableItem
         key={index}
@@ -106,7 +111,7 @@ const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) 
 
 export const IngredientList = ({ items, onRemove, onSort }: Props) => {
   if (items.length === 0) {
-    return <div className="alert alert-info">Zatím žádné ingredience.</div>;
+    return <InfoAlert>Zatím žádné ingredience.</InfoAlert>;
   }
 
   return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;

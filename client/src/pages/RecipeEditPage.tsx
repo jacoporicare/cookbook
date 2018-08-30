@@ -7,7 +7,9 @@ import axios from 'axios';
 
 import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
 import { getImageUrl } from '../utils';
-import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
+import { DangerAlert } from '../components/elements/Alert';
+import { SpinnerIf } from '../components/common/SpinnerIf';
+import { DocumentTitle } from '../components/common/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import {
   saveRecipe,
@@ -17,7 +19,6 @@ import {
   SaveRecipeParams,
 } from '../components/RecipeEdit/actions';
 import { RecipeEdit } from '../components/RecipeEdit/RecipeEdit';
-import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -317,9 +318,9 @@ class RecipeEditPageBase extends React.Component<Props, State> {
 
     if (!isNew && !recipe) {
       return (
-        <div className="container">
-          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
-        </div>
+        <SpinnerIf spinner={isFetching}>
+          <DangerAlert>Recept nenalezen.</DangerAlert>
+        </SpinnerIf>
       );
     }
 
@@ -329,30 +330,28 @@ class RecipeEditPageBase extends React.Component<Props, State> {
     return (
       <>
         <DocumentTitle title={!title && isNew ? 'Nový recept' : title} />
-        <div className="container">
-          <RecipeEdit
-            changed={changed}
-            directions={directions}
-            imageUrl={imageUrl}
-            ingredientOptions={ingredientOptions}
-            ingredients={ingredients}
-            isNew={isNew}
-            isSaving={isSaving || isSavingImage}
-            onAddGroup={this.handleAddGroup}
-            onAddIngredient={this.handleAddIngredient}
-            onChange={this.handleChange}
-            onImageChange={this.handleImageChange}
-            onRemoveIngredient={this.handleRemoveIngredient}
-            onSortIngredient={this.handleSortIngredient}
-            onSubmit={this.handleSubmit}
-            preparationTime={preparationTime}
-            servingCount={servingCount}
-            sideDish={sideDish}
-            sideDishOptions={sideDishOptions}
-            slug={slug}
-            title={title}
-          />
-        </div>
+        <RecipeEdit
+          changed={changed}
+          directions={directions}
+          imageUrl={imageUrl}
+          ingredientOptions={ingredientOptions}
+          ingredients={ingredients}
+          isNew={isNew}
+          isSaving={isSaving || isSavingImage}
+          onAddGroup={this.handleAddGroup}
+          onAddIngredient={this.handleAddIngredient}
+          onChange={this.handleChange}
+          onImageChange={this.handleImageChange}
+          onRemoveIngredient={this.handleRemoveIngredient}
+          onSortIngredient={this.handleSortIngredient}
+          onSubmit={this.handleSubmit}
+          preparationTime={preparationTime}
+          servingCount={servingCount}
+          sideDish={sideDish}
+          sideDishOptions={sideDishOptions}
+          slug={slug}
+          title={title}
+        />
       </>
     );
   }

@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'react-emotion';
+
+import { Icon } from '../common/Icon';
 import { RecipeInfoItem } from './RecipeInfoItem';
 
 type Props = {
@@ -41,9 +43,13 @@ export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) =>
     <List>
       {preparationTime &&
         preparationTime > 0 && (
-          <RecipeInfoItem icon="clock-o">{formatTime(preparationTime)}</RecipeInfoItem>
+          <RecipeInfoItem icon={<Icon icon="clock" regular />}>
+            {formatTime(preparationTime)}
+          </RecipeInfoItem>
         )}
-      {!!sideDish && <RecipeInfoItem icon="spoon">{sideDish}</RecipeInfoItem>}
+      {!!sideDish && (
+        <RecipeInfoItem icon={<Icon icon="utensil-spoon" />}>{sideDish}</RecipeInfoItem>
+      )}
     </List>
   );
 };

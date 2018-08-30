@@ -1,6 +1,9 @@
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
 
-import { Icon } from '../Icon/Icon';
+import { Box } from '../core';
+import { Input } from '../elements/Input';
+import { Button } from '../elements/Button';
+import { Icon } from '../common/Icon';
 
 type Props = {
   group?: string;
@@ -23,24 +26,21 @@ export class IngredientGroupForm extends React.Component<Props> {
     const { group = '', onChange, onAdd } = this.props;
 
     return (
-      <div className="form-group">
-        <div className="input-group">
-          <input
-            type="text"
-            name="newGroup"
-            value={group}
-            onChange={onChange}
-            onKeyPress={this.handleKeyPress}
-            className="form-control"
-            placeholder="Nová skupina"
-          />
-          <div className="input-group-btn">
-            <button type="button" onClick={onAdd} className="btn btn-default" disabled={!group}>
-              <Icon icon="plus" /> Přidat
-            </button>
-          </div>
-        </div>
-      </div>
+      <Box display="flex">
+        <Input
+          type="text"
+          name="newGroup"
+          value={group}
+          onChange={onChange}
+          onKeyPress={this.handleKeyPress}
+          placeholder="Nová skupina"
+          flex="auto"
+          hasAppendAddon
+        />
+        <Button type="button" onClick={onAdd} disabled={!group} isAppendAddon>
+          <Icon icon="plus" /> Přidat
+        </Button>
+      </Box>
     );
   }
 }

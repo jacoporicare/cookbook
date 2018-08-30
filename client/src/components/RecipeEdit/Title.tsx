@@ -1,6 +1,9 @@
 import React from 'react';
 
 import { AutosuggestChangeEventHandler } from '../../types';
+import { colors } from '../../styles/colors';
+import { Box, Text } from '../core';
+import { Input } from '../elements/Input';
 
 type Props = {
   title?: string;
@@ -8,11 +11,11 @@ type Props = {
 };
 
 export class Title extends React.Component<Props> {
-  titleInput?: HTMLInputElement | null;
+  ref = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
-    if (this.titleInput) {
-      this.titleInput.focus();
+    if (this.ref.current) {
+      this.ref.current.focus();
     }
   }
 
@@ -20,20 +23,18 @@ export class Title extends React.Component<Props> {
     const { title = '', onChange } = this.props;
 
     return (
-      <div className={`form-group ${!title ? 'has-error' : ''}`}>
-        <input
-          ref={titleInput => {
-            this.titleInput = titleInput;
-          }}
+      <Box mb={3}>
+        <Input
+          innerRef={this.ref}
           type="text"
           name="title"
           value={title}
           onChange={onChange}
-          className="form-control"
           placeholder="Název"
+          hasError={!title}
         />
-        {!title && <span className="text-danger">Název je povinný</span>}
-      </div>
+        {!title && <Text color={colors.red}>Název je povinný</Text>}
+      </Box>
     );
   }
 }

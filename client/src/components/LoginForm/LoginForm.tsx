@@ -1,6 +1,13 @@
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
-import { Spinner } from '../Spinner/Spinner';
+import { Box } from '../core';
+import { Input } from '../elements/Input';
+import { SuccessButton } from '../elements/Button';
+import { Label } from '../elements/Label';
+import { Spinner } from '../common/Spinner';
+import { PageHeading } from '../common/PageHeading';
+import { Lead } from '../common/Lead';
+import { Checkbox } from '../common/Checkbox';
 
 type Props = {
   username: string;
@@ -21,54 +28,41 @@ export const LoginForm = ({
 }: Props) => (
   <>
     {isSubmitting && <Spinner overlay />}
-    <div className="row">
-      <div className="col-sm-12">
-        <h1>Přihlášení</h1>
-        <p className="lead">Zadej své uživatelské jméno a heslo.</p>
-      </div>
-      <div className="col-md-4">
-        <form onSubmit={onSubmit} className="form">
-          <div className="form-group">
-            <label htmlFor="username" className="control-label">
-              Uživatel
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={onChange}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password" className="control-label">
-              Heslo
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="clearfix">
-            <div className="checkbox pull-left">
-              <label>
-                <input type="checkbox" name="rememberMe" checked={rememberMe} onChange={onChange} />
-                Neodhlašovat
-              </label>
-            </div>
-            <div className="pull-right">
-              <button type="submit" className="btn btn-success" disabled={isSubmitting}>
-                Přihlásit
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <PageHeading>Přihlášení</PageHeading>
+    <Lead>Zadej své uživatelské jméno a heslo.</Lead>
+    <form onSubmit={onSubmit}>
+      <Box maxWidth={400}>
+        <Box mb={3}>
+          <Label htmlFor="username">Uživatel</Label>
+          <Input
+            type="text"
+            id="username"
+            name="username"
+            value={username}
+            onChange={onChange}
+            required
+          />
+        </Box>
+        <Box mb={3}>
+          <Label htmlFor="password">Heslo</Label>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={onChange}
+            required
+          />
+        </Box>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Checkbox id="rememberMe" name="rememberMe" checked={rememberMe} onChange={onChange}>
+            Neodhlašovat
+          </Checkbox>
+          <SuccessButton type="submit" disabled={isSubmitting}>
+            Přihlásit
+          </SuccessButton>
+        </Box>
+      </Box>
+    </form>
   </>
 );

@@ -1,7 +1,12 @@
 import React, { Component, ChangeEvent } from 'react';
-import { cx, css } from 'emotion';
 
 import { Ingredient } from '../../types';
+import { colors } from '../../styles/colors';
+import { Box, Text } from '../core';
+import { InfoAlert } from '../elements/Alert';
+import { Input } from '../elements/Input';
+import { InputAddon } from '../elements/InputAddon';
+import { Table, TableRow, TableCell } from '../elements/Table';
 
 type Props = {
   ingredients?: Ingredient[];
@@ -9,7 +14,7 @@ type Props = {
 };
 
 type State = {
-  servingCount: string;
+  servingCount?: number;
 };
 
 export class IngredientList extends Component<Props, State> {
@@ -17,13 +22,13 @@ export class IngredientList extends Component<Props, State> {
     super(props);
 
     this.state = {
-      servingCount: props.servingCount ? props.servingCount.toString() : '',
+      servingCount: props.servingCount,
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
-      servingCount: nextProps.servingCount ? nextProps.servingCount.toString() : '',
+      servingCount: nextProps.servingCount,
     });
   }
 
@@ -36,17 +41,12 @@ export class IngredientList extends Component<Props, State> {
       return amount.toLocaleString('cs');
     }
 
-    return (
-      (amount / this.props.servingCount) *
-      Number.parseInt(this.state.servingCount, 10)
-    ).toLocaleString('cs');
+    return ((amount / this.props.servingCount) * this.state.servingCount).toLocaleString('cs');
   }
 
   handleServingCountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const servingCount = Number.parseInt(event.target.value, 10);
-
     this.setState({
-      servingCount: !Number.isNaN(servingCount) && servingCount > 0 ? servingCount.toString() : '',
+      servingCount: Math.abs(Number(event.target.value) || 1),
     });
   };
 
@@ -55,65 +55,52 @@ export class IngredientList extends Component<Props, State> {
     const { servingCount } = this.state;
 
     if (!ingredients || !ingredients.length) {
-      return <div className="alert alert-info">Žádné ingredience.</div>;
+      return <InfoAlert>Žádné ingredience.</InfoAlert>;
     }
 
     return (
       <>
-        {!!initialServingCount && (
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-group-addon">Počet porcí</div>
-              <input
-                type="number"
-                value={servingCount}
-                onChange={this.handleServingCountChange}
-                min={1}
-                className="form-control"
-              />
-            </div>
-          </div>
+        {Boolean(initialServingCount) && (
+          <Box display="flex" mb={2}>
+            <InputAddon isPrepend>Počet porcí</InputAddon>
+            <Input
+              type="number"
+              value={String(servingCount)}
+              onChange={this.handleServingCountChange}
+              min={1}
+              flex="auto"
+              hasPrependAddon
+            />
+          </Box>
         )}
 
-        <ul className="list-group">
-          {ingredients.map(ingredient => {
-            const { _id: id, isGroup, name, amount, amountUnit } = ingredient;
+        <Table width={1}>
+          <tbody>
+            {ingredients.map(ingredient => {
+              const { _id: id, isGroup, name, amount, amountUnit } = ingredient;
 
-            let className = 'list-group-item';
-            if (isGroup) {
-              className += ' list-group-item-warning';
-            }
+              if (isGroup) {
+                return (
+                  <TableRow key={id} bg={colors.gray200}>
+                    <TableCell colSpan={3} textAlign="center">
+                      <Text fontWeight={600}> {name}</Text>
+                    </TableCell>
+                  </TableRow>
+                );
+              }
 
-            return (
-              <li key={id} className={className}>
-                {isGroup ? (
-                  <b>{name}</b>
-                ) : (
-                  <div
-                    className={cx(
-                      'row',
-                      css`
-                        margin-left: -16px;
-                        margin-right: -16px;
-                      `,
-                    )}
-                  >
-                    <div className="col-xs-3 text-right">
-                      {(amount || amountUnit) && (
-                        <b>
-                          {this.getAmount(amount)}
-                          &nbsp;
-                          {amountUnit}
-                        </b>
-                      )}
-                    </div>
-                    <div className="col-xs-9">{name}</div>
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <TableRow key={id}>
+                  <TableCell width="20%" textAlign="right">
+                    {this.getAmount(amount)}
+                  </TableCell>
+                  <TableCell width="10%">{amountUnit}</TableCell>
+                  <TableCell>{name}</TableCell>
+                </TableRow>
+              );
+            })}
+          </tbody>
+        </Table>
       </>
     );
   }

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
-import styled from 'react-emotion';
 
+import { Box } from '../core';
+import { Button, DangerButton } from '../elements/Button';
+import { PageHeading } from '../common/PageHeading';
+import { Icon } from '../common/Icon';
 import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
-import { Icon } from '../Icon/Icon';
 
 type Props = {
   preparationTime?: number;
@@ -14,9 +16,7 @@ type Props = {
   onDeleteShow: () => void;
 };
 
-const RecipeInfoContainer = styled.div`
-  margin-bottom: 15px;
-`;
+const EditRecipeButton = Button.withComponent(Link);
 
 export const RecipeHeader = ({
   preparationTime,
@@ -27,24 +27,29 @@ export const RecipeHeader = ({
   onDeleteShow,
 }: Props) => (
   <>
-    <h1 className="page-header clearfix">
+    <PageHeading
+      buttons={
+        isAuthenticated && (
+          <>
+            <EditRecipeButton to={`/recept/${slug}/upravit`}>
+              <Icon icon="edit" regular />
+              Upravit
+            </EditRecipeButton>
+            <DangerButton onClick={onDeleteShow}>
+              <Icon icon="trash-alt" regular />
+              Smazat
+            </DangerButton>
+          </>
+        )
+      }
+    >
       {title}
-      {isAuthenticated && (
-        <span className="pull-right">
-          <Link to={`/recept/${slug}/upravit`} className="btn btn-primary">
-            <Icon icon="edit" /> Upravit
-          </Link>{' '}
-          <button className="btn btn-danger" onClick={onDeleteShow}>
-            <Icon icon="trash" /> Smazat
-          </button>
-        </span>
-      )}
-    </h1>
+    </PageHeading>
 
     {(preparationTime || sideDish) && (
-      <RecipeInfoContainer>
+      <Box mb={3}>
         <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
-      </RecipeInfoContainer>
+      </Box>
     )}
   </>
 );

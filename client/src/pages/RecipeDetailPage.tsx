@@ -6,15 +6,16 @@ import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
 import { getImageUrl } from '../utils';
-import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
+import { DangerAlert } from '../components/elements/Alert';
+import { Spinner } from '../components/common/Spinner';
+import { SpinnerIf } from '../components/common/SpinnerIf';
+import { DocumentTitle } from '../components/common/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import { deleteRecipe, RecipeDeleteAction } from '../components/RecipeDeleteModal/actions';
 import { findRecipeBySlug } from '../components/RecipeList/reducer';
 import { RecipeHeader } from '../components/RecipeDetail/RecipeHeader';
 import { RecipeDetail } from '../components/RecipeDetail/RecipeDetail';
 import { RecipeDeleteModal } from '../components/RecipeDeleteModal/RecipeDeleteModal';
-import { Spinner } from '../components/Spinner/Spinner';
-import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
 
 type Params = {
   slug: string;
@@ -77,9 +78,9 @@ class RecipeDetailPageBase extends Component<Props, State> {
 
     if (!recipe) {
       return (
-        <div className="container">
-          <SpinnerAlert level="danger" text="Recept nenalezen." spinner={isFetching} />
-        </div>
+        <SpinnerIf spinner={isFetching}>
+          <DangerAlert>Recept nenalezen.</DangerAlert>
+        </SpinnerIf>
       );
     }
 
@@ -102,28 +103,26 @@ class RecipeDetailPageBase extends Component<Props, State> {
     return (
       <>
         <DocumentTitle title={title} />
-        <div className="container">
-          <RecipeHeader
-            preparationTime={preparationTime}
-            sideDish={sideDish}
-            slug={slug}
-            title={title}
-            isAuthenticated={isAuthenticated}
-            onDeleteShow={this.handleDeleteShow}
+        <RecipeHeader
+          preparationTime={preparationTime}
+          sideDish={sideDish}
+          slug={slug}
+          title={title}
+          isAuthenticated={isAuthenticated}
+          onDeleteShow={this.handleDeleteShow}
+        />
+        {isFetching && !hasDetail ? (
+          <Spinner />
+        ) : (
+          <RecipeDetail
+            ingredients={ingredients}
+            servingCount={servingCount}
+            directions={directions}
+            lastModifiedDate={lastModifiedDate}
+            imageUrl={imageUrl}
+            imageFullUrl={imageFullUrl}
           />
-          {isFetching && !hasDetail ? (
-            <Spinner />
-          ) : (
-            <RecipeDetail
-              ingredients={ingredients}
-              servingCount={servingCount}
-              directions={directions}
-              lastModifiedDate={lastModifiedDate}
-              imageUrl={imageUrl}
-              imageFullUrl={imageFullUrl}
-            />
-          )}
-        </div>
+        )}
         <RecipeDeleteModal
           show={showDeleteModal}
           recipeTitle={title}

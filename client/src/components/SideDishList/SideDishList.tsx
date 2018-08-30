@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { SideDish } from '../../types';
+import { Table, TableHeadRow, TableHeadCell } from '../elements/Table';
+import { PageHeading } from '../common/PageHeading';
 import { SideDishListItem } from './SideDishListItem';
 
 type Props = {
@@ -8,16 +10,16 @@ type Props = {
 };
 
 export const SideDishList = ({ sideDishes }: Props) => (
-  <div className="container">
-    <h1 className="page-header">Přílohy</h1>
+  <>
+    <PageHeading>Přílohy</PageHeading>
 
-    <table className="table table-hover" style={{ width: 'auto' }}>
+    <Table>
       <thead>
-        <tr>
-          <th>Název</th>
-          <th>Příloha</th>
-          <th>Hlavní</th>
-        </tr>
+        <TableHeadRow>
+          <TableHeadCell>Název</TableHeadCell>
+          <TableHeadCell>Příloha</TableHeadCell>
+          <TableHeadCell>Hlavní</TableHeadCell>
+        </TableHeadRow>
       </thead>
 
       <tbody>
@@ -25,6 +27,6 @@ export const SideDishList = ({ sideDishes }: Props) => (
           <SideDishListItem key={sideDish.title} {...sideDish} />
         ))}
       </tbody>
-    </table>
-  </div>
+    </Table>
+  </>
 );

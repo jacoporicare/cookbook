@@ -1,13 +1,16 @@
-import matchSorter from 'match-sorter';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Icon } from '../components/Icon/Icon';
-import { RecipeList } from '../components/RecipeList/RecipeList';
-import { SearchBar } from '../components/SearchBar/SearchBar';
-import { SpinnerAlert } from '../components/SpinnerAlert/SpinnerAlert';
 import { Recipe, StoreState } from '../types';
+import { colors } from '../styles/colors';
+import { Text } from '../components/core';
+import { Button } from '../components/elements/Button';
+import { InfoAlert } from '../components/elements/Alert';
+import { Icon } from '../components/common/Icon';
+import { PageHeading } from '../components/common/PageHeading';
+import { SpinnerIf } from '../components/common/SpinnerIf';
+import { RecipeList } from '../components/RecipeList/RecipeList';
 
 type StateProps = {
   recipes: Recipe[];
@@ -17,77 +20,38 @@ type StateProps = {
 
 type Props = StateProps;
 
-type State = {
-  searchText?: string;
-  recipes: Recipe[];
-};
+const NewRecipeButton = Button.withComponent(Link);
 
-class RecipeListPageBase extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      recipes: props.recipes,
-    };
-  }
-
-  componentWillReceiveProps({ recipes }: Props) {
-    if (recipes !== this.props.recipes) {
-      const { searchText } = this.state;
-      this.setState({
-        recipes: this.getFilteredRecipes(recipes, searchText),
-      });
-    }
-  }
-
-  getFilteredRecipes(recipes: Recipe[], searchText?: string) {
-    if (!searchText) {
-      return recipes;
-    }
-
-    return matchSorter(recipes, searchText, { keys: ['title'] });
-  }
-
-  handleSearchChange = (searchText?: string) => {
-    const { recipes } = this.props;
-    this.setState({
-      searchText,
-      recipes: this.getFilteredRecipes(recipes, searchText),
-    });
-  };
-
+class RecipeListPageBase extends Component<Props> {
   render() {
-    const { isFetching, isAuthenticated } = this.props;
-    const { recipes, searchText } = this.state;
+    const { isFetching, isAuthenticated, recipes } = this.props;
     const isEmpty = recipes.length === 0;
 
     return (
-      <div className="container">
-        <h1 className="page-header clearfix">
-          <div className="row">
-            <div className="col-md-6">
-              Recepty <small>({recipes.length})</small>
-            </div>
-            {isAuthenticated && (
-              <div className="col-md-6 text-right">
-                <Link to="/novy-recept" className="btn btn-primary">
-                  <Icon icon="plus-circle" /> Nový recept
-                </Link>
-              </div>
-            )}
-          </div>
-        </h1>
-        <SearchBar onChange={this.handleSearchChange} />
+      <>
+        <PageHeading
+          buttons={
+            isAuthenticated && (
+              <NewRecipeButton to="/novy-recept">
+                <Icon icon="utensils" />
+                Nový recept
+              </NewRecipeButton>
+            )
+          }
+        >
+          Recepty{' '}
+          <Text fontSize="0.5em" fontWeight={200} color={colors.gray600}>
+            {recipes.length}
+          </Text>
+        </PageHeading>
         {isEmpty ? (
-          <SpinnerAlert
-            level="info"
-            spinner={isFetching}
-            text={searchText ? 'Nenalezen žádný recept.' : 'Zatím zde není žádný recept.'}
-          />
+          <SpinnerIf spinner={isFetching}>
+            <InfoAlert>Zatím zde není žádný recept.</InfoAlert>
+          </SpinnerIf>
         ) : (
           <RecipeList recipes={recipes} />
         )}
-      </div>
+      </>
     );
   }
 }

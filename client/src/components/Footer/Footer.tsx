@@ -1,8 +1,5 @@
 import React from 'react';
 
-export const Footer = () => (
-  <div className="container">
-    <hr />
-    <p>© {new Date().getFullYear()} · Žrádelník</p>
-  </div>
-);
+import { Text } from '../core';
+
+export const Footer = () => <Text fontSize="0.75em">© {new Date().getFullYear()} · Žrádelník</Text>;

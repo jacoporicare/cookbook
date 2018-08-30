@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SideDish } from '../types';
-import { DocumentTitle } from '../components/DocumentTitle/DocumentTitle';
+import { DocumentTitle } from '../components/common/DocumentTitle';
 import { SideDishList } from '../components/SideDishList/SideDishList';
 
 const sideDishes: SideDish[] = [

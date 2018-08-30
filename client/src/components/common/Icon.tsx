@@ -6,11 +6,12 @@ type Props = {
   spin?: boolean;
   fw?: boolean;
   lg?: boolean;
+  regular?: boolean;
 };
 
-export const Icon = ({ icon, spin, fw, lg }: Props) => (
+export const Icon = ({ icon, spin, fw, lg, regular }: Props) => (
   <i
-    className={cx('fa', `fa-${icon}`, {
+    className={cx(regular ? 'far' : 'fa', `fa-${icon}`, {
       'fa-spin': spin,
       'fa-fw': fw,
       'fa-lg': lg,

@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'react-emotion';
 
-import { Icon } from '../Icon/Icon';
-
 type Props = {
-  icon: string;
+  icon: React.ReactNode;
   children?: React.ReactNode;
 };
 
@@ -17,6 +15,6 @@ const Item = styled.li`
 
 export const RecipeInfoItem = ({ icon, children }: Props) => (
   <Item>
-    <Icon icon={icon} /> {children}
+    {icon} {children}
   </Item>
 );

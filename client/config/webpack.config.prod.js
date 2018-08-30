@@ -10,8 +10,6 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -55,7 +53,7 @@ module.exports = {
   mode: 'production',
   bail: true,
   devtool: 'source-map',
-  entry: ['babel-polyfill', './src/index.tsx'],
+  entry: ['@babel/polyfill', './src/index.tsx'],
   resolve: {
     extensions: [
       '.web.ts',
@@ -119,19 +117,7 @@ module.exports = {
                 loader: require.resolve('babel-loader'),
                 options: {
                   presets: ['@babel/preset-react'],
-                  plugins: [
-                    'emotion',
-                    [
-                      'react-css-modules',
-                      {
-                        filetypes: {
-                          '.scss': {
-                            syntax: 'postcss-scss',
-                          },
-                        },
-                      },
-                    ],
-                  ],
+                  plugins: ['emotion'],
                 },
               },
               {
@@ -162,36 +148,6 @@ module.exports = {
               modules: true,
               localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
             }),
-          },
-          // Opt-in support for SASS. The logic here is somewhat similar
-          // as in the CSS routine, except that "sass-loader" runs first
-          // to compile SASS files into CSS.
-          // By default we support SASS Modules with the
-          // extensions .module.scss or .module.sass
-          {
-            test: sassRegex,
-            exclude: sassModuleRegex,
-            loader: getStyleLoaders(
-              {
-                importLoaders: 2,
-                sourceMap: shouldUseSourceMap,
-              },
-              'sass-loader',
-            ),
-          },
-          // Adds support for CSS Modules, but using SASS
-          // using the extension .module.scss or .module.sass
-          {
-            test: sassModuleRegex,
-            loader: getStyleLoaders(
-              {
-                importLoaders: 2,
-                sourceMap: shouldUseSourceMap,
-                modules: true,
-                localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
-              },
-              'sass-loader',
-            ),
           },
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],

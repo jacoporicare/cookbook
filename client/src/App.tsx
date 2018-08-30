@@ -9,11 +9,14 @@ import configureStore from './redux/configureStore';
 import { setAuthToken } from './components/Auth/actions';
 import routes from './routes';
 
-import './App.scss';
+import '@fortawesome/fontawesome-free/css/all.css';
+import './styles/reboot';
 
 type Props = CookiesProps;
 
 const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
+const routerRender = applyRouterMiddleware(useScroll());
 
 class AppBase extends Component<Props> {
   constructor(props: Props) {
@@ -29,11 +32,7 @@ class AppBase extends Component<Props> {
   render() {
     return (
       <Provider store={store}>
-        <Router
-          history={syncHistoryWithStore(browserHistory, store)}
-          render={applyRouterMiddleware(useScroll())}
-          routes={routes}
-        />
+        <Router history={history} render={routerRender} routes={routes} />
       </Provider>
     );
   }

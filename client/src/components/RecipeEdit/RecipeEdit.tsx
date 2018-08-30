@@ -2,10 +2,10 @@ import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { AutosuggestChangeEventHandler, Ingredient } from '../../types';
-import { Icon } from '../Icon/Icon';
+import { Spinner } from '../common/Spinner';
+import { Box } from '../core';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import { RichText } from '../RichText/RichText';
-import { Spinner } from '../Spinner/Spinner';
 import { BasicInfo } from './BasicInfo';
 import { Directions } from './Directions';
 import { Header } from './Header';
@@ -66,7 +66,7 @@ export class RecipeEdit extends React.Component<Props> {
     } = this.props;
 
     return (
-      <form onSubmit={onSubmit} className="form">
+      <form onSubmit={onSubmit}>
         {isSaving && <Spinner overlay />}
 
         <Header title={title} isNew={isNew} isSaving={isSaving} changed={changed} slug={slug} />
@@ -75,8 +75,8 @@ export class RecipeEdit extends React.Component<Props> {
           <Title title={title} onChange={onChange} />
         </fieldset>
 
-        <div className="row">
-          <div className="col-md-2">
+        <Box display={['block', 'block', 'flex']}>
+          <Box flex={1} pr={[0, 0, 3]} mb={3}>
             <fieldset>
               <legend>Základní údaje</legend>
               <BasicInfo
@@ -87,9 +87,9 @@ export class RecipeEdit extends React.Component<Props> {
                 onChange={onChange}
               />
             </fieldset>
-          </div>
+          </Box>
 
-          <div className="col-md-4">
+          <Box flex={[1, 1, 1, 2]} px={[0, 0, 3]} mb={3}>
             <fieldset>
               <legend>Ingredience</legend>
               <IngredientEdit
@@ -101,25 +101,21 @@ export class RecipeEdit extends React.Component<Props> {
                 onSort={onSortIngredient}
               />
             </fieldset>
-          </div>
+          </Box>
 
-          <div className="col-md-6">
+          <Box flex={[1, 1, 1, 3]} pl={[0, 0, 3]} mb={3}>
             <fieldset>
               <legend>Postup</legend>
               <Directions directions={directions} onChange={onChange} />
             </fieldset>
 
-            <p className="text-right">
-              <button
-                type="submit"
-                className="btn btn-success btn-lg"
-                disabled={!title || isSaving || !changed}
-              >
-                <Icon icon="save" /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
-              </button>
-            </p>
-          </div>
-        </div>
+            {/* <Box textAlign="center">
+              <SuccessButton type="submit" disabled={!title || isSaving || !changed}>
+                <Icon icon="save" regular /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
+              </SuccessButton>
+            </Box> */}
+          </Box>
+        </Box>
 
         <fieldset>
           <legend>Náhled postupu</legend>

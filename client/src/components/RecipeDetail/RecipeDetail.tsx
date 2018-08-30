@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'react-emotion';
 
 import { Ingredient } from '../../types';
+import { colors } from '../../styles/colors';
+import { Box, Text } from '../core';
+import { InfoAlert } from '../elements/Alert';
 import { RichText } from '../RichText/RichText';
 import { IngredientList } from './IngredientList';
 
@@ -14,11 +17,7 @@ type Props = {
   imageFullUrl?: string;
 };
 
-const Info = styled.p`
-  margin-bottom: 20px;
-`;
-
-const ImageLink = styled.a`
+const ImageBox = styled(Box)`
   float: right;
   position: relative;
   z-index: 2;
@@ -47,29 +46,32 @@ export const RecipeDetail = ({
   imageFullUrl,
 }: Props) => (
   <>
-    <div className="row">
-      <div className="col-md-3 col-sm-4">
+    <Box display={['block', 'flex']}>
+      <Box flex={1} pr={[0, 3]}>
         <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        <Info>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Info>
-      </div>
+        <Box my={4}>
+          <Text color={colors.gray600}>Naposledy upraveno:</Text>
+          <Box>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Box>
+        </Box>
+      </Box>
 
-      <div className="col-md-9 col-sm-8">
+      <Box flex={3}>
         {imageUrl && (
-          <ImageLink href={imageFullUrl} target="_blank" className="hidden-xs">
-            <Image src={imageUrl} />
-          </ImageLink>
+          <ImageBox display={['none', 'block']}>
+            <a href={imageFullUrl} target="_blank">
+              <Image src={imageUrl} />
+            </a>
+          </ImageBox>
         )}
-        {directions ? (
-          <RichText text={directions} />
-        ) : (
-          <div className="alert alert-info">Žádný postup.</div>
-        )}
-      </div>
-    </div>
+        {directions ? <RichText text={directions} /> : <InfoAlert>Žádný postup.</InfoAlert>}
+      </Box>
+    </Box>
     {imageUrl && (
-      <a href={imageFullUrl} target="_blank" className="visible-xs">
-        <ImageXs src={imageUrl} />
-      </a>
+      <Box display={['block', 'none']}>
+        <a href={imageFullUrl} target="_blank">
+          <ImageXs src={imageUrl} />
+        </a>
+      </Box>
     )}
   </>
 );
