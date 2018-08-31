@@ -14,20 +14,28 @@ type Props = {
   recipe: Recipe;
 };
 
+const Overlay = styled(Box)`
+  color: ${colors.white};
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
 const StyledLink = styled(Link)`
   display: block;
   color: ${colors.gray900};
   text-decoration: none;
+  position: relative;
 
-  &:hover {
-    color: ${colors.gray900};
-    text-decoration: none;
-    background-color: ${colors.gray200};
+  &:hover ${Overlay} {
+    background-color: rgba(0, 0, 0, 0.6);
   }
 `;
 
 const Image = styled.div`
-  height: 200px;
+  height: 250px;
   background-size: cover;
   background-position: center center;
 `;
@@ -48,16 +56,16 @@ export const RecipeListItem = ({ recipe }: Props) => {
   return (
     <StyledLink to={`/recept/${slug}`}>
       <Image style={{ backgroundImage: `url(${imageUrl})` }} />
-      <Box p={2}>
+      <Overlay p={2}>
         <Title>{title}</Title>
-        <Box mt={2} color="#777" fontSize="0.75em">
+        <Box mt={2} color={colors.gray200} fontSize="0.75em">
           <RecipeInfo
             preparationTime={preparationTime}
             sideDish={sideDish}
             placeholder="žádné údaje"
           />
         </Box>
-      </Box>
+      </Overlay>
     </StyledLink>
   );
 };

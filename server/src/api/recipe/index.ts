@@ -167,7 +167,7 @@ router.get('/:slug/image-:size', async (req, res) => {
 
     if (size === 'thumb') {
       image = await sharp(recipe.image)
-        .resize(400, 400)
+        .resize(800, 800)
         .jpeg()
         .toBuffer();
       await fs.mkdirs(path.dirname(thumbPath));
