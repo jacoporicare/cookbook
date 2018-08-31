@@ -112,7 +112,7 @@ module.exports = {
                 loader: require.resolve('babel-loader'),
                 options: {
                   presets: ['@babel/preset-react'],
-                  plugins: ['emotion'],
+                  plugins: [['emotion', { sourceMap: true, autoLabel: true }]],
                 },
               },
               {
