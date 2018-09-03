@@ -4,13 +4,12 @@ import { mix } from 'polished';
 import { theme } from '../../styles/colors';
 import { Box } from '../core';
 
-const Alert = styled(Box)`
-  border: 1px solid;
-  border-radius: 4px;
-`;
+const Alert = Box.withComponent('div');
 
 Alert.defaultProps = {
   p: 3,
+  border: '1px solid',
+  borderRadius: '4px',
 };
 
 export const createAlert = (color: string) => styled(Alert)`

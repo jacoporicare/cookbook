@@ -2,6 +2,8 @@ import styled from 'react-emotion';
 import {
   alignItems,
   AlignItemsProps,
+  border,
+  BorderProps,
   borderRadius,
   BorderRadiusProps,
   borders,
@@ -45,6 +47,7 @@ export type Props = {
   display?: ResponsiveValue<ExtendedDisplayValue>;
   overflow?: ResponsiveValue<OverflowValue>;
 } & AlignItemsProps &
+  BorderProps &
   BordersProps &
   BorderRadiusProps &
   ColorProps &
@@ -66,6 +69,7 @@ const overflow = style({ prop: 'overflow' });
 
 export const Box = styled.div<Props>(
   alignItems,
+  border,
   borders,
   borderRadius,
   color,
