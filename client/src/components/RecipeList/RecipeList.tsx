@@ -16,7 +16,7 @@ const border = `1px solid ${colors.gray200}`;
 export const RecipeList = ({ recipes }: Props) => (
   <Box
     display="flex"
-    justifyContent="space-between"
+    justifyContent="flex-start"
     flexWrap="wrap"
     borderTop={[0, border]}
     borderLeft={[0, border]}
