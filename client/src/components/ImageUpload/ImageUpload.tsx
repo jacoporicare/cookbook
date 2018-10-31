@@ -1,5 +1,5 @@
 import React from 'react';
-import Dropzone, { ImageFile } from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import styled, { css } from 'react-emotion';
 
 type Props = {
@@ -51,13 +51,19 @@ export class ImageUpload extends React.Component<Props, State> {
     this.state = { image: undefined };
   }
 
-  handleDrop = (files: ImageFile[]) => {
+  componentWillUnmount() {
+    if (this.state.image) {
+      URL.revokeObjectURL(this.state.image);
+    }
+  }
+
+  handleDrop = (files: File[]) => {
     if (files.length === 0) {
       return;
     }
 
     const file = files[0];
-    this.setState({ image: file.preview });
+    this.setState({ image: URL.createObjectURL(file) });
 
     const reader = new FileReader();
     reader.onload = () => {
