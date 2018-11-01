@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { Spinner } from '../common/Spinner';
+import Spinner from '../common/Spinner';
 
 type Props = {
   children: React.ReactNode;
   spinner?: boolean;
 };
 
-export const SpinnerIf = ({ children, spinner }: Props) =>
-  spinner ? <Spinner /> : <>{children}</>;
+export default function SpinnerIf({ children, spinner }: Props) {
+  return spinner ? <Spinner /> : <>{children}</>;
+}

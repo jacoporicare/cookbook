@@ -4,10 +4,8 @@ import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 import { Box } from '../core';
-import { Label } from '../elements/Label';
-import { Input, getInputStyle } from '../elements/Input';
-import { InputAddon } from '../elements/InputAddon';
-import { autosuggestStyle } from './autosuggestStyle';
+import { Label, Input, getInputStyle, InputAddon } from '../elements';
+import autosuggestStyle from './autosuggestStyle';
 
 type Props = {
   preparationTime?: number;
@@ -21,7 +19,7 @@ type State = {
   sideDishOptions: string[];
 };
 
-export class BasicInfo extends React.Component<Props, State> {
+export default class BasicInfo extends React.Component<Props, State> {
   state = {
     sideDishOptions: [],
   };

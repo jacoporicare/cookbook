@@ -48,7 +48,7 @@ const Overlay = styled.div`
   }
 `;
 
-export class Spinner extends React.Component<Props, State> {
+export default class Spinner extends React.Component<Props, State> {
   timer?: number;
 
   constructor(props: Props) {

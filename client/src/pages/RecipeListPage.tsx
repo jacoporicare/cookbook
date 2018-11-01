@@ -5,12 +5,11 @@ import { Link } from 'react-router';
 import { Recipe, StoreState } from '../types';
 import { colors } from '../styles/colors';
 import { Text } from '../components/core';
-import { Button } from '../components/elements/Button';
-import { InfoAlert } from '../components/elements/Alert';
-import { Icon } from '../components/common/Icon';
-import { PageHeading } from '../components/common/PageHeading';
-import { SpinnerIf } from '../components/common/SpinnerIf';
-import { RecipeList } from '../components/RecipeList/RecipeList';
+import { Button, InfoAlert } from '../components/elements';
+import Icon from '../components/common/Icon';
+import PageHeading from '../components/common/PageHeading';
+import SpinnerIf from '../components/common/SpinnerIf';
+import RecipeList from '../components/RecipeList/RecipeList';
 
 type StateProps = {
   recipes: Recipe[];
@@ -22,7 +21,7 @@ type Props = StateProps;
 
 const NewRecipeButton = Button.withComponent(Link);
 
-class RecipeListPageBase extends Component<Props> {
+class RecipeListPage extends Component<Props> {
   render() {
     const { isFetching, isAuthenticated, recipes } = this.props;
     const isEmpty = recipes.length === 0;
@@ -67,4 +66,4 @@ function mapStateToProps(state: StoreState): StateProps {
   };
 }
 
-export const RecipeListPage = connect(mapStateToProps)(RecipeListPageBase);
+export default connect(mapStateToProps)(RecipeListPage);

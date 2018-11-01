@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'react-emotion';
 
-import { Icon } from '../common/Icon';
-import { RecipeInfoItem } from './RecipeInfoItem';
+import Icon from '../common/Icon';
+import RecipeInfoItem from './RecipeInfoItem';
 
 type Props = {
   preparationTime?: number;
@@ -34,7 +34,7 @@ const List = styled.ul`
   text-overflow: ellipsis;
 `;
 
-export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) => {
+export default function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
   }
@@ -52,4 +52,4 @@ export const RecipeInfo = ({ preparationTime, sideDish, placeholder }: Props) =>
       )}
     </List>
   );
-};
+}

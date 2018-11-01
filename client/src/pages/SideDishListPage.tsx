@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { SideDish } from '../types';
-import { DocumentTitle } from '../components/common/DocumentTitle';
-import { SideDishList } from '../components/SideDishList/SideDishList';
+import DocumentTitle from '../components/common/DocumentTitle';
+import SideDishList from '../components/SideDishList/SideDishList';
 
 const sideDishes: SideDish[] = [
   { title: 'Brambory', sideWeight: '180 g' },
@@ -13,9 +13,11 @@ const sideDishes: SideDish[] = [
   { title: 'Polenta', sideWeight: '45g' },
 ];
 
-export const SideDishListPage = () => (
-  <>
-    <DocumentTitle title="Přílohy" />
-    <SideDishList sideDishes={sideDishes} />
-  </>
-);
+export default function SideDishListPage() {
+  return (
+    <>
+      <DocumentTitle title="Přílohy" />
+      <SideDishList sideDishes={sideDishes} />
+    </>
+  );
+}

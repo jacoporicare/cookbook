@@ -10,7 +10,7 @@ import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
-import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 import placeholder from '../../assets/food-placeholder.png';
 
@@ -116,7 +116,7 @@ const inputClass = css`
   }
 `;
 
-export class RecipeSearch extends React.Component<Props, State> {
+export default class RecipeSearch extends React.Component<Props, State> {
   state = {
     value: '',
     suggestions: [],

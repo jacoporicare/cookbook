@@ -1,9 +1,8 @@
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
 
 import { Box } from '../core';
-import { Input } from '../elements/Input';
-import { Button } from '../elements/Button';
-import { Icon } from '../common/Icon';
+import { Input, Button } from '../elements';
+import Icon from '../common/Icon';
 
 type Props = {
   group?: string;
@@ -11,7 +10,7 @@ type Props = {
   onAdd: () => void;
 };
 
-export class IngredientGroupForm extends React.Component<Props> {
+export default class IngredientGroupForm extends React.Component<Props> {
   handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
-import { authenticatedComponent } from './components/Auth/authenticatedComponent';
-import { Layout } from './pages/Layout';
-import { RecipeListPage } from './pages/RecipeListPage';
-import { RecipeDetailPage } from './pages/RecipeDetailPage';
-import { RecipeEditPage } from './pages/RecipeEditPage';
-import { SideDishListPage } from './pages/SideDishListPage';
-import { LoginPage } from './pages/LoginPage';
-import { LogoutPage } from './pages/LogoutPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import authenticatedComponent from './components/Auth/authenticatedComponent';
+import Layout from './pages/Layout';
+import RecipeListPage from './pages/RecipeListPage';
+import RecipeDetailPage from './pages/RecipeDetailPage';
+import RecipeEditPage from './pages/RecipeEditPage';
+import SideDishListPage from './pages/SideDishListPage';
+import LoginPage from './pages/LoginPage';
+import LogoutPage from './pages/LogoutPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export default (
   <Route path="/" component={Layout}>

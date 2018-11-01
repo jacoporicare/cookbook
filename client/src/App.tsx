@@ -18,7 +18,7 @@ const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 const routerRender = applyRouterMiddleware(useScroll());
 
-class AppBase extends Component<Props> {
+class App extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
@@ -38,4 +38,4 @@ class AppBase extends Component<Props> {
   }
 }
 
-export const App = withCookies(AppBase);
+export default withCookies(App);

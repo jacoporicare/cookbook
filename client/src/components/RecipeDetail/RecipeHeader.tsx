@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { Box } from '../core';
-import { Button, DangerButton } from '../elements/Button';
-import { PageHeading } from '../common/PageHeading';
-import { Icon } from '../common/Icon';
-import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
+import { Button, DangerButton } from '../elements';
+import PageHeading from '../common/PageHeading';
+import Icon from '../common/Icon';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 type Props = {
   preparationTime?: number;
@@ -18,38 +18,40 @@ type Props = {
 
 const EditRecipeButton = Button.withComponent(Link);
 
-export const RecipeHeader = ({
+export default function RecipeHeader({
   preparationTime,
   sideDish,
   slug,
   title,
   isAuthenticated,
   onDeleteShow,
-}: Props) => (
-  <>
-    <PageHeading
-      buttons={
-        isAuthenticated && (
-          <>
-            <EditRecipeButton to={`/recept/${slug}/upravit`}>
-              <Icon icon="edit" regular />
-              Upravit
-            </EditRecipeButton>
-            <DangerButton onClick={onDeleteShow}>
-              <Icon icon="trash-alt" regular />
-              Smazat
-            </DangerButton>
-          </>
-        )
-      }
-    >
-      {title}
-    </PageHeading>
+}: Props) {
+  return (
+    <>
+      <PageHeading
+        buttons={
+          isAuthenticated && (
+            <>
+              <EditRecipeButton to={`/recept/${slug}/upravit`}>
+                <Icon icon="edit" regular />
+                Upravit
+              </EditRecipeButton>
+              <DangerButton onClick={onDeleteShow}>
+                <Icon icon="trash-alt" regular />
+                Smazat
+              </DangerButton>
+            </>
+          )
+        }
+      >
+        {title}
+      </PageHeading>
 
-    {(preparationTime || sideDish) && (
-      <Box mb={3}>
-        <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
-      </Box>
-    )}
-  </>
-);
+      {(preparationTime || sideDish) && (
+        <Box mb={3}>
+          <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
+        </Box>
+      )}
+    </>
+  );
+}

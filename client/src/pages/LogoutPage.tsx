@@ -10,7 +10,7 @@ type Props = CookiesProps &
     logout: () => AuthAction;
   };
 
-class LogoutPageBase extends React.Component<Props> {
+class LogoutPage extends React.Component<Props> {
   componentDidMount() {
     const { cookies, router, location, logout } = this.props;
     cookies.remove('token');
@@ -27,7 +27,7 @@ const mapDispatchToProps = {
   logout,
 };
 
-export const LogoutPage = connect(
+export default connect(
   null,
   mapDispatchToProps,
-)(withCookies(LogoutPageBase));
+)(withCookies(LogoutPage));

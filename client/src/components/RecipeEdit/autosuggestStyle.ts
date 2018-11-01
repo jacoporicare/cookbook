@@ -2,7 +2,7 @@ import { css } from 'emotion';
 
 import { colors } from '../../styles/colors';
 
-export const autosuggestStyle = css`
+const autosuggestStyle = css`
   .react-autosuggest__container {
     position: relative;
   }
@@ -42,3 +42,5 @@ export const autosuggestStyle = css`
     cursor: pointer;
   }
 `;
+
+export default autosuggestStyle;

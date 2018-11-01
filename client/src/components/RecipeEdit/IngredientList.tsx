@@ -9,8 +9,8 @@ import {
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
-import { InfoAlert } from '../elements/Alert';
-import { Icon } from '../common/Icon';
+import { InfoAlert } from '../elements';
+import Icon from '../common/Icon';
 import { darken } from 'polished';
 
 type RemoveHandler = (index: number) => void;
@@ -109,10 +109,10 @@ const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) 
   </ul>
 ));
 
-export const IngredientList = ({ items, onRemove, onSort }: Props) => {
+export default function IngredientList({ items, onRemove, onSort }: Props) {
   if (items.length === 0) {
     return <InfoAlert>Zatím žádné ingredience.</InfoAlert>;
   }
 
   return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;
-};
+}

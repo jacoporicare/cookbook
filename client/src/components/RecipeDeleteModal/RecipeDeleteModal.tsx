@@ -4,7 +4,7 @@ import { css } from 'emotion';
 
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
-import { DangerButton, Button } from '../elements/Button';
+import { DangerButton, Button } from '../elements';
 
 type Props = {
   show: boolean;
@@ -13,7 +13,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-export const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }: Props) => {
+export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
   return (
     <Modal
       isOpen={show}
@@ -136,4 +136,4 @@ export const RecipeDeleteModal = ({ show, recipeTitle, onClose, onConfirm }: Pro
       </div>
     </Modal>
   );
-};
+}

@@ -6,7 +6,7 @@ import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
-import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 import placeholder from '../../assets/food-placeholder.png';
 
@@ -48,7 +48,7 @@ const Title = styled.h3`
   text-overflow: ellipsis;
 `;
 
-export const RecipeListItem = ({ recipe }: Props) => {
+export default function RecipeListItem({ recipe }: Props) {
   const { slug, title, preparationTime, sideDish, hasImage, lastModifiedDate } = recipe;
 
   const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
@@ -68,4 +68,4 @@ export const RecipeListItem = ({ recipe }: Props) => {
       </Overlay>
     </StyledLink>
   );
-};
+}

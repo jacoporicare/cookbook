@@ -5,8 +5,8 @@ import styled, { css } from 'react-emotion';
 import { Recipe } from '../../types';
 import { colors, theme } from '../../styles/colors';
 import { Box } from '../core';
-import { Icon } from '../common/Icon';
-import { RecipeSearch } from '../RecipeSearch/RecipeSearch';
+import Icon from '../common/Icon';
+import RecipeSearch from '../RecipeSearch/RecipeSearch';
 import cow from './cow.png';
 import pig from './pig.png';
 
@@ -62,66 +62,68 @@ const StyledLink = styled(NavItem)`
 
 const StyledIndexLink = StyledLink.withComponent(IndexLink);
 
-export const Header = ({
+export default function Header({
   userName,
   isAuthenticated,
   isFetchingUser,
   recipes,
   onRecipeSelected,
-}: Props) => (
-  <Box
-    bg={colors.gray1000}
-    color="white"
-    css={{
-      transition: 'all 200ms ease',
-    }}
-  >
-    <Box display="flex" justifyContent="space-between" p={[2, 3]} overflow={['auto', 'initial']}>
-      <Box display="flex" alignItems="center" css={{ transition: 'opacity 200ms ease' }}>
-        <IndexLink
-          to="/"
-          className={css`
-            display: flex;
-            align-items: center;
-            font-family: 'Amatic SC', cursive;
-            font-size: 36px;
-            color: white;
-
-            &:hover {
+}: Props) {
+  return (
+    <Box
+      bg={colors.gray1000}
+      color="white"
+      css={{
+        transition: 'all 200ms ease',
+      }}
+    >
+      <Box display="flex" justifyContent="space-between" p={[2, 3]} overflow={['auto', 'initial']}>
+        <Box display="flex" alignItems="center" css={{ transition: 'opacity 200ms ease' }}>
+          <IndexLink
+            to="/"
+            className={css`
+              display: flex;
+              align-items: center;
+              font-family: 'Amatic SC', cursive;
+              font-size: 36px;
               color: white;
-              text-decoration: none;
-            }
-          `}
-        >
-          <LogoIcon src={pig} alt="Prase" /> <Box display={['none', 'inline']}>Žrádelník</Box>{' '}
-          <LogoIcon src={cow} alt="Kráva" />
-        </IndexLink>
-      </Box>
-      <Box display="flex">
-        <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
-        <StyledIndexLink to="/" activeClassName="active">
-          Recepty
-        </StyledIndexLink>
-        <StyledLink to="/prilohy" activeClassName="active">
-          Přílohy
-        </StyledLink>
-        <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
-        {!isAuthenticated ? (
-          <StyledLink
-            to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
-            activeClassName="active"
+
+              &:hover {
+                color: white;
+                text-decoration: none;
+              }
+            `}
           >
-            Přihlásit
+            <LogoIcon src={pig} alt="Prase" /> <Box display={['none', 'inline']}>Žrádelník</Box>{' '}
+            <LogoIcon src={cow} alt="Kráva" />
+          </IndexLink>
+        </Box>
+        <Box display="flex">
+          <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
+          <StyledIndexLink to="/" activeClassName="active">
+            Recepty
+          </StyledIndexLink>
+          <StyledLink to="/prilohy" activeClassName="active">
+            Přílohy
           </StyledLink>
-        ) : (
-          <>
-            <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
-            <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
-              <Icon icon="sign-out-alt" />
+          <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
+          {!isAuthenticated ? (
+            <StyledLink
+              to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
+              activeClassName="active"
+            >
+              Přihlásit
             </StyledLink>
-          </>
-        )}
+          ) : (
+            <>
+              <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
+              <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
+                <Icon icon="sign-out-alt" />
+              </StyledLink>
+            </>
+          )}
+        </Box>
       </Box>
     </Box>
-  </Box>
-);
+  );
+}

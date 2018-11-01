@@ -3,10 +3,7 @@ import React, { Component, ChangeEvent } from 'react';
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
 import { Box, Text } from '../core';
-import { InfoAlert } from '../elements/Alert';
-import { Input } from '../elements/Input';
-import { InputAddon } from '../elements/InputAddon';
-import { Table, TableRow, TableCell } from '../elements/Table';
+import { InfoAlert, Input, InputAddon, Table, TableRow, TableCell } from '../elements';
 
 type Props = {
   ingredients?: Ingredient[];
@@ -17,7 +14,7 @@ type State = {
   servingCount?: number;
 };
 
-export class IngredientList extends Component<Props, State> {
+export default class IngredientList extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

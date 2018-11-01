@@ -6,16 +6,16 @@ import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
 import { getImageUrl } from '../utils';
-import { DangerAlert } from '../components/elements/Alert';
-import { Spinner } from '../components/common/Spinner';
-import { SpinnerIf } from '../components/common/SpinnerIf';
-import { DocumentTitle } from '../components/common/DocumentTitle';
+import { DangerAlert } from '../components/elements';
+import Spinner from '../components/common/Spinner';
+import SpinnerIf from '../components/common/SpinnerIf';
+import DocumentTitle from '../components/common/DocumentTitle';
 import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
 import { deleteRecipe, RecipeDeleteAction } from '../components/RecipeDeleteModal/actions';
 import { findRecipeBySlug } from '../components/RecipeList/reducer';
-import { RecipeHeader } from '../components/RecipeDetail/RecipeHeader';
-import { RecipeDetail } from '../components/RecipeDetail/RecipeDetail';
-import { RecipeDeleteModal } from '../components/RecipeDeleteModal/RecipeDeleteModal';
+import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
+import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
+import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal';
 
 type Params = {
   slug: string;
@@ -40,7 +40,7 @@ type State = {
   showDeleteModal: boolean;
 };
 
-class RecipeDetailPageBase extends Component<Props, State> {
+class RecipeDetailPage extends Component<Props, State> {
   state = {
     showDeleteModal: false,
   };
@@ -157,7 +157,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, {}, AnyAction>):
   };
 }
 
-export const RecipeDetailPage = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecipeDetailPageBase);
+)(RecipeDetailPage);

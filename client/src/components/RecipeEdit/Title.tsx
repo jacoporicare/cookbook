@@ -3,14 +3,14 @@ import React from 'react';
 import { AutosuggestChangeEventHandler } from '../../types';
 import { colors } from '../../styles/colors';
 import { Box, Text } from '../core';
-import { Input } from '../elements/Input';
+import { Input } from '../elements';
 
 type Props = {
   title?: string;
   onChange: AutosuggestChangeEventHandler;
 };
 
-export class Title extends React.Component<Props> {
+export default class Title extends React.Component<Props> {
   ref = React.createRef<HTMLInputElement>();
 
   componentDidMount() {

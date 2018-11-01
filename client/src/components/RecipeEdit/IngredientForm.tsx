@@ -3,11 +3,10 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import matchSorter from 'match-sorter';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Input, getInputStyle } from '../elements/Input';
-import { Icon } from '../common/Icon';
+import { Input, getInputStyle, Button } from '../elements';
+import Icon from '../common/Icon';
 import { Box } from '../core';
-import { Button } from '../elements/Button';
-import { autosuggestStyle } from './autosuggestStyle';
+import autosuggestStyle from './autosuggestStyle';
 
 type Props = {
   name?: string;
@@ -22,7 +21,7 @@ type State = {
   ingredientOptions: string[];
 };
 
-export class IngredientForm extends React.Component<Props, State> {
+export default class IngredientForm extends React.Component<Props, State> {
   state = {
     ingredientOptions: [],
   };

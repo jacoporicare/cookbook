@@ -2,20 +2,19 @@ import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { AutosuggestChangeEventHandler, Ingredient } from '../../types';
-import { Spinner } from '../common/Spinner';
+import Spinner from '../common/Spinner';
 import { Box } from '../core';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
-import { RichText } from '../RichText/RichText';
-import { BasicInfo } from './BasicInfo';
-import { Directions } from './Directions';
-import { Header } from './Header';
-import {
+import RichText from '../RichText/RichText';
+import BasicInfo from './BasicInfo';
+import Directions from './Directions';
+import Header from './Header';
+import IngredientEdit, {
   AddGroupEventHandler,
   AddIngredientEventHandler,
-  IngredientEdit,
   RemoveEventHandler,
 } from './IngredientEdit';
-import { Title } from './Title';
+import Title from './Title';
 
 type Props = {
   changed: boolean;
@@ -40,7 +39,7 @@ type Props = {
   title?: string;
 };
 
-export class RecipeEdit extends React.Component<Props> {
+export default class RecipeEdit extends React.Component<Props> {
   render() {
     const {
       changed,

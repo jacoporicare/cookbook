@@ -3,9 +3,9 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
 import { Box, Text } from '../core';
-import { IngredientList } from './IngredientList';
-import { IngredientForm } from './IngredientForm';
-import { IngredientGroupForm } from './IngredientGroupForm';
+import IngredientList from './IngredientList';
+import IngredientForm from './IngredientForm';
+import IngredientGroupForm from './IngredientGroupForm';
 
 export type AddIngredientEventHandler = (
   name: string,
@@ -36,7 +36,7 @@ Heading.defaultProps = {
   fontWeight: 300,
 };
 
-export class IngredientEdit extends React.Component<Props, State> {
+export default class IngredientEdit extends React.Component<Props, State> {
   state: State = {};
 
   handleIngredientChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
