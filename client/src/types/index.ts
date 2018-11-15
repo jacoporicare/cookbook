@@ -1,4 +1,6 @@
-export { StoreState } from './StoreState';
+import { StoreState } from './StoreState';
+
+export type StoreState = StoreState;
 export * from './models';
 export * from './common';
 

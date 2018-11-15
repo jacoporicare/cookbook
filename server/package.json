@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node index",
-    "dev": "../scripts/mongo.sh && PORT=4001 tsc-watch --onSuccess 'nodemon dist'",
-    "prebuild": "rm -rf dist",
-    "build": "tsc && cp package.json yarn.lock dist",
+    "dev": "../scripts/mongo.sh && PORT=4001 tsc-watch --onSuccess 'nodemon build'",
+    "prebuild": "rm -rf build",
+    "build": "tsc && cp package.json yarn.lock build",
     "prettier": "prettier --write 'src/**/*.{js,ts,tsx}'"
   },
   "dependencies": {
@@ -31,7 +31,7 @@
     "@types/express-jwt": "^0.0.40",
     "@types/file-type": "^5.2.1",
     "@types/fs-extra": "^5.0.4",
-    "@types/jsonwebtoken": "^7.2.8",
+    "@types/jsonwebtoken": "^8.3.0",
     "@types/mongoose": "^5.2.9",
     "@types/node": "^10.9.4",
     "@types/sharp": "^0.21.0",

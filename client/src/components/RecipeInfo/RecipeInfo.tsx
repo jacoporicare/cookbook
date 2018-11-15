@@ -41,12 +41,11 @@ export default function RecipeInfo({ preparationTime, sideDish, placeholder }: P
 
   return (
     <List>
-      {preparationTime &&
-        preparationTime > 0 && (
-          <RecipeInfoItem icon={<Icon icon="clock" regular />}>
-            {formatTime(preparationTime)}
-          </RecipeInfoItem>
-        )}
+      {preparationTime && preparationTime > 0 && (
+        <RecipeInfoItem icon={<Icon icon="clock" regular />}>
+          {formatTime(preparationTime)}
+        </RecipeInfoItem>
+      )}
       {!!sideDish && (
         <RecipeInfoItem icon={<Icon icon="utensil-spoon" />}>{sideDish}</RecipeInfoItem>
       )}

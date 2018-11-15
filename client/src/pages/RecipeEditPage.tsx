@@ -98,9 +98,8 @@ class RecipeEditPage extends React.Component<Props, State> {
   componentDidMount() {
     const { router, route, fetchIngredientList, fetchSideDishList, slug, fetchRecipe } = this.props;
 
-    router.setRouteLeaveHook(
-      route,
-      () => (this.state.changed && !this.saved ? confirmMsg : undefined),
+    router.setRouteLeaveHook(route, () =>
+      this.state.changed && !this.saved ? confirmMsg : undefined,
     );
 
     fetchIngredientList();
@@ -385,7 +384,7 @@ function mapDispatchToProps(
 ): DispatchProps {
   return {
     fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
-    saveRecipe: (id: string | undefined, recipe: RecipeDetail, hasNewImage: boolean) =>
+    saveRecipe: (id: string | undefined, recipe: SaveRecipeParams, hasNewImage: boolean) =>
       dispatch(saveRecipe(id, recipe, hasNewImage)),
     fetchIngredientList: () => dispatch(fetchIngredientList()),
     fetchSideDishList: () => dispatch(fetchSideDishList()),
