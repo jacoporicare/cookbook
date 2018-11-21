@@ -19,7 +19,21 @@ const users: User[] = [
     name: 'Terezka',
     password: 'zeryk',
   },
+  {
+    id: 3,
+    username: 'skleny',
+    name: 'Kuba S.',
+    password: 'Jachym14',
+  },
+  {
+    id: 4,
+    username: 'misa',
+    name: 'Míša',
+    password: 'Simon17',
+  },
 ];
+
+export const superAdminIds = [1, 2];
 
 export function fakeAuth() {
   return (req: Request, res: Response, next: NextFunction) => {

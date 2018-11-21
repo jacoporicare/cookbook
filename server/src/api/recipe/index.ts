@@ -7,7 +7,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 
 import { User } from '../../types';
-import { auth, findUserById } from '../../auth/auth.service';
+import { auth, findUserById, superAdminIds } from '../../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
 
 function toSlug(title: string) {
@@ -66,6 +66,16 @@ function appendUserName(recipe: Recipe): Recipe {
 
 function getThumbPath(slug: string): string {
   return `/tmp/cookbook/thumbs/${slug}.jpg`;
+}
+
+async function checkUserRightsAsync(userId: number, recipeId: string) {
+  if (superAdminIds.indexOf(userId) > -1) {
+    return true;
+  }
+
+  const oldRecipe = await recipeModel.findById(recipeId);
+
+  return Boolean(oldRecipe && oldRecipe.userId === userId);
 }
 
 const router = Router();
@@ -199,6 +209,10 @@ router.post('/:id', auth(), async (req, res) => {
   const recipe = getRecipe(req);
 
   try {
+    if (!(await checkUserRightsAsync(req.user.id, req.params.id))) {
+      return res.status(403).end();
+    }
+
     const newRecipe = await recipeModel.findByIdAndUpdate(
       req.params.id,
       { $set: recipe },
@@ -217,6 +231,10 @@ router.post('/:id', auth(), async (req, res) => {
 
 router.post('/:id/image', auth(), async (req, res) => {
   try {
+    if (!(await checkUserRightsAsync(req.user.id, req.params.id))) {
+      return res.status(403).end();
+    }
+
     const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
       $set: { image: req.body, hasImage: true },
     });
@@ -236,6 +254,10 @@ router.post('/:id/image', auth(), async (req, res) => {
 
 router.delete('/:id', auth(), async (req, res) => {
   try {
+    if (!(await checkUserRightsAsync(req.user.id, req.params.id))) {
+      return res.status(403).end();
+    }
+
     const recipe = await recipeModel.findByIdAndRemove(req.params.id);
 
     if (recipe) {
@@ -251,6 +273,10 @@ router.delete('/:id', auth(), async (req, res) => {
 
 router.delete('/:id/image', auth(), async (req, res) => {
   try {
+    if (!(await checkUserRightsAsync(req.user.id, req.params.id))) {
+      return res.status(403).end();
+    }
+
     const recipe = await recipeModel.findByIdAndUpdate(req.params.id, {
       $unset: { image: '', hasImage: '' },
     });
