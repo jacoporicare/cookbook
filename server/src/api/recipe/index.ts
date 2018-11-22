@@ -6,7 +6,6 @@ import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { User } from '../../types';
 import { auth, findUserById, superAdminIds } from '../../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
 
@@ -26,10 +25,9 @@ function getError(err: any) {
   return err;
 }
 
-function getRecipe({ body: recipe, user }: { body: Recipe; user?: User }): Recipe {
+function getRecipe({ body: recipe }: { body: Recipe }): Recipe {
   return {
     ...recipe,
-    userId: recipe.userId || (user ? user.id : 0),
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
     sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
@@ -194,7 +192,7 @@ router.get('/:slug/image-:size', async (req, res) => {
 });
 
 router.post('/', auth(), async (req, res) => {
-  const recipe = getRecipe(req);
+  const recipe = { ...getRecipe(req), userId: req.user.id };
 
   try {
     const newRecipe = await recipeModel.create(recipe);
