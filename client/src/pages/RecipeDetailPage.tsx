@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RouteComponentProps } from 'react-router';
 
-import { StoreState, RecipeDetail as RecipeDetailType } from '../types';
+import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
 import { DangerAlert } from '../components/elements';
 import Spinner from '../components/common/Spinner';
@@ -27,6 +27,7 @@ type StateProps = {
   recipe: RecipeDetailType;
   slug: string;
   isAuthenticated: boolean;
+  user?: User;
 };
 
 type DispatchProps = {
@@ -74,7 +75,7 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   render() {
-    const { recipe, isFetching, hasDetail, isAuthenticated } = this.props;
+    const { recipe, isFetching, hasDetail, isAuthenticated, user } = this.props;
 
     if (!recipe) {
       return (
@@ -95,6 +96,8 @@ class RecipeDetailPage extends Component<Props, State> {
       slug,
       title,
       hasImage,
+      userId,
+      userName,
     } = recipe;
 
     const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : undefined;
@@ -109,6 +112,7 @@ class RecipeDetailPage extends Component<Props, State> {
           slug={slug}
           title={title}
           isAuthenticated={isAuthenticated}
+          isAuthor={user && (user.id === userId || user.id === 1 || user.id === 2)}
           onDeleteShow={this.handleDeleteShow}
         />
         {isFetching && !hasDetail ? (
@@ -121,6 +125,7 @@ class RecipeDetailPage extends Component<Props, State> {
             lastModifiedDate={lastModifiedDate}
             imageUrl={imageUrl}
             imageFullUrl={imageFullUrl}
+            userName={userName}
           />
         )}
         <RecipeDeleteModal
@@ -136,7 +141,7 @@ class RecipeDetailPage extends Component<Props, State> {
 
 function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
   const { isFetching, recipesBySlug } = state.recipeDetail;
-  const { isAuthenticated } = state.auth;
+  const { isAuthenticated, user } = state.auth;
   const { slug } = ownProps.params;
   const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
   const hasDetail = Boolean(recipesBySlug[slug]);
@@ -147,6 +152,7 @@ function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params
     recipe,
     slug,
     isAuthenticated,
+    user,
   };
 }
 

@@ -13,6 +13,7 @@ type Props = {
   slug: string;
   title: string;
   isAuthenticated: boolean;
+  isAuthor?: boolean;
   onDeleteShow: () => void;
 };
 
@@ -24,13 +25,15 @@ export default function RecipeHeader({
   slug,
   title,
   isAuthenticated,
+  isAuthor,
   onDeleteShow,
 }: Props) {
   return (
     <>
       <PageHeading
         buttons={
-          isAuthenticated && (
+          isAuthenticated &&
+          isAuthor && (
             <>
               <EditRecipeButton to={`/recept/${slug}/upravit`}>
                 <Icon icon="edit" regular />

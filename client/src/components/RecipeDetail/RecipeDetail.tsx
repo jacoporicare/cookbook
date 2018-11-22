@@ -15,6 +15,7 @@ type Props = {
   lastModifiedDate: string;
   imageUrl?: string;
   imageFullUrl?: string;
+  userName: string;
 };
 
 const ImageBox = styled(Box)`
@@ -44,6 +45,7 @@ export default function RecipeDetail({
   lastModifiedDate,
   imageUrl,
   imageFullUrl,
+  userName,
 }: Props) {
   return (
     <>
@@ -51,6 +53,8 @@ export default function RecipeDetail({
         <Box flex={1} pr={[0, 3]}>
           <IngredientList ingredients={ingredients} servingCount={servingCount} />
           <Box my={4}>
+            <Text color={colors.gray600}>Autor:</Text>
+            <Box>{userName}</Box>
             <Text color={colors.gray600}>Naposledy upraveno:</Text>
             <Box>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Box>
           </Box>
