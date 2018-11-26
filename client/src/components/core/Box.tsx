@@ -10,7 +10,8 @@ import {
   BordersProps,
   color,
   ColorProps,
-  DisplayValue,
+  display,
+  DisplayProps,
   flex,
   flexDirection,
   FlexDirectionProps,
@@ -19,7 +20,6 @@ import {
   FlexWrapProps,
   fontSize,
   FontSizeProps,
-  GlobalStyleValues,
   height,
   HeightProps,
   justifyContent,
@@ -30,6 +30,8 @@ import {
   MaxWidthProps,
   order,
   OrderProps,
+  overflow,
+  OverflowProps,
   ResponsiveValue,
   space,
   SpaceProps,
@@ -40,17 +42,12 @@ import {
   WidthProps,
 } from 'styled-system';
 
-type ExtendedDisplayValue = DisplayValue | 'inline-flex' | 'none';
-type OverflowValue = GlobalStyleValues | 'visible' | 'hidden' | 'scroll' | 'auto';
-
-export type Props = {
-  display?: ResponsiveValue<ExtendedDisplayValue>;
-  overflow?: ResponsiveValue<OverflowValue>;
-} & AlignItemsProps &
+export type Props = AlignItemsProps &
   BorderProps &
   BordersProps &
   BorderRadiusProps &
   ColorProps &
+  DisplayProps &
   FlexDirectionProps &
   FlexProps &
   FlexWrapProps &
@@ -60,12 +57,10 @@ export type Props = {
   MaxHeightProps &
   MaxWidthProps &
   OrderProps &
+  OverflowProps &
   SpaceProps &
   TextAlignProps &
   WidthProps;
-
-const display = style({ prop: 'display' });
-const overflow = style({ prop: 'overflow' });
 
 export const Box = styled.div<Props>(
   alignItems,
