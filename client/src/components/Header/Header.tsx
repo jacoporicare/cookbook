@@ -18,7 +18,7 @@ type Props = {
   onRecipeSelected: (slug: string) => void;
 };
 
-const LogoIcon = styled.img`
+const LogoIcon = styled('img')`
   width: 40px;
   height: 40px;
   margin: 0 4px;
@@ -73,12 +73,16 @@ export default function Header({
     <Box
       bg={colors.gray1000}
       color="white"
-      css={{
+      className={css({
         transition: 'all 200ms ease',
-      }}
+      })}
     >
       <Box display="flex" justifyContent="space-between" p={[2, 3]} overflow={['auto', 'initial']}>
-        <Box display="flex" alignItems="center" css={{ transition: 'opacity 200ms ease' }}>
+        <Box
+          display="flex"
+          alignItems="center"
+          className={css({ transition: 'opacity 200ms ease' })}
+        >
           <IndexLink
             to="/"
             className={css`
@@ -106,7 +110,7 @@ export default function Header({
           <StyledLink to="/prilohy" activeClassName="active">
             Přílohy
           </StyledLink>
-          <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
+          <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
           {!isAuthenticated ? (
             <StyledLink
               to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}

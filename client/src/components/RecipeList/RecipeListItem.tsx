@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import styled from 'react-emotion';
+import styled, { css } from 'react-emotion';
 
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
@@ -14,13 +14,14 @@ type Props = {
   recipe: Recipe;
 };
 
-const Overlay = styled(Box)`
+const overlay = css`
   color: ${colors.white};
   background-color: rgba(0, 0, 0, 0.4);
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 8px;
 `;
 
 const StyledLink = styled(Link)`
@@ -29,18 +30,18 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   position: relative;
 
-  &:hover ${Overlay} {
+  &:hover .${overlay} {
     background-color: rgba(0, 0, 0, 0.6);
   }
 `;
 
-const Image = styled.div`
+const Image = styled('div')`
   height: 250px;
   background-size: cover;
   background-position: center center;
 `;
 
-const Title = styled.h3`
+const Title = styled('h3')`
   margin: 0;
   font-weight: 400;
   white-space: nowrap;
@@ -56,7 +57,7 @@ export default function RecipeListItem({ recipe }: Props) {
   return (
     <StyledLink to={`/recept/${slug}`}>
       <Image style={{ backgroundImage: `url(${imageUrl})` }} />
-      <Overlay p={2}>
+      <div className={overlay}>
         <Title>{title}</Title>
         <Box mt={2} color={colors.gray200} fontSize="0.75em">
           <RecipeInfo
@@ -65,7 +66,7 @@ export default function RecipeListItem({ recipe }: Props) {
             placeholder="žádné údaje"
           />
         </Box>
-      </Overlay>
+      </div>
     </StyledLink>
   );
 }

@@ -6,7 +6,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Item = styled.li`
+const Item = styled('li')`
   display: inline;
   & + &::before {
     content: ' · ';

@@ -5,13 +5,14 @@ import {
   SortableHandle,
   SortEndHandler,
 } from 'react-sortable-hoc';
+import { darken } from 'polished';
+import { css } from 'emotion';
 
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
 import { InfoAlert } from '../elements';
 import Icon from '../common/Icon';
-import { darken } from 'polished';
 
 type RemoveHandler = (index: number) => void;
 
@@ -27,7 +28,7 @@ type Props = SortableListProps & {
 const Handle = SortableHandle(() => (
   <Box
     p={2}
-    css={`
+    className={css`
       color: ${colors.gray600};
       cursor: pointer;
 
@@ -59,7 +60,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
     >
       <Box
         p={2}
-        css={`
+        className={css`
           color: ${colors.red};
           cursor: pointer;
           &:hover {
@@ -96,7 +97,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 });
 
 const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <ul css={{ listStyle: 'none', margin: 0, padding: 0 }}>
+  <ul className={css({ listStyle: 'none', margin: 0, padding: 0 })}>
     {items.map((ingredient, index) => (
       <SortableItem
         key={index}

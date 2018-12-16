@@ -3,7 +3,7 @@ import styled from 'react-emotion';
 
 import icon from './search.svg';
 
-const Search = styled.div`
+const Search = styled('div')`
   .form-control {
     background-image: url('${icon}');
     background-repeat: no-repeat;

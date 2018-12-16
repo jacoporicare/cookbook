@@ -62,7 +62,7 @@ export type Props = AlignItemsProps &
   TextAlignProps &
   WidthProps;
 
-export const Box = styled.div<Props>(
+export const Box = styled('div')<Props>(
   alignItems,
   border,
   borders,

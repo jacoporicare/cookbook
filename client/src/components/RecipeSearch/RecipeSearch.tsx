@@ -172,10 +172,10 @@ export default class RecipeSearch extends React.Component<Props, State> {
           <Box
             width="100%"
             height="100%"
-            css={{
+            className={css({
               backgroundSize: 'cover',
               backgroundPosition: 'center center',
-            }}
+            })}
             style={{ backgroundImage: `url('${imageUrl}')` }}
           />
         </Box>
@@ -185,15 +185,15 @@ export default class RecipeSearch extends React.Component<Props, State> {
           flexDirection="column"
           justifyContent="space-between"
           p={2}
-          css={{ minWidth: 0 }}
+          className={css({ minWidth: 0 })}
         >
           <Box
             width="100%"
             overflow="hidden"
-            css={{
+            className={css({
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
-            }}
+            })}
           >
             {recipe.title}
           </Box>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { css } from 'emotion';
+
 import { theme } from '../../styles/colors';
 import { Box } from '../core';
 import { Heading } from '../elements';
@@ -17,7 +19,7 @@ export default function PageHeading({ children, buttons }: Props) {
           flex="auto"
           display="flex"
           justifyContent="flex-end"
-          css={`
+          className={css`
             button,
             a {
               display: inline-block;

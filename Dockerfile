@@ -10,10 +10,8 @@ RUN yarn build
 
 WORKDIR /srv/client
 COPY client/package.json client/yarn.lock ./
-ENV NODE_ENV development
 RUN yarn
 COPY client .
-ENV NODE_ENV production
 RUN yarn build
 
 

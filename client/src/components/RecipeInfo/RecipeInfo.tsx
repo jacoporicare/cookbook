@@ -25,7 +25,7 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const List = styled.ul`
+const List = styled('ul')`
   margin: 0;
   padding: 0;
   list-style: none;

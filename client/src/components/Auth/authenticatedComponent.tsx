@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 
 import { StoreState } from '../../types';
 
-type Props = {
+type StateProps = {
   isAuthenticated: boolean;
+};
+
+type Props = StateProps & {
   router: InjectedRouter;
 };
 
 export default function authenticatedComponent<P>(Component: React.ComponentType<P>) {
-  class AuthenticatedComponent extends React.Component<Props> {
+  class AuthenticatedComponent extends React.Component<P & Props> {
     componentWillMount() {
       if (!this.props.isAuthenticated) {
         this.redirect();
@@ -37,9 +40,11 @@ export default function authenticatedComponent<P>(Component: React.ComponentType
     }
   }
 
-  const mapStateToProps = (state: StoreState) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-  });
+  function mapStateToProps(state: StoreState): StateProps {
+    return {
+      isAuthenticated: state.auth.isAuthenticated,
+    };
+  }
 
-  return connect(mapStateToProps)(AuthenticatedComponent);
+  return connect(mapStateToProps)(AuthenticatedComponent as any);
 }

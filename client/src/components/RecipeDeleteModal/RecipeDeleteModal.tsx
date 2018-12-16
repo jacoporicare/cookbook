@@ -46,7 +46,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
       ariaHideApp={false}
     >
       <div
-        css={`
+        className={css`
           position: relative;
           display: flex;
           flex-direction: column;
@@ -60,7 +60,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
         `}
       >
         <div
-          css={`
+          className={css`
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
@@ -71,7 +71,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
           `}
         >
           <h5
-            css={`
+            className={css`
               font-size: 1.25rem;
               margin-bottom: 0;
               line-height: 1.5;
@@ -82,7 +82,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
           <button
             type="button"
             onClick={onClose}
-            css={`
+            className={css`
               cursor: pointer;
               padding: 1rem;
               margin: -1rem -1rem -1rem auto;
@@ -107,7 +107,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
           </button>
         </div>
         <div
-          css={`
+          className={css`
             position: relative;
             flex: 1 1 auto;
             padding: 1rem;
@@ -116,7 +116,7 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
           Určitě smazat recept <strong>{recipeTitle}</strong>?
         </div>
         <div
-          css={`
+          className={css`
             display: flex;
             align-items: center;
             justify-content: flex-end;

@@ -24,7 +24,7 @@ const ImageBox = styled(Box)`
   z-index: 2;
 `;
 
-const Image = styled.img`
+const Image = styled('img')`
   width: 200px;
   height: 200px;
   margin-left: 15px;
@@ -32,7 +32,7 @@ const Image = styled.img`
   border-radius: 4px;
 `;
 
-const ImageXs = styled.img`
+const ImageXs = styled('img')`
   width: 100%;
   border-radius: 4px;
   margin-top: 15px;

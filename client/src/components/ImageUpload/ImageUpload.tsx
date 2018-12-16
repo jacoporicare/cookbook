@@ -11,7 +11,7 @@ type State = {
   image?: string;
 };
 
-const Text = styled.div`
+const text = css`
   position: absolute;
   width: 200px;
   height: 200px;
@@ -24,17 +24,17 @@ const Text = styled.div`
   z-index: 1;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   float: right;
   margin-left: 15px;
   position: relative;
 
-  &:hover ${Text} {
+  &:hover .${text} {
     z-index: 3;
   }
 `;
 
-const Preview = styled.div`
+const Preview = styled('div')`
   position: absolute;
   width: 200px;
   height: 200px;
@@ -104,7 +104,7 @@ export class ImageUpload extends React.Component<Props, State> {
           `}
         >
           {src && <Preview style={{ backgroundImage: `url(${src})` }} />}
-          <Text>Klikni nebo sem přetáhni obrázek</Text>
+          <div className={text}>Klikni nebo sem přetáhni obrázek</div>
         </Dropzone>
       </Wrapper>
     );
