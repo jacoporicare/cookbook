@@ -1,16 +1,11 @@
-#!/usr/bin/env bash
-
-if [ -z "$1" ]; then
-    echo "Environment not set: dev, prod"
-    exit 1
-fi
+#!/bin/bash
 
 docker-compose \
-  -f "${BASH_SOURCE%/*}/docker-compose.$1.yml" \
-  -p "cookbook-$1" \
+  -f "${BASH_SOURCE%/*}/docker-compose.yml" \
+  -p "cookbook-prod" \
   pull
 
 docker-compose \
-  -f "${BASH_SOURCE%/*}/docker-compose.$1.yml" \
-  -p "cookbook-$1" \
+  -f "${BASH_SOURCE%/*}/docker-compose.yml" \
+  -p "cookbook-prod" \
   up -d

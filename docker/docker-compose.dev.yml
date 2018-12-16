@@ -3,24 +3,15 @@ version: '3'
 services:
   db:
     image: mongo:3.4
-    restart: always
-    networks:
-      - cookbook-dev
+    volumes:
+      - ~/dev/private/mongo_data:/data/db
 
   web:
-    image: docker.jakubricar.cz/cookbook:dev
-    restart: always
-    networks:
-      - cookbook-dev
-      - web
+    image: cookbook
+    depends_on:
+      - db
     environment:
       - NODE_ENV=production
       - MONGO_URI=mongodb://db/cookbook
-      - VIRTUAL_HOST=zradelnik-dev.jakubricar.cz
-      - LETSENCRYPT_HOST=zradelnik-dev.jakubricar.cz
-      - LETSENCRYPT_EMAIL=***REMOVED***
-
-networks:
-  cookbook-dev:
-  web:
-    external: true
+    ports:
+      - '5000:3000'
