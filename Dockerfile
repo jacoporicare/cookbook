@@ -1,4 +1,4 @@
-FROM node:10 as builder
+FROM node:10-alpine as builder
 
 WORKDIR /srv/server
 COPY server/package.json server/yarn.lock ./
@@ -15,7 +15,7 @@ COPY client .
 RUN yarn build
 
 
-FROM node:10
+FROM node:10-alpine
 
 ENV NODE_ENV production
 WORKDIR /srv/app

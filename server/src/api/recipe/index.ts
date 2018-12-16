@@ -2,9 +2,9 @@ import { Router } from 'express';
 import * as mongoose from 'mongoose';
 import * as slug from 'slug';
 import * as fileType from 'file-type';
-import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as jimp from 'jimp';
 
 import { auth, findUserById, superAdminIds } from '../../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
@@ -172,20 +172,18 @@ router.get('/:slug/image-:size', async (req, res) => {
     }
 
     let image: Buffer | undefined = undefined;
+    const mimeType = fileType(recipe.image).mime;
 
     if (size === 'thumb') {
-      image = await sharp(recipe.image)
-        .resize(800, 800)
-        .jpeg()
-        .toBuffer();
+      const jimpImage = await jimp.read(recipe.image);
+      image = await jimpImage.cover(800, 800).getBufferAsync(mimeType);
       await fs.mkdirs(path.dirname(thumbPath));
       fs.writeFile(thumbPath, image).catch(console.log);
     } else {
       image = recipe.image;
     }
 
-    const contentType = fileType(image).mime;
-    res.contentType(contentType).send(image);
+    res.contentType(mimeType).send(image);
   } catch (err) {
     res.status(500).send(err);
   }
