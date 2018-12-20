@@ -222,6 +222,7 @@ export default class RecipeSearch extends React.Component<Props, State> {
           onSuggestionSelected={this.handleSelected}
           getSuggestionValue={r => r.title}
           renderSuggestion={this.renderSuggestion}
+          focusInputOnSuggestionClick={false}
           inputProps={{
             value: value,
             onChange: this.handleChange,
