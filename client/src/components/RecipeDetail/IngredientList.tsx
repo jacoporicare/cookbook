@@ -42,9 +42,18 @@ export default class IngredientList extends Component<Props, State> {
   }
 
   handleServingCountChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    const parsedValue = Number(event.target.value);
+
     this.setState({
-      servingCount: Math.abs(Number(event.target.value) || 1),
+      servingCount: value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : undefined,
     });
+  };
+
+  handleServingCountBlur = () => {
+    if (this.props.servingCount && !this.state.servingCount) {
+      this.setState({ servingCount: this.props.servingCount });
+    }
   };
 
   render() {
@@ -62,8 +71,9 @@ export default class IngredientList extends Component<Props, State> {
             <InputAddon isPrepend>Počet porcí</InputAddon>
             <Input
               type="number"
-              value={String(servingCount)}
+              value={!servingCount ? '' : servingCount}
               onChange={this.handleServingCountChange}
+              onBlur={this.handleServingCountBlur}
               min={1}
               flex="auto"
               hasPrependAddon
