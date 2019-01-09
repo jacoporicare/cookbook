@@ -4,7 +4,9 @@ import * as slug from 'slug';
 import * as fileType from 'file-type';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as jimp from 'jimp';
+import * as childProcess from 'child_process';
+
+import { getTmpImgPath, getThumbPath } from './imageProcessor';
 
 import { auth, findUserById, superAdminIds } from '../../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
@@ -62,10 +64,6 @@ function appendUserName(recipe: Recipe): Recipe {
   };
 }
 
-function getThumbPath(slug: string): string {
-  return `/tmp/cookbook/thumbs/${slug}.jpg`;
-}
-
 async function checkUserRightsAsync(userId: number, recipeId: string) {
   if (superAdminIds.indexOf(userId) > -1) {
     return true;
@@ -74,6 +72,32 @@ async function checkUserRightsAsync(userId: number, recipeId: string) {
   const oldRecipe = await recipeModel.findById(recipeId);
 
   return Boolean(oldRecipe && oldRecipe.userId === userId);
+}
+
+const imgProcessorCallbacks: { [key: string]: (() => void)[] } = {};
+const imgProcessor = childProcess.fork(path.join(__dirname, 'imageProcessor'));
+imgProcessor.on('message', slug => {
+  imgProcessorCallbacks[slug].forEach(cb => cb());
+  delete imgProcessorCallbacks[slug];
+});
+
+async function resizeImage(slug: string, image: Buffer, cb: () => void) {
+  if (!imgProcessorCallbacks[slug]) {
+    imgProcessorCallbacks[slug] = [];
+  }
+
+  imgProcessorCallbacks[slug].push(cb);
+
+  if (imgProcessorCallbacks[slug].length === 1) {
+    const tmpPath = getTmpImgPath(slug);
+
+    if (!fs.existsSync(tmpPath)) {
+      await fs.mkdirs(path.dirname(tmpPath));
+      await fs.writeFile(tmpPath, image);
+    }
+
+    imgProcessor.send(slug);
+  }
 }
 
 const router = Router();
@@ -171,19 +195,12 @@ router.get('/:slug/image-:size', async (req, res) => {
       return res.status(404).end();
     }
 
-    let image: Buffer | undefined = undefined;
-    const mimeType = fileType(recipe.image).mime;
-
-    if (size === 'thumb') {
-      const jimpImage = await jimp.read(recipe.image);
-      image = await jimpImage.cover(800, 800).getBufferAsync(mimeType);
-      await fs.mkdirs(path.dirname(thumbPath));
-      fs.writeFile(thumbPath, image).catch(console.log);
-    } else {
-      image = recipe.image;
+    if (size !== 'thumb') {
+      const mimeType = fileType(recipe.image).mime;
+      res.contentType(mimeType).send(recipe.image);
     }
 
-    res.contentType(mimeType).send(image);
+    await resizeImage(slug, recipe.image, () => res.sendFile(thumbPath));
   } catch (err) {
     res.status(500).send(err);
   }
