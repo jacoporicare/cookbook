@@ -28,6 +28,10 @@ type Props = RouteComponentProps<{}, {}> & {
 
 class Layout extends React.Component<Props> {
   componentDidMount() {
+    if (!navigator.onLine) {
+      return;
+    }
+
     const { isAuthenticated, user, fetchUser, fetchRecipeList } = this.props;
 
     fetchRecipeList();
@@ -37,18 +41,27 @@ class Layout extends React.Component<Props> {
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { fetchUser, fetchRecipeList } = this.props;
-    const { isAuthenticated, user, isFetchingUser, fetchUserError, isFetchingRecipes } = nextProps;
+  componentDidUpdate(prevProps: Props) {
+    if (!navigator.onLine) {
+      return;
+    }
 
-    if (isAuthenticated) {
-      if (!user && !isFetchingUser && !fetchUserError) {
-        fetchUser();
-      }
+    const {
+      isAuthenticated,
+      user,
+      isFetchingUser,
+      fetchUserError,
+      isFetchingRecipes,
+      fetchUser,
+      fetchRecipeList,
+    } = this.props;
 
-      if (!this.props.isAuthenticated && !isFetchingRecipes) {
-        fetchRecipeList();
-      }
+    if (isAuthenticated && !user && !isFetchingUser && !fetchUserError) {
+      fetchUser();
+    }
+
+    if (isAuthenticated && !prevProps.isAuthenticated && !isFetchingRecipes) {
+      fetchRecipeList();
     }
   }
 

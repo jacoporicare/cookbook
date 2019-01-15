@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
-import { DangerAlert } from '../components/elements';
+import { DangerAlert, WarningAlert } from '../components/elements';
 import Spinner from '../components/common/Spinner';
 import SpinnerIf from '../components/common/SpinnerIf';
 import DocumentTitle from '../components/common/DocumentTitle';
@@ -47,11 +47,13 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   componentDidMount() {
-    this.props.fetchRecipe(this.props.slug);
+    if (navigator.onLine) {
+      this.props.fetchRecipe(this.props.slug);
+    }
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.slug !== this.props.slug) {
+    if (navigator.onLine && nextProps.slug !== this.props.slug) {
       this.props.fetchRecipe(nextProps.slug);
     }
   }
@@ -115,9 +117,15 @@ class RecipeDetailPage extends Component<Props, State> {
           isAuthor={user && (user.id === userId || user.id === 1 || user.id === 2)}
           onDeleteShow={this.handleDeleteShow}
         />
-        {isFetching && !hasDetail ? (
-          <Spinner />
-        ) : (
+        {!hasDetail && isFetching && <Spinner />}
+        {!hasDetail && !navigator.onLine && (
+          <WarningAlert>
+            <strong>Žádné připojení k internetu.</strong>
+            <br />
+            Recept se zobrazí v offline módu pouze po předchozím načtení.
+          </WarningAlert>
+        )}
+        {hasDetail && (
           <RecipeDetail
             ingredients={ingredients}
             servingCount={servingCount}

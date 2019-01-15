@@ -110,20 +110,24 @@ export default function Header({
           <StyledLink to="/prilohy" activeClassName="active">
             Přílohy
           </StyledLink>
-          <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
-          {!isAuthenticated ? (
-            <StyledLink
-              to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
-              activeClassName="active"
-            >
-              Přihlásit
-            </StyledLink>
-          ) : (
+          {navigator.onLine && (
             <>
-              <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
-              <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
-                <Icon icon="sign-out-alt" />
-              </StyledLink>
+              <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
+              {!isAuthenticated ? (
+                <StyledLink
+                  to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
+                  activeClassName="active"
+                >
+                  Přihlásit
+                </StyledLink>
+              ) : (
+                <>
+                  <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
+                  <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
+                    <Icon icon="sign-out-alt" />
+                  </StyledLink>
+                </>
+              )}
             </>
           )}
         </Box>

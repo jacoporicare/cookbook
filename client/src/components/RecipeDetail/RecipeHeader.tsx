@@ -32,6 +32,7 @@ export default function RecipeHeader({
     <>
       <PageHeading
         buttons={
+          navigator.onLine &&
           isAuthenticated &&
           isAuthor && (
             <>

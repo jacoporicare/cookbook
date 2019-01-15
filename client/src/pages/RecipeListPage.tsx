@@ -30,6 +30,7 @@ class RecipeListPage extends Component<Props> {
       <>
         <PageHeading
           buttons={
+            navigator.onLine &&
             isAuthenticated && (
               <NewRecipeButton to="/novy-recept">
                 <Icon icon="utensils" />
