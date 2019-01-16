@@ -185,6 +185,8 @@ router.get('/:slug/image-:size', async (req, res) => {
   const thumbPath = getThumbPath(slug);
 
   try {
+    res.set('Cache-Control', 'public, max-age=31536000');
+
     if (size === 'thumb' && fs.existsSync(thumbPath)) {
       return res.sendFile(thumbPath);
     }
