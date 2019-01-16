@@ -25,6 +25,11 @@ const app = express();
 app.use(cors());
 
 if (isProduction) {
+  app.get('/service-worker.js', (req, res) => {
+    res.set('Cache-Control', 'no-cache');
+    res.sendFile(path.join(__dirname, 'public/service-worker.js'));
+  });
+
   app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31536000000 }));
 }
 
