@@ -25,7 +25,7 @@ const app = express();
 app.use(cors());
 
 if (isProduction) {
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31536000000 }));
 }
 
 app.use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }));
