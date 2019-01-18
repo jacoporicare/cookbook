@@ -49,10 +49,9 @@ export function saveRecipe(id: string | undefined, recipe: SaveRecipeParams, has
 
     return api(getState)
       .post<RecipeDetail>(id ? `/api/recipes/${id}` : '/api/recipes', undefinedToNull(recipe))
-      .then(({ data }) => {
-        notify.show('Recept úspěšně uložen', 'success');
-        return dispatch(saveRecipeSuccess(hasNewImage ? { ...data, hasImage: true } : data));
-      })
+      .then(({ data }) =>
+        dispatch(saveRecipeSuccess(hasNewImage ? { ...data, hasImage: true } : data)),
+      )
       .catch(error => {
         handleError(error);
         return dispatch(saveRecipeFailure());

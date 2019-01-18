@@ -4,6 +4,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 import axios from 'axios';
+import { notify } from 'react-notify-toast';
 
 import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
 import { getImageUrl } from '../utils';
@@ -290,6 +291,7 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 
   completeSave(slug: string) {
+    notify.show('Recept úspěšně uložen', 'success');
     this.saved = true;
     this.props.router.push(`/recept/${slug}`);
   }
