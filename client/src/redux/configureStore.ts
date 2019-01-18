@@ -1,13 +1,14 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import configureReducer from './configureReducer';
 
-const persistConfig = {
+const persistConfig: PersistConfig = {
   key: 'root',
   storage,
+  blacklist: ['routing'],
 };
 
 const rootReducer = persistReducer(persistConfig, configureReducer());

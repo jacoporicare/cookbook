@@ -14,7 +14,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 (mongoose as any).Promise = global.Promise;
 mongoose.connect(
   config.mongo.uri,
-  { useNewUrlParser: true },
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  },
 );
 mongoose.connection.on('error', () => {
   throw new Error(`Unable to connect to database at ${config.mongo.uri}`);
