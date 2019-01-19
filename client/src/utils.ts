@@ -19,5 +19,5 @@ export function getImageUrl(
 ) {
   const ts = new Date(lastModifiedDate).valueOf();
 
-  return `/api/recipes/${slug}/image-${size}?${ts}`;
+  return `/api/recipes/${slug}/image-${size}.jpg?${ts}`;
 }

@@ -180,7 +180,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:slug/image-:size', async (req, res) => {
+router.get('/:slug/image-:size.jpg', async (req, res) => {
   const { slug, size } = req.params;
   const thumbPath = getThumbPath(slug);
 
