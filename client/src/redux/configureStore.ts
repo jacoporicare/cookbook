@@ -15,11 +15,8 @@ const rootReducer = persistReducer(persistConfig, configureReducer());
 const middlewares = [thunk];
 
 export default function configureStore() {
-  const composeFn =
-    (process.env.NODE_ENV !== 'production' &&
-      (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-    compose;
-
+  const devToolsCompose = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+  const composeFn = (process.env.NODE_ENV !== 'production' && devToolsCompose) || compose;
   const store = createStore(rootReducer, composeFn(applyMiddleware(...middlewares)));
   const persistor = persistStore(store);
 
