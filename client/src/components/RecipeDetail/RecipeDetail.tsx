@@ -68,7 +68,13 @@ export default function RecipeDetail({
               </a>
             </ImageBox>
           )}
-          {directions ? <RichText text={directions} /> : <InfoAlert>Žádný postup.</InfoAlert>}
+          {directions ? (
+            <RichText text={directions} />
+          ) : (
+            <Box mr={[0, !directions && imageUrl ? '215px' : 0]}>
+              <InfoAlert>Žádný postup.</InfoAlert>
+            </Box>
+          )}
         </Box>
       </Box>
       {imageUrl && (
