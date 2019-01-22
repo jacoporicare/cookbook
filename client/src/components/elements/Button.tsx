@@ -87,3 +87,31 @@ export const WarningButton = createButton(theme.warning);
 export const DangerButton = createButton(theme.danger);
 export const LightButton = createButton(theme.light);
 export const DarkButton = createButton(theme.dark);
+
+export const LinkButton = styled(Box)<BoxProps>({
+  display: 'inline-block',
+  fontWeight: 400,
+  color: colors.blue,
+  textAlign: 'center',
+  verticalAlign: 'middle',
+  userSelect: 'none',
+  backgroundColor: 'transparent',
+  border: '1px solid transparent',
+  padding: '.375rem .75rem',
+  fontSize: '1rem',
+  lineHeight: 1.5,
+  borderRadius: '.25rem',
+  transition: 'color .15s ease-in-out',
+  '&:hover': {
+    color: darken(0.15, colors.blue),
+    textDecoration: 'underline',
+  },
+  '&:not(:disabled)': {
+    cursor: 'pointer',
+  },
+  '&:disabled': {
+    color: colors.gray600,
+    pointerEvents: 'none',
+    opacity: 0.65,
+  },
+}).withComponent('button');

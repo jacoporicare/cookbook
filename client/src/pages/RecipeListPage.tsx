@@ -10,20 +10,42 @@ import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
 import RecipeList from '../components/RecipeList/RecipeList';
+import OfflineRecipes from '../components/RecipeList/OfflineRecipes';
+import { fetchAllRecipes } from '../components/RecipeDetail/actions';
 
 type StateProps = {
   recipes: Recipe[];
   isFetching: boolean;
   isAuthenticated: boolean;
+  offlineRecipeSlugs: string[];
+  isFetchingAllRecipes: boolean;
 };
 
-type Props = StateProps;
+type DispatchProps = {
+  fetchAllRecipes: (slugs: string[]) => void;
+};
+
+type Props = StateProps & DispatchProps;
 
 const NewRecipeButton = Button.withComponent(Link);
 
 class RecipeListPage extends Component<Props> {
+  handleFetchAllRecipesClick = () => {
+    this.props.fetchAllRecipes(
+      this.props.recipes
+        .filter(r => !this.props.offlineRecipeSlugs.includes(r.slug))
+        .map(r => r.slug),
+    );
+  };
+
   render() {
-    const { isFetching, isAuthenticated, recipes } = this.props;
+    const {
+      isFetching,
+      isAuthenticated,
+      recipes,
+      offlineRecipeSlugs,
+      isFetchingAllRecipes,
+    } = this.props;
     const isEmpty = recipes.length === 0;
 
     return (
@@ -49,7 +71,15 @@ class RecipeListPage extends Component<Props> {
             <InfoAlert>Zatím zde není žádný recept.</InfoAlert>
           </SpinnerIf>
         ) : (
-          <RecipeList recipes={recipes} />
+          <>
+            <RecipeList recipes={recipes} />
+            <OfflineRecipes
+              offlineRecipeCount={offlineRecipeSlugs.length}
+              totalRecipeCount={recipes.length}
+              onFetchAllRecipesClick={this.handleFetchAllRecipesClick}
+              isFetchingAllRecipes={isFetchingAllRecipes}
+            />
+          </>
         )}
       </>
     );
@@ -59,12 +89,22 @@ class RecipeListPage extends Component<Props> {
 function mapStateToProps(state: StoreState): StateProps {
   const { recipes, isFetching } = state.recipeList;
   const { isAuthenticated } = state.auth;
+  const { recipesBySlug, isFetchingAllRecipes } = state.recipeDetail;
 
   return {
     recipes,
     isFetching,
     isAuthenticated,
+    offlineRecipeSlugs: Object.keys(recipesBySlug),
+    isFetchingAllRecipes,
   };
 }
 
-export default connect(mapStateToProps)(RecipeListPage);
+const mapDispatchToProps: DispatchProps = {
+  fetchAllRecipes,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RecipeListPage);

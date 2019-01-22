@@ -3,14 +3,14 @@ import { RecipeDetailAction } from './actions';
 
 export type RecipeDetailState = {
   isFetching: boolean;
-  recipesBySlug: {
-    [slug: string]: RecipeDetail;
-  };
+  recipesBySlug: Record<string, RecipeDetail>;
+  isFetchingAllRecipes: boolean;
 };
 
 const initialState: RecipeDetailState = {
   isFetching: false,
   recipesBySlug: {},
+  isFetchingAllRecipes: false,
 };
 
 function recipeDetailReducer(
@@ -42,27 +42,23 @@ function recipeDetailReducer(
         ...state,
         isFetching: false,
       };
-    // case RECIPE_SAVE_REQUEST:
-    //   return {
-    //     ...state,
-    //     isSaving: true,
-    //   };
-    //
-    // case RECIPE_SAVE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isSaving: false,
-    //     [action.response.slug]: {
-    //       ...state[action.response.slug],
-    //       recipe: action.response,
-    //     },
-    //   };
-    //
-    // case RECIPE_SAVE_FAILURE:
-    //   return {
-    //     ...state,
-    //     isSaving: false,
-    //   };
+
+    case 'RECIPE.FETCH_ALL.BEGIN':
+      return {
+        ...state,
+        isFetchingAllRecipes: true,
+      };
+
+    case 'RECIPE.FETCH_ALL.END': {
+      return {
+        ...state,
+        isFetchingAllRecipes: false,
+        recipesBySlug: {
+          ...state.recipesBySlug,
+          ...action.payload.recipesBySlug,
+        },
+      };
+    }
 
     default:
       return state;

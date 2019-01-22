@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Recipe } from '../../types';
 import { colors } from '../../styles/colors';
-import { InfoAlert } from '../elements';
 import { Box } from '../core';
 import RecipeListItem from './RecipeListItem';
 
@@ -37,7 +36,6 @@ export default function RecipeList({ recipes }: Props) {
           <RecipeListItem recipe={recipe} />
         </Box>
       ))}
-      {recipes.length === 0 && <InfoAlert>Zatím zde není žádný recept.</InfoAlert>}
     </Box>
   );
 }
