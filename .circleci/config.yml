@@ -22,7 +22,7 @@ jobs:
             docker push "docker.jakubricar.cz/cookbook:latest"
       - deploy:
           command: |
-            ssh -o StrictHostKeyChecking=no ci@jakubricar.cz '/srv/docker/cookbook/start.sh'
+            ssh -o StrictHostKeyChecking=no ci@jakubricar.cz 'cd /srv/docker/cookbook && docker-compose pull && docker-compose up -d'
 
 workflows:
   version: 2
