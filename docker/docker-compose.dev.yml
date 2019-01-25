@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: mongo:3.4
+    image: mongo:4.0
     volumes:
       - ~/dev/private/mongo_data:/data/db
 
