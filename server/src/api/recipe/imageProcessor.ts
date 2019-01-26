@@ -1,14 +1,13 @@
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs-extra';
 import * as jimp from 'jimp';
 
 export function getTmpImgPath(slug: string): string {
-  return path.join(os.tmpdir(), `cookbook/tmp/${slug}.jpg`);
+  return path.join(`/tmp/cookbook/tmp/${slug}.jpg`);
 }
 
 export function getThumbPath(slug: string): string {
-  return path.join(os.tmpdir(), `cookbook/thumbs/${slug}.jpg`);
+  return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
 }
 
 process.on('message', async slug => {

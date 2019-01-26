@@ -4,7 +4,9 @@ services:
   db:
     image: mongo:4.0
     volumes:
-      - ~/dev/private/mongo_data:/data/db
+      - type: bind
+        source: ~/dev/private/mongo_data/cookbook
+        target: /data/db
 
   web:
     image: cookbook

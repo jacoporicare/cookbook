@@ -7,7 +7,9 @@ services:
     networks:
       - cookbook
     volumes:
-      - /srv/docker/cookbook/data:/data/db
+      - type: bind
+        source: /srv/docker/cookbook/data
+        target: /data/db
 
   web:
     image: docker.jakubricar.cz/cookbook:latest
@@ -17,6 +19,10 @@ services:
       - web
     depends_on:
       - db
+    volumes:
+      - type: volume
+        source: tmp
+        target: /tmp/cookbook
     environment:
       - NODE_ENV=production
       - MONGO_URI=mongodb://db/cookbook
