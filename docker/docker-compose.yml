@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
   db:
@@ -21,7 +21,7 @@ services:
       - db
     volumes:
       - type: volume
-        source: tmp
+        source: cookbooktmp
         target: /tmp/cookbook
     environment:
       - NODE_ENV=production
@@ -34,3 +34,6 @@ networks:
   cookbook:
   web:
     external: true
+
+volumes:
+  cookbooktmp:
