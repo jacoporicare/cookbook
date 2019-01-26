@@ -21,6 +21,7 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS docker.jakubricar.cz
             docker push "docker.jakubricar.cz/cookbook:latest"
       - deploy:
+          name: Deploy
           command: |
             scp -o StrictHostKeyChecking=no docker/docker-compose.yml ci@jakubricar.cz:/srv/docker/cookbook
             ssh -o StrictHostKeyChecking=no ci@jakubricar.cz 'cd /srv/docker/cookbook && docker-compose pull && docker-compose up -d'
