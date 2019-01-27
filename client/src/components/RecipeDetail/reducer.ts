@@ -1,4 +1,5 @@
 import { RecipeDetail } from '../../types';
+import { RecipeListAction } from '../RecipeList/actions';
 import { RecipeDetailAction } from './actions';
 
 export type RecipeDetailState = {
@@ -15,7 +16,7 @@ const initialState: RecipeDetailState = {
 
 function recipeDetailReducer(
   state: RecipeDetailState = initialState,
-  action: RecipeDetailAction,
+  action: RecipeDetailAction | RecipeListAction,
 ): RecipeDetailState {
   switch (action.type) {
     case 'RECIPE.FETCH.REQUEST':
@@ -49,7 +50,7 @@ function recipeDetailReducer(
         isFetchingAllRecipes: true,
       };
 
-    case 'RECIPE.FETCH_ALL.END': {
+    case 'RECIPE.FETCH_ALL.END':
       return {
         ...state,
         isFetchingAllRecipes: false,
@@ -58,7 +59,21 @@ function recipeDetailReducer(
           ...action.payload.recipesBySlug,
         },
       };
-    }
+
+    case 'RECIPE_LIST.FETCH.SUCCESS':
+      return {
+        ...state,
+        recipesBySlug: Object.entries(state.recipesBySlug).reduce<Record<string, RecipeDetail>>(
+          (acc, [slug, recipe]) => {
+            if (action.payload.recipes.some(r => r.slug === slug)) {
+              acc[slug] = recipe;
+            }
+
+            return acc;
+          },
+          {},
+        ),
+      };
 
     default:
       return state;
