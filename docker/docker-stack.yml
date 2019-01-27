@@ -1,0 +1,46 @@
+version: '3.2'
+
+services:
+  db:
+    image: mongo:4.0
+    networks:
+      - cookbook
+    volumes:
+      - type: volume
+        source: cookbookdata
+        target: /data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+  web:
+    image: docker.jakubricar.cz/cookbook:latest
+    ports:
+      - '80:3000'
+    networks:
+      - cookbook
+      - webnet
+    volumes:
+      - type: volume
+        source: cookbooktmp
+        target: /tmp/cookbook
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://db/cookbook
+      - VIRTUAL_HOST=zradelnik.jakubricar.cz
+      - LETSENCRYPT_HOST=zradelnik.jakubricar.cz
+      - LETSENCRYPT_EMAIL=***REMOVED***
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+networks:
+  cookbook:
+  webnet:
+
+volumes:
+  cookbookdata:
+  cookbooktmp:
