@@ -1,6 +1,6 @@
 import React from 'react';
-import { IndexLink, Link } from 'react-router';
-import styled, { css } from 'react-emotion';
+import { Link, LinkGetProps } from '@reach/router';
+import styled, { css, cx } from 'react-emotion';
 
 import { Recipe } from '../../types';
 import { colors, theme } from '../../styles/colors';
@@ -24,13 +24,15 @@ const LogoIcon = styled('img')`
   margin: 0 4px;
 `;
 
-const NavItem = styled(Box)`
+const navItem = css`
   color: ${colors.gray600};
   font-size: 20px;
   font-weight: 300;
   padding: 8px;
   white-space: nowrap;
 `;
+
+const NavItem = styled(Box)(navItem);
 
 const animatedUnderline = css`
   &::after {
@@ -49,18 +51,24 @@ const animatedUnderline = css`
   }
 `;
 
-const StyledLink = styled(NavItem)`
-  color: white;
-  text-decoration: none;
-  ${animatedUnderline};
-
-  &:hover {
+const styledLink = css(
+  navItem,
+  css`
     color: white;
     text-decoration: none;
-  }
-`.withComponent(Link);
+    ${animatedUnderline};
 
-const StyledIndexLink = StyledLink.withComponent(IndexLink);
+    &:hover {
+      color: white;
+      text-decoration: none;
+    }
+  `,
+);
+const StyledLink = styled(NavItem)(styledLink).withComponent(Link);
+
+function isActive({ isCurrent }: LinkGetProps) {
+  return isCurrent && { className: cx(styledLink, 'active') };
+}
 
 export default function Header({
   userName,
@@ -83,7 +91,7 @@ export default function Header({
           alignItems="center"
           className={css({ transition: 'opacity 200ms ease' })}
         >
-          <IndexLink
+          <Link
             to="/"
             className={css`
               display: flex;
@@ -100,14 +108,14 @@ export default function Header({
           >
             <LogoIcon src={pig} alt="Prase" /> <Box display={['none', 'inline']}>Žrádelník</Box>{' '}
             <LogoIcon src={cow} alt="Kráva" />
-          </IndexLink>
+          </Link>
         </Box>
         <Box display="flex">
           <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
-          <StyledIndexLink to="/" activeClassName="active">
+          <StyledLink to="/" getProps={isActive}>
             Recepty
-          </StyledIndexLink>
-          <StyledLink to="/prilohy" activeClassName="active">
+          </StyledLink>
+          <StyledLink to="/prilohy" getProps={isActive}>
             Přílohy
           </StyledLink>
           {navigator.onLine && (
@@ -116,7 +124,7 @@ export default function Header({
               {!isAuthenticated ? (
                 <StyledLink
                   to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
-                  activeClassName="active"
+                  getProps={isActive}
                 >
                   Přihlásit
                 </StyledLink>

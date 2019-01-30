@@ -1,21 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withCookies, CookiesProps } from 'react-cookie';
-import { RouteComponentProps } from 'react-router';
 
 import { logout, AuthAction } from '../components/Auth/actions';
+import { RouteComponentProps } from '@reach/router';
 
-type Props = CookiesProps &
-  RouteComponentProps<{}, {}> & {
-    logout: () => AuthAction;
-  };
+type OwnProps = RouteComponentProps;
+
+type DispatchProps = {
+  logout: () => AuthAction;
+};
+
+type Props = OwnProps & DispatchProps;
 
 class LogoutPage extends React.Component<Props> {
   componentDidMount() {
-    const { cookies, router, location, logout } = this.props;
-    cookies.remove('token');
+    const { location, logout, navigate } = this.props;
     logout();
-    router.push(location.query.u || '/');
+
+    if (navigate && location) {
+      navigate(new URL(location.href).searchParams.get('u') || '/');
+    }
   }
 
   render() {
@@ -23,11 +27,11 @@ class LogoutPage extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = {
+const mapDispatchToProps: DispatchProps = {
   logout,
 };
 
 export default connect(
   null,
   mapDispatchToProps,
-)(withCookies(LogoutPage));
+)(LogoutPage);

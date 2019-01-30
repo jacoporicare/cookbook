@@ -1,19 +1,24 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
-import { withCookies, CookiesProps, CookieSetOptions } from 'react-cookie';
+import { RouteComponentProps } from '@reach/router';
 
 import { StoreState } from '../types';
 import DocumentTitle from '../components/common/DocumentTitle';
 import { login, AuthAction } from '../components/Auth/actions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
-type Props = CookiesProps &
-  RouteComponentProps<{}, {}> & {
-    isSubmitting: boolean;
-    login: (username: string, password: string) => Promise<AuthAction>;
-  };
+type OwnProps = RouteComponentProps;
+
+type StateProps = {
+  isSubmitting: boolean;
+};
+
+type DispatchProps = {
+  login: (username: string, password: string) => Promise<AuthAction>;
+};
+
+type Props = OwnProps & StateProps & DispatchProps;
 
 type State = {
   username: string;
@@ -52,22 +57,17 @@ class LoginPage extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { login, router, cookies } = this.props;
-    const { username, password, rememberMe } = this.state;
+    const { login, navigate } = this.props;
+    const { username, password } = this.state;
 
     login(username, password).then(action => {
       if (action.type === 'LOGIN_FORM.LOGIN.SUCCESS') {
-        const cookieOpts: CookieSetOptions = { path: '/' };
-
-        if (rememberMe) {
-          cookieOpts.expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-        }
-        cookies.set('token', action.payload.token, cookieOpts);
-        router.push(
-          window.location.hash.startsWith('#u=')
-            ? decodeURIComponent(window.location.hash.substring(3))
-            : '/',
-        );
+        navigate &&
+          navigate(
+            window.location.hash.startsWith('#u=')
+              ? decodeURIComponent(window.location.hash.substring(3))
+              : '/',
+          );
       }
     });
   };
@@ -92,15 +92,19 @@ class LoginPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: StoreState) => ({
-  isSubmitting: state.auth.isSubmitting,
-});
+function mapStateToProps(state: StoreState): StateProps {
+  return {
+    isSubmitting: state.auth.isSubmitting,
+  };
+}
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AuthAction>) => ({
-  login: (username: string, password: string) => dispatch(login(username, password)),
-});
+function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, {}, AuthAction>): DispatchProps {
+  return {
+    login: (username: string, password: string) => dispatch(login(username, password)),
+  };
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withCookies(LoginPage));
+)(LoginPage);

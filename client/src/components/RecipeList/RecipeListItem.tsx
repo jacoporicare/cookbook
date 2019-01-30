@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from '@reach/router';
 import styled, { css } from 'react-emotion';
 
 import { Recipe } from '../../types';

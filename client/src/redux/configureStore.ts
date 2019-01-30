@@ -12,7 +12,6 @@ type EnhancedWindow = Window & {
 const persistConfig: PersistConfig = {
   key: 'root',
   storage,
-  blacklist: ['routing'],
 };
 
 const rootReducer = persistReducer(persistConfig, configureReducer());

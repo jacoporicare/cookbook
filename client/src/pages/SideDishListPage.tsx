@@ -1,4 +1,5 @@
 import React from 'react';
+import { RouteComponentProps } from '@reach/router';
 
 import { SideDish } from '../types';
 import DocumentTitle from '../components/common/DocumentTitle';
@@ -13,7 +14,9 @@ const sideDishes: SideDish[] = [
   { title: 'Polenta', sideWeight: '45g' },
 ];
 
-export default function SideDishListPage() {
+type Props = RouteComponentProps;
+
+export default function SideDishListPage(_props: Props) {
   return (
     <>
       <DocumentTitle title="Přílohy" />

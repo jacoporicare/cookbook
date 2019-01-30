@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
 
 import { StoreState } from '../types';
 import auth from '../components/Auth/reducer';
@@ -9,7 +8,6 @@ import recipeEdit from '../components/RecipeEdit/reducer';
 
 const configureReducer = () =>
   combineReducers<StoreState>({
-    routing: routerReducer,
     auth,
     recipeList,
     recipeDetail,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from '@reach/router';
 
 import { StoreState, RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
@@ -21,11 +21,12 @@ type Params = {
   slug: string;
 };
 
+type OwnProps = RouteComponentProps<Params>;
+
 type StateProps = {
   hasDetail: boolean;
   isFetching: boolean;
-  recipe: RecipeDetailType;
-  slug: string;
+  recipe?: RecipeDetailType;
   isAuthenticated: boolean;
   user?: User;
 };
@@ -35,7 +36,7 @@ type DispatchProps = {
   fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
 };
 
-type Props = StateProps & DispatchProps & RouteComponentProps<Params, {}>;
+type Props = OwnProps & StateProps & DispatchProps;
 
 type State = {
   showDeleteModal: boolean;
@@ -47,13 +48,13 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   componentDidMount() {
-    if (navigator.onLine) {
+    if (navigator.onLine && this.props.slug) {
       this.props.fetchRecipe(this.props.slug);
     }
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (navigator.onLine && nextProps.slug !== this.props.slug) {
+    if (navigator.onLine && nextProps.slug && nextProps.slug !== this.props.slug) {
       this.props.fetchRecipe(nextProps.slug);
     }
   }
@@ -71,8 +72,12 @@ class RecipeDetailPage extends Component<Props, State> {
   };
 
   handleDeleteConfirm = () => {
+    if (!this.props.recipe) {
+      return;
+    }
+
     this.props.deleteRecipe(this.props.recipe._id).then(() => {
-      this.props.router.push('/');
+      this.props.navigate && this.props.navigate('/');
     });
   };
 
@@ -147,18 +152,17 @@ class RecipeDetailPage extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
+function mapStateToProps(state: StoreState, ownProps: OwnProps): StateProps {
   const { isFetching, recipesBySlug } = state.recipeDetail;
   const { isAuthenticated, user } = state.auth;
-  const { slug } = ownProps.params;
-  const recipe = recipesBySlug[slug] || findRecipeBySlug(state, slug);
-  const hasDetail = Boolean(recipesBySlug[slug]);
+  const { slug } = ownProps;
+  const recipe = slug ? recipesBySlug[slug] || findRecipeBySlug(state, slug) : undefined;
+  const hasDetail = Boolean(slug && recipesBySlug[slug]);
 
   return {
     hasDetail,
     isFetching,
     recipe,
-    slug,
     isAuthenticated,
     user,
   };

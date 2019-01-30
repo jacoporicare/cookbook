@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { RouteComponentProps, Link } from '@reach/router';
 
 import { Recipe, StoreState } from '../types';
 import { colors } from '../styles/colors';
@@ -25,7 +25,7 @@ type DispatchProps = {
   fetchAllRecipes: (slugs: string[]) => void;
 };
 
-type Props = StateProps & DispatchProps;
+type Props = StateProps & DispatchProps & RouteComponentProps;
 
 const NewRecipeButton = Button.withComponent(Link);
 

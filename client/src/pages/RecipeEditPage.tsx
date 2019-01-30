@@ -1,10 +1,10 @@
 import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { RouteComponentProps } from 'react-router';
 import { SortEnd } from 'react-sortable-hoc';
 import axios from 'axios';
 import { notify } from 'react-notify-toast';
+import { RouteComponentProps } from '@reach/router';
 
 import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
 import { getImageUrl } from '../utils';
@@ -27,6 +27,8 @@ type Params = {
   slug?: string;
 };
 
+type OwnProps = RouteComponentProps<Params>;
+
 type StateProps = {
   isNew: boolean;
   slug: string | undefined;
@@ -48,7 +50,7 @@ type DispatchProps = {
   fetchSideDishList: () => Promise<RecipeEditAction>;
 };
 
-type Props = StateProps & DispatchProps & RouteComponentProps<Params, {}>;
+type Props = OwnProps & StateProps & DispatchProps;
 
 type State = {
   changed: boolean;
@@ -97,11 +99,11 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { router, route, fetchIngredientList, fetchSideDishList, slug, fetchRecipe } = this.props;
+    const { fetchIngredientList, fetchSideDishList, slug, fetchRecipe } = this.props;
 
-    router.setRouteLeaveHook(route, () =>
-      this.state.changed && !this.saved ? confirmMsg : undefined,
-    );
+    // router.setRouteLeaveHook(route, () =>
+    //   this.state.changed && !this.saved ? confirmMsg : undefined,
+    // );
 
     fetchIngredientList();
     fetchSideDishList();
@@ -293,7 +295,7 @@ class RecipeEditPage extends React.Component<Props, State> {
   completeSave(slug: string) {
     notify.show('Recept úspěšně uložen', 'success');
     this.saved = true;
-    this.props.router.push(`/recept/${slug}`);
+    this.props.navigate && this.props.navigate(`/recept/${slug}`);
   }
 
   render() {
@@ -358,7 +360,7 @@ class RecipeEditPage extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params, {}>): StateProps {
+function mapStateToProps(state: StoreState, ownProps: OwnProps): StateProps {
   const { recipeDetail, recipeEdit } = state;
   const { isFetching, recipesBySlug } = recipeDetail;
   const {
@@ -366,7 +368,7 @@ function mapStateToProps(state: StoreState, ownProps: RouteComponentProps<Params
     ingredientList: { ingredients },
     sideDishList: { sideDishes },
   } = recipeEdit;
-  const { slug } = ownProps.params;
+  const { slug } = ownProps;
 
   const recipe = slug ? recipesBySlug[slug] : undefined;
 

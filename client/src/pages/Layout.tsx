@@ -2,8 +2,8 @@ import React from 'react';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import Notifications from 'react-notify-toast';
+import { RouteComponentProps } from '@reach/router';
 
 import { User, Recipe, StoreState } from '../types';
 import { colors } from '../styles/colors';
@@ -14,7 +14,7 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import { Box } from '../components/core';
 
-type Props = RouteComponentProps<{}, {}> & {
+type Props = {
   children: React.ReactNode;
   isAuthenticated: boolean;
   user: User | undefined;
@@ -24,7 +24,7 @@ type Props = RouteComponentProps<{}, {}> & {
   isFetchingRecipes: boolean;
   fetchUser: () => Promise<AuthAction>;
   fetchRecipeList: () => Promise<RecipeListAction>;
-};
+} & RouteComponentProps;
 
 class Layout extends React.Component<Props> {
   componentDidMount() {
@@ -66,7 +66,7 @@ class Layout extends React.Component<Props> {
   }
 
   handleRecipeSelected = (slug: string) => {
-    this.props.router.push(`/recept/${slug}`);
+    this.props.navigate && this.props.navigate(`/recept/${slug}`);
   };
 
   render() {
