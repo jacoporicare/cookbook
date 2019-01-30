@@ -4,9 +4,7 @@ import * as slug from 'slug';
 import * as fileType from 'file-type';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as childProcess from 'child_process';
-
-import { getTmpImgPath, getThumbPath } from './imageProcessor';
+import * as sharp from 'sharp';
 
 import { auth, findUserById, superAdminIds } from '../../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
@@ -74,30 +72,8 @@ async function checkUserRightsAsync(userId: number, recipeId: string) {
   return Boolean(oldRecipe && oldRecipe.userId === userId);
 }
 
-const imgProcessorCallbacks: { [key: string]: (() => void)[] } = {};
-const imgProcessor = childProcess.fork(path.join(__dirname, 'imageProcessor'));
-imgProcessor.on('message', slug => {
-  imgProcessorCallbacks[slug].forEach(cb => cb());
-  delete imgProcessorCallbacks[slug];
-});
-
-async function resizeImage(slug: string, image: Buffer, cb: () => void) {
-  if (!imgProcessorCallbacks[slug]) {
-    imgProcessorCallbacks[slug] = [];
-  }
-
-  imgProcessorCallbacks[slug].push(cb);
-
-  if (imgProcessorCallbacks[slug].length === 1) {
-    const tmpPath = getTmpImgPath(slug);
-
-    if (!fs.existsSync(tmpPath)) {
-      await fs.mkdirs(path.dirname(tmpPath));
-      await fs.writeFile(tmpPath, image);
-    }
-
-    imgProcessor.send(slug);
-  }
+function getThumbPath(slug: string): string {
+  return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
 }
 
 const router = Router();
@@ -197,12 +173,21 @@ router.get('/:slug/image-:size.jpg', async (req, res) => {
       return res.status(404).end();
     }
 
+    const mimeType = fileType(recipe.image).mime;
+
     if (size !== 'thumb') {
-      const mimeType = fileType(recipe.image).mime;
-      res.contentType(mimeType).send(recipe.image);
+      return res.contentType(mimeType).send(recipe.image);
     }
 
-    await resizeImage(slug, recipe.image, () => res.sendFile(thumbPath));
+    await fs.mkdirs(path.dirname(thumbPath));
+    const thumb = await sharp(recipe.image)
+      .rotate()
+      .resize(800, 800)
+      .toBuffer();
+
+    fs.writeFile(thumbPath, thumb).catch(console.error);
+
+    res.contentType(mimeType).send(thumb);
   } catch (err) {
     res.status(500).send(err);
   }
