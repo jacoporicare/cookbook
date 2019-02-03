@@ -42,13 +42,17 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "styled-system": "^3.1.11",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-react": "^3.6.0",
+    "tslint": "^5.12.1",
     "typescript": "3.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tslint -p . -e 'src/serviceWorker.ts'"
   },
   "eslintConfig": {
     "extends": "react-app"

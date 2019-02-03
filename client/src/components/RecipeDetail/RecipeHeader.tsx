@@ -19,7 +19,7 @@ type Props = {
 
 const EditRecipeButton = Button.withComponent(Link);
 
-export default function RecipeHeader({
+function RecipeHeader({
   preparationTime,
   sideDish,
   slug,
@@ -59,3 +59,5 @@ export default function RecipeHeader({
     </>
   );
 }
+
+export default RecipeHeader;

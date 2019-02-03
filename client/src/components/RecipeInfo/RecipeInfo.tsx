@@ -34,7 +34,7 @@ const List = styled('ul')`
   text-overflow: ellipsis;
 `;
 
-export default function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
+function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
   }
@@ -52,3 +52,5 @@ export default function RecipeInfo({ preparationTime, sideDish, placeholder }: P
     </List>
   );
 }
+
+export default RecipeInfo;

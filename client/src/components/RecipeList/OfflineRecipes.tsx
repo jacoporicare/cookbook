@@ -10,7 +10,7 @@ type Props = {
   isFetchingAllRecipes: boolean;
 };
 
-export default function OfflineRecipes({
+function OfflineRecipes({
   offlineRecipeCount,
   totalRecipeCount,
   onFetchAllRecipesClick,
@@ -29,3 +29,5 @@ export default function OfflineRecipes({
     </Box>
   );
 }
+
+export default OfflineRecipes;

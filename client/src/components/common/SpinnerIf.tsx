@@ -7,6 +7,8 @@ type Props = {
   spinner?: boolean;
 };
 
-export default function SpinnerIf({ children, spinner }: Props) {
+function SpinnerIf({ children, spinner }: Props) {
   return spinner ? <Spinner /> : <>{children}</>;
 }
+
+export default SpinnerIf;

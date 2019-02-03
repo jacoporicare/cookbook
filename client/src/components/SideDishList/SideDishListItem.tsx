@@ -5,7 +5,7 @@ import { TableRow, TableCell } from '../elements';
 
 type Props = SideDish;
 
-export default function SideDishListItem({ title, sideWeight, mainWeight }: Props) {
+function SideDishListItem({ title, sideWeight, mainWeight }: Props) {
   return (
     <TableRow>
       <TableCell>{title}</TableCell>
@@ -14,3 +14,5 @@ export default function SideDishListItem({ title, sideWeight, mainWeight }: Prop
     </TableRow>
   );
 }
+
+export default SideDishListItem;

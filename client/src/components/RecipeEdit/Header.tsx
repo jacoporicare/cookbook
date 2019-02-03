@@ -15,7 +15,7 @@ type Props = {
 
 const LinkButton = Button.withComponent(Link);
 
-export default function Header({ title, isNew, isSaving, changed, slug }: Props) {
+function Header({ title, isNew, isSaving, changed, slug }: Props) {
   return (
     <PageHeading
       buttons={
@@ -32,3 +32,5 @@ export default function Header({ title, isNew, isSaving, changed, slug }: Props)
     </PageHeading>
   );
 }
+
+export default Header;

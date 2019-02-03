@@ -16,7 +16,7 @@ const sideDishes: SideDish[] = [
 
 type Props = RouteComponentProps;
 
-export default function SideDishListPage(_props: Props) {
+function SideDishListPage(_props: Props) {
   return (
     <>
       <DocumentTitle title="Přílohy" />
@@ -24,3 +24,5 @@ export default function SideDishListPage(_props: Props) {
     </>
   );
 }
+
+export default SideDishListPage;

@@ -10,7 +10,7 @@ type Props = {
   onChange: AutosuggestChangeEventHandler;
 };
 
-export default function Directions({ directions = '', onChange }: Props) {
+function Directions({ directions = '', onChange }: Props) {
   return (
     <Box mb={3}>
       <Textarea
@@ -33,3 +33,5 @@ export default function Directions({ directions = '', onChange }: Props) {
     </Box>
   );
 }
+
+export default Directions;

@@ -49,7 +49,7 @@ const Title = styled('h3')`
   text-overflow: ellipsis;
 `;
 
-export default function RecipeListItem({ recipe }: Props) {
+function RecipeListItem({ recipe }: Props) {
   const { slug, title, preparationTime, sideDish, hasImage, lastModifiedDate } = recipe;
 
   const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
@@ -70,3 +70,5 @@ export default function RecipeListItem({ recipe }: Props) {
     </StyledLink>
   );
 }
+
+export default RecipeListItem;

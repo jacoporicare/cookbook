@@ -9,7 +9,7 @@ type Props = {
   regular?: boolean;
 };
 
-export default function Icon({ icon, spin, fw, lg, regular }: Props) {
+function Icon({ icon, spin, fw, lg, regular }: Props) {
   return (
     <i
       className={cx(regular ? 'far' : 'fa', `fa-${icon}`, {
@@ -20,3 +20,5 @@ export default function Icon({ icon, spin, fw, lg, regular }: Props) {
     />
   );
 }
+
+export default Icon;

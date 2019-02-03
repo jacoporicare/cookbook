@@ -8,7 +8,7 @@ type Props = RouteComponentProps;
 
 const HeadingAlert = WarningAlert.withComponent('h3');
 
-export default function NotFoundPage(_props: Props) {
+function NotFoundPage(_props: Props) {
   return (
     <>
       <PageHeading>Nenalezeno</PageHeading>
@@ -16,3 +16,5 @@ export default function NotFoundPage(_props: Props) {
     </>
   );
 }
+
+export default NotFoundPage;

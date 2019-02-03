@@ -13,7 +13,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
+function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
   return (
     <Modal
       isOpen={show}
@@ -137,3 +137,5 @@ export default function RecipeDeleteModal({ show, recipeTitle, onClose, onConfir
     </Modal>
   );
 }
+
+export default RecipeDeleteModal;

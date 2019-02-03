@@ -5,6 +5,8 @@ type Props = {
   title?: string;
 };
 
-export default function DocumentTitle({ title }: Props) {
+function DocumentTitle({ title }: Props) {
   return <ReactDocumentTitle title={title ? `${title} - Žrádelník` : 'Žrádelník'} />;
 }
+
+export default DocumentTitle;

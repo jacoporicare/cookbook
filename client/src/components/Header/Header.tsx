@@ -51,7 +51,7 @@ const animatedUnderline = css`
   }
 `;
 
-const styledLink = css(
+const linkStyle = css(
   navItem,
   css`
     color: white;
@@ -64,19 +64,14 @@ const styledLink = css(
     }
   `,
 );
-const StyledLink = styled(NavItem)(styledLink).withComponent(Link);
 
-function isActive({ isCurrent }: LinkGetProps) {
-  return isCurrent && { className: cx(styledLink, 'active') };
+function getLinkProps({ isCurrent }: LinkGetProps) {
+  return {
+    className: cx(linkStyle, { active: isCurrent }),
+  };
 }
 
-export default function Header({
-  userName,
-  isAuthenticated,
-  isFetchingUser,
-  recipes,
-  onRecipeSelected,
-}: Props) {
+function Header({ userName, isAuthenticated, isFetchingUser, recipes, onRecipeSelected }: Props) {
   return (
     <Box
       bg={colors.gray1000}
@@ -112,28 +107,31 @@ export default function Header({
         </Box>
         <Box display="flex">
           <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
-          <StyledLink to="/" getProps={isActive}>
+          <Link to="/" getProps={getLinkProps}>
             Recepty
-          </StyledLink>
-          <StyledLink to="/prilohy" getProps={isActive}>
+          </Link>
+          <Link to="/prilohy" getProps={getLinkProps}>
             Přílohy
-          </StyledLink>
+          </Link>
           {navigator.onLine && (
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
               {!isAuthenticated ? (
-                <StyledLink
+                <Link
                   to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
-                  getProps={isActive}
+                  getProps={getLinkProps}
                 >
                   Přihlásit
-                </StyledLink>
+                </Link>
               ) : (
                 <>
                   <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
-                  <StyledLink to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}>
+                  <Link
+                    to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}
+                    getProps={getLinkProps}
+                  >
                     <Icon icon="sign-out-alt" />
-                  </StyledLink>
+                  </Link>
                 </>
               )}
             </>
@@ -143,3 +141,5 @@ export default function Header({
     </Box>
   );
 }
+
+export default Header;

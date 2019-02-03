@@ -16,14 +16,7 @@ type Props = {
   onSubmit: FormEventHandler<HTMLFormElement>;
 };
 
-export default function LoginForm({
-  username,
-  password,
-  rememberMe,
-  isSubmitting,
-  onChange,
-  onSubmit,
-}: Props) {
+function LoginForm({ username, password, rememberMe, isSubmitting, onChange, onSubmit }: Props) {
   return (
     <>
       {isSubmitting && <Spinner overlay />}
@@ -66,3 +59,5 @@ export default function LoginForm({
     </>
   );
 }
+
+export default LoginForm;

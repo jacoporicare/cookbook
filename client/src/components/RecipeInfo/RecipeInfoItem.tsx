@@ -13,10 +13,12 @@ const Item = styled('li')`
   }
 `;
 
-export default function RecipeInfoItem({ icon, children }: Props) {
+function RecipeInfoItem({ icon, children }: Props) {
   return (
     <Item>
       {icon} {children}
     </Item>
   );
 }
+
+export default RecipeInfoItem;

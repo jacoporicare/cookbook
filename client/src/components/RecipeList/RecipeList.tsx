@@ -12,7 +12,7 @@ type Props = {
 const widths = ['100%', '50%', '33.33333%', '25%'];
 const border = `1px solid ${colors.gray200}`;
 
-export default function RecipeList({ recipes }: Props) {
+function RecipeList({ recipes }: Props) {
   return (
     <Box
       display="flex"
@@ -39,3 +39,5 @@ export default function RecipeList({ recipes }: Props) {
     </Box>
   );
 }
+
+export default RecipeList;

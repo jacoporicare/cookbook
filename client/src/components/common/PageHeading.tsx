@@ -10,7 +10,7 @@ type Props = {
   buttons?: React.ReactNode;
 };
 
-export default function PageHeading({ children, buttons }: Props) {
+function PageHeading({ children, buttons }: Props) {
   return (
     <Heading fontSize={[5, 6]} fontWeight={300} mb={[3, 4]} color={theme.primary}>
       <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
@@ -33,3 +33,5 @@ export default function PageHeading({ children, buttons }: Props) {
     </Heading>
   );
 }
+
+export default PageHeading;

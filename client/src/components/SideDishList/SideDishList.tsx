@@ -9,7 +9,7 @@ type Props = {
   sideDishes: SideDish[];
 };
 
-export default function SideDishList({ sideDishes }: Props) {
+function SideDishList({ sideDishes }: Props) {
   return (
     <>
       <PageHeading>Přílohy</PageHeading>
@@ -32,3 +32,5 @@ export default function SideDishList({ sideDishes }: Props) {
     </>
   );
 }
+
+export default SideDishList;

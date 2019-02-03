@@ -8,7 +8,7 @@ type Props = React.InputHTMLAttributes<HTMLInputElement>;
 const Input = Box.withComponent('input');
 const Label = Box.withComponent('label');
 
-export default function Checkbox({ children, ...props }: Props) {
+function Checkbox({ children, ...props }: Props) {
   return (
     <Box pl="1.25rem" className={css({ position: 'relative' })}>
       <Input
@@ -24,3 +24,5 @@ export default function Checkbox({ children, ...props }: Props) {
     </Box>
   );
 }
+
+export default Checkbox;

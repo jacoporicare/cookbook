@@ -38,7 +38,7 @@ const ImageXs = styled('img')`
   margin-top: 15px;
 `;
 
-export default function RecipeDetail({
+function RecipeDetail({
   ingredients,
   servingCount,
   directions,
@@ -87,3 +87,5 @@ export default function RecipeDetail({
     </>
   );
 }
+
+export default RecipeDetail;
