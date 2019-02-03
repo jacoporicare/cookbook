@@ -52,7 +52,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tslint -p . -e 'src/serviceWorker.ts'"
+    "lint": "tslint -p .",
+    "prettier": "prettier --write './src/**/*.{ts,tsx}'"
   },
   "eslintConfig": {
     "extends": "react-app"
