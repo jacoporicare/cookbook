@@ -7,11 +7,11 @@ import SideDishList from '../components/SideDishList/SideDishList';
 
 const sideDishes: SideDish[] = [
   { title: 'Brambory', sideWeight: '180 g' },
-  { title: 'Těstoviny', sideWeight: '70g', mainWeight: '85g' },
-  { title: 'Rýže', sideWeight: '60g', mainWeight: '75g' },
-  { title: 'Čočka', sideWeight: '60g', mainWeight: '75g' },
-  { title: 'Kuskus', sideWeight: '45g', mainWeight: '50g' },
-  { title: 'Polenta', sideWeight: '45g' },
+  { title: 'Těstoviny', sideWeight: '70 g', mainWeight: '85 g' },
+  { title: 'Rýže', sideWeight: '70 g', mainWeight: '75 g' },
+  { title: 'Čočka', sideWeight: '60 g', mainWeight: '75 g' },
+  { title: 'Kuskus', sideWeight: '45 g', mainWeight: '50 g' },
+  { title: 'Polenta', sideWeight: '45 g' },
 ];
 
 type Props = RouteComponentProps;

@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
 
 import * as db from './db';
 import config from './config';
@@ -27,7 +26,6 @@ if (isProduction) {
 
 app.use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }));
 app.use(bodyParser.json());
-app.use(cookieParser());
 
 app.use(routes);
 

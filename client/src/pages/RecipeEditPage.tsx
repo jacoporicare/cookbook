@@ -2,7 +2,6 @@ import React, { FormEvent } from 'react';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { SortEnd } from 'react-sortable-hoc';
-import axios from 'axios';
 import { notify } from 'react-notify-toast';
 import { RouteComponentProps } from '@reach/router';
 
@@ -20,6 +19,7 @@ import {
   SaveRecipeParams,
 } from '../components/RecipeEdit/actions';
 import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
+import api from '../api';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -30,6 +30,7 @@ type Params = {
 type OwnProps = RouteComponentProps<Params>;
 
 type StateProps = {
+  authToken?: string;
   isNew: boolean;
   slug: string | undefined;
   recipe: RecipeDetail | undefined;
@@ -272,7 +273,12 @@ class RecipeEditPage extends React.Component<Props, State> {
   };
 
   handleSave(action: RecipeEditAction) {
-    if (action.type === 'RECIPE.SAVE.SUCCESS' && action.payload && action.payload.recipe) {
+    if (
+      action.type === 'RECIPE.SAVE.SUCCESS' &&
+      action.payload &&
+      action.payload.recipe &&
+      this.props.authToken
+    ) {
       const { _id, slug } = action.payload.recipe;
       const { newImage } = this.state;
 
@@ -283,7 +289,7 @@ class RecipeEditPage extends React.Component<Props, State> {
 
       this.setState({ isSavingImage: true });
 
-      axios
+      api(this.props.authToken)
         .post(`/api/recipes/${_id}/image`, newImage, {
           headers: { 'Content-Type': 'application/octet-stream' },
         })
@@ -361,7 +367,7 @@ class RecipeEditPage extends React.Component<Props, State> {
 }
 
 function mapStateToProps(state: StoreState, ownProps: OwnProps): StateProps {
-  const { recipeDetail, recipeEdit } = state;
+  const { auth, recipeDetail, recipeEdit } = state;
   const { isFetching, recipesBySlug } = recipeDetail;
   const {
     isSaving,
@@ -373,6 +379,7 @@ function mapStateToProps(state: StoreState, ownProps: OwnProps): StateProps {
   const recipe = slug ? recipesBySlug[slug] : undefined;
 
   return {
+    authToken: auth.token,
     ingredientOptions: ingredients,
     isFetching,
     isNew: !slug,

@@ -58,14 +58,8 @@ export function auth() {
   return (
     compose()
       .use((req, res, next) => {
-        // allow access_token to be passed through query parameter as well
         if (req.query && req.query.access_token) {
           req.headers.authorization = `Bearer ${req.query.access_token}`;
-        }
-
-        // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
-        if (req.query && typeof req.headers.authorization === 'undefined') {
-          req.headers.authorization = `Bearer ${req.cookies.token}`;
         }
 
         next();
