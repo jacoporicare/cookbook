@@ -12,7 +12,7 @@ services:
         target: /data/db
 
   web:
-    image: docker.jakubricar.cz/cookbook:latest
+    image: registry.gitlab.com/jacoporicare/cookbook:latest
     restart: always
     networks:
       - cookbook
