@@ -20,6 +20,7 @@ function SideDishList({ sideDishes }: Props) {
             <TableHeadCell>Název</TableHeadCell>
             <TableHeadCell>Příloha</TableHeadCell>
             <TableHeadCell>Hlavní</TableHeadCell>
+            <TableHeadCell>Po uvaření</TableHeadCell>
           </TableHeadRow>
         </thead>
 
