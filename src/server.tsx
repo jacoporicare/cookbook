@@ -8,6 +8,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
+import { Helmet } from 'react-helmet';
 
 import App from './App';
 import * as db from './db';
@@ -41,15 +42,25 @@ server
         </Provider>
       );
       const markup = renderStylesToString(renderToString(root));
+      const helmet = Helmet.renderStatic();
       const initialReduxState = store.getState();
 
       res.status(200).send(
         `<!doctype html>
-    <html lang="">
+    <html lang="cs"  ${helmet.htmlAttributes.toString()}>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
+        ${helmet.link.toString()}
+        ${assets.client.css ? `<link rel="stylesheet" href="${assets.client.css}">` : ''}
+        ${
+          process.env.NODE_ENV === 'production'
+            ? `<script src="${assets.client.js}" defer></script>`
+            : `<script src="${assets.client.js}" defer crossorigin></script>`
+        }
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Žrádelník" />
@@ -162,15 +173,8 @@ server
           media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)"
           href="${process.env.PUBLIC_PATH}icons/apple-touch-startup-image-1536x2008.png"
         />
-        <title>Žrádelník</title>
-        ${assets.client.css ? `<link rel="stylesheet" href="${assets.client.css}">` : ''}
-        ${
-          process.env.NODE_ENV === 'production'
-            ? `<script src="${assets.client.js}" defer></script>`
-            : `<script src="${assets.client.js}" defer crossorigin></script>`
-        }
     </head>
-    <body>
+    <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${markup}</div>
         <script>
           window.__REDUX_STATE__ = ${serialize(initialReduxState)};
