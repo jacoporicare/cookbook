@@ -87,3 +87,33 @@ export function auth() {
       })
   );
 }
+
+export function authentication() {
+  return (
+    compose()
+      .use((req, res, next) => {
+        if (req.query && req.query.access_token) {
+          req.headers.authorization = `Bearer ${req.query.access_token}`;
+        }
+
+        next();
+      })
+      .use(expressJwt({ secret: config.secrets.auth, credentialsRequired: false }))
+      // tslint:disable-next-line no-any
+      .use((err: any, req: Request, res: Response, next: NextFunction) => {
+        if (err.name === 'UnauthorizedError') {
+          res.status(401).end();
+          return;
+        }
+
+        next();
+      })
+      .use((req, res, next) => {
+        if (req.user) {
+          req.user = findUserById(req.user._id);
+        }
+
+        next();
+      })
+  );
+}

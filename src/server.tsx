@@ -6,10 +6,12 @@ import express from 'express';
 import path from 'path';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
-import { Helmet } from 'react-helmet';
 
+import { authentication } from './api/auth/auth.service';
+import apolloServer from './apolloServer';
 import App from './App';
 import * as db from './db';
 import configureStore from './redux/configureStore';
@@ -28,25 +30,29 @@ server
     res.sendFile(path.join(process.env.RAZZLE_PUBLIC_DIR!, 'service-worker.js'));
   })
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!, { maxAge: 31536000000 }))
+  .use(authentication())
   .use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }))
   .use(bodyParser.json())
-  .use(routes)
-  .all('*', (req, res) => {
-    try {
-      const { store } = configureStore();
-      const root = (
-        <Provider store={store}>
-          <ServerLocation url={req.url}>
-            <App />
-          </ServerLocation>
-        </Provider>
-      );
-      const markup = renderStylesToString(renderToString(root));
-      const helmet = Helmet.renderStatic();
-      const initialReduxState = store.getState();
+  .use(routes);
 
-      res.status(200).send(
-        `<!doctype html>
+apolloServer.applyMiddleware({ app: server });
+
+server.all('*', (req, res) => {
+  try {
+    const { store } = configureStore();
+    const root = (
+      <Provider store={store}>
+        <ServerLocation url={req.url}>
+          <App />
+        </ServerLocation>
+      </Provider>
+    );
+    const markup = renderStylesToString(renderToString(root));
+    const helmet = Helmet.renderStatic();
+    const initialReduxState = store.getState();
+
+    res.status(200).send(
+      `<!doctype html>
     <html lang="cs"  ${helmet.htmlAttributes.toString()}>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -181,14 +187,14 @@ server
         </script>
     </body>
 </html>`,
-      );
-    } catch (error) {
-      if (isRedirect(error)) {
-        return res.redirect(error.uri);
-      }
-
-      res.status(500).send(error);
+    );
+  } catch (error) {
+    if (isRedirect(error)) {
+      return res.redirect(error.uri);
     }
-  });
+
+    res.status(500).send(error);
+  }
+});
 
 export default server;
