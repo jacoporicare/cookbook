@@ -1,7 +1,5 @@
 import * as mongoose from 'mongoose';
 
-import config from './serverConfig';
-
 // tslint:disable-next-line no-any
 (mongoose as any).Promise = global.Promise;
 
@@ -12,11 +10,13 @@ export let connected = false;
 
 export function connect() {
   console.log(
-    `Connecting to database at ${config.mongo.uri} (attempt ${++attempt} of ${maxAttempts})...`,
+    `Connecting to database at ${
+      process.env.MONGO_URI
+    } (attempt ${++attempt} of ${maxAttempts})...`,
   );
 
   mongoose.connect(
-    config.mongo.uri,
+    process.env.MONGO_URI!,
     {
       useNewUrlParser: true,
       useCreateIndex: true,
@@ -24,19 +24,19 @@ export function connect() {
     },
     err => {
       if (err) {
-        return retryConnect(`Unable to connect to database at ${config.mongo.uri}`);
+        return retryConnect(`Unable to connect to database at ${process.env.MONGO_URI}`);
       }
 
       connected = true;
       attempt = 0;
-      console.log(`Successfully connected to database at ${config.mongo.uri}`);
+      console.log(`Successfully connected to database at ${process.env.MONGO_URI}`);
     },
   );
 }
 
 mongoose.connection.on('disconnected', () => {
   if (connected) {
-    retryConnect(`Disconnected from database at ${config.mongo.uri}`);
+    retryConnect(`Disconnected from database at ${process.env.MONGO_URI}`);
   }
 
   connected = false;

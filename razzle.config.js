@@ -4,6 +4,12 @@ module.exports = {
       name: 'typescript',
       options: {
         useBabel: true,
+        forkTsChecker: {
+          tsconfig: './tsconfig.json',
+          tslint: undefined,
+          watch: './src',
+          typeCheck: true,
+        },
       },
     },
   ],

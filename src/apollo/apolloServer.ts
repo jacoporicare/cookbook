@@ -2,8 +2,8 @@ import { ApolloServer, gql, IResolvers } from 'apollo-server-express';
 import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 
-import recipeModel, { Recipe, RecipeDocument } from './api/recipe/recipe.model';
-import { findUserById } from './api/auth/auth.service';
+import recipeModel, { Recipe, RecipeDocument } from '../api/recipe/recipe.model';
+import { findUserById } from '../api/auth/auth.service';
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`

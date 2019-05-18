@@ -5,13 +5,15 @@ import { renderStylesToString } from 'emotion-server';
 import express from 'express';
 import path from 'path';
 import React from 'react';
+import { ApolloProvider } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
 
 import { authentication } from './api/auth/auth.service';
-import apolloServer from './apolloServer';
+import configureClient from './apollo/apolloClient';
+import apolloServer from './apollo/apolloServer';
 import App from './App';
 import * as db from './db';
 import configureStore from './redux/configureStore';
@@ -40,16 +42,21 @@ apolloServer.applyMiddleware({ app: server });
 server.all('*', (req, res) => {
   try {
     const { store } = configureStore();
+    const apolloClient = configureClient();
+
     const root = (
-      <Provider store={store}>
-        <ServerLocation url={req.url}>
-          <App />
-        </ServerLocation>
-      </Provider>
+      <ApolloProvider client={apolloClient}>
+        <Provider store={store}>
+          <ServerLocation url={req.url}>
+            <App />
+          </ServerLocation>
+        </Provider>
+      </ApolloProvider>
     );
     const markup = renderStylesToString(renderToString(root));
     const helmet = Helmet.renderStatic();
     const initialReduxState = store.getState();
+    const initialApolloState = apolloClient.extract();
 
     res.status(200).send(
       `<!doctype html>
@@ -183,6 +190,7 @@ server.all('*', (req, res) => {
     <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${markup}</div>
         <script>
+          window.__APOLLO_STATE__ = ${serialize(initialApolloState)};
           window.__REDUX_STATE__ = ${serialize(initialReduxState)};
         </script>
     </body>
