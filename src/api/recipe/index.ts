@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
-import slug from 'slug';
 import fileType from 'file-type';
 import fs from 'fs-extra';
 import path from 'path';
 import sharp from 'sharp';
+import slug from 'slug';
 
 import { auth, findUserById, superAdminIds } from '../auth/auth.service';
 import recipeModel, { Recipe, RecipeDocument } from './recipe.model';
@@ -77,84 +76,6 @@ function getThumbPath(slug: string): string {
 }
 
 const router = Router();
-
-router.get('/', async (req, res) => {
-  let query: mongoose.DocumentQuery<RecipeDocument[], RecipeDocument>;
-
-  if (!req.query.q) {
-    query = recipeModel.find();
-  } else {
-    const q = (<string>req.query.q)
-      .split(',')
-      .filter(s => s.trim() !== '')
-      .map(s => new RegExp(s.trim(), 'i'));
-
-    query = recipeModel.find({
-      $or: [{ title: { $in: q } }, { sideDish: { $in: q } }, { 'ingredients.name': { $in: q } }],
-    });
-  }
-
-  try {
-    const recipes = await query.select(
-      '_id title slug preparationTime sideDish hasImage lastModifiedDate userId',
-    );
-
-    res.send(
-      recipes
-        .map(deleteNullValues)
-        .map(appendUserName)
-        .sort((a, b) => a.title.localeCompare(b.title, 'cs')),
-    );
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-router.get('/ingredients', async (req, res) => {
-  try {
-    const ingredients: string[] = await recipeModel.distinct('ingredients.name');
-
-    res.send(ingredients.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs')));
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-router.get('/side-dishes', async (req, res) => {
-  try {
-    const sideDishes: string[] = await recipeModel.distinct('sideDish');
-
-    res.send(sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs')));
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    let recipe = await recipeModel.findOne({ slug: id });
-
-    if (recipe) {
-      return res.send(appendUserName(deleteNullValues(recipe)));
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).end();
-    }
-
-    recipe = await recipeModel.findById(id);
-
-    if (!recipe) {
-      return res.status(404).end();
-    }
-
-    res.send(appendUserName(deleteNullValues(recipe)));
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
 
 router.get('/:slug/image-:size.jpg', async (req, res) => {
   const { slug, size } = req.params;

@@ -4,6 +4,7 @@ import React from 'react';
 import { ApolloProvider } from 'react-apollo-hooks';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import 'isomorphic-fetch';
 
 import configureClient from './apollo/apolloClient';
 import App from './App';
@@ -12,16 +13,14 @@ import configureStore from './redux/configureStore';
 import * as serviceWorker from './serviceWorker';
 import { StoreState } from './types';
 
-const { store, persistor } = configureStore((window as any).__REDUX_STATE__ as StoreState);
+const { store } = configureStore((window as any).__REDUX_STATE__ as StoreState);
 const apolloClient = configureClient((window as any).__APOLLO_STATE__ as NormalizedCacheObject);
 
 ReactDOM.hydrate(
   <ApolloProvider client={apolloClient}>
     <Provider store={store}>
-      {/* <PersistGate loading={null} persistor={persistor}> */}
       <App />
       <ManageScroll />
-      {/* </PersistGate> */}
     </Provider>
   </ApolloProvider>,
   document.getElementById('root'),

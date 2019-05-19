@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { notify } from 'react-notify-toast';
 
-import { StoreState } from './types';
+import { getAuthToken } from './clientAuth';
 
 export function handleError(error: AxiosError | string) {
   if (!error) {
@@ -37,21 +37,9 @@ export function handleError(error: AxiosError | string) {
   notify.show(message || 'Nastala neočekávaná chyba', 'error');
 }
 
-type GetState = () => StoreState;
-
-export default function api(tokenOrState: string | StoreState | GetState): AxiosInstance {
+export default function api(): AxiosInstance {
   const headers: { [key: string]: string } = {};
-  // tslint:disable-next-line no-any
-
-  let token;
-
-  if (typeof tokenOrState === 'string') {
-    token = tokenOrState;
-  } else if (typeof tokenOrState === 'object' && tokenOrState.auth && tokenOrState.auth.token) {
-    token = tokenOrState.auth.token;
-  } else if (typeof tokenOrState === 'function') {
-    token = tokenOrState().auth.token;
-  }
+  const token = getAuthToken();
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

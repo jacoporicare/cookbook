@@ -5,13 +5,14 @@ import { renderStylesToString } from 'emotion-server';
 import express from 'express';
 import path from 'path';
 import React from 'react';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider, getMarkupFromTree } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
+import 'isomorphic-fetch';
 
-import { authentication } from './api/auth/auth.service';
+import { authentication, fakeAuth } from './api/auth/auth.service';
 import configureClient from './apollo/apolloClient';
 import apolloServer from './apollo/apolloServer';
 import App from './App';
@@ -39,7 +40,7 @@ server
 
 apolloServer.applyMiddleware({ app: server });
 
-server.all('*', (req, res) => {
+server.all('*', async (req, res) => {
   try {
     const { store } = configureStore();
     const apolloClient = configureClient();
@@ -53,7 +54,11 @@ server.all('*', (req, res) => {
         </Provider>
       </ApolloProvider>
     );
-    const markup = renderStylesToString(renderToString(root));
+    const markupWithoutStyles = await getMarkupFromTree({
+      renderFunction: renderToString,
+      tree: root,
+    });
+    const markup = renderStylesToString(markupWithoutStyles);
     const helmet = Helmet.renderStatic();
     const initialReduxState = store.getState();
     const initialApolloState = apolloClient.extract();
@@ -197,11 +202,15 @@ server.all('*', (req, res) => {
 </html>`,
     );
   } catch (error) {
+    console.error(error);
+
     if (isRedirect(error)) {
       return res.redirect(error.uri);
     }
 
-    res.status(500).send(error);
+    process.env.NODE_ENV === 'production'
+      ? res.status(500).send()
+      : res.status(500).json({ message: error.message, stack: error.stack });
   }
 });
 

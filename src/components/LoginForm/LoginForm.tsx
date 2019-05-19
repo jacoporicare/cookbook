@@ -1,28 +1,30 @@
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
-import { Box } from '../core';
-import { Input, Label, SuccessButton } from '../elements';
-import Spinner from '../common/Spinner';
-import PageHeading from '../common/PageHeading';
-import Lead from '../common/Lead';
 import Checkbox from '../common/Checkbox';
+import Lead from '../common/Lead';
+import PageHeading from '../common/PageHeading';
+import Spinner from '../common/Spinner';
+import { Box } from '../core';
+import { DangerAlert, Input, Label, SuccessButton } from '../elements';
 
 type Props = {
   username: string;
   password: string;
   rememberMe: boolean;
   isSubmitting: boolean;
+  error: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onSubmit: FormEventHandler<HTMLFormElement>;
 };
 
-function LoginForm({ username, password, rememberMe, isSubmitting, onChange, onSubmit }: Props) {
+function LoginForm(props: Props) {
   return (
     <>
-      {isSubmitting && <Spinner overlay />}
+      {props.isSubmitting && <Spinner overlay />}
       <PageHeading>Přihlášení</PageHeading>
       <Lead>Zadej své uživatelské jméno a heslo.</Lead>
-      <form onSubmit={onSubmit}>
+      {props.error && <DangerAlert>Neplatné uživatelské jméno nebo heslo.</DangerAlert>}
+      <form onSubmit={props.onSubmit}>
         <Box maxWidth={400}>
           <Box mb={3}>
             <Label htmlFor="username">Uživatel</Label>
@@ -30,8 +32,8 @@ function LoginForm({ username, password, rememberMe, isSubmitting, onChange, onS
               type="text"
               id="username"
               name="username"
-              value={username}
-              onChange={onChange}
+              value={props.username}
+              onChange={props.onChange}
               required
             />
           </Box>
@@ -41,16 +43,21 @@ function LoginForm({ username, password, rememberMe, isSubmitting, onChange, onS
               type="password"
               id="password"
               name="password"
-              value={password}
-              onChange={onChange}
+              value={props.password}
+              onChange={props.onChange}
               required
             />
           </Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Checkbox id="rememberMe" name="rememberMe" checked={rememberMe} onChange={onChange}>
+            <Checkbox
+              id="rememberMe"
+              name="rememberMe"
+              checked={props.rememberMe}
+              onChange={props.onChange}
+            >
               Neodhlašovat
             </Checkbox>
-            <SuccessButton type="submit" disabled={isSubmitting}>
+            <SuccessButton type="submit" disabled={props.isSubmitting}>
               Přihlásit
             </SuccessButton>
           </Box>

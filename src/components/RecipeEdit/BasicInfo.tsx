@@ -37,7 +37,7 @@ export default class BasicInfo extends React.Component<Props, State> {
   };
 
   render() {
-    const { preparationTime = '', servingCount = '', sideDish = '', onChange } = this.props;
+    const { preparationTime, servingCount, sideDish, onChange } = this.props;
     const { sideDishOptions } = this.state;
 
     return (
@@ -50,7 +50,7 @@ export default class BasicInfo extends React.Component<Props, State> {
               min="1"
               id="preparationTime"
               name="preparationTime"
-              value={preparationTime}
+              value={typeof preparationTime === 'number' ? preparationTime : ''}
               onChange={onChange}
               flex="auto"
               hasAppendAddon
@@ -66,7 +66,7 @@ export default class BasicInfo extends React.Component<Props, State> {
             min="1"
             id="servingCount"
             name="servingCount"
-            value={servingCount}
+            value={typeof servingCount === 'number' ? servingCount : ''}
             onChange={onChange}
           />
         </Box>
@@ -82,7 +82,7 @@ export default class BasicInfo extends React.Component<Props, State> {
             inputProps={{
               id: 'sideDish',
               name: 'sideDish',
-              value: sideDish,
+              value: sideDish || '',
               onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
               onKeyPress: e => {
                 if (e.key === 'Enter') {

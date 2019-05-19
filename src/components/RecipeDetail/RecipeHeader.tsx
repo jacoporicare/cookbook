@@ -1,11 +1,12 @@
-import React from 'react';
 import { Link } from '@reach/router';
+import React from 'react';
 
+import { isAuthenticated } from '../../clientAuth';
 import { isOnline } from '../../utils';
+import Icon from '../common/Icon';
+import PageHeading from '../common/PageHeading';
 import { Box } from '../core';
 import { Button, DangerButton } from '../elements';
-import PageHeading from '../common/PageHeading';
-import Icon from '../common/Icon';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 type Props = {
@@ -13,28 +14,19 @@ type Props = {
   sideDish?: string;
   slug: string;
   title: string;
-  isAuthenticated: boolean;
   isAuthor?: boolean;
   onDeleteShow: () => void;
 };
 
 const EditRecipeButton = Button.withComponent(Link);
 
-function RecipeHeader({
-  preparationTime,
-  sideDish,
-  slug,
-  title,
-  isAuthenticated,
-  isAuthor,
-  onDeleteShow,
-}: Props) {
+function RecipeHeader({ preparationTime, sideDish, slug, title, isAuthor, onDeleteShow }: Props) {
   return (
     <>
       <PageHeading
         buttons={
           isOnline() &&
-          isAuthenticated &&
+          isAuthenticated() &&
           isAuthor && (
             <>
               <EditRecipeButton to={`/recept/${slug}/upravit`}>

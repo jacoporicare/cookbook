@@ -1,13 +1,15 @@
+import {
+  defaultDataIdFromObject,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { BatchHttpLink } from 'apollo-link-batch-http';
+import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
-import {
-  InMemoryCache,
-  defaultDataIdFromObject,
-  NormalizedCacheObject,
-} from 'apollo-cache-inmemory';
-import 'isomorphic-fetch';
+
+import { getAuthToken } from '../clientAuth';
 
 export default function configureClient(initialState?: NormalizedCacheObject) {
   const cache = new InMemoryCache({
@@ -26,6 +28,17 @@ export default function configureClient(initialState?: NormalizedCacheObject) {
     },
   });
 
+  const authLink = setContext((_, { headers }) => {
+    const token = getAuthToken();
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  });
+
   const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
       const formattedGraphQLErrors = graphQLErrors.map(
@@ -37,7 +50,7 @@ export default function configureClient(initialState?: NormalizedCacheObject) {
               .map(location => `${location.line}:${location.column}`)
               .join(', ')}, Path: ${path}`,
       );
-      if (process.env.BUILD_TARGET === 'server' && process.env.NODE_ENV === 'production') {
+      if (process.env.BUILD_TARGET === 'server') {
         formattedGraphQLErrors.forEach(error => console.error(error, operation));
       }
     }
@@ -53,11 +66,9 @@ export default function configureClient(initialState?: NormalizedCacheObject) {
   });
 
   return new ApolloClient({
-    link: ApolloLink.from([errorLink, batchLink]),
+    link: ApolloLink.from([errorLink, authLink, batchLink]),
     cache: initialState ? cache.restore(initialState) : cache,
     // https://www.apollographql.com/docs/react/features/developer-tooling.html#devtools
-    connectToDevTools:
-      process.env.BUILD_TARGET === 'client' && process.env.NODE_ENV !== 'production',
     ssrMode: process.env.BUILD_TARGET === 'server',
   });
 }

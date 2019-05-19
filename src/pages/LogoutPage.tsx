@@ -1,37 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
-
-import { logout, AuthAction } from '../components/Auth/actions';
 import { RouteComponentProps } from '@reach/router';
+import { useEffect } from 'react';
+import { clearAuthToken } from '../clientAuth';
 
-type OwnProps = RouteComponentProps;
+type Props = RouteComponentProps;
 
-type DispatchProps = {
-  logout: () => AuthAction;
-};
+function LogoutPage(props: Props) {
+  useEffect(() => {
+    clearAuthToken();
 
-type Props = OwnProps & DispatchProps;
-
-class LogoutPage extends React.Component<Props> {
-  componentDidMount() {
-    const { location, logout, navigate } = this.props;
-    logout();
-
-    if (navigate && location) {
-      navigate(new URL(location.href).searchParams.get('u') || '/');
+    if (props.navigate && props.location) {
+      props.navigate(new URL(location.href).searchParams.get('u') || '/');
     }
-  }
+  }, []);
 
-  render() {
-    return null;
-  }
+  return null;
 }
 
-const mapDispatchToProps: DispatchProps = {
-  logout,
-};
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(LogoutPage);
+export default LogoutPage;

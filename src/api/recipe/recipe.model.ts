@@ -1,8 +1,8 @@
 import { Document, Schema, model } from 'mongoose';
 
 export type Ingredient = {
-  amount: number;
-  amountUnit: string;
+  amount?: number;
+  amountUnit?: string;
   name: string;
   isGroup: boolean;
 };

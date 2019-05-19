@@ -1,21 +1,23 @@
-import React from 'react';
 import { Link, LinkGetProps } from '@reach/router';
+import gql from 'graphql-tag';
+import React from 'react';
+import { useQuery } from 'react-apollo-hooks';
 import styled, { css, cx } from 'react-emotion';
 
-import { Recipe } from '../../types';
+import { isAuthenticated } from '../../clientAuth';
 import { colors, theme } from '../../styles/colors';
+import { Recipe } from '../../types';
 import { isOnline } from '../../utils';
-import { Box } from '../core';
 import Icon from '../common/Icon';
+import { Box } from '../core';
+import { recipeBaseFragment } from '../RecipeList/RecipeListItem';
 import RecipeSearch from '../RecipeSearch/RecipeSearch';
 import cow from './cow.png';
 import pig from './pig.png';
 
 type Props = {
   userName?: string;
-  isAuthenticated: boolean;
   isFetchingUser: boolean;
-  recipes: Recipe[];
   onRecipeSelected: (slug: string) => void;
 };
 
@@ -72,7 +74,21 @@ function getLinkProps({ isCurrent }: LinkGetProps) {
   };
 }
 
-function Header({ userName, isAuthenticated, isFetchingUser, recipes, onRecipeSelected }: Props) {
+const QUERY = gql`
+  query HeaderRecipes {
+    recipes {
+      ...recipeBase
+    }
+  }
+
+  ${recipeBaseFragment}
+`;
+
+function Header({ userName, isFetchingUser, onRecipeSelected }: Props) {
+  const { data } = useQuery<{ recipes: Recipe[] }>(QUERY);
+
+  const recipes = (data && data.recipes) || [];
+
   return (
     <Box
       bg={colors.gray1000}
@@ -117,7 +133,7 @@ function Header({ userName, isAuthenticated, isFetchingUser, recipes, onRecipeSe
           {isOnline() && (
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
-              {!isAuthenticated ? (
+              {!isAuthenticated() ? (
                 <Link
                   // to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
                   to="/prihlaseni"

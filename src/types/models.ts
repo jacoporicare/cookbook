@@ -32,3 +32,20 @@ export type Ingredient = {
   amountUnit?: string;
   isGroup: boolean;
 };
+
+export type RecipeInput = {
+  title: string;
+  slug: string;
+  directions?: string;
+  sideDish?: string;
+  preparationTime?: number;
+  servingCount?: number;
+  ingredients: IngredientInput[];
+};
+
+export type IngredientInput = {
+  name: string;
+  amount?: number;
+  amountUnit?: string;
+  isGroup: boolean;
+};

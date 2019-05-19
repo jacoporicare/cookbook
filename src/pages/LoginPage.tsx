@@ -1,110 +1,76 @@
-import React, { ChangeEvent, FormEvent } from 'react';
-import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from '@reach/router';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 
-import { StoreState } from '../types';
+import { login } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
-import { login, AuthAction } from '../components/Auth/actions';
 import LoginForm from '../components/LoginForm/LoginForm';
 
-type OwnProps = RouteComponentProps;
+type Props = RouteComponentProps;
 
-type StateProps = {
-  isSubmitting: boolean;
-};
+function LoginPage(props: Props) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(false);
 
-type DispatchProps = {
-  login: (username: string, password: string) => Promise<AuthAction>;
-};
-
-type Props = OwnProps & StateProps & DispatchProps;
-
-type State = {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-};
-
-class LoginPage extends React.Component<Props, State> {
-  state = {
-    username: '',
-    password: '',
-    rememberMe: true,
-  };
-
-  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value, checked } = event.target;
 
     switch (name) {
       case 'username':
-        this.setState({ username: value });
+        setUsername(value);
         break;
 
       case 'password':
-        this.setState({ password: value });
+        setPassword(value);
         break;
 
       case 'rememberMe':
-        this.setState({ rememberMe: checked });
+        setRememberMe(checked);
         break;
 
       default:
         break;
     }
-  };
+  }
 
-  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const { login, navigate } = this.props;
-    const { username, password } = this.state;
+    setIsSubmitting(true);
+    setError(false);
 
-    login(username, password).then(action => {
-      if (action.type === 'LOGIN_FORM.LOGIN.SUCCESS') {
-        navigate &&
-          navigate(
+    login(username, password)
+      .then(() => {
+        setIsSubmitting(false);
+        props.navigate &&
+          props.navigate(
             window.location.hash.startsWith('#u=')
               ? decodeURIComponent(window.location.hash.substring(3))
               : '/',
           );
-      }
-    });
-  };
-
-  render() {
-    const { username, password, rememberMe } = this.state;
-    const { isSubmitting } = this.props;
-
-    return (
-      <>
-        <DocumentTitle title="Přihlášení" />
-        <LoginForm
-          username={username}
-          password={password}
-          rememberMe={rememberMe}
-          isSubmitting={isSubmitting}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
-      </>
-    );
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+        setError(true);
+      });
   }
+
+  return (
+    <>
+      <DocumentTitle title="Přihlášení" />
+      <LoginForm
+        username={username}
+        password={password}
+        rememberMe={rememberMe}
+        isSubmitting={isSubmitting}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        error={error}
+      />
+    </>
+  );
 }
 
-function mapStateToProps(state: StoreState): StateProps {
-  return {
-    isSubmitting: state.auth.isSubmitting,
-  };
-}
-
-function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, {}, AuthAction>): DispatchProps {
-  return {
-    login: (username: string, password: string) => dispatch(login(username, password)),
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LoginPage);
+export default LoginPage;

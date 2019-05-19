@@ -1595,6 +1595,14 @@ apollo-link-batch@^1.1.12:
     apollo-link "^1.2.11"
     tslib "^1.9.3"
 
+apollo-link-context@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/apollo-link-context/-/apollo-link-context-1.0.17.tgz#439272cfb43ec1891506dd175ed907845b7de36c"
+  integrity sha512-W5UUfHcrrlP5uqJs5X1zbf84AMXhPZGAqX/7AQDgR6wY/7//sMGfJvm36KDkpIeSOElztGtM9z6zdPN1NbT41Q==
+  dependencies:
+    apollo-link "^1.2.11"
+    tslib "^1.9.3"
+
 apollo-link-dedup@^1.0.0:
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.18.tgz#635cb5659b082e7f270f7649c4b0f71021f7bb4b"
@@ -4752,7 +4760,7 @@ graphql-subscriptions@^1.0.0:
   dependencies:
     iterall "^1.2.1"
 
-graphql-tag@^2.9.2:
+graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
@@ -5692,7 +5700,7 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-isomorphic-fetch@^2.1.1:
+isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
   integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
@@ -9017,11 +9025,6 @@ recursive-readdir@2.2.2:
   integrity sha512-nRCcW9Sj7NuZwa2XvH9co8NPeXUBhZP7CRKJtU+cS6PW9FpCIFoI5ib0NT1ZrbNuPoRy0ylyCaUL8Gih4LSyFg==
   dependencies:
     minimatch "3.0.4"
-
-redux-persist@^5.10.0:
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-5.10.0.tgz#5d8d802c5571e55924efc1c3a9b23575283be62b"
-  integrity sha512-sSJAzNq7zka3qVHKce1hbvqf0Vf5DuTVm7dr4GtsqQVOexnrvbV47RWFiPxQ8fscnyiuWyD2O92DOxPl0tGCRg==
 
 redux-thunk@^2.3.0:
   version "2.3.0"

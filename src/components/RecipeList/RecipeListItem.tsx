@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import styled, { css } from 'react-emotion';
+import gql from 'graphql-tag';
 
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
@@ -70,5 +71,19 @@ function RecipeListItem({ recipe }: Props) {
     </StyledLink>
   );
 }
+
+export const recipeBaseFragment = gql`
+  fragment recipeBase on Recipe {
+    _id
+    title
+    slug
+    sideDish
+    preparationTime
+    userId
+    userName
+    hasImage
+    lastModifiedDate
+  }
+`;
 
 export default RecipeListItem;

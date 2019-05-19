@@ -1,6 +1,7 @@
 import { Router } from '@reach/router';
 import React from 'react';
-import { connect } from 'react-redux';
+
+import { isAuthenticated } from './clientAuth';
 import Layout from './pages/Layout';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
@@ -9,25 +10,18 @@ import RecipeDetailPage from './pages/RecipeDetailPage';
 import RecipeEditPage from './pages/RecipeEditPage';
 import RecipeListPage from './pages/RecipeListPage';
 import SideDishListPage from './pages/SideDishListPage';
-import { StoreState } from './types';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import './styles/reboot';
 
-type StateProps = {
-  isAuthenticated: boolean;
-};
-
-type Props = StateProps;
-
-function App({ isAuthenticated }: Props) {
+function App() {
   return (
     <Router>
       <Layout path="/">
         <RecipeListPage path="/" />
         <RecipeDetailPage path="recept/:slug" />
-        {isAuthenticated && <RecipeEditPage path="recept/:slug/upravit" />}
-        {isAuthenticated && <RecipeEditPage path="novy-recept" />}
+        {isAuthenticated() && <RecipeEditPage path="recept/:slug/upravit" />}
+        {isAuthenticated() && <RecipeEditPage path="novy-recept" />}
         <SideDishListPage path="prilohy" />
         <LoginPage path="prihlaseni" />
         <LogoutPage path="odhlaseni" />
@@ -37,10 +31,4 @@ function App({ isAuthenticated }: Props) {
   );
 }
 
-function mapStateToProps(state: StoreState): StateProps {
-  return {
-    isAuthenticated: state.auth.isAuthenticated,
-  };
-}
-
-export default connect(mapStateToProps)(App);
+export default App;

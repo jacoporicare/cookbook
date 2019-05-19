@@ -1,6 +1,4 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import { persistReducer, persistStore } from 'redux-persist';
-import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import thunk from 'redux-thunk';
 
 import { StoreState } from '../types';
@@ -19,21 +17,7 @@ export default function configureStore(initialState?: StoreState) {
       (typeof window !== 'undefined' &&
         (window as EnhancedWindow).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)) ||
     compose;
-  const store =
-    process.env.BUILD_TARGET === 'server'
-      ? createStore(reducer, initialState, composeFn(applyMiddleware(...middlewares)))
-      : createStore(
-          persistReducer(
-            {
-              key: 'root',
-              storage: createWebStorage('local'),
-            },
-            reducer,
-          ),
-          initialState,
-          composeFn(applyMiddleware(...middlewares)),
-        );
-  const persistor = persistStore(store);
+  const store = createStore(reducer, initialState, composeFn(applyMiddleware(...middlewares)));
 
-  return { store, persistor };
+  return { store };
 }

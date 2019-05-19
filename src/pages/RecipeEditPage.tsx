@@ -1,25 +1,19 @@
-import React, { FormEvent } from 'react';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { SortEnd } from 'react-sortable-hoc';
-import { notify } from 'react-notify-toast';
 import { RouteComponentProps } from '@reach/router';
+import { FetchResult } from 'apollo-link';
+import gql from 'graphql-tag';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-apollo-hooks';
+import { notify } from 'react-notify-toast';
+import { SortEnd } from 'react-sortable-hoc';
 
-import { RecipeDetail, Ingredient, StoreState, AutosuggestChangeEventHandler } from '../types';
-import { getImageUrl } from '../utils';
-import { DangerAlert } from '../components/elements';
-import SpinnerIf from '../components/common/SpinnerIf';
 import DocumentTitle from '../components/common/DocumentTitle';
-import { fetchRecipe, RecipeDetailAction } from '../components/RecipeDetail/actions';
-import {
-  saveRecipe,
-  fetchIngredientList,
-  fetchSideDishList,
-  RecipeEditAction,
-  SaveRecipeParams,
-} from '../components/RecipeEdit/actions';
+import SpinnerIf from '../components/common/SpinnerIf';
+import { DangerAlert } from '../components/elements';
 import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
-import api from '../api';
+import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
+import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
+import { getImageUrl } from '../utils';
+import { getAuthToken, getHeaders } from '../clientAuth';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -27,158 +21,136 @@ type Params = {
   slug?: string;
 };
 
-type OwnProps = RouteComponentProps<Params>;
+type Props = RouteComponentProps<Params>;
 
-type StateProps = {
-  authToken?: string;
-  isNew: boolean;
-  slug: string | undefined;
-  recipe: RecipeDetail | undefined;
-  isFetching: boolean;
-  isSaving: boolean;
-  ingredientOptions: string[];
-  sideDishOptions: string[];
+const QUERY = gql`
+  query RecipeEdit($slug: String) {
+    recipe(slug: $slug) {
+      ...recipeBase
+      directions
+      servingCount
+      ingredients {
+        _id
+        name
+        amount
+        amountUnit
+        isGroup
+      }
+    }
+    ingredients
+    sideDishes
+  }
+
+  ${recipeBaseFragment}
+`;
+
+const CREATE_RECIPE_MUTATION = gql`
+  mutation CreateRecipe($recipe: RecipeInput!) {
+    createRecipe(recipe: $recipe) {
+      slug
+    }
+  }
+`;
+
+const UPDATE_RECIPE_MUTATION = gql`
+  mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!) {
+    updateRecipe(id: $id, recipe: $recipe) {
+      slug
+    }
+  }
+`;
+
+type QueryData = {
+  recipe?: RecipeDetail;
+  ingredients: string[];
+  sideDishes: [];
 };
 
-type DispatchProps = {
-  fetchRecipe: (slug: string) => Promise<RecipeDetailAction>;
-  saveRecipe: (
-    id: string | undefined,
-    recipe: SaveRecipeParams,
-    hasNewImage: boolean,
-  ) => Promise<RecipeEditAction>;
-  fetchIngredientList: () => Promise<RecipeEditAction>;
-  fetchSideDishList: () => Promise<RecipeEditAction>;
+type CreateRecipeMutationData = {
+  createRecipe?: RecipeDetail;
 };
 
-type Props = OwnProps & StateProps & DispatchProps;
-
-type State = {
-  changed: boolean;
-  title?: string;
-  preparationTime?: number;
-  servingCount?: number;
-  sideDish?: string;
-  directions?: string;
-  ingredients: Ingredient[];
-  newImage?: ArrayBuffer;
-  isSavingImage: boolean;
+type UpdateRecipeMutationData = {
+  updateRecipe?: RecipeDetail;
 };
 
-class RecipeEditPage extends React.Component<Props, State> {
-  saved = false;
+function isCreateMutation(
+  data: CreateRecipeMutationData | UpdateRecipeMutationData,
+): data is CreateRecipeMutationData {
+  return Boolean((data as any).createRecipe);
+}
 
-  constructor(props: Props) {
-    super(props);
+function RecipeEditPage(props: Props) {
+  const [changed, setChanged] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSavingImage, setIsSavingImage] = useState(false);
+  const [newImage, setNewImage] = useState<ArrayBuffer | undefined>(undefined);
+  const [id, setId] = useState('');
+  const [title, setTitle] = useState('');
+  const [sideDish, setSideDish] = useState('');
+  const [directions, setDirections] = useState('');
+  const [preparationTime, setPreparationTime] = useState<number | undefined>();
+  const [servingCount, setServingCount] = useState<number | undefined>();
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
-    this.state = {
-      changed: false,
-      isSavingImage: false,
-      ingredients: [],
-      ...(props.recipe && this.getRecipeState(props.recipe)),
+  const { data, loading } = useQuery<QueryData>(QUERY, {
+    variables: { slug: props.slug },
+  });
+  const createRecipe = useMutation<CreateRecipeMutationData>(CREATE_RECIPE_MUTATION);
+  const updateRecipe = useMutation<UpdateRecipeMutationData>(UPDATE_RECIPE_MUTATION);
+
+  const editedRecipe = data && data.recipe;
+
+  if (editedRecipe && editedRecipe._id !== id) {
+    setId(editedRecipe._id);
+    setTitle(editedRecipe.title);
+    setSideDish(editedRecipe.sideDish || '');
+    setDirections(editedRecipe.directions || '');
+    setPreparationTime(editedRecipe.preparationTime);
+    setServingCount(editedRecipe.servingCount);
+    setIngredients(editedRecipe.ingredients);
+  }
+
+  useEffect(() => {
+    if (changed) {
+      (window as any).onbeforeunload = (e: any) => {
+        e.returnValue = confirmMsg;
+        return confirmMsg;
+      };
+    }
+
+    return () => {
+      (window as any).onbeforeunload = undefined;
     };
-  }
+  }, [changed]);
 
-  getRecipeState({
-    title,
-    preparationTime,
-    servingCount,
-    sideDish,
-    directions,
-    ingredients,
-  }: RecipeDetail) {
-    return {
-      title,
-      preparationTime,
-      servingCount,
-      sideDish,
-      directions,
-      ingredients,
-      newImage: undefined,
-      isSavingImage: false,
-    };
-  }
-
-  componentDidMount() {
-    const { fetchIngredientList, fetchSideDishList, slug, fetchRecipe } = this.props;
-
-    // router.setRouteLeaveHook(route, () =>
-    //   this.state.changed && !this.saved ? confirmMsg : undefined,
-    // );
-
-    fetchIngredientList();
-    fetchSideDishList();
-
-    if (slug) {
-      fetchRecipe(slug);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.recipe === nextProps.recipe) {
-      return;
-    }
-
-    if (nextProps.recipe) {
-      this.setState(this.getRecipeState(nextProps.recipe));
-      return;
-    }
-
-    this.setState({
-      title: undefined,
-      preparationTime: undefined,
-      servingCount: undefined,
-      sideDish: undefined,
-      directions: undefined,
-      ingredients: [],
-      newImage: undefined,
-      isSavingImage: false,
-    });
-  }
-
-  componentDidUpdate() {
-    if (!this.state.changed) {
-      return;
-    }
-
-    window.onbeforeunload = e => {
-      e.returnValue = confirmMsg;
-      return confirmMsg;
-    };
-  }
-
-  componentWillUnmount() {
-    // tslint:disable-next-line no-any
-    (window as any).onbeforeunload = undefined;
-  }
-
-  handleChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
+  const handleChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
     const { name, value } = event.currentTarget;
     const key = targetName || name;
     const rawValue = selectEvent ? selectEvent.newValue : value;
 
     switch (key) {
       case 'title':
-        this.setState({ title: rawValue });
+        setTitle(rawValue);
         break;
 
       case 'sideDish':
-        this.setState({ sideDish: rawValue });
+        setSideDish(rawValue);
         break;
 
       case 'directions':
-        this.setState({ directions: rawValue });
+        setDirections(rawValue);
         break;
 
       case 'preparationTime': {
         const parsed = Number.parseInt(rawValue, 10);
-        this.setState({ preparationTime: Number.isNaN(parsed) ? undefined : parsed });
+        setPreparationTime(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
       case 'servingCount': {
         const parsed = Number.parseInt(rawValue, 10);
-        this.setState({ servingCount: Number.isNaN(parsed) ? undefined : parsed });
+        setServingCount(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
@@ -186,223 +158,165 @@ class RecipeEditPage extends React.Component<Props, State> {
         break;
     }
 
-    this.setState({ changed: true });
+    setChanged(true);
   };
 
-  handleAddIngredient = (name: string, amount?: number, amountUnit?: string) => {
-    this.setState(state => ({
-      changed: true,
-      ingredients: [
-        ...state.ingredients,
-        {
-          name,
-          amount,
-          amountUnit,
-          isGroup: false,
-        },
-      ],
-    }));
-  };
+  function handleAddIngredient(name: string, amount?: number, amountUnit?: string) {
+    setChanged(true);
+    setIngredients([
+      ...ingredients,
+      {
+        name,
+        amount,
+        amountUnit,
+        isGroup: false,
+      },
+    ]);
+  }
 
-  handleAddGroup = (group: string) => {
-    this.setState(state => ({
-      changed: true,
-      ingredients: [
-        ...state.ingredients,
-        {
-          name: group,
-          isGroup: true,
-        },
-      ],
-    }));
-  };
+  function handleAddGroup(group: string) {
+    setChanged(true);
+    setIngredients([
+      ...ingredients,
+      {
+        name: group,
+        isGroup: true,
+      },
+    ]);
+  }
 
-  handleRemoveIngredient = (index: number) => {
-    this.setState(({ ingredients }) => ({
-      changed: true,
-      ingredients: ingredients.filter((_, i) => i !== index),
-    }));
-  };
+  function handleRemoveIngredient(index: number) {
+    setChanged(true);
+    setIngredients(ingredients.filter((_, i) => i !== index));
+  }
 
-  handleSortIngredient = ({ oldIndex, newIndex }: SortEnd) => {
-    this.setState(({ ingredients: oldIngredient }) => {
-      const ingredients = [...oldIngredient];
-      ingredients.splice(newIndex, 0, ingredients.splice(oldIndex, 1)[0]);
+  function handleSortIngredient({ oldIndex, newIndex }: SortEnd) {
+    const newIngredients = [...ingredients];
+    newIngredients.splice(newIndex, 0, newIngredients.splice(oldIndex, 1)[0]);
 
-      return {
-        changed: true,
-        ingredients,
-      };
-    });
-  };
+    setChanged(true);
+    setIngredients(newIngredients);
+  }
 
-  handleImageChange = (data: ArrayBuffer) => {
-    this.setState({ changed: true, newImage: data });
-  };
+  function handleImageChange(data: ArrayBuffer) {
+    setChanged(true);
+    setNewImage(data);
+  }
 
-  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const {
-      title,
-      preparationTime,
-      servingCount,
-      sideDish,
-      directions,
-      ingredients,
-      newImage,
-    } = this.state;
-    const { recipe, saveRecipe } = this.props;
 
     if (!title) {
       return;
     }
 
-    saveRecipe(
-      recipe && recipe._id,
-      {
-        title,
-        preparationTime,
-        servingCount,
-        sideDish,
-        directions,
-        ingredients,
-      },
-      Boolean(newImage),
-    ).then(action => this.handleSave(action));
-  };
+    setIsSaving(true);
 
-  handleSave(action: RecipeEditAction) {
-    if (
-      action.type === 'RECIPE.SAVE.SUCCESS' &&
-      action.payload &&
-      action.payload.recipe &&
-      this.props.authToken
-    ) {
-      const { _id, slug } = action.payload.recipe;
-      const { newImage } = this.state;
-
-      if (!newImage) {
-        this.completeSave(slug);
-        return;
-      }
-
-      this.setState({ isSavingImage: true });
-
-      api(this.props.authToken)
-        .post(`/api/recipes/${_id}/image`, newImage, {
-          headers: { 'Content-Type': 'application/octet-stream' },
-        })
-        .then(() => this.completeSave(slug))
-        .catch(() => this.completeSave(slug));
-    }
-  }
-
-  completeSave(slug: string) {
-    notify.show('Recept úspěšně uložen', 'success');
-    this.saved = true;
-    this.props.navigate && this.props.navigate(`/recept/${slug}`);
-  }
-
-  render() {
-    const {
-      changed,
+    const recipeInput = {
       title,
-      preparationTime,
-      servingCount,
-      sideDish,
-      directions,
+      preparationTime: preparationTime || null,
+      servingCount: servingCount || null,
+      sideDish: sideDish || null,
+      directions: directions || null,
       ingredients,
-      isSavingImage,
-    } = this.state;
-    const {
-      isNew,
-      slug,
-      recipe,
-      isFetching,
-      isSaving,
-      ingredientOptions,
-      sideDishOptions,
-    } = this.props;
+    };
 
-    if (!isNew && !recipe) {
-      return (
-        <SpinnerIf spinner={isFetching}>
-          <DangerAlert>Recept nenalezen.</DangerAlert>
-        </SpinnerIf>
-      );
+    if (editedRecipe) {
+      updateRecipe({
+        variables: {
+          id: editedRecipe._id,
+          recipe: recipeInput,
+        },
+      }).then(handleSave);
+    } else {
+      createRecipe({
+        variables: {
+          recipe: recipeInput,
+        },
+      }).then(handleSave);
+    }
+  }
+
+  function handleSave(
+    fetchResult: FetchResult<CreateRecipeMutationData> | FetchResult<UpdateRecipeMutationData>,
+  ) {
+    setIsSaving(false);
+
+    const recipe =
+      fetchResult.data &&
+      (isCreateMutation(fetchResult.data)
+        ? fetchResult.data.createRecipe
+        : fetchResult.data.updateRecipe);
+
+    const authToken = getAuthToken();
+
+    if (!recipe || !authToken) {
+      return;
     }
 
-    const imageUrl =
-      slug && recipe && recipe.hasImage ? getImageUrl(slug, recipe.lastModifiedDate) : undefined;
+    const { _id, slug } = recipe;
 
+    if (!newImage) {
+      completeSave(slug);
+      return;
+    }
+
+    setIsSavingImage(true);
+
+    fetch(`/api/recipes/${_id}/image`, {
+      method: 'POST',
+      headers: getHeaders({ 'Content-Type': 'application/octet-stream' }),
+      body: newImage,
+    })
+      .then(() => completeSave(slug))
+      .catch(() => completeSave(slug));
+  }
+
+  function completeSave(slug: string) {
+    notify.show('Recept úspěšně uložen', 'success');
+    props.navigate && props.navigate(`/recept/${slug}`);
+  }
+
+  if (props.slug && !editedRecipe) {
     return (
-      <>
-        <DocumentTitle title={!title && isNew ? 'Nový recept' : title} />
-        <RecipeEdit
-          changed={changed}
-          directions={directions}
-          imageUrl={imageUrl}
-          ingredientOptions={ingredientOptions}
-          ingredients={ingredients}
-          isNew={isNew}
-          isSaving={isSaving || isSavingImage}
-          onAddGroup={this.handleAddGroup}
-          onAddIngredient={this.handleAddIngredient}
-          onChange={this.handleChange}
-          onImageChange={this.handleImageChange}
-          onRemoveIngredient={this.handleRemoveIngredient}
-          onSortIngredient={this.handleSortIngredient}
-          onSubmit={this.handleSubmit}
-          preparationTime={preparationTime}
-          servingCount={servingCount}
-          sideDish={sideDish}
-          sideDishOptions={sideDishOptions}
-          slug={slug}
-          title={title}
-        />
-      </>
+      <SpinnerIf spinner={loading}>
+        <DangerAlert>Recept nenalezen.</DangerAlert>
+      </SpinnerIf>
     );
   }
+
+  const imageUrl =
+    props.slug && editedRecipe && editedRecipe.hasImage
+      ? getImageUrl(props.slug, editedRecipe.lastModifiedDate)
+      : undefined;
+
+  return (
+    <>
+      <DocumentTitle title={!title && !props.slug ? 'Nový recept' : title} />
+      <RecipeEdit
+        changed={changed}
+        directions={directions}
+        imageUrl={imageUrl}
+        ingredientOptions={(data && data.ingredients) || []}
+        ingredients={ingredients}
+        isNew={!props.slug}
+        isSaving={isSaving || isSavingImage}
+        onAddGroup={handleAddGroup}
+        onAddIngredient={handleAddIngredient}
+        onChange={handleChange}
+        onImageChange={handleImageChange}
+        onRemoveIngredient={handleRemoveIngredient}
+        onSortIngredient={handleSortIngredient}
+        onSubmit={handleSubmit}
+        preparationTime={preparationTime}
+        servingCount={servingCount}
+        sideDish={sideDish}
+        sideDishOptions={(data && data.sideDishes) || []}
+        slug={props.slug}
+        title={title}
+      />
+    </>
+  );
 }
 
-function mapStateToProps(state: StoreState, ownProps: OwnProps): StateProps {
-  const { auth, recipeDetail, recipeEdit } = state;
-  const { isFetching, recipesBySlug } = recipeDetail;
-  const {
-    isSaving,
-    ingredientList: { ingredients },
-    sideDishList: { sideDishes },
-  } = recipeEdit;
-  const { slug } = ownProps;
-
-  const recipe = slug ? recipesBySlug[slug] : undefined;
-
-  return {
-    authToken: auth.token,
-    ingredientOptions: ingredients,
-    isFetching,
-    isNew: !slug,
-    isSaving,
-    recipe,
-    sideDishOptions: sideDishes,
-    slug,
-  };
-}
-
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, {}, RecipeDetailAction>,
-): DispatchProps {
-  return {
-    fetchRecipe: (slug: string) => dispatch(fetchRecipe(slug)),
-    saveRecipe: (id: string | undefined, recipe: SaveRecipeParams, hasNewImage: boolean) =>
-      dispatch(saveRecipe(id, recipe, hasNewImage)),
-    fetchIngredientList: () => dispatch(fetchIngredientList()),
-    fetchSideDishList: () => dispatch(fetchSideDishList()),
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RecipeEditPage);
+export default RecipeEditPage;
