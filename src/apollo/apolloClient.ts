@@ -61,9 +61,7 @@ export default function configureClient(initialState?: NormalizedCacheObject) {
   });
 
   // This link batches multiple requests on transport layer
-  const batchLink = new BatchHttpLink({
-    uri: process.env.GRAPHQL_URI,
-  });
+  const batchLink = new BatchHttpLink();
 
   return new ApolloClient({
     link: ApolloLink.from([errorLink, authLink, batchLink]),

@@ -4,6 +4,7 @@ import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
 
 import { User } from '../../types';
+import { jwtSecret } from '../../serverConfig';
 
 const users: User[] = [
   {
@@ -50,7 +51,7 @@ export function findUserById(id: number) {
 }
 
 export function signToken(id: number) {
-  return jwt.sign({ _id: id }, process.env.JWT_SECRET!, { expiresIn: '1y' });
+  return jwt.sign({ _id: id }, jwtSecret, { expiresIn: '1y' });
 }
 
 export function auth() {
@@ -63,7 +64,7 @@ export function auth() {
 
         next();
       })
-      .use(expressJwt({ secret: process.env.JWT_SECRET! }))
+      .use(expressJwt({ secret: jwtSecret }))
       // tslint:disable-next-line no-any
       .use((err: any, req: Request, res: Response, next: NextFunction) => {
         if (err.name === 'UnauthorizedError') {
@@ -97,7 +98,7 @@ export function authentication() {
 
         next();
       })
-      .use(expressJwt({ secret: process.env.JWT_SECRET!, credentialsRequired: false }))
+      .use(expressJwt({ secret: jwtSecret, credentialsRequired: false }))
       // tslint:disable-next-line no-any
       .use((err: any, req: Request, res: Response, next: NextFunction) => {
         if (err.name === 'UnauthorizedError') {
