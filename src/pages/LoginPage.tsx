@@ -1,11 +1,21 @@
 import { RouteComponentProps } from '@reach/router';
+import gql from 'graphql-tag';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useMutation } from 'react-apollo-hooks';
 
-import { login } from '../clientAuth';
+import { setAuthToken } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import LoginForm from '../components/LoginForm/LoginForm';
 
 type Props = RouteComponentProps;
+
+const LOGIN_MUTATION = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+    }
+  }
+`;
 
 function LoginPage(props: Props) {
   const [username, setUsername] = useState('');
@@ -13,6 +23,8 @@ function LoginPage(props: Props) {
   const [rememberMe, setRememberMe] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
+
+  const login = useMutation<{ login: { token: string } }>(LOGIN_MUTATION);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value, checked } = event.target;
@@ -41,15 +53,21 @@ function LoginPage(props: Props) {
     setIsSubmitting(true);
     setError(false);
 
-    login(username, password)
-      .then(() => {
+    login({ variables: { username, password } })
+      .then(({ data }) => {
         setIsSubmitting(false);
-        props.navigate &&
-          props.navigate(
-            window.location.hash.startsWith('#u=')
-              ? decodeURIComponent(window.location.hash.substring(3))
-              : '/',
-          );
+
+        if (data) {
+          setAuthToken(data.login.token);
+          props.navigate &&
+            props.navigate(
+              window.location.hash.startsWith('#u=')
+                ? decodeURIComponent(window.location.hash.substring(3))
+                : '/',
+            );
+        } else {
+          setError(true);
+        }
       })
       .catch(() => {
         setIsSubmitting(false);

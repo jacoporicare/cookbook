@@ -17,7 +17,7 @@ import pig from './pig.png';
 
 type Props = {
   userName?: string;
-  isFetchingUser: boolean;
+  isUserLoading: boolean;
   onRecipeSelected: (slug: string) => void;
 };
 
@@ -84,7 +84,7 @@ const QUERY = gql`
   ${recipeBaseFragment}
 `;
 
-function Header({ userName, isFetchingUser, onRecipeSelected }: Props) {
+function Header(props: Props) {
   const { data } = useQuery<{ recipes: Recipe[] }>(QUERY);
 
   const recipes = (data && data.recipes) || [];
@@ -123,7 +123,7 @@ function Header({ userName, isFetchingUser, onRecipeSelected }: Props) {
           </Link>
         </Box>
         <Box display="flex">
-          <RecipeSearch recipes={recipes} onSelected={onRecipeSelected} />
+          <RecipeSearch recipes={recipes} onSelected={props.onRecipeSelected} />
           <Link to="/" getProps={getLinkProps}>
             Recepty
           </Link>
@@ -143,7 +143,9 @@ function Header({ userName, isFetchingUser, onRecipeSelected }: Props) {
                 </Link>
               ) : (
                 <>
-                  <NavItem>{isFetchingUser ? <Icon icon="spinner" spin /> : userName}</NavItem>
+                  <NavItem>
+                    {props.isUserLoading ? <Icon icon="spinner" spin /> : props.userName}
+                  </NavItem>
                   <Link
                     // to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}
                     to="/odhlaseni"

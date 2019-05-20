@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
 
-import { User } from '../../types';
-import { jwtSecret } from '../../serverConfig';
+import { User } from './types';
+import { jwtSecret } from './serverConfig';
 
 const users: User[] = [
   {

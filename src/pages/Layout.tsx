@@ -1,40 +1,34 @@
 import { RouteComponentProps } from '@reach/router';
-import React, { useEffect } from 'react';
+import gql from 'graphql-tag';
+import React from 'react';
+import { useQuery } from 'react-apollo-hooks';
 import Notifications from 'react-notify-toast';
-import { connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 
-import { AuthAction, fetchUser } from '../components/Auth/actions';
 import DocumentTitle from '../components/common/DocumentTitle';
 import { Box } from '../components/core';
 import Footer from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
 import { colors } from '../styles/colors';
-import { StoreState, User } from '../types';
-import { isOnline } from '../utils';
-import { isAuthenticated } from '../clientAuth';
+import { User } from '../types';
 
 type Props = {
   children: React.ReactNode;
-  user: User | undefined;
-  isFetchingUser: boolean;
-  fetchUserError: boolean;
-  fetchUser: () => Promise<AuthAction>;
 } & RouteComponentProps;
 
-function Layout(props: Props) {
-  useEffect(() => {
-    if (
-      isOnline() &&
-      isAuthenticated() &&
-      !props.user &&
-      !props.isFetchingUser &&
-      !props.fetchUserError
-    ) {
-      props.fetchUser();
+const QUERY = gql`
+  query Me {
+    me {
+      id
+      username
+      name
     }
-  }, [isOnline(), isAuthenticated(), props.user, props.isFetchingUser, props.fetchUserError]);
+  }
+`;
+
+function Layout(props: Props) {
+  const { data, loading } = useQuery<{ me?: User }>(QUERY, {
+    skip: process.env.BUILD_TARGET === 'server',
+  });
 
   function handleRecipeSelected(slug: string) {
     props.navigate && props.navigate(`/recept/${slug}`);
@@ -45,8 +39,8 @@ function Layout(props: Props) {
       <DocumentTitle />
       <Notifications options={{ zIndex: 1100 }} />
       <Header
-        userName={props.user ? props.user.name : undefined}
-        isFetchingUser={props.isFetchingUser}
+        userName={data && data.me && data.me.name}
+        isUserLoading={loading}
         onRecipeSelected={handleRecipeSelected}
       />
       <Box p={[3, 4]}>
@@ -59,17 +53,4 @@ function Layout(props: Props) {
   );
 }
 
-const mapStateToProps = (state: StoreState) => ({
-  user: state.auth.user,
-  isFetchingUser: state.auth.isFetchingUser,
-  fetchUserError: state.auth.error,
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, {}, AnyAction>) => ({
-  fetchUser: () => dispatch(fetchUser()),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Layout);
+export default Layout;

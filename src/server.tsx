@@ -3,21 +3,19 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { renderStylesToString } from 'emotion-server';
 import express from 'express';
+import 'isomorphic-fetch';
 import path from 'path';
 import React from 'react';
 import { ApolloProvider, getMarkupFromTree } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
-import { Provider } from 'react-redux';
 import serialize from 'serialize-javascript';
-import 'isomorphic-fetch';
 
-import { authentication, fakeAuth } from './api/auth/auth.service';
+import { authentication } from './auth.service';
 import configureClient from './apollo/apolloClient';
 import apolloServer from './apollo/apolloServer';
 import App from './App';
 import * as db from './db';
-import configureStore from './redux/configureStore';
 import routes from './serverRoutes';
 
 db.connect();
@@ -42,16 +40,13 @@ apolloServer.applyMiddleware({ app: server });
 
 server.all('*', async (req, res) => {
   try {
-    const { store } = configureStore();
     const apolloClient = configureClient();
 
     const root = (
       <ApolloProvider client={apolloClient}>
-        <Provider store={store}>
-          <ServerLocation url={req.url}>
-            <App />
-          </ServerLocation>
-        </Provider>
+        <ServerLocation url={req.url}>
+          <App />
+        </ServerLocation>
       </ApolloProvider>
     );
     const markupWithoutStyles = await getMarkupFromTree({
@@ -60,7 +55,6 @@ server.all('*', async (req, res) => {
     });
     const markup = renderStylesToString(markupWithoutStyles);
     const helmet = Helmet.renderStatic();
-    const initialReduxState = store.getState();
     const initialApolloState = apolloClient.extract();
 
     res.status(200).send(
@@ -196,7 +190,6 @@ server.all('*', async (req, res) => {
         <div id="root">${markup}</div>
         <script>
           window.__APOLLO_STATE__ = ${serialize(initialApolloState)};
-          window.__REDUX_STATE__ = ${serialize(initialReduxState)};
         </script>
     </body>
 </html>`,

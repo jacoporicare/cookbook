@@ -6,6 +6,7 @@ import { useMutation, useQuery } from 'react-apollo-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
+import { getHeaders } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
@@ -13,7 +14,6 @@ import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
-import { getAuthToken, getHeaders } from '../clientAuth';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -248,9 +248,7 @@ function RecipeEditPage(props: Props) {
         ? fetchResult.data.createRecipe
         : fetchResult.data.updateRecipe);
 
-    const authToken = getAuthToken();
-
-    if (!recipe || !authToken) {
+    if (!recipe) {
       return;
     }
 

@@ -2,8 +2,8 @@ import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
-import { connect } from 'react-redux';
 
+import { getAuthToken } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import Spinner from '../components/common/Spinner';
 import SpinnerIf from '../components/common/SpinnerIf';
@@ -12,20 +12,14 @@ import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
-import { RecipeDetail as RecipeDetailType, StoreState, User } from '../types';
+import { RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
 
 type Params = {
   slug: string;
 };
 
-type OwnProps = RouteComponentProps<Params>;
-
-type StateProps = {
-  user?: User;
-};
-
-type Props = OwnProps & StateProps;
+type Props = RouteComponentProps<Params>;
 
 const QUERY = gql`
   query RecipeDetail($slug: String!) {
@@ -41,6 +35,12 @@ const QUERY = gql`
         isGroup
       }
     }
+
+    me {
+      id
+      username
+      name
+    }
   }
 
   ${recipeBaseFragment}
@@ -54,7 +54,7 @@ const DELETE_RECIPE_MUTATION = gql`
 
 function RecipeDetailPage(props: Props) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const { data, loading } = useQuery<{ recipe?: RecipeDetailType }>(QUERY, {
+  const { data, loading } = useQuery<{ recipe?: RecipeDetailType; me?: User }>(QUERY, {
     variables: { slug: props.slug },
   });
   const deleteRecipe = useMutation(DELETE_RECIPE_MUTATION);
@@ -105,7 +105,7 @@ function RecipeDetailPage(props: Props) {
         slug={slug}
         title={title}
         isAuthor={
-          props.user && (props.user.id === userId || props.user.id === 1 || props.user.id === 2)
+          data && data.me && (data.me.id === userId || data.me.id === 1 || data.me.id === 2)
         }
         onDeleteShow={() => setDeleteModalVisible(true)}
       />
@@ -138,12 +138,4 @@ function RecipeDetailPage(props: Props) {
   );
 }
 
-function mapStateToProps(state: StoreState): StateProps {
-  const { user } = state.auth;
-
-  return {
-    user,
-  };
-}
-
-export default connect(mapStateToProps)(RecipeDetailPage);
+export default RecipeDetailPage;

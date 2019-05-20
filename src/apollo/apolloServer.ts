@@ -4,7 +4,8 @@ import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 import path from 'path';
 import slug from 'slug';
-import { findUserById, superAdminIds } from '../api/auth/auth.service';
+
+import { checkUser, findUserById, signToken, superAdminIds } from '../auth.service';
 import recipeModel, { Recipe } from '../api/recipe/recipe.model';
 import { RecipeInput, User } from '../types';
 
@@ -14,18 +15,7 @@ type Context = {
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
-  type Query {
-    recipes: [Recipe!]!
-    recipe(id: ID, slug: String): Recipe
-    ingredients: [String!]!
-    sideDishes: [String!]!
-  }
-
-  type Mutation {
-    createRecipe(recipe: RecipeInput!): Recipe
-    updateRecipe(id: ID!, recipe: RecipeInput!): Recipe
-    deleteRecipe(id: ID!): Boolean
-  }
+  scalar Date
 
   type Recipe {
     _id: ID!
@@ -50,6 +40,16 @@ const typeDefs = gql`
     isGroup: Boolean
   }
 
+  type AuthPayload {
+    token: String
+  }
+
+  type User {
+    id: Int!
+    username: String!
+    name: String!
+  }
+
   input RecipeInput {
     title: String!
     directions: String
@@ -66,7 +66,20 @@ const typeDefs = gql`
     isGroup: Boolean
   }
 
-  scalar Date
+  type Query {
+    recipes: [Recipe!]!
+    recipe(id: ID, slug: String): Recipe
+    ingredients: [String!]!
+    sideDishes: [String!]!
+    me: User
+  }
+
+  type Mutation {
+    login(username: String!, password: String): AuthPayload
+    createRecipe(recipe: RecipeInput!): Recipe
+    updateRecipe(id: ID!, recipe: RecipeInput!): Recipe
+    deleteRecipe(id: ID!): Boolean
+  }
 `;
 
 // Provide resolver functions for your schema fields
@@ -105,8 +118,22 @@ const resolvers: IResolvers = {
       const sideDishes: string[] = await recipeModel.distinct('sideDish');
       return sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
+    me: async (_, _args, context) => {
+      if (!context.user) {
+        return null;
+      }
+
+      return context.user;
+    },
   },
   Mutation: {
+    login: async (_, args: { username: string; password: string }) => {
+      const user = checkUser(args.username, args.password);
+
+      return {
+        token: user ? signToken(user.id) : null,
+      };
+    },
     createRecipe: async (_, args: { recipe: RecipeInput }, context: Context) => {
       if (!context.user) {
         return null;
