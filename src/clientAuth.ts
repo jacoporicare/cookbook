@@ -2,17 +2,21 @@ import Cookies from 'universal-cookie';
 
 import { AUTH_TOKEN_KEY } from './const';
 
-export function getAuthToken(): string {
+export function getAuthTokenCookie(): string | null {
   if (process.env.BUILD_TARGET !== 'client') {
-    return '';
+    return null;
   }
 
-  return new Cookies().get(AUTH_TOKEN_KEY) || '';
+  return new Cookies().get(AUTH_TOKEN_KEY) || null;
 }
 
-export function setAuthToken(token: string): void {
+export function setAuthTokenCookie(token: string | null): void {
   if (process.env.BUILD_TARGET !== 'client') {
     return;
+  }
+
+  if (!token) {
+    new Cookies().remove(AUTH_TOKEN_KEY);
   }
 
   return new Cookies().set(AUTH_TOKEN_KEY, token, {

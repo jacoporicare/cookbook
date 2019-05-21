@@ -5,7 +5,7 @@ import { BatchHttpLink } from 'apollo-link-batch-http';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 
-import { getAuthToken } from '../clientAuth';
+import { getAuthTokenCookie } from '../clientAuth';
 
 export default function configureClient(
   config: { initialState?: NormalizedCacheObject; authToken?: string } = {},
@@ -13,7 +13,7 @@ export default function configureClient(
   const cache = new InMemoryCache();
 
   const authLink = setContext((_, { headers }) => {
-    const token = config.authToken || getAuthToken();
+    const token = config.authToken || getAuthTokenCookie();
 
     return {
       headers: {

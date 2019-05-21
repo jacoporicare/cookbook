@@ -1,21 +1,21 @@
 import React, { useState, useContext } from 'react';
 
-import { setAuthToken } from './clientAuth';
+import { setAuthTokenCookie } from './clientAuth';
 
-type Value = [string, (token: string) => void];
+type ContextValue = [string | null, (token: string | null) => void];
+
+const Context = React.createContext<ContextValue>([null, () => {}]);
 
 type Props = {
   children: React.ReactNode;
-  token: string;
+  token: string | null;
 };
-
-const Context = React.createContext<Value>(['', () => {}]);
 
 export function AuthProvider(props: Props) {
   const [value, setValue] = useState(props.token);
 
-  function set(token: string) {
-    setAuthToken(token);
+  function set(token: string | null) {
+    setAuthTokenCookie(token);
     setValue(token);
   }
 
