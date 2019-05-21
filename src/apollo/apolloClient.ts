@@ -1,8 +1,4 @@
-import {
-  defaultDataIdFromObject,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from 'apollo-cache-inmemory';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { BatchHttpLink } from 'apollo-link-batch-http';
@@ -12,21 +8,7 @@ import { onError } from 'apollo-link-error';
 import { getAuthToken } from '../clientAuth';
 
 export default function configureClient(initialState?: NormalizedCacheObject) {
-  const cache = new InMemoryCache({
-    addTypename: true,
-    // Cache key used for data normalization
-    // https://www.apollographql.com/docs/react/advanced/caching.html#normalization
-    dataIdFromObject: object => {
-      if (object.__typename !== undefined) {
-        // We use _id
-        if (object['_id'] !== undefined) {
-          return `${object.__typename}:${object['_id']}`;
-        }
-      }
-
-      return defaultDataIdFromObject(object);
-    },
-  });
+  const cache = new InMemoryCache();
 
   const authLink = setContext((_, { headers }) => {
     const token = getAuthToken();

@@ -106,7 +106,6 @@ const resolvers: IResolvers = {
 
       if (args.slug) {
         const recipe = await recipeModel.findOne({ slug: args.slug });
-        console.log(recipe && recipe.toObject());
         return recipe && appendUserName(recipe.toObject());
       }
     },
