@@ -21,21 +21,24 @@ function RecipeList({ recipes }: Props) {
       borderTop={[0, border]}
       borderLeft={[0, border]}
     >
-      {recipes.map(recipe => (
-        <Box
-          key={recipe._id}
-          flex="auto"
-          width={widths}
-          maxWidth={widths}
-          mb={[3, 0]}
-          borderTop={[border, 0]}
-          borderLeft={[border, 0]}
-          borderRight={border}
-          borderBottom={border}
-        >
-          <RecipeListItem recipe={recipe} />
-        </Box>
-      ))}
+      {recipes
+        .slice()
+        .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
+        .map(recipe => (
+          <Box
+            key={recipe._id}
+            flex="auto"
+            width={widths}
+            maxWidth={widths}
+            mb={[3, 0]}
+            borderTop={[border, 0]}
+            borderLeft={[border, 0]}
+            borderRight={border}
+            borderBottom={border}
+          >
+            <RecipeListItem recipe={recipe} />
+          </Box>
+        ))}
     </Box>
   );
 }
