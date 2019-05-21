@@ -3,9 +3,9 @@ import gql from 'graphql-tag';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 
-import { setAuthToken } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import LoginForm from '../components/LoginForm/LoginForm';
+import { useAuth } from '../AuthContext';
 
 type Props = RouteComponentProps;
 
@@ -18,6 +18,7 @@ const LOGIN_MUTATION = gql`
 `;
 
 function LoginPage(props: Props) {
+  const [, setToken] = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
@@ -58,7 +59,7 @@ function LoginPage(props: Props) {
         setIsSubmitting(false);
 
         if (data) {
-          setAuthToken(data.login.token);
+          setToken(data.login.token);
           props.navigate &&
             props.navigate(
               window.location.hash.startsWith('#u=')

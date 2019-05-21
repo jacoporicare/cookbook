@@ -4,7 +4,7 @@ import React from 'react';
 import { useQuery } from 'react-apollo-hooks';
 import styled, { css, cx } from 'react-emotion';
 
-import { isAuthenticated } from '../../clientAuth';
+import { useAuth } from '../../AuthContext';
 import { colors, theme } from '../../styles/colors';
 import { Recipe } from '../../types';
 import { isOnline } from '../../utils';
@@ -85,6 +85,7 @@ const QUERY = gql`
 `;
 
 function Header(props: Props) {
+  const [token] = useAuth();
   const { data } = useQuery<{ recipes: Recipe[] }>(QUERY);
 
   const recipes = (data && data.recipes) || [];
@@ -133,7 +134,7 @@ function Header(props: Props) {
           {isOnline() && (
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
-              {!isAuthenticated() ? (
+              {!token ? (
                 <Link
                   // to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
                   to="/prihlaseni"

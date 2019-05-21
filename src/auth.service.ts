@@ -1,10 +1,11 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
+import { NextFunction, Request, Response } from 'express';
+import expressJwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
+import Cookies from 'universal-cookie';
 
-import { User } from './types';
 import { jwtSecret } from './serverConfig';
+import { User } from './types';
 
 const users: User[] = [
   {
@@ -57,14 +58,22 @@ export function signToken(id: number) {
 export function auth() {
   return (
     compose()
-      .use((req, res, next) => {
-        if (req.query && req.query.access_token) {
-          req.headers.authorization = `Bearer ${req.query.access_token}`;
-        }
+      .use(
+        expressJwt({
+          secret: jwtSecret,
+          getToken: req => {
+            if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+              return req.headers.authorization.split(' ')[1];
+            }
 
-        next();
-      })
-      .use(expressJwt({ secret: jwtSecret }))
+            if (req.query && req.query.access_token) {
+              return req.query.token;
+            }
+
+            return (req as any).universalCookies.get('access_token');
+          },
+        }),
+      )
       // tslint:disable-next-line no-any
       .use((err: any, req: Request, res: Response, next: NextFunction) => {
         if (err.name === 'UnauthorizedError') {
@@ -91,14 +100,23 @@ export function auth() {
 export function authentication() {
   return (
     compose()
-      .use((req, res, next) => {
-        if (req.query && req.query.access_token) {
-          req.headers.authorization = `Bearer ${req.query.access_token}`;
-        }
+      .use(
+        expressJwt({
+          secret: jwtSecret,
+          credentialsRequired: false,
+          getToken: req => {
+            if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+              return req.headers.authorization.split(' ')[1];
+            }
 
-        next();
-      })
-      .use(expressJwt({ secret: jwtSecret, credentialsRequired: false }))
+            if (req.query && req.query.access_token) {
+              return req.query.token;
+            }
+
+            return ((req as any).universalCookies as Cookies).get('access_token');
+          },
+        }),
+      )
       // tslint:disable-next-line no-any
       .use((err: any, req: Request, res: Response, next: NextFunction) => {
         if (err.name === 'UnauthorizedError') {

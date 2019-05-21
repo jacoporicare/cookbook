@@ -26,9 +26,7 @@ const QUERY = gql`
 `;
 
 function Layout(props: Props) {
-  const { data, loading } = useQuery<{ me?: User }>(QUERY, {
-    skip: process.env.BUILD_TARGET === 'server',
-  });
+  const { data, loading } = useQuery<{ me?: User }>(QUERY);
 
   function handleRecipeSelected(slug: string) {
     props.navigate && props.navigate(`/recept/${slug}`);

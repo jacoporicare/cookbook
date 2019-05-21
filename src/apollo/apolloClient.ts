@@ -7,11 +7,13 @@ import { onError } from 'apollo-link-error';
 
 import { getAuthToken } from '../clientAuth';
 
-export default function configureClient(initialState?: NormalizedCacheObject) {
+export default function configureClient(
+  config: { initialState?: NormalizedCacheObject; authToken?: string } = {},
+) {
   const cache = new InMemoryCache();
 
   const authLink = setContext((_, { headers }) => {
-    const token = getAuthToken();
+    const token = config.authToken || getAuthToken();
 
     return {
       headers: {
@@ -47,7 +49,7 @@ export default function configureClient(initialState?: NormalizedCacheObject) {
 
   return new ApolloClient({
     link: ApolloLink.from([errorLink, authLink, batchLink]),
-    cache: initialState ? cache.restore(initialState) : cache,
+    cache: config.initialState ? cache.restore(config.initialState) : cache,
     // https://www.apollographql.com/docs/react/features/developer-tooling.html#devtools
     ssrMode: process.env.BUILD_TARGET === 'server',
   });

@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 
-import { getAuthToken } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import Spinner from '../components/common/Spinner';
 import SpinnerIf from '../components/common/SpinnerIf';

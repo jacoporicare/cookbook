@@ -10,11 +10,15 @@ import { ApolloProvider, getMarkupFromTree } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import { Helmet } from 'react-helmet';
 import serialize from 'serialize-javascript';
+import Cookies from 'universal-cookie';
+import cookiesMiddleware from 'universal-cookie-express';
 
-import { authentication } from './auth.service';
 import configureClient from './apollo/apolloClient';
 import apolloServer from './apollo/apolloServer';
 import App from './App';
+import { authentication } from './auth.service';
+import { AuthProvider } from './AuthContext';
+import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';
 import routes from './serverRoutes';
 
@@ -31,6 +35,7 @@ server
     res.sendFile(path.join(process.env.RAZZLE_PUBLIC_DIR!, 'service-worker.js'));
   })
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!, { maxAge: 31536000000 }))
+  .use(cookiesMiddleware())
   .use(authentication())
   .use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }))
   .use(bodyParser.json())
@@ -40,13 +45,17 @@ apolloServer.applyMiddleware({ app: server });
 
 server.all('*', async (req, res) => {
   try {
-    const apolloClient = configureClient();
+    const universalCookies = (req as any).universalCookies as Cookies;
+    const authToken = universalCookies.get(AUTH_TOKEN_KEY);
+    const apolloClient = configureClient({ authToken });
 
     const root = (
       <ApolloProvider client={apolloClient}>
-        <ServerLocation url={req.url}>
-          <App />
-        </ServerLocation>
+        <AuthProvider token={authToken}>
+          <ServerLocation url={req.url}>
+            <App />
+          </ServerLocation>
+        </AuthProvider>
       </ApolloProvider>
     );
     const markupWithoutStyles = await getMarkupFromTree({

@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { useQuery } from 'react-apollo-hooks';
 
-import { isAuthenticated } from '../clientAuth';
+import { useAuth } from '../AuthContext';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
@@ -38,6 +38,7 @@ function RecipeListPage(props: Props) {
   //   );
   // };
 
+  const [token] = useAuth();
   const { data, error, loading } = useQuery<{ recipes: Recipe[] }>(QUERY);
 
   if (error) {
@@ -52,7 +53,7 @@ function RecipeListPage(props: Props) {
       <PageHeading
         buttons={
           isOnline() &&
-          isAuthenticated() && (
+          token && (
             <NewRecipeButton to="/novy-recept">
               <Icon icon="utensils" />
               Nový recept

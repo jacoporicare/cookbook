@@ -6,7 +6,6 @@ import { useMutation, useQuery } from 'react-apollo-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
-import { getHeaders } from '../clientAuth';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
@@ -14,6 +13,7 @@ import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
+import { useAuth } from '../AuthContext';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -81,6 +81,7 @@ function isCreateMutation(
 }
 
 function RecipeEditPage(props: Props) {
+  const [token] = useAuth();
   const [changed, setChanged] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSavingImage, setIsSavingImage] = useState(false);
@@ -263,7 +264,10 @@ function RecipeEditPage(props: Props) {
 
     fetch(`/api/recipes/${_id}/image`, {
       method: 'POST',
-      headers: getHeaders({ 'Content-Type': 'application/octet-stream' }),
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+        'content-type': 'application/octet-stream',
+      },
       body: newImage,
     })
       .then(() => completeSave(slug))

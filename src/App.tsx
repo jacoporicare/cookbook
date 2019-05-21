@@ -1,7 +1,7 @@
 import { Router } from '@reach/router';
 import React from 'react';
 
-import { isAuthenticated } from './clientAuth';
+import { useAuth } from './AuthContext';
 import Layout from './pages/Layout';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
@@ -15,13 +15,15 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import './styles/reboot';
 
 function App() {
+  const [token] = useAuth();
+
   return (
     <Router>
       <Layout path="/">
         <RecipeListPage path="/" />
         <RecipeDetailPage path="recept/:slug" />
-        {isAuthenticated() && <RecipeEditPage path="recept/:slug/upravit" />}
-        {isAuthenticated() && <RecipeEditPage path="novy-recept" />}
+        {token && <RecipeEditPage path="recept/:slug/upravit" />}
+        {token && <RecipeEditPage path="novy-recept" />}
         <SideDishListPage path="prilohy" />
         <LoginPage path="prihlaseni" />
         <LogoutPage path="odhlaseni" />

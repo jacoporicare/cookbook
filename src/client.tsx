@@ -9,13 +9,19 @@ import configureClient from './apollo/apolloClient';
 import App from './App';
 import ManageScroll from './ManageScroll';
 import * as serviceWorker from './serviceWorker';
+import { AuthProvider } from './AuthContext';
+import { getAuthToken } from './clientAuth';
 
-const apolloClient = configureClient((window as any).__APOLLO_STATE__ as NormalizedCacheObject);
+const apolloClient = configureClient({
+  initialState: (window as any).__APOLLO_STATE__ as NormalizedCacheObject,
+});
 
 ReactDOM.hydrate(
   <ApolloProvider client={apolloClient}>
-    <App />
-    <ManageScroll />
+    <AuthProvider token={getAuthToken()}>
+      <App />
+      <ManageScroll />
+    </AuthProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 );
