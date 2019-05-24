@@ -1,16 +1,14 @@
 import { Link, LinkGetProps } from '@reach/router';
-import gql from 'graphql-tag';
 import React from 'react';
 import { useQuery } from 'react-apollo-hooks';
 import styled, { css, cx } from 'react-emotion';
 
 import { useAuth } from '../../AuthContext';
+import { RecipeListQueryData, RECIPE_LIST_QUERY } from '../../pages/RecipeListPage';
 import { colors, theme } from '../../styles/colors';
-import { Recipe } from '../../types';
 import { isOnline } from '../../utils';
 import Icon from '../common/Icon';
 import { Box } from '../core';
-import { recipeBaseFragment } from '../RecipeList/RecipeListItem';
 import RecipeSearch from '../RecipeSearch/RecipeSearch';
 import cow from './cow.png';
 import pig from './pig.png';
@@ -74,19 +72,9 @@ function getLinkProps({ isCurrent }: LinkGetProps) {
   };
 }
 
-const QUERY = gql`
-  query HeaderRecipes {
-    recipes {
-      ...recipeBase
-    }
-  }
-
-  ${recipeBaseFragment}
-`;
-
 function Header(props: Props) {
   const [token] = useAuth();
-  const { data } = useQuery<{ recipes: Recipe[] }>(QUERY);
+  const { data } = useQuery<RecipeListQueryData>(RECIPE_LIST_QUERY);
 
   const recipes = (data && data.recipes) || [];
 
