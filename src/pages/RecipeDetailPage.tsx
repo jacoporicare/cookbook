@@ -13,6 +13,7 @@ import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
+import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
 type Params = {
   slug: string;
@@ -37,7 +38,7 @@ export const recipeDetailFragment = gql`
   ${recipeBaseFragment}
 `;
 
-const QUERY = gql`
+export const RECIPE_DETAIL_QUERY = gql`
   query RecipeDetail($slug: String!) {
     recipe(slug: $slug) {
       ...recipeDetail
@@ -53,7 +54,12 @@ const QUERY = gql`
   ${recipeDetailFragment}
 `;
 
-const DELETE_RECIPE_MUTATION = gql`
+export type RecipeDetailQueryData = {
+  recipe?: RecipeDetailType;
+  me?: User;
+};
+
+export const DELETE_RECIPE_MUTATION = gql`
   mutation DeleteRecipe($id: ID!) {
     deleteRecipe(id: $id)
   }
@@ -61,10 +67,26 @@ const DELETE_RECIPE_MUTATION = gql`
 
 function RecipeDetailPage(props: Props) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const { data, loading } = useQuery<{ recipe?: RecipeDetailType; me?: User }>(QUERY, {
+  const { data, loading } = useQuery<RecipeDetailQueryData>(RECIPE_DETAIL_QUERY, {
     variables: { slug: props.slug },
   });
-  const deleteRecipe = useMutation(DELETE_RECIPE_MUTATION);
+  const deleteRecipe = useMutation<boolean>(DELETE_RECIPE_MUTATION, {
+    update: (store, result) => {
+      if (!result.data || !result.data) {
+        return;
+      }
+
+      const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
+
+      if (!data) {
+        return;
+      }
+
+      data.recipes = data.recipes.filter(r => r.slug !== props.slug);
+
+      store.writeQuery({ query: RECIPE_LIST_QUERY, data });
+    },
+  });
 
   const recipe = data && data.recipe;
 

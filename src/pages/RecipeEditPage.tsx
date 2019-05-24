@@ -14,6 +14,7 @@ import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
 import { recipeDetailFragment } from './RecipeDetailPage';
+import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -23,7 +24,7 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
-const QUERY = gql`
+export const RECIPE_EDIT_QUERY = gql`
   query RecipeEdit($slug: String) {
     recipe(slug: $slug) {
       ...recipeDetail
@@ -35,7 +36,7 @@ const QUERY = gql`
   ${recipeDetailFragment}
 `;
 
-const CREATE_RECIPE_MUTATION = gql`
+export const CREATE_RECIPE_MUTATION = gql`
   mutation CreateRecipe($recipe: RecipeInput!) {
     createRecipe(recipe: $recipe) {
       ...recipeDetail
@@ -45,7 +46,7 @@ const CREATE_RECIPE_MUTATION = gql`
   ${recipeDetailFragment}
 `;
 
-const UPDATE_RECIPE_MUTATION = gql`
+export const UPDATE_RECIPE_MUTATION = gql`
   mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!) {
     updateRecipe(id: $id, recipe: $recipe) {
       ...recipeDetail
@@ -55,17 +56,17 @@ const UPDATE_RECIPE_MUTATION = gql`
   ${recipeDetailFragment}
 `;
 
-type QueryData = {
+export type RecipeEditQueryData = {
   recipe?: RecipeDetail;
   ingredients: string[];
   sideDishes: [];
 };
 
-type CreateRecipeMutationData = {
+export type CreateRecipeMutationData = {
   createRecipe?: RecipeDetail;
 };
 
-type UpdateRecipeMutationData = {
+export type UpdateRecipeMutationData = {
   updateRecipe?: RecipeDetail;
 };
 
@@ -89,10 +90,26 @@ function RecipeEditPage(props: Props) {
   const [servingCount, setServingCount] = useState<number | undefined>();
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
-  const { data, loading } = useQuery<QueryData>(QUERY, {
+  const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
   });
-  const createRecipe = useMutation<CreateRecipeMutationData>(CREATE_RECIPE_MUTATION);
+  const createRecipe = useMutation<CreateRecipeMutationData>(CREATE_RECIPE_MUTATION, {
+    update: (store, result) => {
+      if (!result.data || !result.data.createRecipe) {
+        return;
+      }
+
+      const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
+
+      if (!data) {
+        return;
+      }
+
+      data.recipes.push(result.data.createRecipe);
+
+      store.writeQuery({ query: RECIPE_LIST_QUERY, data });
+    },
+  });
   const updateRecipe = useMutation<UpdateRecipeMutationData>(UPDATE_RECIPE_MUTATION);
 
   const editedRecipe = data && data.recipe;

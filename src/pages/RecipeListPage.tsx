@@ -19,7 +19,7 @@ type Props = RouteComponentProps;
 
 const NewRecipeButton = Button.withComponent(Link);
 
-const QUERY = gql`
+export const RECIPE_LIST_QUERY = gql`
   query RecipeList {
     recipes {
       ...recipeBase
@@ -28,6 +28,10 @@ const QUERY = gql`
 
   ${recipeBaseFragment}
 `;
+
+export type RecipeListQueryData = {
+  recipes: Recipe[];
+};
 
 function RecipeListPage(props: Props) {
   // handleFetchAllRecipesClick = () => {
@@ -39,7 +43,7 @@ function RecipeListPage(props: Props) {
   // };
 
   const [token] = useAuth();
-  const { data, error, loading } = useQuery<{ recipes: Recipe[] }>(QUERY);
+  const { data, error, loading } = useQuery<RecipeListQueryData>(RECIPE_LIST_QUERY);
 
   if (error) {
     return <DangerAlert>Nastala neočekávná chyba.</DangerAlert>;
