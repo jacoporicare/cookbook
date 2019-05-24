@@ -138,18 +138,21 @@ const resolvers: IResolvers = {
         return null;
       }
 
-      return recipeModel.create(prepareRecipe(args.recipe, context.user.id));
+      const recipe = await recipeModel.create(prepareRecipe(args.recipe, context.user.id));
+      return appendUserName(recipe.toObject());
     },
     updateRecipe: async (_, args: { id: string; recipe: RecipeInput }, context: Context) => {
       if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {
         return null;
       }
 
-      return await recipeModel.findByIdAndUpdate(
+      const recipe = await recipeModel.findByIdAndUpdate(
         args.id,
         { $set: prepareRecipe(args.recipe) },
         { new: true },
       );
+
+      return recipe && appendUserName(recipe.toObject());
     },
     deleteRecipe: async (_, args: { id: string }, context: Context) => {
       if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {

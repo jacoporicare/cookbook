@@ -6,14 +6,14 @@ import { useMutation, useQuery } from 'react-apollo-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
+import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
 import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
-import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
-import { useAuth } from '../AuthContext';
+import { recipeDetailFragment } from './RecipeDetailPage';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -26,38 +26,33 @@ type Props = RouteComponentProps<Params>;
 const QUERY = gql`
   query RecipeEdit($slug: String) {
     recipe(slug: $slug) {
-      ...recipeBase
-      directions
-      servingCount
-      ingredients {
-        _id
-        name
-        amount
-        amountUnit
-        isGroup
-      }
+      ...recipeDetail
     }
     ingredients
     sideDishes
   }
 
-  ${recipeBaseFragment}
+  ${recipeDetailFragment}
 `;
 
 const CREATE_RECIPE_MUTATION = gql`
   mutation CreateRecipe($recipe: RecipeInput!) {
     createRecipe(recipe: $recipe) {
-      slug
+      ...recipeDetail
     }
   }
+
+  ${recipeDetailFragment}
 `;
 
 const UPDATE_RECIPE_MUTATION = gql`
   mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!) {
     updateRecipe(id: $id, recipe: $recipe) {
-      slug
+      ...recipeDetail
     }
   }
+
+  ${recipeDetailFragment}
 `;
 
 type QueryData = {

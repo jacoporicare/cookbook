@@ -20,19 +20,27 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
+export const recipeDetailFragment = gql`
+  fragment recipeDetail on Recipe {
+    ...recipeBase
+    directions
+    servingCount
+    ingredients {
+      _id
+      name
+      amount
+      amountUnit
+      isGroup
+    }
+  }
+
+  ${recipeBaseFragment}
+`;
+
 const QUERY = gql`
   query RecipeDetail($slug: String!) {
     recipe(slug: $slug) {
-      ...recipeBase
-      directions
-      servingCount
-      ingredients {
-        _id
-        name
-        amount
-        amountUnit
-        isGroup
-      }
+      ...recipeDetail
     }
 
     me {
@@ -42,7 +50,7 @@ const QUERY = gql`
     }
   }
 
-  ${recipeBaseFragment}
+  ${recipeDetailFragment}
 `;
 
 const DELETE_RECIPE_MUTATION = gql`
