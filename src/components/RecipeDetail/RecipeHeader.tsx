@@ -1,7 +1,6 @@
 import { Link } from '@reach/router';
 import React from 'react';
 
-import { useAuth } from '../../AuthContext';
 import { isOnline } from '../../utils';
 import Icon from '../common/Icon';
 import PageHeading from '../common/PageHeading';
@@ -21,14 +20,11 @@ type Props = {
 const EditRecipeButton = Button.withComponent(Link);
 
 function RecipeHeader({ preparationTime, sideDish, slug, title, isAuthor, onDeleteShow }: Props) {
-  const [token] = useAuth();
-
   return (
     <>
       <PageHeading
         buttons={
           isOnline() &&
-          token &&
           isAuthor && (
             <>
               <EditRecipeButton to={`/recept/${slug}/upravit`}>

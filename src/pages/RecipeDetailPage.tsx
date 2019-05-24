@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 
+import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
 import Spinner from '../components/common/Spinner';
 import SpinnerIf from '../components/common/SpinnerIf';
@@ -66,6 +67,7 @@ export const DELETE_RECIPE_MUTATION = gql`
 `;
 
 function RecipeDetailPage(props: Props) {
+  const [token] = useAuth();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { data, loading } = useQuery<RecipeDetailQueryData>(RECIPE_DETAIL_QUERY, {
     variables: { slug: props.slug },
@@ -133,9 +135,12 @@ function RecipeDetailPage(props: Props) {
         sideDish={sideDish}
         slug={slug}
         title={title}
-        isAuthor={
-          data && data.me && (data.me.id === userId || data.me.id === 1 || data.me.id === 2)
-        }
+        isAuthor={Boolean(
+          token &&
+            data &&
+            data.me &&
+            (data.me.id === userId || data.me.id === 1 || data.me.id === 2),
+        )}
         onDeleteShow={() => setDeleteModalVisible(true)}
       />
       {loading && <Spinner />}
