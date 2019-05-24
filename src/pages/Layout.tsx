@@ -15,7 +15,7 @@ type Props = {
   children: React.ReactNode;
 } & RouteComponentProps;
 
-const QUERY = gql`
+export const ME_QUERY = gql`
   query Me {
     me {
       id
@@ -25,8 +25,12 @@ const QUERY = gql`
   }
 `;
 
+export type MeQueryData = {
+  me?: User;
+};
+
 function Layout(props: Props) {
-  const { data, loading } = useQuery<{ me?: User }>(QUERY);
+  const { data, loading } = useQuery<MeQueryData>(ME_QUERY);
 
   function handleRecipeSelected(slug: string) {
     props.navigate && props.navigate(`/recept/${slug}`);

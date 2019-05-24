@@ -3,19 +3,26 @@ import gql from 'graphql-tag';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 
+import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
 import LoginForm from '../components/LoginForm/LoginForm';
-import { useAuth } from '../AuthContext';
+import { ME_QUERY } from './Layout';
 
 type Props = RouteComponentProps;
 
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       token
     }
   }
 `;
+
+export type LoginMutationData = {
+  login: {
+    token: string;
+  };
+};
 
 function LoginPage(props: Props) {
   const [, setToken] = useAuth();
@@ -25,7 +32,19 @@ function LoginPage(props: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
-  const login = useMutation<{ login: { token: string } }>(LOGIN_MUTATION);
+  const login = useMutation<LoginMutationData>(LOGIN_MUTATION, {
+    refetchQueries: result => {
+      // refetchQueries callback and even those returned queries are called before .then
+      // we have to set the token here so the ME_QUERY gets the fresh token
+      setToken(result.data ? result.data.login.token : null);
+
+      if (!result.data) {
+        return [];
+      }
+
+      return [{ query: ME_QUERY }];
+    },
+  });
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value, checked } = event.target;
@@ -59,7 +78,6 @@ function LoginPage(props: Props) {
         setIsSubmitting(false);
 
         if (data) {
-          setToken(data.login.token);
           props.navigate &&
             props.navigate(
               window.location.hash.startsWith('#u=')
