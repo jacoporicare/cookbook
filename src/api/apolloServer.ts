@@ -267,12 +267,13 @@ async function prepareRecipe(
     const stream = (await fileUpload).createReadStream();
     const bufs: Buffer[] = [];
     const image = await new Promise<Buffer>(resolve => {
-      stream.on('data', (data: Buffer) => {
-        bufs.push(data);
-      });
-      stream.on('end', () => {
-        resolve(Buffer.concat(bufs));
-      });
+      stream
+        .on('data', (data: Buffer) => {
+          bufs.push(data);
+        })
+        .on('end', () => {
+          resolve(Buffer.concat(bufs));
+        });
     });
 
     newRecipe = {
@@ -304,9 +305,9 @@ async function checkUserRightsAsync(userId: number, recipeId: string) {
     return true;
   }
 
-  const oldRecipe = await recipeModel.findById(recipeId);
+  const recipe = await recipeModel.findById(recipeId);
 
-  return Boolean(oldRecipe && oldRecipe.userId === userId);
+  return Boolean(recipe && recipe.userId === userId);
 }
 
 export function getThumbPath(slug: string): string {
