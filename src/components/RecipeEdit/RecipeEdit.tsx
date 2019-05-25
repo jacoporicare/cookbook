@@ -27,7 +27,7 @@ type Props = {
   onAddGroup: AddGroupEventHandler;
   onAddIngredient: AddIngredientEventHandler;
   onChange: AutosuggestChangeEventHandler;
-  onImageChange: (data: ArrayBuffer) => void;
+  onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
   onSortIngredient: SortEndHandler;
   onSubmit: FormEventHandler<HTMLFormElement>;

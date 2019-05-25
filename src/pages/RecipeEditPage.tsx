@@ -37,8 +37,8 @@ export const RECIPE_EDIT_QUERY = gql`
 `;
 
 export const CREATE_RECIPE_MUTATION = gql`
-  mutation CreateRecipe($recipe: RecipeInput!) {
-    createRecipe(recipe: $recipe) {
+  mutation CreateRecipe($recipe: RecipeInput!, $image: Upload) {
+    createRecipe(recipe: $recipe, image: $image) {
       ...recipeDetail
     }
   }
@@ -47,8 +47,8 @@ export const CREATE_RECIPE_MUTATION = gql`
 `;
 
 export const UPDATE_RECIPE_MUTATION = gql`
-  mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!) {
-    updateRecipe(id: $id, recipe: $recipe) {
+  mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!, $image: Upload) {
+    updateRecipe(id: $id, recipe: $recipe, image: $image) {
       ...recipeDetail
     }
   }
@@ -77,11 +77,9 @@ function isCreateMutation(
 }
 
 function RecipeEditPage(props: Props) {
-  const [token] = useAuth();
   const [changed, setChanged] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isSavingImage, setIsSavingImage] = useState(false);
-  const [newImage, setNewImage] = useState<ArrayBuffer | undefined>(undefined);
+  const [image, setImage] = useState<File | undefined>(undefined);
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [sideDish, setSideDish] = useState('');
@@ -211,9 +209,9 @@ function RecipeEditPage(props: Props) {
     setIngredients(newIngredients);
   }
 
-  function handleImageChange(data: ArrayBuffer) {
+  function handleImageChange(data: File) {
     setChanged(true);
-    setNewImage(data);
+    setImage(data);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -239,14 +237,20 @@ function RecipeEditPage(props: Props) {
         variables: {
           id: editedRecipe._id,
           recipe: recipeInput,
+          image,
         },
-      }).then(handleSave);
+      })
+        .then(handleSave)
+        .catch(handleError);
     } else {
       createRecipe({
         variables: {
           recipe: recipeInput,
+          image,
         },
-      }).then(handleSave);
+      })
+        .then(handleSave)
+        .catch(handleError);
     }
   }
 
@@ -265,30 +269,13 @@ function RecipeEditPage(props: Props) {
       return;
     }
 
-    const { _id, slug } = recipe;
-
-    if (!newImage) {
-      completeSave(slug);
-      return;
-    }
-
-    setIsSavingImage(true);
-
-    fetch(`/api/recipes/${_id}/image`, {
-      method: 'POST',
-      headers: {
-        authorization: token ? `Bearer ${token}` : '',
-        'content-type': 'application/octet-stream',
-      },
-      body: newImage,
-    })
-      .then(() => completeSave(slug))
-      .catch(() => completeSave(slug));
+    notify.show('Recept úspěšně uložen', 'success');
+    props.navigate && props.navigate(`/recept/${recipe.slug}`);
   }
 
-  function completeSave(slug: string) {
-    notify.show('Recept úspěšně uložen', 'success');
-    props.navigate && props.navigate(`/recept/${slug}`);
+  function handleError() {
+    setIsSaving(false);
+    notify.show('Recept se nepodařilo uložit', 'error');
   }
 
   if (props.slug && !editedRecipe) {
@@ -314,7 +301,7 @@ function RecipeEditPage(props: Props) {
         ingredientOptions={(data && data.ingredients) || []}
         ingredients={ingredients}
         isNew={!props.slug}
-        isSaving={isSaving || isSavingImage}
+        isSaving={isSaving}
         onAddGroup={handleAddGroup}
         onAddIngredient={handleAddIngredient}
         onChange={handleChange}

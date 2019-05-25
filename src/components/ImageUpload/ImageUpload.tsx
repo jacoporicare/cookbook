@@ -4,7 +4,7 @@ import styled, { css } from 'react-emotion';
 
 type Props = {
   imageUrl?: string;
-  onImageChange: (data: ArrayBuffer) => void;
+  onImageChange: (data: File) => void;
 };
 
 type State = {
@@ -92,14 +92,7 @@ export class ImageUpload extends React.Component<Props, State> {
     const file = files[0];
     this.setState({ image: URL.createObjectURL(file) });
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.result && typeof reader.result === 'object') {
-        this.props.onImageChange(reader.result);
-      }
-    };
-
-    reader.readAsArrayBuffer(file);
+    this.props.onImageChange(file);
   };
 
   render() {

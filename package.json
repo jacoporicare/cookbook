@@ -13,6 +13,7 @@
     "apollo-link-context": "^1.0.17",
     "apollo-link-error": "^1.1.10",
     "apollo-server-express": "^2.5.0",
+    "apollo-upload-client": "^10.0.1",
     "axios": "^0.18.0",
     "body-parser": "^1.17.2",
     "composable-middleware": "^0.3.0",
@@ -38,7 +39,7 @@
     "react-apollo-hooks": "^0.4.5",
     "react-autosuggest": "^9.4.2",
     "react-dom": "^16.8.6",
-    "react-dropzone": "^8.0.4",
+    "react-dropzone": "^10.1.5",
     "react-emotion": "^9.2.12",
     "react-helmet": "^5.2.1",
     "react-markdown": "^4.0.3",
@@ -53,6 +54,7 @@
     "universal-cookie-express": "^4.0.0"
   },
   "devDependencies": {
+    "@types/apollo-upload-client": "^8.1.1",
     "@types/body-parser": "^1.16.8",
     "@types/cors": "^2.8.3",
     "@types/express": "^4.0.39",

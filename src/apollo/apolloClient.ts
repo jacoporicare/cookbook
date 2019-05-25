@@ -1,7 +1,8 @@
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
-import { BatchHttpLink } from 'apollo-link-batch-http';
+// import { BatchHttpLink } from 'apollo-link-batch-http';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 
@@ -44,11 +45,10 @@ export default function configureClient(
     }
   });
 
-  // This link batches multiple requests on transport layer
-  const batchLink = new BatchHttpLink({ uri: process.env.RAZZLE_GRAPHQL_URI });
+  const terminatingLink = createUploadLink({ uri: process.env.RAZZLE_GRAPHQL_URI });
 
   return new ApolloClient({
-    link: ApolloLink.from([errorLink, authLink, batchLink]),
+    link: ApolloLink.from([errorLink, authLink, terminatingLink]),
     cache: config.initialState ? cache.restore(config.initialState) : cache,
     // https://www.apollographql.com/docs/react/features/developer-tooling.html#devtools
     ssrMode: process.env.BUILD_TARGET === 'server',

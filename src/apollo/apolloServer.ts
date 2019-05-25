@@ -7,10 +7,34 @@ import slug from 'slug';
 
 import { checkUser, findUserById, signToken, superAdminIds } from '../auth.service';
 import recipeModel, { Recipe } from '../api/recipe/recipe.model';
-import { RecipeInput, User } from '../types';
+import { User } from '../types';
 
 type Context = {
   user?: User;
+};
+
+type RecipeInput = {
+  title: string;
+  slug: string;
+  directions?: string;
+  sideDish?: string;
+  preparationTime?: number;
+  servingCount?: number;
+  ingredients: IngredientInput[];
+};
+
+type IngredientInput = {
+  name: string;
+  amount?: number;
+  amountUnit?: string;
+  isGroup: boolean;
+};
+
+type FileUpload = {
+  createReadStream: () => NodeJS.ReadableStream;
+  filename: string;
+  mimetype: string;
+  encoding: string;
 };
 
 // Construct a schema, using GraphQL schema language
@@ -57,6 +81,7 @@ const typeDefs = gql`
     preparationTime: Int
     servingCount: Int
     ingredients: [IngredientInput!]!
+    image: Upload
   }
 
   input IngredientInput {
@@ -76,8 +101,8 @@ const typeDefs = gql`
 
   type Mutation {
     login(username: String!, password: String): AuthPayload
-    createRecipe(recipe: RecipeInput!): Recipe
-    updateRecipe(id: ID!, recipe: RecipeInput!): Recipe
+    createRecipe(recipe: RecipeInput!, image: Upload): Recipe
+    updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe
     deleteRecipe(id: ID!): Boolean
   }
 `;
@@ -133,26 +158,37 @@ const resolvers: IResolvers = {
         token: user ? signToken(user.id) : null,
       };
     },
-    createRecipe: async (_, args: { recipe: RecipeInput }, context: Context) => {
+    createRecipe: async (
+      _,
+      args: { recipe: RecipeInput; image?: Promise<FileUpload> },
+      context: Context,
+    ) => {
       if (!context.user) {
         return null;
       }
 
-      const recipe = await recipeModel.create(prepareRecipe(args.recipe, context.user.id));
-      return appendUserName(recipe.toObject());
+      const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user.id);
+      const recipeDocument = await recipeModel.create(recipeToSave);
+
+      return appendUserName(recipeDocument.toObject());
     },
-    updateRecipe: async (_, args: { id: string; recipe: RecipeInput }, context: Context) => {
+    updateRecipe: async (
+      _,
+      args: { id: string; recipe: RecipeInput; image?: Promise<FileUpload> },
+      context: Context,
+    ) => {
       if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {
         return null;
       }
 
-      const recipe = await recipeModel.findByIdAndUpdate(
+      const recipeToSave = await prepareRecipe(args.recipe, args.image);
+      const recipeDocument = await recipeModel.findByIdAndUpdate(
         args.id,
-        { $set: prepareRecipe(args.recipe) },
+        { $set: recipeToSave },
         { new: true },
       );
 
-      return recipe && appendUserName(recipe.toObject());
+      return recipeDocument && appendUserName(recipeDocument.toObject());
     },
     deleteRecipe: async (_, args: { id: string }, context: Context) => {
       if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {
@@ -204,11 +240,16 @@ function appendUserName(recipe: Recipe): Recipe {
   };
 }
 
-function prepareRecipe(recipe: RecipeInput, userId?: number): Partial<Recipe> {
-  let newRecipe = {
+async function prepareRecipe(
+  recipe: RecipeInput,
+  fileUpload?: Promise<FileUpload>,
+  userId?: number,
+): Promise<Partial<Recipe>> {
+  const slug = toSlug(recipe.title);
+  let newRecipe: Partial<Recipe> = {
     ...recipe,
     title: recipe.title.trim(),
-    slug: toSlug(recipe.title),
+    slug,
     sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
     preparationTime: recipe.preparationTime || undefined,
     servingCount: recipe.servingCount || undefined,
@@ -222,7 +263,36 @@ function prepareRecipe(recipe: RecipeInput, userId?: number): Partial<Recipe> {
     lastModifiedDate: new Date(),
   };
 
-  return userId ? { ...newRecipe, userId } : newRecipe;
+  if (fileUpload) {
+    const stream = (await fileUpload).createReadStream();
+    const bufs: Buffer[] = [];
+    const image = await new Promise<Buffer>(resolve => {
+      stream.on('data', (data: Buffer) => {
+        bufs.push(data);
+      });
+      stream.on('end', () => {
+        resolve(Buffer.concat(bufs));
+      });
+    });
+
+    newRecipe = {
+      ...newRecipe,
+      image,
+      hasImage: true,
+    };
+
+    const thumbPath = getThumbPath(slug);
+    await fs.remove(thumbPath);
+  }
+
+  if (userId) {
+    newRecipe = {
+      ...newRecipe,
+      userId,
+    };
+  }
+
+  return newRecipe;
 }
 
 function toSlug(title: string) {
