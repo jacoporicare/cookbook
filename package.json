@@ -9,7 +9,6 @@
     "@reach/router": "^1.2.1",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
-    "apollo-link-batch-http": "^1.2.11",
     "apollo-link-context": "^1.0.17",
     "apollo-link-error": "^1.1.10",
     "apollo-server-express": "^2.5.0",
