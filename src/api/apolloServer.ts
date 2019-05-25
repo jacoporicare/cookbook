@@ -6,7 +6,7 @@ import path from 'path';
 import slug from 'slug';
 
 import { checkUser, findUserById, signToken, superAdminIds } from '../auth.service';
-import recipeModel, { Recipe } from '../api/recipe/recipe.model';
+import recipeModel, { Recipe } from './recipe/model';
 import { User } from '../types';
 
 type Context = {
@@ -309,6 +309,6 @@ async function checkUserRightsAsync(userId: number, recipeId: string) {
   return Boolean(oldRecipe && oldRecipe.userId === userId);
 }
 
-function getThumbPath(slug: string): string {
+export function getThumbPath(slug: string): string {
   return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
 }

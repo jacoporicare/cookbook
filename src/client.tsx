@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo-hooks';
 import ReactDOM from 'react-dom';
 import 'isomorphic-fetch';
 
-import configureClient from './apollo/apolloClient';
+import configureClient from './api/apolloClient';
 import App from './App';
 import ManageScroll from './ManageScroll';
 import * as serviceWorker from './serviceWorker';

@@ -4,11 +4,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import sharp from 'sharp';
 
-import recipeModel from './recipe.model';
-
-function getThumbPath(slug: string): string {
-  return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
-}
+import { getThumbPath } from '../apolloServer';
+import recipeModel from './model';
 
 const router = Router();
 

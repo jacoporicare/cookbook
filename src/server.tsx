@@ -13,8 +13,8 @@ import serialize from 'serialize-javascript';
 import Cookies from 'universal-cookie';
 import cookiesMiddleware from 'universal-cookie-express';
 
-import configureClient from './apollo/apolloClient';
-import apolloServer from './apollo/apolloServer';
+import configureClient from './api/apolloClient';
+import apolloServer from './api/apolloServer';
 import App from './App';
 import { authentication } from './auth.service';
 import { AuthProvider } from './AuthContext';
