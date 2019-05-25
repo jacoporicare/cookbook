@@ -98,10 +98,14 @@ function RecipeDetailPage(props: Props) {
       return;
     }
 
-    deleteRecipe({ variables: { id: recipe._id } }).then(() => {
-      notify.show('Recept smazán', 'success');
-      props.navigate && props.navigate('/');
-    });
+    deleteRecipe({ variables: { id: recipe._id } })
+      .then(() => {
+        notify.show('Recept smazán', 'success');
+        props.navigate && props.navigate('/');
+      })
+      .catch(() => {
+        notify.show('Nastala neočekávaná chyba', 'error');
+      });
   }
 
   if (!recipe) {
