@@ -1,4 +1,5 @@
 import { RouteComponentProps } from '@reach/router';
+import { ApolloError } from 'apollo-client';
 import { FetchResult } from 'apollo-link';
 import gql from 'graphql-tag';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import { useMutation, useQuery } from 'react-apollo-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
-import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
@@ -273,9 +273,14 @@ function RecipeEditPage(props: Props) {
     props.navigate && props.navigate(`/recept/${recipe.slug}`);
   }
 
-  function handleError() {
+  function handleError(error: ApolloError) {
     setIsSaving(false);
-    notify.show('Recept se nepodařilo uložit', 'error');
+
+    if (error.graphQLErrors[0] && error.graphQLErrors[0].message.startsWith('E11000')) {
+      notify.show('Zadaný název již existuje', 'warning');
+    } else {
+      notify.show('Recept se nepodařilo uložit', 'error');
+    }
   }
 
   if (props.slug && !editedRecipe) {

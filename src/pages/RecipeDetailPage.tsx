@@ -2,6 +2,7 @@ import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
+import { notify } from 'react-notify-toast';
 
 import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
@@ -98,6 +99,7 @@ function RecipeDetailPage(props: Props) {
     }
 
     deleteRecipe({ variables: { id: recipe._id } }).then(() => {
+      notify.show('Recept smazán', 'success');
       props.navigate && props.navigate('/');
     });
   }
