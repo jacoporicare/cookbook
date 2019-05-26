@@ -15,7 +15,6 @@ WORKDIR /srv/app
 COPY package.json yarn.lock ./
 RUN yarn
 COPY --from=builder /srv/build build
-COPY public build/public
 
 EXPOSE 3000
 

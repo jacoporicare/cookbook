@@ -1,6 +1,5 @@
 import { isRedirect, ServerLocation } from '@reach/router';
 import bodyParser from 'body-parser';
-import cors from 'cors';
 import { renderStylesToString } from 'emotion-server';
 import express from 'express';
 import 'isomorphic-fetch';
@@ -29,11 +28,6 @@ const server = express();
 
 server
   .disable('x-powered-by')
-  .use(cors())
-  .get('/service-worker.js', (req, res) => {
-    res.set('Cache-Control', 'no-cache');
-    res.sendFile(path.join(process.env.RAZZLE_PUBLIC_DIR!, 'service-worker.js'));
-  })
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!, { maxAge: 31536000000 }))
   .use(cookiesMiddleware())
   .use(authentication())
