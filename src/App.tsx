@@ -1,0 +1,36 @@
+import { Router } from '@reach/router';
+import React from 'react';
+
+import { useAuth } from './AuthContext';
+import Layout from './pages/Layout';
+import LoginPage from './pages/LoginPage';
+import LogoutPage from './pages/LogoutPage';
+import NotFoundPage from './pages/NotFoundPage';
+import RecipeDetailPage from './pages/RecipeDetailPage';
+import RecipeEditPage from './pages/RecipeEditPage';
+import RecipeListPage from './pages/RecipeListPage';
+import SideDishListPage from './pages/SideDishListPage';
+
+import '@fortawesome/fontawesome-free/css/all.css';
+import './styles/reboot';
+
+function App() {
+  const [token] = useAuth();
+
+  return (
+    <Router>
+      <Layout path="/">
+        <RecipeListPage path="/" />
+        <RecipeDetailPage path="recept/:slug" />
+        {token && <RecipeEditPage path="recept/:slug/upravit" />}
+        {token && <RecipeEditPage path="novy-recept" />}
+        <SideDishListPage path="prilohy" />
+        <LoginPage path="prihlaseni" />
+        <LogoutPage path="odhlaseni" />
+        <NotFoundPage default />
+      </Layout>
+    </Router>
+  );
+}
+
+export default App;
