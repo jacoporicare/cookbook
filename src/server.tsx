@@ -28,7 +28,12 @@ const server = express();
 
 server
   .disable('x-powered-by')
-  .use(express.static(process.env.RAZZLE_PUBLIC_DIR!, { maxAge: 31536000000 }))
+  .use(
+    express.static(
+      path.join(__dirname, process.env.NODE_ENV === 'production' ? 'public' : '../public'),
+      { maxAge: 31536000000 },
+    ),
+  )
   .use(cookiesMiddleware())
   .use(authentication())
   .use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }))
