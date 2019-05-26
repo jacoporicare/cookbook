@@ -26,4 +26,4 @@ ReactDOM.hydrate(
   document.getElementById('root'),
 );
 
-serviceWorker.register();
+serviceWorker.unregister();
