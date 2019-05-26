@@ -10,10 +10,7 @@ function LogoutPage(props: Props) {
 
   useEffect(() => {
     setToken('');
-
-    if (props.navigate && props.location) {
-      props.navigate(new URL(location.href).searchParams.get('u') || '/');
-    }
+    props.navigate && props.navigate('/');
   }, []);
 
   return null;

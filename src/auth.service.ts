@@ -56,82 +56,76 @@ export function signToken(id: number) {
 }
 
 export function auth() {
-  return (
-    compose()
-      .use(
-        expressJwt({
-          secret: jwtSecret,
-          getToken: req => {
-            if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-              return req.headers.authorization.split(' ')[1];
-            }
+  return compose()
+    .use(
+      expressJwt({
+        secret: jwtSecret,
+        getToken: req => {
+          if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+            return req.headers.authorization.split(' ')[1];
+          }
 
-            if (req.query && req.query.access_token) {
-              return req.query.token;
-            }
+          if (req.query && req.query.access_token) {
+            return req.query.token;
+          }
 
-            return (req as any).universalCookies.get('access_token');
-          },
-        }),
-      )
-      // tslint:disable-next-line no-any
-      .use((err: any, req: Request, res: Response, next: NextFunction) => {
-        if (err.name === 'UnauthorizedError') {
-          res.status(401).end();
-          return;
-        }
+          return (req as any).universalCookies.get('access_token');
+        },
+      }),
+    )
+    .use((err: any, req: Request, res: Response, next: NextFunction) => {
+      if (err.name === 'UnauthorizedError') {
+        res.status(401).end();
+        return;
+      }
 
-        next();
-      })
-      .use((req, res, next) => {
-        const user = findUserById(req.user._id);
+      next();
+    })
+    .use((req, res, next) => {
+      const user = findUserById(req.user._id);
 
-        if (!user) {
-          res.status(401).end();
-          return;
-        }
+      if (!user) {
+        res.status(401).end();
+        return;
+      }
 
-        req.user = user;
-        next();
-      })
-  );
+      req.user = user;
+      next();
+    });
 }
 
 export function authentication() {
-  return (
-    compose()
-      .use(
-        expressJwt({
-          secret: jwtSecret,
-          credentialsRequired: false,
-          getToken: req => {
-            if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-              return req.headers.authorization.split(' ')[1];
-            }
+  return compose()
+    .use(
+      expressJwt({
+        secret: jwtSecret,
+        credentialsRequired: false,
+        getToken: req => {
+          if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+            return req.headers.authorization.split(' ')[1];
+          }
 
-            if (req.query && req.query.access_token) {
-              return req.query.token;
-            }
+          if (req.query && req.query.access_token) {
+            return req.query.token;
+          }
 
-            return ((req as any).universalCookies as Cookies).get('access_token');
-          },
-        }),
-      )
-      // tslint:disable-next-line no-any
-      .use((err: any, req: Request, res: Response, next: NextFunction) => {
-        if (err.name === 'UnauthorizedError') {
-          res.status(401).end();
-          return;
-        }
+          return ((req as any).universalCookies as Cookies).get('access_token');
+        },
+      }),
+    )
+    .use((err: any, req: Request, res: Response, next: NextFunction) => {
+      if (err.name === 'UnauthorizedError') {
+        res.status(401).end();
+        return;
+      }
 
-        next();
-      })
-      .use((req, res, next) => {
-        if (req.user) {
-          req.user = findUserById(req.user._id);
-        }
+      next();
+    })
+    .use((req, res, next) => {
+      if (req.user) {
+        req.user = findUserById(req.user._id);
+      }
 
-        next();
-      })
-  );
+      next();
+    });
 }

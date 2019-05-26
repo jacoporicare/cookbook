@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 
-// tslint:disable-next-line no-any
 (mongoose as any).Promise = global.Promise;
 
 let attempt = 0;

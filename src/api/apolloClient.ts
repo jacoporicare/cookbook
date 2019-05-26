@@ -49,7 +49,6 @@ export default function configureClient(
   return new ApolloClient({
     link: ApolloLink.from([errorLink, authLink, terminatingLink]),
     cache: config.initialState ? cache.restore(config.initialState) : cache,
-    // https://www.apollographql.com/docs/react/features/developer-tooling.html#devtools
     ssrMode: process.env.BUILD_TARGET === 'server',
   });
 }

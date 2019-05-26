@@ -107,12 +107,6 @@ export default class RecipeEdit extends React.Component<Props> {
               <legend>Postup</legend>
               <Directions directions={directions} onChange={onChange} />
             </fieldset>
-
-            {/* <Box textAlign="center">
-              <SuccessButton type="submit" disabled={!title || isSaving || !changed}>
-                <Icon icon="save" regular /> {isSaving ? <span>Ukládání…</span> : 'Uložit'}
-              </SuccessButton>
-            </Box> */}
           </Box>
         </Box>
 

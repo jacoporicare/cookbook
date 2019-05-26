@@ -150,14 +150,6 @@ function RecipeDetailPage(props: Props) {
         onDeleteShow={() => setDeleteModalVisible(true)}
       />
       {loading && <Spinner />}
-      {/* {!hasDetail && !isOnline() && (
-          <WarningAlert>
-            <strong>Žádné připojení k internetu.</strong>
-            <br />
-            Recept se zobrazí v offline módu pouze po předchozím načtení.
-          </WarningAlert>
-        )} */}
-      {/* {hasDetail && ( */}
       <RecipeDetail
         ingredients={ingredients}
         servingCount={servingCount}
@@ -167,7 +159,6 @@ function RecipeDetailPage(props: Props) {
         imageFullUrl={imageFullUrl}
         userName={userName}
       />
-      {/* )} */}
       <RecipeDeleteModal
         show={deleteModalVisible}
         recipeTitle={title}

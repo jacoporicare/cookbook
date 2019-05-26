@@ -123,11 +123,7 @@ function Header(props: Props) {
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
               {!token ? (
-                <Link
-                  // to={`/prihlaseni#u=${encodeURIComponent(window.location.pathname)}`}
-                  to="/prihlaseni"
-                  getProps={getLinkProps}
-                >
+                <Link to="/prihlaseni" getProps={getLinkProps}>
                   Přihlásit
                 </Link>
               ) : (
@@ -135,11 +131,7 @@ function Header(props: Props) {
                   <NavItem>
                     {props.isUserLoading ? <Icon icon="spinner" spin /> : props.userName}
                   </NavItem>
-                  <Link
-                    // to={`/odhlaseni?u=${encodeURIComponent(window.location.pathname)}`}
-                    to="/odhlaseni"
-                    getProps={getLinkProps}
-                  >
+                  <Link to="/odhlaseni" getProps={getLinkProps}>
                     <Icon icon="sign-out-alt" />
                   </Link>
                 </>

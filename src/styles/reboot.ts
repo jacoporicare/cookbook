@@ -1,6 +1,5 @@
 import { injectGlobal } from 'emotion';
 
-// tslint:disable-next-line:no-unused-expression
 injectGlobal`
   *,
   *::before,
