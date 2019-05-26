@@ -88,6 +88,7 @@ server.all('*', async (req, res) => {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#fff" />
         <meta name="application-name" content="Žrádelník" />
+        <link rel="manifest" href="${process.env.PUBLIC_PATH}manifest.json" />
         <link
           href="https://fonts.googleapis.com/css?family=Amatic+SC|Open+Sans:300,400,400i,700"
           rel="stylesheet"
