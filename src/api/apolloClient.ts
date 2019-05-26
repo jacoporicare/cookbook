@@ -45,7 +45,7 @@ export default function configureClient(
   });
 
   const terminatingLink = createUploadLink({
-    uri: process.env.BUILD_TARGET === 'server' ? process.env.RAZZLE_GRAPHQL_URI : '/graphql',
+    uri: process.env.BUILD_TARGET === 'server' ? process.env.GRAPHQL_URI : '/graphql',
   });
 
   return new ApolloClient({

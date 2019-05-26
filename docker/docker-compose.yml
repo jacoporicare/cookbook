@@ -26,7 +26,7 @@ services:
     environment:
       - NODE_ENV=production
       - MONGO_URI=mongodb://db/cookbook
-      - RAZZLE_GRAPHQL_URI=https://zradelnik.jakubricar.cz/graphql
+      - GRAPHQL_URI=https://zradelnik.jakubricar.cz/graphql
       - VIRTUAL_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_HOST=zradelnik.jakubricar.cz
       - LETSENCRYPT_EMAIL=***REMOVED***
