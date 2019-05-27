@@ -119,7 +119,15 @@ function RecipeEditPage(props: Props) {
     setDirections(editedRecipe.directions || '');
     setPreparationTime(editedRecipe.preparationTime);
     setServingCount(editedRecipe.servingCount);
-    setIngredients(editedRecipe.ingredients);
+    setIngredients(
+      // To remove _id and __typename
+      editedRecipe.ingredients.map(i => ({
+        name: i.name,
+        amount: i.amount,
+        amountUnit: i.amountUnit,
+        isGroup: i.isGroup,
+      })),
+    );
   }
 
   useEffect(() => {
