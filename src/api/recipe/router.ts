@@ -37,6 +37,7 @@ router.get('/:slug/image-:size.jpg', async (req, res) => {
     const thumb = await sharp(recipe.image)
       .rotate()
       .resize(800, 800)
+      .jpeg()
       .toBuffer();
 
     fs.writeFile(thumbPath, thumb).catch(console.error);
