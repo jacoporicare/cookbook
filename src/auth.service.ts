@@ -69,7 +69,7 @@ export function auth() {
             return req.query.token;
           }
 
-          return (req as any).universalCookies.get('access_token');
+          return ((req as any).universalCookies as Cookies).get('access_token');
         },
       }),
     )

@@ -16,10 +16,11 @@ export function setAuthTokenCookie(token: string | null): void {
   }
 
   if (!token) {
-    new Cookies().remove(AUTH_TOKEN_KEY);
+    new Cookies().remove(AUTH_TOKEN_KEY, { path: '/' });
   }
 
   return new Cookies().set(AUTH_TOKEN_KEY, token, {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    path: '/',
   });
 }
