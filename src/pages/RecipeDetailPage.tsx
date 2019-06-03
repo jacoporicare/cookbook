@@ -151,6 +151,7 @@ function RecipeDetailPage(props: Props) {
       />
       {loading && <Spinner />}
       <RecipeDetail
+        title={title}
         ingredients={ingredients}
         servingCount={servingCount}
         directions={directions}

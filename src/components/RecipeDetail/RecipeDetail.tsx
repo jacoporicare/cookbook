@@ -9,6 +9,7 @@ import RichText from '../RichText/RichText';
 import IngredientList from './IngredientList';
 
 type Props = {
+  title: string;
   ingredients?: Ingredient[];
   servingCount?: number;
   directions?: string;
@@ -39,6 +40,7 @@ const ImageXs = styled('img')`
 `;
 
 function RecipeDetail({
+  title,
   ingredients,
   servingCount,
   directions,
@@ -64,7 +66,7 @@ function RecipeDetail({
           {imageUrl && (
             <ImageBox display={['none', 'block']}>
               <a href={imageFullUrl} target="_blank">
-                <Image src={imageUrl} />
+                <Image src={imageUrl} alt={title} />
               </a>
             </ImageBox>
           )}
