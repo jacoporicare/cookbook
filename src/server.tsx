@@ -194,6 +194,15 @@ server.all('*', async (req, res) => {
           media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)"
           href="${process.env.PUBLIC_PATH}icons/apple-touch-startup-image-1536x2008.png"
         />
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141291591-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-141291591-1');
+        </script>
     </head>
     <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${markup}</div>
