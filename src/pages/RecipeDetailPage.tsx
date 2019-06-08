@@ -13,7 +13,8 @@ import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
-import { RecipeDetail as RecipeDetailType, User } from '../types';
+import { User } from '../models/user';
+import { RecipeDetail as RecipeDetailType } from '../types';
 import { getImageUrl } from '../utils';
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
@@ -47,9 +48,9 @@ export const RECIPE_DETAIL_QUERY = gql`
     }
 
     me {
-      id
-      username
-      name
+      _id
+      displayName
+      isAdmin
     }
   }
 
@@ -126,8 +127,7 @@ function RecipeDetailPage(props: Props) {
     slug,
     title,
     hasImage,
-    userId,
-    userName,
+    user,
   } = recipe;
 
   const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : undefined;
@@ -142,10 +142,7 @@ function RecipeDetailPage(props: Props) {
         slug={slug}
         title={title}
         isAuthor={Boolean(
-          token &&
-            data &&
-            data.me &&
-            (data.me.id === userId || data.me.id === 1 || data.me.id === 2),
+          token && data && data.me && (data.me._id === user._id || data.me.isAdmin),
         )}
         onDeleteShow={() => setDeleteModalVisible(true)}
       />
@@ -158,7 +155,7 @@ function RecipeDetailPage(props: Props) {
         lastModifiedDate={lastModifiedDate}
         imageUrl={imageUrl}
         imageFullUrl={imageFullUrl}
-        userName={userName}
+        userName={user.displayName}
       />
       <RecipeDeleteModal
         show={deleteModalVisible}

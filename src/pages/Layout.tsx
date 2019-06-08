@@ -8,8 +8,8 @@ import DocumentTitle from '../components/common/DocumentTitle';
 import { Box } from '../components/core';
 import Footer from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
+import { User } from '../models/user';
 import { colors } from '../styles/colors';
-import { User } from '../types';
 
 type Props = {
   children: React.ReactNode;
@@ -18,9 +18,9 @@ type Props = {
 export const ME_QUERY = gql`
   query Me {
     me {
-      id
+      _id
       username
-      name
+      displayName
     }
   }
 `;
@@ -41,7 +41,7 @@ function Layout(props: Props) {
       <DocumentTitle />
       <Notifications options={{ zIndex: 1100 }} />
       <Header
-        userName={data && data.me && data.me.name}
+        userName={data && data.me && data.me.displayName}
         isUserLoading={loading}
         onRecipeSelected={handleRecipeSelected}
       />

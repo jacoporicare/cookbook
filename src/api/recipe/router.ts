@@ -4,8 +4,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import sharp from 'sharp';
 
-import { getThumbPath } from '../apolloServer';
-import recipeModel from './model';
+import { getThumbPath, saltHashPassword } from '../apolloServer';
+import recipeModel from '../../models/recipe';
+import userModel from '../../models/user';
 
 const router = Router();
 
@@ -46,6 +47,65 @@ router.get('/:slug/image-:size.jpg', async (req, res) => {
   } catch (err) {
     res.status(500).send(err);
   }
+});
+
+router.get('/migrate-users', async (req, res) => {
+  const users = [
+    {
+      id: 1,
+      username: 'kubik',
+      name: 'Kubík',
+      password: 'maturita',
+    },
+    {
+      id: 2,
+      username: 'terezka',
+      name: 'Terezka',
+      password: 'zeryk',
+    },
+    {
+      id: 3,
+      username: 'skleny',
+      name: 'Kuba S.',
+      password: 'Jachym14',
+    },
+    {
+      id: 4,
+      username: 'misa',
+      name: 'Míša',
+      password: 'Simon17',
+    },
+  ];
+
+  await userModel.deleteMany({});
+  await Promise.all(
+    users.map(async user => {
+      const passwordData = saltHashPassword(user.password);
+      const newUser = await userModel.create({
+        username: user.username,
+        displayName: user.name,
+        password: passwordData.hash,
+        salt: passwordData.salt,
+        isAdmin: user.id === 1 || user.id === 2 ? true : undefined,
+      });
+
+      await recipeModel.updateMany(
+        { userId: user.id },
+        {
+          $set: {
+            user: newUser._id,
+          },
+          $unset: {
+            userId: 1,
+            isMarkdown: 1,
+          },
+        },
+        { strict: false },
+      );
+    }),
+  );
+
+  res.send('done');
 });
 
 export default router;

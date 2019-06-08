@@ -1,9 +1,4 @@
-export type User = {
-  id: number;
-  username: string;
-  name: string;
-  password?: string;
-};
+import { User } from '../models/user';
 
 export type Recipe = {
   _id: string;
@@ -11,8 +6,7 @@ export type Recipe = {
   slug: string;
   sideDish?: string;
   preparationTime?: number;
-  userId: number;
-  userName: string;
+  user: User;
   hasImage?: boolean;
   lastModifiedDate: string;
 };
@@ -20,8 +14,6 @@ export type Recipe = {
 export type RecipeDetail = Recipe & {
   directions?: string;
   servingCount?: number;
-  userId: number;
-  userName: string;
   ingredients: Ingredient[];
 };
 

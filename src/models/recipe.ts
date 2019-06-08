@@ -1,5 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
 
+import { User } from './user';
+
 export type Ingredient = {
   amount?: number;
   amountUnit?: string;
@@ -8,8 +10,7 @@ export type Ingredient = {
 };
 
 export type Recipe = {
-  userId: number;
-  userName: string;
+  user: User | string;
   title: string;
   slug: string;
   directions?: string;
@@ -25,7 +26,7 @@ export type Recipe = {
 export type RecipeDocument = Document & Recipe;
 
 const RecipeSchema = new Schema({
-  userId: { type: Number, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
   directions: String,

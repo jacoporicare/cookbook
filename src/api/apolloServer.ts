@@ -4,10 +4,11 @@ import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 import path from 'path';
 import slug from 'slug';
+import crypto from 'crypto';
 
-import { checkUser, findUserById, signToken, superAdminIds } from '../auth.service';
-import recipeModel, { Recipe } from './recipe/model';
-import { User } from '../types';
+import { signToken } from './auth';
+import recipeModel, { Recipe } from '../models/recipe';
+import userModel, { User } from '../models/user';
 
 type Context = {
   user?: User;
@@ -49,8 +50,7 @@ const typeDefs = gql`
     sideDish: String
     preparationTime: Int
     servingCount: Int
-    userId: Int!
-    userName: String!
+    user: User!
     hasImage: Boolean
     lastModifiedDate: Date!
     ingredients: [Ingredient!]!
@@ -69,9 +69,11 @@ const typeDefs = gql`
   }
 
   type User {
-    id: Int!
+    _id: ID!
     username: String!
-    name: String!
+    displayName: String!
+    isAdmin: Boolean
+    lastActivity: Date
   }
 
   input RecipeInput {
@@ -104,6 +106,7 @@ const typeDefs = gql`
     createRecipe(recipe: RecipeInput!, image: Upload): Recipe
     updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe
     deleteRecipe(id: ID!): Boolean
+    updateUserLastActivity: Boolean
   }
 `;
 
@@ -111,10 +114,9 @@ const typeDefs = gql`
 const resolvers: IResolvers = {
   Query: {
     recipes: async () =>
-      (await recipeModel.find({}))
-        .map(r => r.toObject())
-        .map(appendUserName)
-        .sort((a, b) => a.title.localeCompare(b.title, 'cs')),
+      (await recipeModel.find({}).populate('user')).sort((a, b) =>
+        a.title.localeCompare(b.title, 'cs'),
+      ),
     recipe: async (_, args: { id?: string; slug?: string }) => {
       if (!args.id && !args.slug) {
         return null;
@@ -125,13 +127,11 @@ const resolvers: IResolvers = {
           return null;
         }
 
-        const recipe = await recipeModel.findById(args.id);
-        return recipe && appendUserName(recipe.toObject());
+        return await recipeModel.findById(args.id).populate('user');
       }
 
       if (args.slug) {
-        const recipe = await recipeModel.findOne({ slug: args.slug });
-        return recipe && appendUserName(recipe.toObject());
+        return await recipeModel.findOne({ slug: args.slug }).populate('user');
       }
     },
     ingredients: async () => {
@@ -152,10 +152,11 @@ const resolvers: IResolvers = {
   },
   Mutation: {
     login: async (_, args: { username: string; password: string }) => {
-      const user = checkUser(args.username, args.password);
+      const user = await userModel.findOne({ username: args.username });
 
       return {
-        token: user ? signToken(user.id) : null,
+        token:
+          user && sha512(args.password, user.salt) === user.password ? signToken(user.id) : null,
       };
     },
     createRecipe: async (
@@ -167,31 +168,27 @@ const resolvers: IResolvers = {
         return null;
       }
 
-      const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user.id);
-      const recipeDocument = await recipeModel.create(recipeToSave);
-
-      return appendUserName(recipeDocument.toObject());
+      const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user);
+      return await recipeModel.create(recipeToSave);
     },
     updateRecipe: async (
       _,
       args: { id: string; recipe: RecipeInput; image?: Promise<FileUpload> },
       context: Context,
     ) => {
-      if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {
+      if (!context.user || !(await checkUserRightsAsync(context.user, args.id))) {
         return null;
       }
 
       const recipeToSave = await prepareRecipe(args.recipe, args.image);
-      const recipeDocument = await recipeModel.findByIdAndUpdate(
-        args.id,
-        { $set: recipeToSave },
-        { new: true },
-      );
+      const recipe = await recipeModel
+        .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
+        .populate('user');
 
-      return recipeDocument && appendUserName(recipeDocument.toObject());
+      return recipe;
     },
     deleteRecipe: async (_, args: { id: string }, context: Context) => {
-      if (!context.user || !(await checkUserRightsAsync(context.user.id, args.id))) {
+      if (!context.user || !(await checkUserRightsAsync(context.user, args.id))) {
         return false;
       }
 
@@ -203,6 +200,15 @@ const resolvers: IResolvers = {
 
       const thumbPath = getThumbPath(recipe.slug);
       fs.remove(thumbPath).catch(console.log);
+
+      return true;
+    },
+    updateUserLastActivity: async (_context, _args, context: Context) => {
+      if (!context.user) {
+        return false;
+      }
+
+      userModel.findByIdAndUpdate(context.user._id, { lastActivity: new Date() });
 
       return true;
     },
@@ -231,19 +237,10 @@ export default new ApolloServer({
   context: ({ req }) => ({ user: req.user }),
 });
 
-function appendUserName(recipe: Recipe): Recipe {
-  const user = findUserById(recipe.userId);
-
-  return {
-    ...recipe,
-    userName: user ? user.name : '',
-  };
-}
-
 async function prepareRecipe(
   recipe: RecipeInput,
   fileUpload?: Promise<FileUpload>,
-  userId?: number,
+  user?: User,
 ): Promise<Partial<Recipe>> {
   const slug = toSlug(recipe.title);
   let newRecipe: Partial<Recipe> = {
@@ -286,10 +283,10 @@ async function prepareRecipe(
     await fs.remove(thumbPath);
   }
 
-  if (userId) {
+  if (user) {
     newRecipe = {
       ...newRecipe,
-      userId,
+      user,
     };
   }
 
@@ -300,16 +297,35 @@ function toSlug(title: string) {
   return slug(title.trim(), slug.defaults.modes.rfc3986);
 }
 
-async function checkUserRightsAsync(userId: number, recipeId: string) {
-  if (superAdminIds.indexOf(userId) > -1) {
-    return true;
-  }
-
+async function checkUserRightsAsync(user: User | null, recipeId: string) {
   const recipe = await recipeModel.findById(recipeId);
 
-  return Boolean(recipe && recipe.userId === userId);
+  return Boolean(user && recipe && (user.isAdmin || recipe.user === user._id));
 }
 
 export function getThumbPath(slug: string): string {
   return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
+}
+
+function genRandomString(length: number) {
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString('hex')
+    .slice(0, length);
+}
+
+function sha512(password: string, salt: string) {
+  var sha512 = crypto.createHmac('sha512', salt);
+  sha512.update(password);
+
+  return sha512.digest('hex');
+}
+
+export function saltHashPassword(password: string) {
+  const salt = genRandomString(16);
+
+  return {
+    hash: sha512(password, salt),
+    salt,
+  };
 }

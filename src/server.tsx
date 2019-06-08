@@ -15,7 +15,7 @@ import cookiesMiddleware from 'universal-cookie-express';
 import configureClient from './api/apolloClient';
 import apolloServer from './api/apolloServer';
 import App from './App';
-import { authentication } from './auth.service';
+import { authentication } from './api/auth';
 import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';

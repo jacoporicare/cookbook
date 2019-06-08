@@ -79,8 +79,10 @@ export const recipeBaseFragment = gql`
     slug
     sideDish
     preparationTime
-    userId
-    userName
+    user {
+      _id
+      displayName
+    }
     hasImage
     lastModifiedDate
   }
