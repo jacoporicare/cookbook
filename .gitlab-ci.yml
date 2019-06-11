@@ -23,7 +23,7 @@ build_and_push:
   only:
     - master
   script:
-    - docker login -u $CI_REGISTRY_USER -p $ACCESS_TOKEN $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
 
