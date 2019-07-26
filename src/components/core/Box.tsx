@@ -83,3 +83,11 @@ export const Box = styled('div')<Props>(
   textAlign,
   width,
 );
+
+export const BoxMain = Box.withComponent('main');
+export const BoxSection = Box.withComponent('section');
+export const BoxArticle = Box.withComponent('article');
+export const BoxNav = Box.withComponent('nav');
+export const BoxHeader = Box.withComponent('header');
+export const BoxFooter = Box.withComponent('footer');
+export const BoxAside = Box.withComponent('aside');

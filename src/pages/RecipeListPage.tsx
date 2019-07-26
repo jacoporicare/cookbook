@@ -7,7 +7,7 @@ import { useAuth } from '../AuthContext';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
-import { Text } from '../components/core';
+import { Text, BoxSection } from '../components/core';
 import { Button, DangerAlert, InfoAlert } from '../components/elements';
 import RecipeList from '../components/RecipeList/RecipeList';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
@@ -53,7 +53,7 @@ function RecipeListPage(props: Props) {
   const isEmpty = recipes.length === 0;
 
   return (
-    <>
+    <BoxSection>
       <PageHeading
         buttons={
           isOnline() &&
@@ -85,7 +85,7 @@ function RecipeListPage(props: Props) {
             /> */}
         </>
       )}
-    </>
+    </BoxSection>
   );
 }
 

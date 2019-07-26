@@ -5,7 +5,7 @@ import { useQuery } from 'react-apollo-hooks';
 import Notifications from 'react-notify-toast';
 
 import DocumentTitle from '../components/common/DocumentTitle';
-import { Box } from '../components/core';
+import { BoxFooter, BoxMain } from '../components/core';
 import Footer from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
 import { User } from '../models/user';
@@ -45,12 +45,10 @@ function Layout(props: Props) {
         isUserLoading={loading}
         onRecipeSelected={handleRecipeSelected}
       />
-      <Box p={[3, 4]}>
-        {props.children}
-        <Box mt={[3, 4]} pt={2} borderTop={`1px solid ${colors.gray200}`}>
-          <Footer />
-        </Box>
-      </Box>
+      <BoxMain p={[3, 4]}>{props.children}</BoxMain>
+      <BoxFooter p={[3, 4]} borderTop={`1px solid ${colors.gray200}`}>
+        <Footer />
+      </BoxFooter>
     </>
   );
 }

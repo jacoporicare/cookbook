@@ -8,7 +8,7 @@ import { RecipeListQueryData, RECIPE_LIST_QUERY } from '../../pages/RecipeListPa
 import { colors, theme } from '../../styles/colors';
 import { isOnline } from '../../utils';
 import Icon from '../common/Icon';
-import { Box } from '../core';
+import { Box, BoxHeader, BoxNav } from '../core';
 import RecipeSearch from '../RecipeSearch/RecipeSearch';
 import cow from './cow.png';
 import pig from './pig.png';
@@ -79,7 +79,7 @@ function Header(props: Props) {
   const recipes = (data && data.recipes) || [];
 
   return (
-    <Box
+    <BoxHeader
       bg={colors.gray1000}
       color="white"
       className={css({
@@ -111,7 +111,7 @@ function Header(props: Props) {
             <LogoIcon src={cow} alt="Kráva" />
           </Link>
         </Box>
-        <Box display="flex">
+        <BoxNav display="flex">
           <RecipeSearch recipes={recipes} onSelected={props.onRecipeSelected} />
           <Link to="/" getProps={getLinkProps}>
             Recepty
@@ -138,9 +138,9 @@ function Header(props: Props) {
               )}
             </>
           )}
-        </Box>
+        </BoxNav>
       </Box>
-    </Box>
+    </BoxHeader>
   );
 }
 

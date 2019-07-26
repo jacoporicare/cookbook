@@ -3,7 +3,7 @@ import styled from 'react-emotion';
 
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
-import { Box, Text } from '../core';
+import { Box, Text, BoxAside, BoxSection, BoxArticle } from '../core';
 import { InfoAlert } from '../elements';
 import RichText from '../RichText/RichText';
 import IngredientList from './IngredientList';
@@ -52,7 +52,7 @@ function RecipeDetail({
   return (
     <>
       <Box display={['block', 'flex']}>
-        <Box flex={1} pr={[0, 3]}>
+        <BoxAside flex={1} pr={[0, 3]}>
           <IngredientList ingredients={ingredients} servingCount={servingCount} />
           <Box my={4}>
             <Text color={colors.gray600}>Autor:</Text>
@@ -60,7 +60,7 @@ function RecipeDetail({
             <Text color={colors.gray600}>Naposledy upraveno:</Text>
             <Box>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Box>
           </Box>
-        </Box>
+        </BoxAside>
 
         <Box flex={3}>
           {imageUrl && (

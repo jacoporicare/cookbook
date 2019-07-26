@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Recipe } from '../../types';
 import { colors } from '../../styles/colors';
-import { Box } from '../core';
+import { BoxArticle, Box } from '../core';
 import RecipeListItem from './RecipeListItem';
 
 type Props = {
@@ -25,7 +25,7 @@ function RecipeList({ recipes }: Props) {
         .slice()
         .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
         .map(recipe => (
-          <Box
+          <BoxArticle
             key={recipe._id}
             flex="auto"
             width={widths}
@@ -37,7 +37,7 @@ function RecipeList({ recipes }: Props) {
             borderBottom={border}
           >
             <RecipeListItem recipe={recipe} />
-          </Box>
+          </BoxArticle>
         ))}
     </Box>
   );

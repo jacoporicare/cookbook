@@ -17,6 +17,7 @@ import { User } from '../models/user';
 import { RecipeDetail as RecipeDetailType } from '../types';
 import { getImageUrl } from '../utils';
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
+import { BoxArticle } from '../components/core';
 
 type Params = {
   slug: string;
@@ -134,7 +135,7 @@ function RecipeDetailPage(props: Props) {
   const imageFullUrl = hasImage ? getImageUrl(slug, lastModifiedDate, 'full') : undefined;
 
   return (
-    <>
+    <BoxArticle>
       <DocumentTitle title={title} />
       <RecipeHeader
         preparationTime={preparationTime}
@@ -163,7 +164,7 @@ function RecipeDetailPage(props: Props) {
         onClose={() => setDeleteModalVisible(false)}
         onConfirm={handleDeleteConfirm}
       />
-    </>
+    </BoxArticle>
   );
 }
 
