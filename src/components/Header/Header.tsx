@@ -1,6 +1,6 @@
 import { Link, LinkGetProps } from '@reach/router';
 import React from 'react';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import styled, { css, cx } from 'react-emotion';
 
 import { useAuth } from '../../AuthContext';

@@ -1,7 +1,7 @@
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from 'react-apollo-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 
 import { useAuth } from '../AuthContext';
@@ -75,7 +75,14 @@ function RecipeDetailPage(props: Props) {
   const { data, loading } = useQuery<RecipeDetailQueryData>(RECIPE_DETAIL_QUERY, {
     variables: { slug: props.slug },
   });
-  const deleteRecipe = useMutation<boolean>(DELETE_RECIPE_MUTATION, {
+  const [deleteRecipe] = useMutation<boolean>(DELETE_RECIPE_MUTATION, {
+    onCompleted: () => {
+      notify.show('Recept smazán', 'success');
+      props.navigate && props.navigate('/');
+    },
+    onError: () => {
+      notify.show('Nastala neočekávaná chyba', 'error');
+    },
     update: (store, result) => {
       if (!result.data || !result.data) {
         return;
@@ -100,14 +107,7 @@ function RecipeDetailPage(props: Props) {
       return;
     }
 
-    deleteRecipe({ variables: { id: recipe._id } })
-      .then(() => {
-        notify.show('Recept smazán', 'success');
-        props.navigate && props.navigate('/');
-      })
-      .catch(() => {
-        notify.show('Nastala neočekávaná chyba', 'error');
-      });
+    deleteRecipe({ variables: { id: recipe._id } });
   }
 
   if (!recipe) {

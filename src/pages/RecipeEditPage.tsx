@@ -3,7 +3,7 @@ import { ApolloError } from 'apollo-client';
 import { FetchResult } from 'apollo-link';
 import gql from 'graphql-tag';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-apollo-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
@@ -78,7 +78,6 @@ function isCreateMutation(
 
 function RecipeEditPage(props: Props) {
   const [changed, setChanged] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
@@ -91,25 +90,36 @@ function RecipeEditPage(props: Props) {
   const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
   });
-  const createRecipe = useMutation<CreateRecipeMutationData>(CREATE_RECIPE_MUTATION, {
-    update: (store, result) => {
-      if (!result.data || !result.data.createRecipe) {
-        return;
-      }
+  const [createRecipe, { loading: creating }] = useMutation<CreateRecipeMutationData>(
+    CREATE_RECIPE_MUTATION,
+    {
+      onCompleted: handleSave,
+      onError: handleError,
+      update: (store, result) => {
+        if (!result.data || !result.data.createRecipe) {
+          return;
+        }
 
-      const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
+        const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
 
-      if (!data) {
-        return;
-      }
+        if (!data) {
+          return;
+        }
 
-      data.recipes.push(result.data.createRecipe);
+        data.recipes.push(result.data.createRecipe);
 
-      store.writeQuery({ query: RECIPE_LIST_QUERY, data });
+        store.writeQuery({ query: RECIPE_LIST_QUERY, data });
+      },
     },
-  });
-  const updateRecipe = useMutation<UpdateRecipeMutationData>(UPDATE_RECIPE_MUTATION);
-
+  );
+  const [updateRecipe, { loading: updating }] = useMutation<UpdateRecipeMutationData>(
+    UPDATE_RECIPE_MUTATION,
+    {
+      onCompleted: handleSave,
+      onError: handleError,
+    },
+  );
+  const isSaving = creating || updating;
   const editedRecipe = data && data.recipe;
 
   if (editedRecipe && editedRecipe._id !== id) {
@@ -229,8 +239,6 @@ function RecipeEditPage(props: Props) {
       return;
     }
 
-    setIsSaving(true);
-
     const recipeInput = {
       title,
       preparationTime: preparationTime || null,
@@ -247,31 +255,19 @@ function RecipeEditPage(props: Props) {
           recipe: recipeInput,
           image,
         },
-      })
-        .then(handleSave)
-        .catch(handleError);
+      });
     } else {
       createRecipe({
         variables: {
           recipe: recipeInput,
           image,
         },
-      })
-        .then(handleSave)
-        .catch(handleError);
+      });
     }
   }
 
-  function handleSave(
-    fetchResult: FetchResult<CreateRecipeMutationData> | FetchResult<UpdateRecipeMutationData>,
-  ) {
-    setIsSaving(false);
-
-    const recipe =
-      fetchResult.data &&
-      (isCreateMutation(fetchResult.data)
-        ? fetchResult.data.createRecipe
-        : fetchResult.data.updateRecipe);
+  function handleSave(data: CreateRecipeMutationData | UpdateRecipeMutationData) {
+    const recipe = isCreateMutation(data) ? data.createRecipe : data.updateRecipe;
 
     if (!recipe) {
       return;
@@ -282,8 +278,6 @@ function RecipeEditPage(props: Props) {
   }
 
   function handleError(error: ApolloError) {
-    setIsSaving(false);
-
     if (error.graphQLErrors[0] && error.graphQLErrors[0].message.startsWith('E11000')) {
       notify.show('Zadaný název již existuje', 'warning');
     } else {

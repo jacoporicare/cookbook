@@ -5,8 +5,8 @@ import express from 'express';
 import 'isomorphic-fetch';
 import path from 'path';
 import React from 'react';
-import { ApolloProvider, getMarkupFromTree } from 'react-apollo-hooks';
-import { renderToString } from 'react-dom/server';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { renderToStringWithData } from '@apollo/react-ssr';
 import { Helmet } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import Cookies from 'universal-cookie';
@@ -57,10 +57,7 @@ server.all('*', async (req, res) => {
         </AuthProvider>
       </ApolloProvider>
     );
-    const markupWithoutStyles = await getMarkupFromTree({
-      renderFunction: renderToString,
-      tree: root,
-    });
+    const markupWithoutStyles = await renderToStringWithData(root);
     const markup = renderStylesToString(markupWithoutStyles);
     const helmet = Helmet.renderStatic();
     const initialApolloState = apolloClient.extract();

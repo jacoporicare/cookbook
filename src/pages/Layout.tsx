@@ -1,7 +1,7 @@
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React from 'react';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import Notifications from 'react-notify-toast';
 
 import DocumentTitle from '../components/common/DocumentTitle';

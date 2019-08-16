@@ -1,7 +1,7 @@
 import { Link, RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React from 'react';
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 import { useAuth } from '../AuthContext';
 import Icon from '../components/common/Icon';

@@ -1,7 +1,7 @@
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
@@ -29,20 +29,36 @@ function LoginPage(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(false);
+  const [dataError, setDataError] = useState(false);
 
-  const login = useMutation<LoginMutationData>(LOGIN_MUTATION, {
+  const [login, { loading, error }] = useMutation<LoginMutationData>(LOGIN_MUTATION, {
     refetchQueries: result => {
+      console.log('refetchQueries');
+      const token = result.data && result.data.login.token;
       // refetchQueries callback and even those returned queries are called before .then
       // we have to set the token here so the ME_QUERY gets the fresh token
-      setToken(result.data ? result.data.login.token : null);
-
-      if (!result.data) {
+      if (!token) {
         return [];
       }
 
+      setToken(token);
+
       return [{ query: ME_QUERY }];
+    },
+    onCompleted: data => {
+      console.log('onCompleted');
+      if (!data || !data.login.token) {
+        setDataError(true);
+
+        return;
+      }
+
+      props.navigate &&
+        props.navigate(
+          window.location.hash.startsWith('#u=')
+            ? decodeURIComponent(window.location.hash.substring(3))
+            : '/',
+        );
     },
   });
 
@@ -70,28 +86,8 @@ function LoginPage(props: Props) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setIsSubmitting(true);
-    setError(false);
-
-    login({ variables: { username, password } })
-      .then(({ data }) => {
-        setIsSubmitting(false);
-
-        if (data) {
-          props.navigate &&
-            props.navigate(
-              window.location.hash.startsWith('#u=')
-                ? decodeURIComponent(window.location.hash.substring(3))
-                : '/',
-            );
-        } else {
-          setError(true);
-        }
-      })
-      .catch(() => {
-        setIsSubmitting(false);
-        setError(true);
-      });
+    setDataError(false);
+    login({ variables: { username, password } });
   }
 
   return (
@@ -101,10 +97,10 @@ function LoginPage(props: Props) {
         username={username}
         password={password}
         rememberMe={rememberMe}
-        isSubmitting={isSubmitting}
+        isSubmitting={loading}
         onChange={handleChange}
         onSubmit={handleSubmit}
-        error={error}
+        error={Boolean(error || dataError)}
       />
     </>
   );

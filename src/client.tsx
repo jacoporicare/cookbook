@@ -1,7 +1,8 @@
-import '@babel/polyfill';
+import 'core-js/stable';
+
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import React from 'react';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import ReactDOM from 'react-dom';
 import 'isomorphic-fetch';
 
