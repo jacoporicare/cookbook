@@ -1,12 +1,12 @@
 import { RouteComponentProps } from '@reach/router';
 import { ApolloError } from 'apollo-client';
-import { FetchResult } from 'apollo-link';
 import gql from 'graphql-tag';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
+import { RecipeInput } from '../api/apolloServer';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
@@ -66,8 +66,19 @@ export type CreateRecipeMutationData = {
   createRecipe?: RecipeDetail;
 };
 
+export type CreateRecipeMutationVariables = {
+  recipe: RecipeInput;
+  image?: File;
+};
+
 export type UpdateRecipeMutationData = {
   updateRecipe?: RecipeDetail;
+};
+
+export type UpdateRecipeMutationVariables = {
+  id: string;
+  recipe: RecipeInput;
+  image?: File;
 };
 
 function isCreateMutation(
@@ -90,35 +101,35 @@ function RecipeEditPage(props: Props) {
   const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
   });
-  const [createRecipe, { loading: creating }] = useMutation<CreateRecipeMutationData>(
-    CREATE_RECIPE_MUTATION,
-    {
-      onCompleted: handleSave,
-      onError: handleError,
-      update: (store, result) => {
-        if (!result.data || !result.data.createRecipe) {
-          return;
-        }
+  const [createRecipe, { loading: creating }] = useMutation<
+    CreateRecipeMutationData,
+    CreateRecipeMutationVariables
+  >(CREATE_RECIPE_MUTATION, {
+    onCompleted: handleSave,
+    onError: handleError,
+    update: (store, result) => {
+      if (!result.data || !result.data.createRecipe) {
+        return;
+      }
 
-        const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
+      const data = store.readQuery<RecipeListQueryData>({ query: RECIPE_LIST_QUERY });
 
-        if (!data) {
-          return;
-        }
+      if (!data) {
+        return;
+      }
 
-        data.recipes.push(result.data.createRecipe);
+      data.recipes.push(result.data.createRecipe);
 
-        store.writeQuery({ query: RECIPE_LIST_QUERY, data });
-      },
+      store.writeQuery({ query: RECIPE_LIST_QUERY, data });
     },
-  );
-  const [updateRecipe, { loading: updating }] = useMutation<UpdateRecipeMutationData>(
-    UPDATE_RECIPE_MUTATION,
-    {
-      onCompleted: handleSave,
-      onError: handleError,
-    },
-  );
+  });
+  const [updateRecipe, { loading: updating }] = useMutation<
+    UpdateRecipeMutationData,
+    UpdateRecipeMutationVariables
+  >(UPDATE_RECIPE_MUTATION, {
+    onCompleted: handleSave,
+    onError: handleError,
+  });
   const isSaving = creating || updating;
   const editedRecipe = data && data.recipe;
 

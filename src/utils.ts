@@ -14,7 +14,7 @@ export function undefinedToNull<T>(o: T): T {
 
 export function getImageUrl(
   slug: string,
-  lastModifiedDate: string,
+  lastModifiedDate: number,
   size: 'full' | 'thumb' = 'thumb',
 ) {
   const ts = new Date(lastModifiedDate).valueOf();

@@ -49,6 +49,12 @@ export const getInputStyle = (props: InputProps = {}) => css`
     box-shadow: 0 0 0 0.2rem
       ${props.hasError ? transparentize(0.75, colors.red) : transparentize(0.75, colors.blue)};
   }
+
+  &:disabled,
+  &[readonly] {
+    background-color: ${colors.gray200};
+    opacity: 1;
+  }
 `;
 
 export const Input = styled(Box)<Props>(getInputStyle).withComponent('input');

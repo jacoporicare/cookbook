@@ -1,5 +1,3 @@
-import { User } from '../models/user';
-
 export type Recipe = {
   _id: string;
   title: string;
@@ -8,7 +6,7 @@ export type Recipe = {
   preparationTime?: number;
   user: User;
   hasImage?: boolean;
-  lastModifiedDate: string;
+  lastModifiedDate: number;
 };
 
 export type RecipeDetail = Recipe & {
@@ -23,4 +21,12 @@ export type Ingredient = {
   amount?: number;
   amountUnit?: string;
   isGroup: boolean;
+};
+
+export type User = {
+  _id: string;
+  username: string;
+  displayName: string;
+  isAdmin?: boolean;
+  lastActivity?: number;
 };

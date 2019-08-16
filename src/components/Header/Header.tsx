@@ -16,6 +16,7 @@ import pig from './pig.png';
 type Props = {
   userName?: string;
   isUserLoading: boolean;
+  isUserAdmin?: boolean;
   onRecipeSelected: (slug: string) => void;
 };
 
@@ -119,6 +120,11 @@ function Header(props: Props) {
           <Link to="/prilohy" getProps={getLinkProps}>
             Přílohy
           </Link>
+          {props.isUserAdmin && (
+            <Link to="/admin" getProps={getLinkProps}>
+              Admin
+            </Link>
+          )}
           {isOnline() && (
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>

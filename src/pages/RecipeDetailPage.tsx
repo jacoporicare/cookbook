@@ -13,8 +13,7 @@ import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
-import { User } from '../models/user';
-import { RecipeDetail as RecipeDetailType } from '../types';
+import { RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 import { BoxArticle } from '../components/core';

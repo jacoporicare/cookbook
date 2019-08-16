@@ -13,7 +13,7 @@ type Props = {
   ingredients?: Ingredient[];
   servingCount?: number;
   directions?: string;
-  lastModifiedDate: string;
+  lastModifiedDate: number;
   imageUrl?: string;
   imageFullUrl?: string;
   userName: string;

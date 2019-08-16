@@ -14,28 +14,33 @@ type Context = {
   user?: User;
 };
 
-type RecipeInput = {
+export type RecipeInput = {
   title: string;
-  slug: string;
-  directions?: string;
-  sideDish?: string;
-  preparationTime?: number;
-  servingCount?: number;
+  directions?: string | null;
+  sideDish?: string | null;
+  preparationTime?: number | null;
+  servingCount?: number | null;
   ingredients: IngredientInput[];
 };
 
-type IngredientInput = {
+export type IngredientInput = {
   name: string;
   amount?: number;
   amountUnit?: string;
   isGroup: boolean;
 };
 
-type FileUpload = {
+export type FileUpload = {
   createReadStream: () => NodeJS.ReadableStream;
   filename: string;
   mimetype: string;
   encoding: string;
+};
+
+export type UserInput = {
+  username: string;
+  displayName: string;
+  isAdmin?: boolean;
 };
 
 // Construct a schema, using GraphQL schema language
@@ -93,12 +98,19 @@ const typeDefs = gql`
     isGroup: Boolean
   }
 
+  input UserInput {
+    username: String!
+    displayName: String!
+    isAdmin: Boolean
+  }
+
   type Query {
     recipes: [Recipe!]!
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!
     me: User
+    users: [User!]
   }
 
   type Mutation {
@@ -107,6 +119,10 @@ const typeDefs = gql`
     updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe
     deleteRecipe(id: ID!): Boolean
     updateUserLastActivity: Boolean
+    createUser(user: UserInput!): User
+    updateUser(id: ID!, user: UserInput!): User
+    deleteUser(id: ID!): ID
+    resetPassword(id: ID!): String
   }
 `;
 
@@ -149,6 +165,13 @@ const resolvers: IResolvers = {
 
       return context.user;
     },
+    users: async (_, __, context: Context) => {
+      if (!context.user || !context.user.isAdmin) {
+        return null;
+      }
+
+      return await userModel.find();
+    },
   },
   Mutation: {
     login: async (_, args: { username: string; password: string }) => {
@@ -169,6 +192,7 @@ const resolvers: IResolvers = {
       }
 
       const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user);
+
       return await recipeModel.create(recipeToSave);
     },
     updateRecipe: async (
@@ -181,11 +205,10 @@ const resolvers: IResolvers = {
       }
 
       const recipeToSave = await prepareRecipe(args.recipe, args.image);
-      const recipe = await recipeModel
+
+      return await recipeModel
         .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
         .populate('user');
-
-      return recipe;
     },
     deleteRecipe: async (_, args: { id: string }, context: Context) => {
       if (!context.user || !(await checkUserRightsAsync(context.user, args.id))) {
@@ -208,9 +231,66 @@ const resolvers: IResolvers = {
         return false;
       }
 
-      userModel.findByIdAndUpdate(context.user._id, { lastActivity: new Date() });
+      await userModel.findByIdAndUpdate(context.user._id, { lastActivity: new Date() });
 
       return true;
+    },
+    createUser: async (_, args: { user: UserInput }, context: Context) => {
+      if (!context.user || !context.user.isAdmin) {
+        return null;
+      }
+
+      const password = genRandomString(10);
+      const { hash, salt } = saltHashPassword(password);
+
+      const userToSave: Partial<User> = {
+        ...args.user,
+        username: args.user.username.trim(),
+        displayName: args.user.displayName.trim(),
+        password: hash,
+        salt,
+      };
+
+      return await userModel.create(userToSave);
+    },
+    updateUser: async (_, args: { id: string; user: UserInput }, context: Context) => {
+      if (!context.user || !context.user.isAdmin) {
+        return null;
+      }
+
+      const userToSave = {
+        ...args.user,
+        username: args.user.username.trim(),
+        displayName: args.user.displayName.trim(),
+      };
+
+      return await userModel.findByIdAndUpdate(args.id, { $set: userToSave }, { new: true });
+    },
+    deleteUser: async (_, args: { id: string }, context: Context) => {
+      if (!context.user || !context.user.isAdmin) {
+        return false;
+      }
+
+      const user = await userModel.findByIdAndRemove(args.id);
+
+      return user ? user._id : null;
+    },
+    resetPassword: async (_, args: { id: string }, context: Context) => {
+      if (!context.user || !context.user.isAdmin) {
+        return null;
+      }
+
+      const password = genRandomString(10);
+      const { hash, salt } = saltHashPassword(password);
+
+      await userModel.findByIdAndUpdate(args.id, {
+        $set: {
+          password: hash,
+          salt,
+        },
+      });
+
+      return password;
     },
   },
   Date: new GraphQLScalarType({
@@ -315,10 +395,10 @@ function genRandomString(length: number) {
 }
 
 function sha512(password: string, salt: string) {
-  var sha512 = crypto.createHmac('sha512', salt);
-  sha512.update(password);
-
-  return sha512.digest('hex');
+  return crypto
+    .createHmac('sha512', salt)
+    .update(password)
+    .digest('hex');
 }
 
 export function saltHashPassword(password: string) {
