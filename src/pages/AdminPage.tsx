@@ -222,7 +222,7 @@ function AdminPage(_props: Props) {
       variables: {
         id: user._id,
         user: {
-          username,
+          username: value,
           displayName: user.displayName,
           isAdmin: user.isAdmin,
         },
@@ -243,7 +243,7 @@ function AdminPage(_props: Props) {
         id: user._id,
         user: {
           username: user.username,
-          displayName,
+          displayName: value,
           isAdmin: user.isAdmin,
         },
       },
@@ -426,7 +426,14 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
               {creating ? (
                 <Icon icon="spinner" spin lg />
               ) : (
-                <SuccessButton onClick={handleCreateNew}>Přidat</SuccessButton>
+                <SuccessButton
+                  onClick={handleCreateNew}
+                  disabled={
+                    !newUsername || !newUsername.trim() || !newDisplayName || !newDisplayName.trim()
+                  }
+                >
+                  Přidat
+                </SuccessButton>
               )}
             </TableCell>
           </TableRow>
