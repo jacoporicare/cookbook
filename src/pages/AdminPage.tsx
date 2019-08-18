@@ -5,6 +5,7 @@ import React, { useRef, useState } from 'react';
 import { notify } from 'react-notify-toast';
 
 import { UserInput } from '../api/apolloServer';
+import DocumentTitle from '../components/common/DocumentTitle';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
@@ -322,124 +323,130 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
   const users = (data && data.users) || [];
 
   return (
-    <BoxSection>
-      <PageHeading>Správa uživatelů</PageHeading>
-      <Table>
-        <thead>
-          <TableHeadRow>
-            <TableHeadCell width="200px">Uživatel</TableHeadCell>
-            <TableHeadCell width="200px">Jméno</TableHeadCell>
-            <TableHeadCell width="70px">Admin</TableHeadCell>
-            <TableHeadCell>Poslední aktivita</TableHeadCell>
-            <TableHeadCell></TableHeadCell>
-          </TableHeadRow>
-        </thead>
-        <tbody>
-          {users.map(user => {
-            const userUpdating = userIdUpdating === user._id && updating;
+    <>
+      <DocumentTitle title="Správa uživatelů" />
+      <BoxSection>
+        <PageHeading>Správa uživatelů</PageHeading>
+        <Table>
+          <thead>
+            <TableHeadRow>
+              <TableHeadCell width="200px">Uživatel</TableHeadCell>
+              <TableHeadCell width="200px">Jméno</TableHeadCell>
+              <TableHeadCell width="70px">Admin</TableHeadCell>
+              <TableHeadCell>Poslední aktivita</TableHeadCell>
+              <TableHeadCell></TableHeadCell>
+            </TableHeadRow>
+          </thead>
+          <tbody>
+            {users.map(user => {
+              const userUpdating = userIdUpdating === user._id && updating;
 
-            return (
-              <TableRow key={user._id}>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={usernameId === user._id ? username : user.username}
-                    onFocus={() => setUsername([user._id, user.username])}
-                    onChange={e => setUsername([user._id, e.currentTarget.value])}
-                    onBlur={() => handleUsernameUpdate(user)}
-                    hasError={usernameId === user._id && !username.trim()}
-                    readOnly={userUpdating}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={displayNameId === user._id ? displayName : user.displayName}
-                    onFocus={() => setDisplayName([user._id, user.displayName])}
-                    onChange={e => setDisplayName([user._id, e.currentTarget.value])}
-                    onBlur={() => handleDisplayNameUpdate(user)}
-                    hasError={displayNameId === user._id && !displayName.trim()}
-                    readOnly={userUpdating}
-                  />
-                </TableCell>
-                <TableCell textAlign="center">
-                  {userUpdating ? (
-                    <Icon icon="spinner" spin lg />
-                  ) : (
-                    <Icon
-                      icon={user.isAdmin ? 'toggle-on' : 'toggle-off'}
-                      lg
-                      css={{
-                        cursor: user._id !== meData!.me!._id ? 'pointer' : undefined,
-                        opacity: user._id !== meData!.me!._id ? 1 : 0.5,
-                        color: user.isAdmin ? colors.blue : colors.gray600,
-                      }}
-                      onClick={() => handleIsAdminUpdate(user)}
+              return (
+                <TableRow key={user._id}>
+                  <TableCell>
+                    <Input
+                      type="text"
+                      value={usernameId === user._id ? username : user.username}
+                      onFocus={() => setUsername([user._id, user.username])}
+                      onChange={e => setUsername([user._id, e.currentTarget.value])}
+                      onBlur={() => handleUsernameUpdate(user)}
+                      hasError={usernameId === user._id && !username.trim()}
+                      readOnly={userUpdating}
                     />
-                  )}
-                </TableCell>
-                <TableCell>
-                  {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
-                </TableCell>
-                <TableCell textAlign="center">
-                  <DangerButton
-                    disabled={user._id === meData!.me!._id}
-                    onClick={() => handleDelete(user)}
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      type="text"
+                      value={displayNameId === user._id ? displayName : user.displayName}
+                      onFocus={() => setDisplayName([user._id, user.displayName])}
+                      onChange={e => setDisplayName([user._id, e.currentTarget.value])}
+                      onBlur={() => handleDisplayNameUpdate(user)}
+                      hasError={displayNameId === user._id && !displayName.trim()}
+                      readOnly={userUpdating}
+                    />
+                  </TableCell>
+                  <TableCell textAlign="center">
+                    {userUpdating ? (
+                      <Icon icon="spinner" spin lg />
+                    ) : (
+                      <Icon
+                        icon={user.isAdmin ? 'toggle-on' : 'toggle-off'}
+                        lg
+                        css={{
+                          cursor: user._id !== meData!.me!._id ? 'pointer' : undefined,
+                          opacity: user._id !== meData!.me!._id ? 1 : 0.5,
+                          color: user.isAdmin ? colors.blue : colors.gray600,
+                        }}
+                        onClick={() => handleIsAdminUpdate(user)}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                  </TableCell>
+                  <TableCell textAlign="center">
+                    <DangerButton
+                      disabled={user._id === meData!.me!._id}
+                      onClick={() => handleDelete(user)}
+                    >
+                      <Icon icon="trash" css={{ marginLeft: '0.5em' }} />
+                    </DangerButton>{' '}
+                    <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            <TableRow>
+              <TableCell>
+                <Input
+                  type="text"
+                  value={newUsername || ''}
+                  onChange={e => setNewUsername(e.currentTarget.value)}
+                  hasError={newUsername === ''}
+                />
+              </TableCell>
+              <TableCell>
+                <Input
+                  type="text"
+                  value={newDisplayName || ''}
+                  onChange={e => setNewDisplayName(e.currentTarget.value)}
+                  hasError={newDisplayName === ''}
+                />
+              </TableCell>
+              <TableCell textAlign="center">
+                <Icon
+                  icon={newIsAdmin ? 'toggle-on' : 'toggle-off'}
+                  lg
+                  css={{
+                    cursor: 'pointer',
+                    color: newIsAdmin ? colors.blue : colors.gray600,
+                  }}
+                  onClick={() => setNewIsAdmin(!newIsAdmin)}
+                />
+              </TableCell>
+              <TableCell />
+              <TableCell textAlign="center">
+                {creating ? (
+                  <Icon icon="spinner" spin lg />
+                ) : (
+                  <SuccessButton
+                    onClick={handleCreateNew}
+                    disabled={
+                      !newUsername ||
+                      !newUsername.trim() ||
+                      !newDisplayName ||
+                      !newDisplayName.trim()
+                    }
                   >
-                    <Icon icon="trash" css={{ marginLeft: '0.5em' }} />
-                  </DangerButton>{' '}
-                  <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <TableCell>
-              <Input
-                type="text"
-                value={newUsername || ''}
-                onChange={e => setNewUsername(e.currentTarget.value)}
-                hasError={newUsername === ''}
-              />
-            </TableCell>
-            <TableCell>
-              <Input
-                type="text"
-                value={newDisplayName || ''}
-                onChange={e => setNewDisplayName(e.currentTarget.value)}
-                hasError={newDisplayName === ''}
-              />
-            </TableCell>
-            <TableCell textAlign="center">
-              <Icon
-                icon={newIsAdmin ? 'toggle-on' : 'toggle-off'}
-                lg
-                css={{
-                  cursor: 'pointer',
-                  color: newIsAdmin ? colors.blue : colors.gray600,
-                }}
-                onClick={() => setNewIsAdmin(!newIsAdmin)}
-              />
-            </TableCell>
-            <TableCell />
-            <TableCell textAlign="center">
-              {creating ? (
-                <Icon icon="spinner" spin lg />
-              ) : (
-                <SuccessButton
-                  onClick={handleCreateNew}
-                  disabled={
-                    !newUsername || !newUsername.trim() || !newDisplayName || !newDisplayName.trim()
-                  }
-                >
-                  Přidat
-                </SuccessButton>
-              )}
-            </TableCell>
-          </TableRow>
-        </tbody>
-      </Table>
-    </BoxSection>
+                    Přidat
+                  </SuccessButton>
+                )}
+              </TableCell>
+            </TableRow>
+          </tbody>
+        </Table>
+      </BoxSection>
+    </>
   );
 }
 

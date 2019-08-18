@@ -10,6 +10,7 @@ import RecipeDetailPage from './pages/RecipeDetailPage';
 import RecipeEditPage from './pages/RecipeEditPage';
 import RecipeListPage from './pages/RecipeListPage';
 import SideDishListPage from './pages/SideDishListPage';
+import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
 
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -28,6 +29,7 @@ function App() {
         <SideDishListPage path="prilohy" />
         <LoginPage path="prihlaseni" />
         <LogoutPage path="odhlaseni" />
+        <SettingsPage path="nastaveni" />
         <AdminPage path="admin" />
         <NotFoundPage default />
       </Layout>

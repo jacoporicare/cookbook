@@ -134,9 +134,15 @@ function Header(props: Props) {
                 </Link>
               ) : (
                 <>
-                  <NavItem>
-                    {props.isUserLoading ? <Icon icon="spinner" spin /> : props.userName}
-                  </NavItem>
+                  {props.isUserLoading ? (
+                    <NavItem>
+                      <Icon icon="spinner" spin />
+                    </NavItem>
+                  ) : (
+                    <Link to="/nastaveni" getProps={getLinkProps}>
+                      {props.userName}
+                    </Link>
+                  )}
                   <Link to="/odhlaseni" getProps={getLinkProps}>
                     <Icon icon="sign-out-alt" />
                   </Link>

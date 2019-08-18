@@ -123,6 +123,7 @@ const typeDefs = gql`
     updateUser(id: ID!, user: UserInput!): User
     deleteUser(id: ID!): ID
     resetPassword(id: ID!): String
+    changePassword(password: String!, newPassword: String!): Boolean!
   }
 `;
 
@@ -291,6 +292,26 @@ const resolvers: IResolvers = {
       });
 
       return password;
+    },
+    changePassword: async (
+      _,
+      args: { password: string; newPassword: string },
+      context: Context,
+    ) => {
+      if (!context.user || sha512(args.password, context.user.salt) !== context.user.password) {
+        return false;
+      }
+
+      const { hash, salt } = saltHashPassword(args.newPassword);
+
+      await userModel.findByIdAndUpdate(context.user._id, {
+        $set: {
+          password: hash,
+          salt,
+        },
+      });
+
+      return true;
     },
   },
   Date: new GraphQLScalarType({
