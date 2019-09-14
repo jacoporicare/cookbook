@@ -40,7 +40,8 @@ export function authentication() {
     })
     .use(async (req, res, next) => {
       if (req.user) {
-        req.user = await userModel.findById(req.user._id);
+        const userDocument = await userModel.findById(req.user._id);
+        req.user = userDocument ? userDocument.toObject() : undefined;
       }
 
       next();

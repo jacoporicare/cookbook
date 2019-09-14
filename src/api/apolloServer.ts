@@ -193,8 +193,10 @@ const resolvers: IResolvers = {
       }
 
       const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user);
+      const recipe = await recipeModel.create(recipeToSave);
+      recipe.populate('user');
 
-      return await recipeModel.create(recipeToSave);
+      return await recipe.execPopulate();
     },
     updateRecipe: async (
       _,
