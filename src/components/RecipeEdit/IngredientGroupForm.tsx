@@ -10,36 +10,34 @@ type Props = {
   onAdd: () => void;
 };
 
-export default class IngredientGroupForm extends React.Component<Props> {
-  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
+  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       event.preventDefault();
 
-      if (this.props.group) {
-        this.props.onAdd();
+      if (group) {
+        onAdd();
       }
     }
-  };
-
-  render() {
-    const { group = '', onChange, onAdd } = this.props;
-
-    return (
-      <Box display="flex">
-        <Input
-          type="text"
-          name="newGroup"
-          value={group}
-          onChange={onChange}
-          onKeyPress={this.handleKeyPress}
-          placeholder="Nová skupina"
-          flex="auto"
-          hasAppendAddon
-        />
-        <Button type="button" onClick={onAdd} disabled={!group} isAppendAddon>
-          <Icon icon="plus" /> Přidat
-        </Button>
-      </Box>
-    );
   }
+
+  return (
+    <Box display="flex">
+      <Input
+        type="text"
+        name="newGroup"
+        value={group}
+        onChange={onChange}
+        onKeyPress={handleKeyPress}
+        placeholder="Nová skupina"
+        flex="auto"
+        hasAppendAddon
+      />
+      <Button type="button" onClick={onAdd} disabled={!group} isAppendAddon>
+        <Icon icon="plus" /> Přidat
+      </Button>
+    </Box>
+  );
 }
+
+export default IngredientGroupForm;

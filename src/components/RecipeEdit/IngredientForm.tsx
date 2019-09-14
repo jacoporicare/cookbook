@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from 'react';
+import React, { KeyboardEvent, useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
 import matchSorter from 'match-sorter';
 
@@ -10,98 +10,89 @@ import autosuggestStyle from './autosuggestStyle';
 
 type Props = {
   name?: string;
-  amount?: number;
+  amount?: number | string;
   amountUnit?: string;
   ingredientOptions: string[];
   onChange: AutosuggestChangeEventHandler;
   onAdd: () => void;
 };
 
-type State = {
-  ingredientOptions: string[];
-};
+function IngredientForm({ name = '', amount = '', amountUnit = '', onChange, onAdd }: Props) {
+  const [ingredientOptions, setIngredientOptions] = useState<string[]>([]);
 
-export default class IngredientForm extends React.Component<Props, State> {
-  state = {
-    ingredientOptions: [],
-  };
-
-  handleSuggestionsFetchRequested = ({ value }: SuggestionsFetchRequestedParams) => {
+  function handleSuggestionsFetchRequested({ value }: SuggestionsFetchRequestedParams) {
     if (value) {
-      this.setState({
-        ingredientOptions: matchSorter(this.props.ingredientOptions, value),
-      });
+      setIngredientOptions(matchSorter(ingredientOptions, value));
     }
-  };
+  }
 
-  handleSuggestionsClearRequested = () => {
-    this.setState({ ingredientOptions: [] });
-  };
+  function handleSuggestionsClearRequested() {
+    setIngredientOptions([]);
+  }
 
-  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       event.preventDefault();
 
-      if (this.props.name) {
-        this.props.onAdd();
+      if (name) {
+        onAdd();
       }
     }
-  };
-
-  renderSuggestion = (suggestion: string) => <span>{suggestion}</span>;
-
-  render() {
-    const { ingredientOptions } = this.state;
-    const { name = '', amount = '', amountUnit = '', onChange, onAdd } = this.props;
-
-    return (
-      <>
-        <Box display="flex" mb={2}>
-          <Box flex={1} pr={1}>
-            <Input
-              type="number"
-              name="amount"
-              value={amount}
-              onChange={onChange}
-              onKeyPress={this.handleKeyPress}
-              min="0"
-              placeholder="Množství"
-            />
-          </Box>
-          <Box flex={1} pl={1}>
-            <Input
-              type="text"
-              name="amountUnit"
-              value={amountUnit}
-              onChange={onChange}
-              onKeyPress={this.handleKeyPress}
-              placeholder="Jednotka"
-            />
-          </Box>
-        </Box>
-        <Box display="flex" mb={2}>
-          <Box flex="auto" className={autosuggestStyle}>
-            <Autosuggest
-              suggestions={ingredientOptions}
-              onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-              getSuggestionValue={s => s}
-              renderSuggestion={this.renderSuggestion}
-              inputProps={{
-                name: 'name',
-                value: name,
-                onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
-                onKeyPress: this.handleKeyPress,
-                className: getInputStyle({ hasAppendAddon: true }),
-                placeholder: 'Název',
-              }}
-            />
-          </Box>
-          <Button type="button" onClick={onAdd} disabled={!name} isAppendAddon>
-            <Icon icon="plus" /> Přidat
-          </Button>
-        </Box>
-      </>
-    );
   }
+
+  function renderSuggestion(suggestion: string) {
+    return <span>{suggestion}</span>;
+  }
+
+  return (
+    <>
+      <Box display="flex" mb={2}>
+        <Box flex={1} pr={1}>
+          <Input
+            type="number"
+            name="amount"
+            value={amount}
+            onChange={onChange}
+            onKeyPress={handleKeyPress}
+            min="0"
+            placeholder="Množství"
+          />
+        </Box>
+        <Box flex={1} pl={1}>
+          <Input
+            type="text"
+            name="amountUnit"
+            value={amountUnit}
+            onChange={onChange}
+            onKeyPress={handleKeyPress}
+            placeholder="Jednotka"
+          />
+        </Box>
+      </Box>
+      <Box display="flex" mb={2}>
+        <Box flex="auto" className={autosuggestStyle}>
+          <Autosuggest
+            suggestions={ingredientOptions}
+            onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+            onSuggestionsClearRequested={handleSuggestionsClearRequested}
+            getSuggestionValue={s => s}
+            renderSuggestion={renderSuggestion}
+            inputProps={{
+              name: 'name',
+              value: name,
+              onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
+              onKeyPress: handleKeyPress,
+              className: getInputStyle({ hasAppendAddon: true }),
+              placeholder: 'Název',
+            }}
+          />
+        </Box>
+        <Button type="button" onClick={onAdd} disabled={!name} isAppendAddon>
+          <Icon icon="plus" /> Přidat
+        </Button>
+      </Box>
+    </>
+  );
 }
+
+export default IngredientForm;

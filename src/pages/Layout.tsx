@@ -42,7 +42,7 @@ function Layout(props: Props) {
 
   useEffect(() => {
     updateUserLastActivity();
-    let int = window.setInterval(updateUserLastActivity, 60 * 1000);
+    const int = window.setInterval(updateUserLastActivity, 60 * 1000);
 
     return () => clearInterval(int);
   }, []);

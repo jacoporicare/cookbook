@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
@@ -24,38 +24,38 @@ type Props = {
   onSort: SortEndHandler;
 };
 
-type State = {
-  name?: string;
-  amount?: number;
-  amountUnit?: string;
-  group?: string;
-};
-
 const Heading = Text.withComponent('h3');
 Heading.defaultProps = {
   fontWeight: 300,
 };
 
-export default class IngredientEdit extends React.Component<Props, State> {
-  state: State = {};
+function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
+  const [name, setName] = useState<string>();
+  const [amount, setAmount] = useState<number>();
+  const [amountUnit, setAmountUnit] = useState<string>();
+  const [group, setGroup] = useState<string>();
 
-  handleIngredientChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
+  const handleIngredientChange: AutosuggestChangeEventHandler = (
+    event,
+    selectEvent,
+    targetName,
+  ) => {
     const name = targetName || event.currentTarget.name;
     const value = selectEvent ? selectEvent.newValue : event.currentTarget.value;
 
     switch (name) {
       case 'name':
-        this.setState({ name: value });
+        setName(value);
         break;
 
       case 'amount': {
         const parsed = Number.parseFloat(value);
-        this.setState({ amount: Number.isNaN(parsed) ? undefined : parsed });
+        setAmount(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
       case 'amountUnit':
-        this.setState({ amountUnit: value });
+        setAmountUnit(value);
         break;
 
       default:
@@ -63,65 +63,52 @@ export default class IngredientEdit extends React.Component<Props, State> {
     }
   };
 
-  handleGroupChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ group: event.target.value });
-  };
+  function handleGroupChange(event: ChangeEvent<HTMLInputElement>) {
+    setGroup(event.target.value);
+  }
 
-  handleAddIngredient = () => {
-    const { name, amount, amountUnit } = this.state;
-
+  function handleAddIngredient() {
     if (!name) {
       return;
     }
 
-    this.props.onAdd(name, amount, amountUnit);
-    this.setState({
-      name: undefined,
-      amount: undefined,
-      amountUnit: undefined,
-    });
-  };
+    onAdd(name, amount, amountUnit);
+    setName(undefined);
+    setAmount(undefined);
+    setAmountUnit(undefined);
+  }
 
-  handleAddGroup = () => {
-    const { group } = this.state;
-
+  function handleAddGroup() {
     if (!group) {
       return;
     }
 
-    this.props.onAddGroup(group);
-    this.setState({ group: undefined });
-  };
-
-  render() {
-    const { items, ingredientOptions, onRemove, onSort } = this.props;
-    const { name, amount, amountUnit, group } = this.state;
-
-    return (
-      <>
-        <Box mb={3}>
-          <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
-        </Box>
-        <Box mb={3}>
-          <Heading>Přidat ingredienci</Heading>
-          <IngredientForm
-            name={name}
-            amount={amount}
-            amountUnit={amountUnit}
-            ingredientOptions={ingredientOptions}
-            onChange={this.handleIngredientChange}
-            onAdd={this.handleAddIngredient}
-          />
-        </Box>
-        <Box>
-          <Heading>Přidat skupinu</Heading>
-          <IngredientGroupForm
-            group={group}
-            onChange={this.handleGroupChange}
-            onAdd={this.handleAddGroup}
-          />
-        </Box>
-      </>
-    );
+    onAddGroup(group);
+    setGroup(undefined);
   }
+
+  return (
+    <>
+      <Box mb={3}>
+        <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+      </Box>
+      <Box mb={3}>
+        <Heading>Přidat ingredienci</Heading>
+        <IngredientForm
+          name={name}
+          amount={amount}
+          amountUnit={amountUnit}
+          ingredientOptions={ingredientOptions}
+          onChange={handleIngredientChange}
+          onAdd={handleAddIngredient}
+        />
+      </Box>
+      <Box>
+        <Heading>Přidat skupinu</Heading>
+        <IngredientGroupForm group={group} onChange={handleGroupChange} onAdd={handleAddGroup} />
+      </Box>
+    </>
+  );
 }
+
+export default IngredientEdit;
