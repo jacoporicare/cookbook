@@ -1,43 +1,91 @@
-variables:
-  DOCKER_HOST: tcp://docker:2375/
-
 stages:
   - build
   - deploy
 
+variables:
+  DEV_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
+  STG_DIR: /home/gitlab-runner/www/cookbook_stg/
+  PRD_DIR: /home/gitlab-runner/www/cookbook_prd/
+  DEV_DOMAIN: $CI_COMMIT_REF_SLUG.zradelnik-test.jakubricar.cz
+  STG_DOMAIN: zradelnik-test.jakubricar.cz
+  PRD_DOMAIN: zradelnik.jakubricar.cz
+
 build:
+  stage: build
+  tags:
+    - shared
   image: docker:stable
   services:
     - docker:dind
-  stage: build
-  except:
-    - master
   script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
-build_and_push:
-  stage: build
-  image: docker:stable
-  services:
-    - docker:dind
-  only:
+deploy-dev:
+  stage: deploy
+  except:
+    - develop
     - master
+    - tags
+  tags:
+    - dev
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - rsync -hlra --delete ./deploy/ $DEV_DIR
+    - cd $DEV_DIR
+    - envsubst < ".env.dev" > ".env"
+    - docker-compose pull
+    - docker-compose up -d --force-recreate --remove-orphans
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    url: https://$CI_COMMIT_REF_SLUG.zradelnik-test.jakubricar.cz
+    on_stop: stop-env-dev
 
-deploy:
+stop-env-dev:
+  stage: deploy
+  except:
+    - develop
+    - master
+    - tags
+  tags:
+    - dev
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - cd $DEV_DIR
+    - docker-compose down --remove-orphans --volumes --rmi local
+    - docker-compose rm
+    - cd ~
+    - rm -rf $DEV_DIR
+
+deploy-stg:
+  stage: deploy
+  only:
+    - develop
+  tags:
+    - stg
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - rsync -hlra --delete ./deploy/ $STG_DIR
+    - cd $STG_DIR
+    - envsubst < ".env.stg" > ".env"
+    - docker-compose pull
+    - docker-compose up -d --force-recreate --remove-orphans
+
+deploy-prd:
   stage: deploy
   only:
     - master
+  tags:
+    - prd
   script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan jakubricar.cz >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - scp docker/docker-compose.yml ci@jakubricar.cz:/srv/docker/cookbook
-    - ssh ci@jakubricar.cz 'cd /srv/docker/cookbook && docker-compose pull && docker-compose up -d'
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - rsync -hlra --delete ./deploy/ $PRD_DIR
+    - cd $PRD_DIR
+    - envsubst < ".env.prd" > ".env"
+    - docker-compose pull
+    - docker-compose up -d --force-recreate --remove-orphans

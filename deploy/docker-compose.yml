@@ -1,0 +1,39 @@
+version: '3.2'
+
+services:
+  db:
+    image: mongo:4.0
+    restart: always
+    networks:
+      - cookbook
+    volumes:
+      - type: bind
+        source: '${DATA_SOURCE}'
+        target: /data/db
+
+  web:
+    image: '${APP_IMAGE}:${APP_TAG}'
+    restart: always
+    networks:
+      - cookbook
+      - web
+    depends_on:
+      - db
+    volumes:
+      - type: volume
+        source: tmp
+        target: /tmp/cookbook
+    environment:
+      MONGO_URI: mongodb://db/cookbook
+      GRAPHQL_URI: 'https://${DOMAIN}/graphql'
+      VIRTUAL_HOST: '${DOMAIN}'
+      LETSENCRYPT_HOST: '${DOMAIN}'
+      LETSENCRYPT_EMAIL: ***REMOVED***
+
+networks:
+  cookbook:
+  web:
+    external: true
+
+volumes:
+  tmp:
