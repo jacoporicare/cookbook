@@ -7,8 +7,8 @@ services:
     networks:
       - cookbook
     volumes:
-      - type: bind
-        source: '${DATA_SOURCE}'
+      - type: volume
+        source: dbdata
         target: /data/db
 
   web:
@@ -36,4 +36,5 @@ networks:
     external: true
 
 volumes:
+  dbdata:
   tmp:

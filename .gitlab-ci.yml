@@ -6,8 +6,8 @@ variables:
   DEV_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
   STG_DIR: /home/gitlab-runner/www/cookbook_stg/
   PRD_DIR: /home/gitlab-runner/www/cookbook_prd/
-  DEV_DOMAIN: $CI_COMMIT_REF_SLUG.zradelnik-test.jakubricar.cz
-  STG_DOMAIN: zradelnik-test.jakubricar.cz
+  DEV_DOMAIN: $CI_COMMIT_REF_SLUG.zradelnik.jakubricar.cz
+  STG_DOMAIN: develop.zradelnik.jakubricar.cz
   PRD_DOMAIN: zradelnik.jakubricar.cz
 
 build:
@@ -37,9 +37,10 @@ deploy-dev:
     - envsubst < ".env.dev" > ".env"
     - docker-compose pull
     - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose exec -T web yarn seed
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://$CI_COMMIT_REF_SLUG.zradelnik-test.jakubricar.cz
+    url: https://$CI_COMMIT_REF_SLUG.zradelnik.jakubricar.cz
     on_stop: stop-env-dev
 
 stop-env-dev:

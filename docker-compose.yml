@@ -1,0 +1,27 @@
+version: '3.2'
+
+services:
+  db:
+    image: mongo:4.0
+    volumes:
+      - type: volume
+        source: dbdata
+        target: /data/db
+
+  web:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - type: volume
+        source: tmp
+        target: /tmp/cookbook
+    ports:
+      - '3000:3000'
+    environment:
+      MONGO_URI: mongodb://db/cookbook
+      GRAPHQL_URI: 'http://localhost:3000/graphql'
+
+volumes:
+  dbdata:
+  tmp:
