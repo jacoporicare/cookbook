@@ -85,6 +85,11 @@ function Header(props: Props) {
       color="white"
       className={css({
         transition: 'all 200ms ease',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
       })}
     >
       <Box display="flex" justifyContent="space-between" p={[2, 3]} overflow={['auto', 'initial']}>
