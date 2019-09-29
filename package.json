@@ -84,7 +84,8 @@
     "build": "razzle build",
     "test": "razzle test --env=jsdom",
     "start:prod": "NODE_ENV=production node --icu-data-dir=node_modules/full-icu build/server.js",
-    "prettier": "prettier --write './src/**/*.{ts,tsx}'"
+    "prettier": "prettier --write './src/**/*.{ts,tsx}'",
+    "seed": "node build/server.js --seed"
   },
   "browserslist": [
     ">0.2%",
