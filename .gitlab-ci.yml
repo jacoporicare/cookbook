@@ -36,7 +36,8 @@ deploy-dev:
     - cd $DEV_DIR
     - envsubst < ".env.dev" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans --rmi local
+    - docker-compose up -d
     - docker-compose exec -T web yarn seed
   environment:
     name: $CI_COMMIT_REF_NAME
@@ -75,7 +76,8 @@ deploy-stg:
     - cd $STG_DIR
     - envsubst < ".env.stg" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans
+    - docker-compose up -d
 
 deploy-prd:
   stage: deploy
@@ -89,4 +91,5 @@ deploy-prd:
     - cd $PRD_DIR
     - envsubst < ".env.prd" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans
+    - docker-compose up -d
