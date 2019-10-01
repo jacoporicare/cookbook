@@ -27,6 +27,8 @@ services:
     environment:
       MONGO_URI: mongodb://db/cookbook
       GRAPHQL_URI: http://localhost:3000/graphql
+    tty: true
+    stdin_open: true
 
 volumes:
   dbdata:
