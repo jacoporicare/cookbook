@@ -10,7 +10,7 @@ if (process.argv[2] === '--seed') {
 
   let currentApp = app;
 
-  server.listen(process.env.PORT || 3000, (error: any) => {
+  server.listen(process.env.PORT || 3000).on('error', error => {
     if (error) {
       console.log(error);
     }
