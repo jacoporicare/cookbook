@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@reach/router';
-import styled, { css } from 'react-emotion';
+import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import gql from 'graphql-tag';
 
 import { Recipe } from '../../types';
@@ -15,7 +16,7 @@ type Props = {
   recipe: Recipe;
 };
 
-const overlay = css`
+const Overlay = styled.div`
   color: ${colors.white};
   background-color: rgba(0, 0, 0, 0.4);
   position: absolute;
@@ -31,18 +32,18 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   position: relative;
 
-  &:hover .${overlay} {
+  &:hover ${Overlay} {
     background-color: rgba(0, 0, 0, 0.6);
   }
 `;
 
-const Image = styled('div')`
+const Image = styled.div`
   height: 250px;
   background-size: cover;
   background-position: center center;
 `;
 
-const Title = styled('h3')`
+const Title = styled.h3`
   margin: 0;
   font-weight: 400;
   white-space: nowrap;
@@ -58,7 +59,7 @@ function RecipeListItem({ recipe }: Props) {
   return (
     <StyledLink to={`/recept/${slug}`}>
       <Image style={{ backgroundImage: `url(${imageUrl})` }} />
-      <div className={overlay}>
+      <Overlay>
         <Title>{title}</Title>
         <Box mt={2} color={colors.gray200} fontSize="0.75em">
           <RecipeInfo
@@ -67,7 +68,7 @@ function RecipeListItem({ recipe }: Props) {
             placeholder="žádné údaje"
           />
         </Box>
-      </div>
+      </Overlay>
     </StyledLink>
   );
 }

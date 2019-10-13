@@ -11,7 +11,7 @@ type Props = {
 };
 
 function Title({ title = '', onChange }: Props) {
-  const ref = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (ref.current) {
@@ -22,7 +22,7 @@ function Title({ title = '', onChange }: Props) {
   return (
     <Box mb={3}>
       <Input
-        innerRef={ref}
+        ref={ref}
         type="text"
         name="title"
         value={title}

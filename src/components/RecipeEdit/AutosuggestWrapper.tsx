@@ -1,8 +1,8 @@
-import { css } from 'emotion';
+import styled from '@emotion/styled';
 
 import { colors } from '../../styles/colors';
 
-const autosuggestStyle = css`
+const AutosuggestWrapper = styled.div`
   .react-autosuggest__container {
     position: relative;
   }
@@ -43,4 +43,4 @@ const autosuggestStyle = css`
   }
 `;
 
-export default autosuggestStyle;
+export default AutosuggestWrapper;

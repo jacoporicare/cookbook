@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { css } from 'emotion';
+import { css, ClassNames } from '@emotion/core';
 
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
@@ -15,10 +15,12 @@ type Props = {
 
 function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
   return (
-    <Modal
-      isOpen={show}
-      onRequestClose={onClose}
-      overlayClassName={css`
+    <ClassNames>
+      {({ css: classNames }) => (
+        <Modal
+          isOpen={show}
+          onRequestClose={onClose}
+          overlayClassName={classNames`
         background-color: rgba(0, 0, 0, 0.3);
         position: fixed;
         top: 0;
@@ -29,7 +31,7 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
         overflow-x: hidden;
         overflow-y: auto;
       `}
-      className={css`
+          className={classNames`
         position: relative;
         width: auto;
         margin: 0.5rem;
@@ -40,101 +42,103 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
           margin: 1.75rem auto;
         }
       `}
-      bodyOpenClassName={css`
+          bodyOpenClassName={classNames`
         overflow: hidden;
       `}
-      ariaHideApp={false}
-    >
-      <div
-        className={css`
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          pointer-events: auto;
-          background-color: ${colors.white};
-          background-clip: padding-box;
-          border: 1px solid rgba(0, 0, 0, 0.2);
-          border-radius: 0.3rem;
-          outline: 0;
-        `}
-      >
-        <div
-          className={css`
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            padding: 1rem;
-            border-bottom: 1px solid ${colors.gray200};
-            border-top-left-radius: 0.3rem;
-            border-top-right-radius: 0.3rem;
-          `}
+          ariaHideApp={false}
         >
-          <h5
-            className={css`
-              font-size: 1.25rem;
-              margin-bottom: 0;
-              line-height: 1.5;
+          <div
+            css={css`
+              position: relative;
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              pointer-events: auto;
+              background-color: ${colors.white};
+              background-clip: padding-box;
+              border: 1px solid rgba(0, 0, 0, 0.2);
+              border-radius: 0.3rem;
+              outline: 0;
             `}
           >
-            Smazat recept
-          </h5>
-          <button
-            type="button"
-            onClick={onClose}
-            className={css`
-              cursor: pointer;
-              padding: 1rem;
-              margin: -1rem -1rem -1rem auto;
-              background-color: transparent;
-              border: 0;
-              -webkit-appearance: none !important;
-              font-size: 1.5rem;
-              font-weight: 700;
-              line-height: 1;
-              color: #000;
-              text-shadow: 0 1px 0 #fff;
-              opacity: 0.5;
+            <div
+              css={css`
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                padding: 1rem;
+                border-bottom: 1px solid ${colors.gray200};
+                border-top-left-radius: 0.3rem;
+                border-top-right-radius: 0.3rem;
+              `}
+            >
+              <h5
+                css={css`
+                  font-size: 1.25rem;
+                  margin-bottom: 0;
+                  line-height: 1.5;
+                `}
+              >
+                Smazat recept
+              </h5>
+              <button
+                type="button"
+                onClick={onClose}
+                css={css`
+                  cursor: pointer;
+                  padding: 1rem;
+                  margin: -1rem -1rem -1rem auto;
+                  background-color: transparent;
+                  border: 0;
+                  -webkit-appearance: none !important;
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  line-height: 1;
+                  color: #000;
+                  text-shadow: 0 1px 0 #fff;
+                  opacity: 0.5;
 
-              &:hover {
-                color: #000;
-                text-decoration: none;
-                opacity: 0.75;
-              }
-            `}
-          >
-            ×
-          </button>
-        </div>
-        <div
-          className={css`
-            position: relative;
-            flex: 1 1 auto;
-            padding: 1rem;
-          `}
-        >
-          Určitě smazat recept <strong>{recipeTitle}</strong>?
-        </div>
-        <div
-          className={css`
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 1rem;
-            border-top: 1px solid ${colors.gray200};
-          `}
-        >
-          <Box mr={2}>
-            <DangerButton type="button" onClick={onConfirm}>
-              Smazat
-            </DangerButton>
-          </Box>
-          <Button type="button" onClick={onClose}>
-            Zrušit
-          </Button>
-        </div>
-      </div>
-    </Modal>
+                  &:hover {
+                    color: #000;
+                    text-decoration: none;
+                    opacity: 0.75;
+                  }
+                `}
+              >
+                ×
+              </button>
+            </div>
+            <div
+              css={css`
+                position: relative;
+                flex: 1 1 auto;
+                padding: 1rem;
+              `}
+            >
+              Určitě smazat recept <strong>{recipeTitle}</strong>?
+            </div>
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                padding: 1rem;
+                border-top: 1px solid ${colors.gray200};
+              `}
+            >
+              <Box mr={2}>
+                <DangerButton type="button" onClick={onConfirm}>
+                  Smazat
+                </DangerButton>
+              </Box>
+              <Button type="button" onClick={onClose}>
+                Zrušit
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </ClassNames>
   );
 }
 

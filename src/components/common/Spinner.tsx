@@ -1,5 +1,6 @@
 import React from 'react';
-import styled, { keyframes, css } from 'react-emotion';
+import styled from '@emotion/styled';
+import { css, keyframes } from '@emotion/core';
 
 type Props = {
   delay?: number;
@@ -14,7 +15,7 @@ const stretchAnimation = keyframes`
   0%, 40%, 100% { transform: scaleY(0.4); }
   20% { transform: scaleY(1.0); }`;
 
-const Container = styled('div')<{ hasOverlay?: boolean }>`
+const Container = styled.div<{ hasOverlay?: boolean }>`
   margin: 100px auto;
   width: 50px;
   height: 20px;
@@ -31,7 +32,7 @@ const Container = styled('div')<{ hasOverlay?: boolean }>`
     `}
 `;
 
-const Rect = styled('div')<{ delay: number }>`
+const Rect = styled.div<{ delay: number }>`
   background-color: #333;
   height: 100%;
   width: 6px;
@@ -40,7 +41,7 @@ const Rect = styled('div')<{ delay: number }>`
   animation-delay: ${props => props.delay}s;
 `;
 
-const Overlay = styled('div')`
+const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;

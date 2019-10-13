@@ -1,8 +1,9 @@
-import styled, { css } from 'react-emotion';
+import styled, { Interpolation } from '@emotion/styled';
+import { css } from '@emotion/core';
+import { lighten, transparentize } from 'polished';
 
 import { colors } from '../../styles/colors';
 import { Box, BoxProps } from '../core';
-import { lighten, transparentize } from 'polished';
 
 type InputProps = {
   hasPrependAddon?: boolean;
@@ -24,7 +25,9 @@ const append = css`
   border-bottom-right-radius: 0;
 `;
 
-export const getInputStyle = (props: InputProps = {}) => css`
+export const getInputStyle = (
+  css: (template: TemplateStringsArray, ...args: Array<Interpolation>) => any,
+) => (props: InputProps = {}) => css`
   display: block;
   width: 100%;
   padding: 0.375rem 0.75rem;
@@ -57,6 +60,6 @@ export const getInputStyle = (props: InputProps = {}) => css`
   }
 `;
 
-export const Input = styled(Box)<Props>(getInputStyle).withComponent('input');
+export const Input = styled(Box)<Props>(getInputStyle(css)).withComponent('input');
 
-export const Textarea = styled(Box)<Props>(getInputStyle).withComponent('textarea');
+export const Textarea = styled(Box)<Props>(getInputStyle(css)).withComponent('textarea');

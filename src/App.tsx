@@ -12,28 +12,31 @@ import RecipeListPage from './pages/RecipeListPage';
 import SideDishListPage from './pages/SideDishListPage';
 import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
+import Reboot from './styles/Reboot';
 
 import '@fortawesome/fontawesome-free/css/all.css';
-import './styles/reboot';
 
 function App() {
   const [token] = useAuth();
 
   return (
-    <Router>
-      <Layout path="/">
-        <RecipeListPage path="/" />
-        <RecipeDetailPage path="recept/:slug" />
-        {token && <RecipeEditPage path="recept/:slug/upravit" />}
-        {token && <RecipeEditPage path="novy-recept" />}
-        <SideDishListPage path="prilohy" />
-        <LoginPage path="prihlaseni" />
-        <LogoutPage path="odhlaseni" />
-        <SettingsPage path="nastaveni" />
-        <AdminPage path="admin" />
-        <NotFoundPage default />
-      </Layout>
-    </Router>
+    <>
+      <Reboot />
+      <Router>
+        <Layout path="/">
+          <RecipeListPage path="/" />
+          <RecipeDetailPage path="recept/:slug" />
+          {token && <RecipeEditPage path="recept/:slug/upravit" />}
+          {token && <RecipeEditPage path="novy-recept" />}
+          <SideDishListPage path="prilohy" />
+          <LoginPage path="prihlaseni" />
+          <LogoutPage path="odhlaseni" />
+          <SettingsPage path="nastaveni" />
+          <AdminPage path="admin" />
+          <NotFoundPage default />
+        </Layout>
+      </Router>
+    </>
   );
 }
 
