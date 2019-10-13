@@ -33,7 +33,6 @@ function LoginPage(props: Props) {
 
   const [login, { loading, error }] = useMutation<LoginMutationData>(LOGIN_MUTATION, {
     refetchQueries: result => {
-      console.log('refetchQueries');
       const token = result.data && result.data.login.token;
       // refetchQueries callback and even those returned queries are called before .then
       // we have to set the token here so the ME_QUERY gets the fresh token
@@ -46,7 +45,6 @@ function LoginPage(props: Props) {
       return [{ query: ME_QUERY }];
     },
     onCompleted: data => {
-      console.log('onCompleted');
       if (!data || !data.login.token) {
         setDataError(true);
 
@@ -55,8 +53,8 @@ function LoginPage(props: Props) {
 
       props.navigate &&
         props.navigate(
-          window.location.hash.startsWith('#u=')
-            ? decodeURIComponent(window.location.hash.substring(3))
+          props.location && props.location.search.startsWith('?u=')
+            ? props.location.search.substring(3)
             : '/',
         );
     },

@@ -1,5 +1,4 @@
 import React from 'react';
-import { css } from 'emotion';
 
 import { Box } from '../core';
 
@@ -10,14 +9,8 @@ const Label = Box.withComponent('label');
 
 function Checkbox({ children, ...props }: Props) {
   return (
-    <Box pl="1.25rem" className={css({ position: 'relative' })}>
-      <Input
-        type="checkbox"
-        mt="0.3rem"
-        ml="-1.25rem"
-        className={css({ position: 'absolute' })}
-        {...props}
-      />
+    <Box pl="1.25rem" css={{ position: 'relative' }}>
+      <Input type="checkbox" mt="0.3rem" ml="-1.25rem" css={{ position: 'absolute' }} {...props} />
       <Label htmlFor={props.id} mb={0}>
         {children}
       </Label>

@@ -1,6 +1,5 @@
 import { isRedirect, ServerLocation } from '@reach/router';
 import bodyParser from 'body-parser';
-import { renderStylesToString } from 'emotion-server';
 import express from 'express';
 import 'isomorphic-fetch';
 import path from 'path';
@@ -57,8 +56,7 @@ server.all('*', async (req, res) => {
         </AuthProvider>
       </ApolloProvider>
     );
-    const markupWithoutStyles = await renderToStringWithData(root);
-    const markup = renderStylesToString(markupWithoutStyles);
+    const markup = await renderToStringWithData(root);
     const helmet = Helmet.renderStatic();
     const initialApolloState = apolloClient.extract();
 

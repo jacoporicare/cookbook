@@ -2,26 +2,34 @@ version: '3.2'
 
 services:
   db:
-    image: mongo:4.0
+    image: mongo:4.2
     volumes:
       - type: volume
         source: dbdata
         target: /data/db
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     depends_on:
       - db
     volumes:
+      - type: bind
+        source: .
+        target: /srv
       - type: volume
-        source: tmp
-        target: /tmp/cookbook
+        source: node_modules
+        target: /srv/node_modules
     ports:
       - '3000:3000'
+      - '3001:3001'
     environment:
       MONGO_URI: mongodb://db/cookbook
-      GRAPHQL_URI: 'http://localhost:3000/graphql'
+      GRAPHQL_URI: http://localhost:3000/graphql
+    tty: true
+    stdin_open: true
 
 volumes:
   dbdata:
-  tmp:
+  node_modules:

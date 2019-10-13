@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 import { theme } from '../../styles/colors';
 import { Box } from '../core';
@@ -19,7 +19,7 @@ function PageHeading({ children, buttons }: Props) {
           flex="auto"
           display="flex"
           justifyContent="flex-end"
-          className={css`
+          css={css`
             button,
             a {
               display: inline-block;

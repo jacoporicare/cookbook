@@ -1,4 +1,5 @@
-import styled, { css } from 'react-emotion';
+import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import { darken } from 'polished';
 
 import { colors, theme, colorYiq } from '../../styles/colors';
@@ -11,74 +12,69 @@ type ButtonProps = {
 
 type Props = BoxProps & ButtonProps;
 
-const prepend = css`
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  box-shadow: none;
-`;
+const buttonStyle = (props: ButtonProps) =>
+  css(
+    {
+      display: 'inline-block',
+      border: '1px solid',
+      borderRadius: '1em',
+      boxShadow: '0 8px 8px -8px rgba(0, 0, 0, 0.2)',
+      padding: '0.5em 0.75em',
+      fontSize: '1rem',
+      lineHeight: '1em',
+      whiteSpace: 'nowrap',
+      transition:
+        'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
 
-const append = css`
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  box-shadow: none;
-  margin-left: -1px;
-`;
+      '&:hover': {
+        textDecoration: 'none',
+      },
 
-const buttonStyle = (props: ButtonProps) => css`
-  display: inline-block;
-  border: 1px solid;
-  border-radius: 1em;
-  box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.2);
-  padding: 0.5em 0.75em;
-  font-size: 1rem;
-  line-height: 1em;
-  white-space: nowrap;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  ${props.isPrependAddon && prepend};
-  ${props.isAppendAddon && append};
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  .fa,
-  .fas,
-  .far {
-    display: inline-block;
-    margin-right: 0.5em;
-  }
-`;
+      '.fa, .fas, .far': {
+        display: 'inline-block',
+        marginRight: '0.5em',
+      },
+    },
+    props.isPrependAddon && {
+      borderTopLeftRadius: '4px',
+      borderBottomLeftRadius: '4px',
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      boxShadow: 'none',
+    },
+    props.isAppendAddon && {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderTopRightRadius: '4px',
+      borderBottomRightRadius: '4px',
+      boxShadow: 'none',
+      marginLeft: '-1px',
+    },
+  );
 
 export const createButton = (color: string, borderColor?: string) =>
-  styled(Box)<Props>`
-    ${buttonStyle};
-    color: ${colorYiq(color)};
-    background-color: ${color};
-    border-color: ${borderColor || color};
+  styled(Box)<Props>(buttonStyle, {
+    color: colorYiq(color),
+    backgroundColor: color,
+    borderColor: borderColor || color,
 
-    &:hover {
-      color: ${colorYiq(darken(0.075, color))};
-      background-color: ${darken(0.075, color)};
-      border-color: ${darken(0.1, borderColor || color)};
-    }
+    '&:hover': {
+      color: colorYiq(darken(0.075, color)),
+      backgroundColor: darken(0.075, color),
+      borderColor: darken(0.1, borderColor || color),
+    },
 
-    &:disabled,
-    &.disabled {
-      opacity: 0.65;
-      color: ${colorYiq(color)};
-      background-color: ${color};
-      border-color: ${borderColor || color};
-    }
+    '&:disabled, &.disabled': {
+      opacity: 0.65,
+      color: colorYiq(color),
+      backgroundColor: color,
+      borderColor: borderColor || color,
+    },
 
-    &:not(:disabled):not(.disabled) {
-      cursor: pointer;
-    }
-  `.withComponent('button');
+    '&:not(:disabled):not(.disabled)': {
+      cursor: 'pointer',
+    },
+  }).withComponent('button');
 
 export const Button = createButton(colors.white, colors.gray400);
 export const SuccessButton = createButton(theme.success);
