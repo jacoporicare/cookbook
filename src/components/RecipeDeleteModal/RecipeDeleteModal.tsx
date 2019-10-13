@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { css, ClassNames } from '@emotion/core';
+import { ClassNames } from '@emotion/core';
 
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
@@ -18,19 +18,8 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
     <ClassNames>
       {({ css: classNames }) => (
         <Modal
-          isOpen={show}
-          onRequestClose={onClose}
-          overlayClassName={classNames({
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1050,
-            overflowX: 'hidden',
-            overflowY: 'auto',
-          })}
+          ariaHideApp={false}
+          bodyOpenClassName={classNames({ overflow: 'hidden' })}
           className={classNames({
             position: 'relative',
             width: 'auto',
@@ -42,8 +31,19 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
               margin: '1.75rem auto',
             },
           })}
-          bodyOpenClassName={classNames({ overflow: 'hidden' })}
-          ariaHideApp={false}
+          isOpen={show}
+          overlayClassName={classNames({
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1050,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+          })}
+          onRequestClose={onClose}
         >
           <div
             css={{
@@ -74,8 +74,6 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
                 Smazat recept
               </h5>
               <button
-                type="button"
-                onClick={onClose}
                 css={{
                   cursor: 'pointer',
                   padding: '1rem',
@@ -96,6 +94,8 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
                     opacity: 0.75,
                   },
                 }}
+                type="button"
+                onClick={onClose}
               >
                 ×
               </button>

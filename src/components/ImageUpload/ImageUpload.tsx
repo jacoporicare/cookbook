@@ -1,7 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 
 type Props = {
   imageUrl?: string;
@@ -55,12 +54,14 @@ const DropzonePlace = styled.div<DropzonePlaceProps>(props => [
     cursor: 'pointer',
     overflow: 'hidden',
     '&:hover': {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [Text as any]: {
         zIndex: 3,
       },
     },
   },
   props.isDragActive && {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Text as any]: {
       zIndex: 3,
     },
@@ -103,12 +104,12 @@ export class ImageUpload extends React.Component<Props, State> {
     const src = this.state.image || this.props.imageUrl;
 
     return (
-      <Dropzone multiple={false} onDrop={this.handleDrop} accept="image/*">
+      <Dropzone accept="image/*" multiple={false} onDrop={this.handleDrop}>
         {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
           <DropzonePlace
             {...getRootProps()}
-            isDragActive={isDragActive}
             isDragAccept={isDragAccept}
+            isDragActive={isDragActive}
             isDragReject={isDragReject}
           >
             <input {...getInputProps()} />

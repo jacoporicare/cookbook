@@ -3,6 +3,7 @@ import React from 'react';
 import { SideDish } from '../../types';
 import { Table, TableHeadRow, TableHeadCell } from '../elements';
 import PageHeading from '../common/PageHeading';
+
 import SideDishListItem from './SideDishListItem';
 
 type Props = {

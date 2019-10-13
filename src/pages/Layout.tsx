@@ -45,7 +45,7 @@ function Layout(props: Props) {
     const int = window.setInterval(updateUserLastActivity, 60 * 1000);
 
     return () => clearInterval(int);
-  }, []);
+  }, [updateUserLastActivity]);
 
   function handleRecipeSelected(slug: string) {
     props.navigate && props.navigate(`/recept/${slug}`);
@@ -56,16 +56,16 @@ function Layout(props: Props) {
       <DocumentTitle />
       <Notifications options={{ zIndex: 1100 }} />
       <Header
-        userName={data && data.me && data.me.displayName}
-        isUserLoading={loading}
         isUserAdmin={data && data.me && data.me.isAdmin}
-        onRecipeSelected={handleRecipeSelected}
+        isUserLoading={loading}
         pathname={props.location && props.location.pathname}
+        userName={data && data.me && data.me.displayName}
+        onRecipeSelected={handleRecipeSelected}
       />
-      <BoxMain p={[3, 4]} mt={['70px', '86px']}>
+      <BoxMain mt={['70px', '86px']} p={[3, 4]}>
         {props.children}
       </BoxMain>
-      <BoxFooter p={[3, 4]} borderTop={`1px solid ${colors.gray200}`}>
+      <BoxFooter borderTop={`1px solid ${colors.gray200}`} p={[3, 4]}>
         <Footer />
       </BoxFooter>
     </>

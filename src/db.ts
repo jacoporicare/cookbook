@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import * as mongoose from 'mongoose';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (mongoose as any).Promise = global.Promise;
 
 let attempt = 0;

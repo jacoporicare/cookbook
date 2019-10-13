@@ -17,12 +17,12 @@ function OfflineRecipes({
   isFetchingAllRecipes,
 }: Props) {
   return (
-    <Box display="flex" alignItems="center" color="#999" mt={3}>
+    <Box alignItems="center" color="#999" display="flex" mt={3}>
       <span>
         Počet receptů dostupných offline: <b>{offlineRecipeCount}</b> / <b>{totalRecipeCount}</b>
       </span>
       {offlineRecipeCount < totalRecipeCount && (
-        <Button onClick={onFetchAllRecipesClick} disabled={isFetchingAllRecipes} ml={3}>
+        <Button disabled={isFetchingAllRecipes} ml={3} onClick={onFetchAllRecipesClick}>
           {isFetchingAllRecipes ? <>Stahování&hellip;</> : <>Stáhnout vše</>}
         </Button>
       )}

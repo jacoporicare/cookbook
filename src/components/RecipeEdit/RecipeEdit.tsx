@@ -6,6 +6,7 @@ import Spinner from '../common/Spinner';
 import { Box } from '../core';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
+
 import BasicInfo from './BasicInfo';
 import Directions from './Directions';
 import Header from './Header';
@@ -65,14 +66,14 @@ function RecipeEdit({
     <form onSubmit={onSubmit}>
       {isSaving && <Spinner overlay />}
 
-      <Header title={title} isNew={isNew} isSaving={isSaving} changed={changed} slug={slug} />
+      <Header changed={changed} isNew={isNew} isSaving={isSaving} slug={slug} title={title} />
 
       <fieldset>
         <Title title={title} onChange={onChange} />
       </fieldset>
 
       <Box display={['block', 'block', 'flex']}>
-        <Box flex={1} pr={[0, 0, 3]} mb={3}>
+        <Box flex={1} mb={3} pr={[0, 0, 3]}>
           <fieldset>
             <legend>Základní údaje</legend>
             <BasicInfo
@@ -85,12 +86,12 @@ function RecipeEdit({
           </fieldset>
         </Box>
 
-        <Box flex={[1, 1, 1, 2]} px={[0, 0, 3]} mb={3}>
+        <Box flex={[1, 1, 1, 2]} mb={3} px={[0, 0, 3]}>
           <fieldset>
             <legend>Ingredience</legend>
             <IngredientEdit
-              items={ingredients}
               ingredientOptions={ingredientOptions}
+              items={ingredients}
               onAdd={onAddIngredient}
               onAddGroup={onAddGroup}
               onRemove={onRemoveIngredient}
@@ -99,7 +100,7 @@ function RecipeEdit({
           </fieldset>
         </Box>
 
-        <Box flex={[1, 1, 1, 3]} pl={[0, 0, 3]} mb={3}>
+        <Box flex={[1, 1, 1, 3]} mb={3} pl={[0, 0, 3]}>
           <fieldset>
             <legend>Postup</legend>
             <Directions directions={directions} onChange={onChange} />

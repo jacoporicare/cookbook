@@ -25,6 +25,7 @@ const append = css`
   border-bottom-right-radius: 0;
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getInputStyle = (css: (...args: Array<Interpolation>) => any) => (
   props: InputProps = {},
 ) =>

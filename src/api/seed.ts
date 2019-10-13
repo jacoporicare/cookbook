@@ -1,6 +1,7 @@
 import * as db from '../db';
 import recipeModel from '../models/recipe';
 import userModel from '../models/user';
+
 import { saltHashPassword } from './apolloServer';
 
 export async function seed() {
@@ -68,6 +69,7 @@ Proin pede metus, vulputate nec, fermentum fringilla, vehicula vitae, justo. Exc
     ],
   });
 
+  // eslint-disable-next-line no-console
   console.log('🎉 Seed successful');
   process.exit(0);
 }

@@ -29,35 +29,35 @@ function LoginForm(props: Props) {
           <Box mb={3}>
             <Label htmlFor="username">Uživatel</Label>
             <Input
-              type="text"
               id="username"
               name="username"
+              type="text"
               value={props.username}
-              onChange={props.onChange}
               required
+              onChange={props.onChange}
             />
           </Box>
           <Box mb={3}>
             <Label htmlFor="password">Heslo</Label>
             <Input
-              type="password"
               id="password"
               name="password"
+              type="password"
               value={props.password}
-              onChange={props.onChange}
               required
+              onChange={props.onChange}
             />
           </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box alignItems="center" display="flex" justifyContent="space-between">
             <Checkbox
+              checked={props.rememberMe}
               id="rememberMe"
               name="rememberMe"
-              checked={props.rememberMe}
               onChange={props.onChange}
             >
               Neodhlašovat
             </Checkbox>
-            <SuccessButton type="submit" disabled={props.isSubmitting}>
+            <SuccessButton disabled={props.isSubmitting} type="submit">
               Přihlásit
             </SuccessButton>
           </Box>

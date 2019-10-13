@@ -17,7 +17,6 @@ function RichText({ text = '' }: Props) {
     <ClassNames>
       {({ css }) => (
         <ReactMarkdown
-          source={text}
           className={css`
             ol {
               list-style-type: none;
@@ -61,6 +60,7 @@ function RichText({ text = '' }: Props) {
               margin-top: 0;
             }
           `}
+          source={text}
         />
       )}
     </ClassNames>

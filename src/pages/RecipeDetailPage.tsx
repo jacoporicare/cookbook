@@ -15,8 +15,9 @@ import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
-import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 import { BoxArticle } from '../components/core';
+
+import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
 type Params = {
   slug: string;
@@ -137,29 +138,29 @@ function RecipeDetailPage(props: Props) {
     <BoxArticle>
       <DocumentTitle title={title} />
       <RecipeHeader
+        isAuthor={Boolean(
+          token && data && data.me && (data.me._id === user._id || data.me.isAdmin),
+        )}
         preparationTime={preparationTime}
         sideDish={sideDish}
         slug={slug}
         title={title}
-        isAuthor={Boolean(
-          token && data && data.me && (data.me._id === user._id || data.me.isAdmin),
-        )}
         onDeleteShow={() => setDeleteModalVisible(true)}
       />
       {loading && <Spinner />}
       <RecipeDetail
-        title={title}
-        ingredients={ingredients}
-        servingCount={servingCount}
         directions={directions}
-        lastModifiedDate={lastModifiedDate}
-        imageUrl={imageUrl}
         imageFullUrl={imageFullUrl}
+        imageUrl={imageUrl}
+        ingredients={ingredients}
+        lastModifiedDate={lastModifiedDate}
+        servingCount={servingCount}
+        title={title}
         userName={user.displayName}
       />
       <RecipeDeleteModal
-        show={deleteModalVisible}
         recipeTitle={title}
+        show={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
         onConfirm={handleDeleteConfirm}
       />

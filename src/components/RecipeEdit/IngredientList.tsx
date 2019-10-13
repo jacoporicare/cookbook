@@ -27,7 +27,6 @@ type Props = SortableListProps & {
 
 const Handle = SortableHandle(() => (
   <Box
-    p={2}
     css={css`
       color: ${colors.gray600};
       cursor: pointer;
@@ -36,6 +35,7 @@ const Handle = SortableHandle(() => (
         color: ${colors.gray900};
       }
     `}
+    p={2}
   >
     <Icon icon="bars" />
   </Box>
@@ -54,12 +54,11 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 
   return (
     <Item
-      display="flex"
       bg={isGroup ? colors.gray200 : colors.white}
       borderTop={`1px solid ${colors.gray300}`}
+      display="flex"
     >
       <Box
-        p={2}
         css={css`
           color: ${colors.red};
           cursor: pointer;
@@ -67,6 +66,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
             color: ${darken(0.1, colors.red)};
           }
         `}
+        p={2}
         onClick={() => {
           onRemove(itemIndex);
         }}
@@ -100,10 +100,11 @@ const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) 
   <ul css={{ listStyle: 'none', margin: 0, padding: 0 }}>
     {items.map((ingredient, index) => (
       <SortableItem
+        // eslint-disable-next-line react/no-array-index-key
         key={index}
         index={index}
-        itemIndex={index}
         ingredient={ingredient}
+        itemIndex={index}
         onRemove={onRemove}
       />
     ))}
@@ -115,7 +116,7 @@ function IngredientList({ items, onRemove, onSort }: Props) {
     return <InfoAlert>Zatím žádné ingredience.</InfoAlert>;
   }
 
-  return <SortableList items={items} onRemove={onRemove} onSortEnd={onSort} useDragHandle />;
+  return <SortableList items={items} useDragHandle onRemove={onRemove} onSortEnd={onSort} />;
 }
 
 export default IngredientList;

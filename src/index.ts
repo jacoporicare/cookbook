@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import http from 'http';
+
 import { seed } from './api/seed';
 
 if (process.argv[2] === '--seed') {
@@ -18,9 +20,11 @@ if (process.argv[2] === '--seed') {
     console.log('🚀 started');
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((module as any).hot) {
     console.log('✅  Server-side HMR Enabled!');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (module as any).hot.accept('./server', () => {
       console.log('🔁  HMR Reloading `./server`...');
 

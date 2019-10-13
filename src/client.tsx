@@ -14,6 +14,7 @@ import { AuthProvider } from './AuthContext';
 import { getAuthTokenCookie } from './clientAuth';
 
 const apolloClient = configureClient({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialState: (window as any).__APOLLO_STATE__ as NormalizedCacheObject,
 });
 

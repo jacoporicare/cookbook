@@ -24,16 +24,16 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
   return (
     <Box display="flex">
       <Input
-        type="text"
+        flex="auto"
         name="newGroup"
+        placeholder="Nová skupina"
+        type="text"
         value={group}
+        hasAppendAddon
         onChange={onChange}
         onKeyPress={handleKeyPress}
-        placeholder="Nová skupina"
-        flex="auto"
-        hasAppendAddon
       />
-      <Button type="button" onClick={onAdd} disabled={!group} isAppendAddon>
+      <Button disabled={!group} type="button" isAppendAddon onClick={onAdd}>
         <Icon icon="plus" /> Přidat
       </Button>
     </Box>

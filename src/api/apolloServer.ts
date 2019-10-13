@@ -1,14 +1,17 @@
+/* eslint-disable no-console */
+import path from 'path';
+import crypto from 'crypto';
+
 import { ApolloServer, gql, IResolvers } from 'apollo-server-express';
 import fs from 'fs-extra';
 import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
-import path from 'path';
 import slug from 'slug';
-import crypto from 'crypto';
 
-import { signToken } from './auth';
 import recipeModel, { Recipe } from '../models/recipe';
 import userModel, { User } from '../models/user';
+
+import { signToken } from './auth';
 
 type Context = {
   user?: User;
@@ -153,10 +156,12 @@ const resolvers: IResolvers = {
     },
     ingredients: async () => {
       const ingredients: string[] = await recipeModel.distinct('ingredients.name');
+
       return ingredients.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
     sideDishes: async () => {
       const sideDishes: string[] = await recipeModel.distinct('sideDish');
+
       return sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
     me: async (_, _args, context) => {
@@ -329,6 +334,7 @@ const resolvers: IResolvers = {
       if (ast.kind === Kind.INT) {
         return new Date(ast.value); // ast value is always in string format
       }
+
       return null;
     },
   }),

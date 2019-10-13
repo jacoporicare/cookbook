@@ -13,6 +13,7 @@ import { DangerAlert } from '../components/elements';
 import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
+
 import { recipeDetailFragment } from './RecipeDetailPage';
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
@@ -84,6 +85,7 @@ export type UpdateRecipeMutationVariables = {
 function isCreateMutation(
   data: CreateRecipeMutationData | UpdateRecipeMutationData,
 ): data is CreateRecipeMutationData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Boolean((data as any).createRecipe);
 }
 
@@ -153,13 +155,16 @@ function RecipeEditPage(props: Props) {
 
   useEffect(() => {
     if (changed) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).onbeforeunload = (e: any) => {
         e.returnValue = confirmMsg;
+
         return confirmMsg;
       };
     }
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).onbeforeunload = undefined;
     };
   }, [changed]);
@@ -320,6 +325,12 @@ function RecipeEditPage(props: Props) {
         ingredients={ingredients}
         isNew={!props.slug}
         isSaving={isSaving}
+        preparationTime={preparationTime}
+        servingCount={servingCount}
+        sideDish={sideDish}
+        sideDishOptions={(data && data.sideDishes) || []}
+        slug={props.slug}
+        title={title}
         onAddGroup={handleAddGroup}
         onAddIngredient={handleAddIngredient}
         onChange={handleChange}
@@ -327,12 +338,6 @@ function RecipeEditPage(props: Props) {
         onRemoveIngredient={handleRemoveIngredient}
         onSortIngredient={handleSortIngredient}
         onSubmit={handleSubmit}
-        preparationTime={preparationTime}
-        servingCount={servingCount}
-        sideDish={sideDish}
-        sideDishOptions={(data && data.sideDishes) || []}
-        slug={props.slug}
-        title={title}
       />
     </>
   );

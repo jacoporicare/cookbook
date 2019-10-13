@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
@@ -34,6 +35,7 @@ export default function configureClient(
               .map(location => `${location.line}:${location.column}`)
               .join(', ')}, Path: ${path}`,
       );
+
       if (process.env.BUILD_TARGET === 'server') {
         formattedGraphQLErrors.forEach(error => console.error(error, operation));
       }

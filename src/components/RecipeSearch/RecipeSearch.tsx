@@ -11,7 +11,6 @@ import { getImageUrl } from '../../utils';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-
 import placeholder from '../../assets/food-placeholder.png';
 
 type Props = {
@@ -73,47 +72,47 @@ export default class RecipeSearch extends React.Component<Props, State> {
     const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
 
     return (
-      <Box display="flex" height="64px" borderBottom={`1px solid ${colors.gray300}`}>
+      <Box borderBottom={`1px solid ${colors.gray300}`} display="flex" height="64px">
         <Box
+          borderRight={`1px solid ${colors.gray300}`}
           flex="none"
+          height="64px"
           p={1}
           width="64px"
-          height="64px"
-          borderRight={`1px solid ${colors.gray300}`}
         >
           <Box
-            width="100%"
-            height="100%"
             css={{
               backgroundSize: 'cover',
               backgroundPosition: 'center center',
             }}
+            height="100%"
             style={{ backgroundImage: `url('${imageUrl}')` }}
+            width="100%"
           />
         </Box>
         <Box
-          flex="auto"
+          css={{ minWidth: 0 }}
           display="flex"
+          flex="auto"
           flexDirection="column"
           justifyContent="space-between"
           p={2}
-          css={{ minWidth: 0 }}
         >
           <Box
-            width="100%"
-            overflow="hidden"
             css={{
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
             }}
+            overflow="hidden"
+            width="100%"
           >
             {recipe.title}
           </Box>
           <Box color="#777" fontSize="0.75em">
             <RecipeInfo
+              placeholder="žádné údaje"
               preparationTime={preparationTime}
               sideDish={sideDish}
-              placeholder="žádné údaje"
             />
           </Box>
         </Box>
@@ -128,7 +127,6 @@ export default class RecipeSearch extends React.Component<Props, State> {
       <ClassNames>
         {({ css }) => (
           <Box
-            display="flex"
             alignItems="center"
             css={css`
               .react-autosuggest__container {
@@ -182,18 +180,13 @@ export default class RecipeSearch extends React.Component<Props, State> {
                 cursor: pointer;
               }
             `}
+            display="flex"
           >
             <Autosuggest
-              suggestions={suggestions}
-              highlightFirstSuggestion
-              onSuggestionsFetchRequested={this.handleFetch}
-              onSuggestionsClearRequested={this.handleClear}
-              onSuggestionSelected={this.handleSelected}
-              getSuggestionValue={r => r.title}
-              renderSuggestion={this.renderSuggestion}
               focusInputOnSuggestionClick={false}
+              getSuggestionValue={r => r.title}
               inputProps={{
-                value: value,
+                value,
                 onChange: this.handleChange,
                 placeholder: 'Hledat...',
                 className: css`
@@ -231,6 +224,12 @@ export default class RecipeSearch extends React.Component<Props, State> {
                   }
                 `,
               }}
+              renderSuggestion={this.renderSuggestion}
+              suggestions={suggestions}
+              highlightFirstSuggestion
+              onSuggestionsClearRequested={this.handleClear}
+              onSuggestionSelected={this.handleSelected}
+              onSuggestionsFetchRequested={this.handleFetch}
             />
           </Box>
         )}
