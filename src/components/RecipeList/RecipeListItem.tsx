@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import gql from 'graphql-tag';
 
 import { Recipe } from '../../types';
@@ -16,40 +15,42 @@ type Props = {
   recipe: Recipe;
 };
 
-const Overlay = styled.div`
-  color: ${colors.white};
-  background-color: rgba(0, 0, 0, 0.4);
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 8px;
-`;
+const Overlay = styled.div({
+  color: colors.white,
+  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  padding: '8px',
+});
 
-const StyledLink = styled(Link)`
-  display: block;
-  color: ${colors.gray900};
-  text-decoration: none;
-  position: relative;
+const StyledLink = styled(Link)({
+  display: 'block',
+  color: colors.gray900,
+  textDecoration: 'none',
+  position: 'relative',
 
-  &:hover ${Overlay} {
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-`;
+  '&:hover': {
+    [Overlay as any]: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    },
+  },
+});
 
-const Image = styled.div`
-  height: 250px;
-  background-size: cover;
-  background-position: center center;
-`;
+const Image = styled.div({
+  height: '250px',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+});
 
-const Title = styled.h3`
-  margin: 0;
-  font-weight: 400;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+const Title = styled.h3({
+  margin: 0,
+  fontWeight: 400,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
 
 function RecipeListItem({ recipe }: Props) {
   const { slug, title, preparationTime, sideDish, hasImage, lastModifiedDate } = recipe;

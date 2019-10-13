@@ -12,11 +12,12 @@ Alert.defaultProps = {
   borderRadius: '4px',
 };
 
-export const createAlert = (color: string) => styled(Alert)`
-  color: ${mix(0.48, 'black', color)};
-  background-color: ${mix(0.8, 'white', color)};
-  border-color: ${mix(0.72, 'white', color)};
-`;
+export const createAlert = (color: string) =>
+  styled(Alert)({
+    color: mix(0.48, 'black', color),
+    backgroundColor: mix(0.8, 'white', color),
+    borderColor: mix(0.72, 'white', color),
+  });
 
 export const SuccessAlert = createAlert(theme.success);
 export const InfoAlert = createAlert(theme.info);

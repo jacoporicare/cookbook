@@ -15,31 +15,31 @@ const stretchAnimation = keyframes`
   0%, 40%, 100% { transform: scaleY(0.4); }
   20% { transform: scaleY(1.0); }`;
 
-const Container = styled.div<{ hasOverlay?: boolean }>`
-  margin: 100px auto;
-  width: 50px;
-  height: 20px;
-  text-align: center;
-  font-size: 10px;
+const Container = styled.div<{ hasOverlay?: boolean }>(props => [
+  {
+    margin: '100px auto',
+    width: '50px',
+    height: '20px',
+    textAlign: 'center',
+    fontSize: '10px',
+  },
 
-  ${props =>
-    props.hasOverlay &&
-    css`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    `}
-`;
+  props.hasOverlay && {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+]);
 
-const Rect = styled.div<{ delay: number }>`
-  background-color: #333;
-  height: 100%;
-  width: 6px;
-  display: inline-block;
-  animation: ${stretchAnimation} 1.2s infinite ease-in-out;
-  animation-delay: ${props => props.delay}s;
-`;
+const Rect = styled.div<{ delay: number }>(props => ({
+  backgroundColor: '#333',
+  height: '100%',
+  width: '6px',
+  display: 'inline-block',
+  animation: `${stretchAnimation} 1.2s infinite ease-in-out`,
+  animationDelay: `${props.delay}s`,
+}));
 
 const Overlay = styled.div`
   position: fixed;

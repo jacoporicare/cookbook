@@ -28,13 +28,13 @@ const LogoIcon = styled.img`
   margin: 0 4px;
 `;
 
-const NavItem = styled(Box)`
-  color: ${colors.gray600};
-  font-size: 20px;
-  font-weight: 300;
-  padding: 8px;
-  white-space: nowrap;
-`;
+const NavItem = styled(Box)({
+  color: colors.gray600,
+  fontSize: '20px',
+  fontWeight: 300,
+  padding: '8px',
+  whiteSpace: 'nowrap',
+});
 
 function Header(props: Props) {
   const [token] = useAuth();
@@ -45,33 +45,34 @@ function Header(props: Props) {
   return (
     <ClassNames>
       {({ css }) => {
-        const linkStyle = css`
-          font-size: 20px;
-          font-weight: 300;
-          padding: 8px;
-          white-space: nowrap;
-          color: white;
-          text-decoration: none;
-          &::after {
-            content: '';
-            display: block;
-            width: 100%;
-            margin-top: 4px;
-            height: 4px;
-            transition: transform 250ms ease;
-            transform: scaleX(0);
-            background-color: ${theme.primary};
-          }
-          &.active::after,
-          &:hover::after {
-            transform: scaleX(1);
-          }
+        const linkStyle = css({
+          fontSize: '20px',
+          fontWeight: 300,
+          padding: '8px',
+          whiteSpace: 'nowrap',
+          color: 'white',
+          textDecoration: 'none',
 
-          &:hover {
-            color: white;
-            text-decoration: none;
-          }
-        `;
+          '&::after': {
+            content: '""',
+            display: 'block',
+            width: '100%',
+            marginTop: '4px',
+            height: '4px',
+            transition: 'transform 250ms ease',
+            transform: 'scaleX(0)',
+            backgroundColor: theme.primary,
+          },
+
+          '&.active::after, &:hover::after': {
+            transform: 'scaleX(1)',
+          },
+
+          '&:hover': {
+            color: 'white',
+            textDecoration: 'none',
+          },
+        });
 
         const activeStyle = css(linkStyle, { active: true });
 
