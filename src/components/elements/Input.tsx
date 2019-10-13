@@ -1,8 +1,9 @@
-import styled, { css } from 'react-emotion';
+import styled, { Interpolation } from '@emotion/styled';
+import { css } from '@emotion/core';
+import { lighten, transparentize } from 'polished';
 
 import { colors } from '../../styles/colors';
 import { Box, BoxProps } from '../core';
-import { lighten, transparentize } from 'polished';
 
 type InputProps = {
   hasPrependAddon?: boolean;
@@ -24,39 +25,45 @@ const append = css`
   border-bottom-right-radius: 0;
 `;
 
-export const getInputStyle = (props: InputProps = {}) => css`
-  display: block;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: ${colors.gray700};
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid ${props.hasError ? colors.red : colors.gray400};
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  position: relative;
-  z-index: 1;
-  ${props.hasPrependAddon && prepend};
-  ${props.hasAppendAddon && append};
+export const getInputStyle = (css: (...args: Array<Interpolation>) => any) => (
+  props: InputProps = {},
+) =>
+  css(
+    {
+      display: 'block',
+      width: '100%',
+      padding: '0.375rem 0.75rem',
+      fontSize: '1rem',
+      lineHeight: '1.5',
+      color: colors.gray700,
+      backgroundColor: '#fff',
+      backgroundClip: 'padding-box',
+      border: `1px solid ${props.hasError ? colors.red : colors.gray400}`,
+      borderRadius: '0.25rem',
+      transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
+      position: 'relative',
+      zIndex: 1,
 
-  &:focus {
-    color: ${colors.gray700};
-    background-color: #fff;
-    border-color: ${props.hasError ? colors.red : lighten(0.25, colors.blue)};
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem
-      ${props.hasError ? transparentize(0.75, colors.red) : transparentize(0.75, colors.blue)};
-  }
+      '&:focus': {
+        color: colors.gray700,
+        backgroundColor: '#fff',
+        borderColor: props.hasError ? colors.red : lighten(0.25, colors.blue),
+        outline: 0,
+        boxShadow: `0 0 0 0.2rem ${
+          props.hasError ? transparentize(0.75, colors.red) : transparentize(0.75, colors.blue)
+        }`,
+      },
 
-  &:disabled,
-  &[readonly] {
-    background-color: ${colors.gray200};
-    opacity: 1;
-  }
-`;
+      '&:disabled, &[readonly]': {
+        backgroundColor: colors.gray200,
+        opacity: 1,
+      },
+    },
 
-export const Input = styled(Box)<Props>(getInputStyle).withComponent('input');
+    props.hasPrependAddon && prepend,
+    props.hasAppendAddon && append,
+  );
 
-export const Textarea = styled(Box)<Props>(getInputStyle).withComponent('textarea');
+export const Input = styled(Box)<Props>(getInputStyle(css)).withComponent('input');
+
+export const Textarea = styled(Box)<Props>(getInputStyle(css)).withComponent('textarea');

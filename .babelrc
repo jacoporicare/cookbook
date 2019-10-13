@@ -1,0 +1,11 @@
+{
+  "presets": [
+    "razzle/babel",
+    [
+      "@emotion/babel-preset-css-prop",
+      {
+        "useBuiltIns": true
+      }
+    ]
+  ]
+}

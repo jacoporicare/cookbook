@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import styled, { css } from 'react-emotion';
+import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 
 type Props = {
   imageUrl?: string;
@@ -11,7 +12,7 @@ type State = {
   image?: string;
 };
 
-const text = css`
+const Text = styled.div`
   position: absolute;
   width: 200px;
   height: 200px;
@@ -24,7 +25,7 @@ const text = css`
   z-index: 1;
 `;
 
-const Preview = styled('div')`
+const Preview = styled.div`
   position: absolute;
   width: 200px;
   height: 200px;
@@ -39,7 +40,8 @@ type DropzonePlaceProps = {
   isDragAccept: boolean;
   isDragReject: boolean;
 };
-const DropzonePlace = styled('div')<DropzonePlaceProps>(props => [
+
+const DropzonePlace = styled.div<DropzonePlaceProps>(props => [
   {
     float: 'right',
     marginLeft: '15px',
@@ -52,12 +54,14 @@ const DropzonePlace = styled('div')<DropzonePlaceProps>(props => [
     borderRadius: '4px',
     cursor: 'pointer',
     overflow: 'hidden',
-    [`&:hover .${text}`]: {
-      zIndex: 3,
+    '&:hover': {
+      [Text as any]: {
+        zIndex: 3,
+      },
     },
   },
   props.isDragActive && {
-    [`.${text}`]: {
+    [Text as any]: {
       zIndex: 3,
     },
   },
@@ -102,14 +106,14 @@ export class ImageUpload extends React.Component<Props, State> {
       <Dropzone multiple={false} onDrop={this.handleDrop} accept="image/*">
         {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
           <DropzonePlace
-            {...getRootProps({ refKey: 'innerRef' })}
+            {...getRootProps()}
             isDragActive={isDragActive}
             isDragAccept={isDragAccept}
             isDragReject={isDragReject}
           >
             <input {...getInputProps()} />
             {src && <Preview style={{ backgroundImage: `url(${src})` }} />}
-            <div className={text}>Klikni nebo sem přetáhni obrázek</div>
+            <Text>Klikni nebo sem přetáhni obrázek</Text>
           </DropzonePlace>
         )}
       </Dropzone>

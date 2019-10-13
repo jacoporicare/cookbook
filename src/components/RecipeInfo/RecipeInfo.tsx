@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import Icon from '../common/Icon';
 import RecipeInfoItem from './RecipeInfoItem';
@@ -25,7 +25,7 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const List = styled('ul')`
+const List = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;

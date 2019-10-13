@@ -6,7 +6,7 @@ import {
   SortEndHandler,
 } from 'react-sortable-hoc';
 import { darken } from 'polished';
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
@@ -28,7 +28,7 @@ type Props = SortableListProps & {
 const Handle = SortableHandle(() => (
   <Box
     p={2}
-    className={css`
+    css={css`
       color: ${colors.gray600};
       cursor: pointer;
 
@@ -60,7 +60,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
     >
       <Box
         p={2}
-        className={css`
+        css={css`
           color: ${colors.red};
           cursor: pointer;
           &:hover {
@@ -97,7 +97,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 });
 
 const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <ul className={css({ listStyle: 'none', margin: 0, padding: 0 })}>
+  <ul css={{ listStyle: 'none', margin: 0, padding: 0 }}>
     {items.map((ingredient, index) => (
       <SortableItem
         key={index}

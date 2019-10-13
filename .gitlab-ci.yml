@@ -29,14 +29,15 @@ deploy-dev:
     - master
     - tags
   tags:
-    - dev
+    - cookbook_dev
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $DEV_DIR
     - cd $DEV_DIR
     - envsubst < ".env.dev" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans --rmi local
+    - docker-compose up -d
     - docker-compose exec -T web yarn seed
   environment:
     name: $CI_COMMIT_REF_NAME
@@ -50,7 +51,7 @@ stop-env-dev:
     - master
     - tags
   tags:
-    - dev
+    - cookbook_dev
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
@@ -68,25 +69,27 @@ deploy-stg:
   only:
     - develop
   tags:
-    - stg
+    - cookbook_stg
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $STG_DIR
     - cd $STG_DIR
     - envsubst < ".env.stg" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans
+    - docker-compose up -d
 
 deploy-prd:
   stage: deploy
   only:
     - master
   tags:
-    - prd
+    - cookbook_prd
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $PRD_DIR
     - cd $PRD_DIR
     - envsubst < ".env.prd" > ".env"
     - docker-compose pull
-    - docker-compose up -d --force-recreate --remove-orphans
+    - docker-compose down --remove-orphans
+    - docker-compose up -d

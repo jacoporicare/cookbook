@@ -1,6 +1,5 @@
 import React from 'react';
-import { cx, css } from 'react-emotion';
-import { Interpolation } from 'emotion';
+import { Interpolation, ClassNames } from '@emotion/core';
 
 type Props = {
   icon: string;
@@ -14,14 +13,21 @@ type Props = {
 
 function Icon({ icon, spin, fw, lg, regular, css: cssProps, onClick }: Props) {
   return (
-    <i
-      className={cx(regular ? 'far' : 'fa', `fa-${icon}`, css(cssProps), {
-        'fa-spin': spin,
-        'fa-fw': fw,
-        'fa-lg': lg,
-      })}
-      onClick={onClick}
-    />
+    <ClassNames>
+      {({ cx }) => (
+        <i
+          css={cssProps}
+          className={cx(
+            regular ? 'far' : 'fa',
+            `fa-${icon}`,
+            { 'fa-spin': Boolean(spin) },
+            { 'fa-fw': Boolean(fw) },
+            { 'fa-lg': Boolean(lg) },
+          )}
+          onClick={onClick}
+        />
+      )}
+    </ClassNames>
   );
 }
 

@@ -1,4 +1,4 @@
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {
   color,
   ColorProps,
@@ -14,4 +14,4 @@ import {
 
 export type Props = ColorProps & FontSizeProps & FontWeightProps & LineHeightProps & SpaceProps;
 
-export const Text = styled('span')<Props>(color, fontSize, fontWeight, lineHeight, space);
+export const Text = styled.span<Props>(color, fontSize, fontWeight, lineHeight, space);

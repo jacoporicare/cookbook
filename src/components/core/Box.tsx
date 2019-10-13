@@ -1,4 +1,4 @@
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {
   alignItems,
   AlignItemsProps,
@@ -62,7 +62,7 @@ export type Props = AlignItemsProps &
   TextAlignProps &
   WidthProps;
 
-export const Box = styled('div')<Props>(
+export const Box = styled.div<Props>(
   alignItems,
   border,
   borders,
