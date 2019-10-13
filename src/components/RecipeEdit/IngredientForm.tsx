@@ -36,7 +36,7 @@ function IngredientForm({
   }
 
   function handleSuggestionsClearRequested() {
-    setIngredientOptions([]);
+    setIngredientOptions(serverIngredientOptions);
   }
 
   function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {

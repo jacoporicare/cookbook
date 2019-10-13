@@ -33,7 +33,7 @@ function BasicInfo({
   }
 
   function handleSuggestionsClearRequested() {
-    setSideDishOptions([]);
+    setSideDishOptions(serverSideDishOptions);
   }
 
   return (
