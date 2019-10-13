@@ -60,6 +60,7 @@ function Layout(props: Props) {
         isUserLoading={loading}
         isUserAdmin={data && data.me && data.me.isAdmin}
         onRecipeSelected={handleRecipeSelected}
+        pathname={props.location && props.location.pathname}
       />
       <BoxMain p={[3, 4]} mt={['70px', '86px']}>
         {props.children}

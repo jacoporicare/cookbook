@@ -18,6 +18,7 @@ type Props = {
   isUserLoading: boolean;
   isUserAdmin?: boolean;
   onRecipeSelected: (slug: string) => void;
+  pathname?: string;
 };
 
 const LogoIcon = styled('img')`
@@ -134,7 +135,14 @@ function Header(props: Props) {
             <>
               <NavItem className={css({ paddingLeft: 0, paddingRight: 0 })}>·</NavItem>
               {!token ? (
-                <Link to="/prihlaseni" getProps={getLinkProps}>
+                <Link
+                  to={
+                    !props.pathname || props.pathname.startsWith('/prihlaseni')
+                      ? '/prihlaseni'
+                      : `/prihlaseni?u=${props.pathname || ''}`
+                  }
+                  getProps={getLinkProps}
+                >
                   Přihlásit
                 </Link>
               ) : (
@@ -148,7 +156,7 @@ function Header(props: Props) {
                       {props.userName}
                     </Link>
                   )}
-                  <Link to="/odhlaseni" getProps={getLinkProps}>
+                  <Link to={`/odhlaseni?u=${props.pathname || ''}`} getProps={getLinkProps}>
                     <Icon icon="sign-out-alt" />
                   </Link>
                 </>
