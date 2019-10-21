@@ -29,6 +29,7 @@ services:
       VIRTUAL_HOST: '${DOMAIN}'
       LETSENCRYPT_HOST: '${DOMAIN}'
       LETSENCRYPT_EMAIL: ***REMOVED***
+      JWT_SECRET: 1577C4J2lmsEuYw27Spy1gAONom3jmdF
 
 networks:
   cookbook:
