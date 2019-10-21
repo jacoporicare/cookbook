@@ -9,8 +9,8 @@ const Label = Box.withComponent('label');
 
 function Checkbox({ children, ...props }: Props) {
   return (
-    <Box pl="1.25rem" css={{ position: 'relative' }}>
-      <Input type="checkbox" mt="0.3rem" ml="-1.25rem" css={{ position: 'absolute' }} {...props} />
+    <Box css={{ position: 'relative' }} pl="1.25rem">
+      <Input css={{ position: 'absolute' }} ml="-1.25rem" mt="0.3rem" type="checkbox" {...props} />
       <Label htmlFor={props.id} mb={0}>
         {children}
       </Label>

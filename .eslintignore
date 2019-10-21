@@ -1,0 +1,4 @@
+*.d.ts
+*.test.ts
+src/serviceWorker.ts
+src/types/ext/*

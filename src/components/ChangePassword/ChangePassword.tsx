@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
+import { notify } from 'react-notify-toast';
 
 import Spinner from '../common/Spinner';
 import { Box } from '../core';
 import { DangerAlert, Input, Label, SuccessButton } from '../elements';
-import { useMutation } from '@apollo/react-hooks';
-import { notify } from 'react-notify-toast';
 
 const MUTATION = gql`
   mutation ChangePassword($password: String!, $newPassword: String!) {
@@ -60,45 +60,44 @@ function ChangePassword() {
           <Box mb={3}>
             <Label htmlFor="password">Současné heslo</Label>
             <Input
-              type="password"
+              hasError={password === ''}
               id="password"
               name="password"
+              type="password"
               value={password || ''}
+              required
               onChange={e => {
                 setPassword(e.currentTarget.value);
                 setInvalidPassword(false);
               }}
-              hasError={password === ''}
-              required
             />
           </Box>
           <Box mb={3}>
             <Label htmlFor="newPassword">Nové heslo</Label>
             <Input
-              type="password"
+              hasError={newPassword === ''}
               id="newPassword"
               name="newPassword"
+              type="password"
               value={newPassword || ''}
-              onChange={e => setNewPassword(e.currentTarget.value)}
-              hasError={newPassword === ''}
               required
+              onChange={e => setNewPassword(e.currentTarget.value)}
             />
           </Box>
           <Box mb={3}>
             <Label htmlFor="newPasswordConfirm">Potvrďte nové heslo</Label>
             <Input
-              type="password"
+              hasError={newPasswordConfirm === ''}
               id="newPasswordConfirm"
               name="newPasswordConfirm"
+              type="password"
               value={newPasswordConfirm || ''}
-              onChange={e => setNewPasswordConfirm(e.currentTarget.value)}
-              hasError={newPasswordConfirm === ''}
               required
+              onChange={e => setNewPasswordConfirm(e.currentTarget.value)}
             />
           </Box>
           <Box>
             <SuccessButton
-              type="submit"
               disabled={
                 submitting ||
                 !password ||
@@ -106,6 +105,7 @@ function ChangePassword() {
                 !newPasswordConfirm ||
                 newPassword !== newPasswordConfirm
               }
+              type="submit"
             >
               Změnit heslo
             </SuccessButton>

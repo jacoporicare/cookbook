@@ -44,14 +44,14 @@ function BasicInfo({
             <Label htmlFor="preparationTime">Doba přípravy</Label>
             <Box display="flex">
               <Input
-                type="number"
-                min="1"
-                id="preparationTime"
-                name="preparationTime"
-                value={typeof preparationTime === 'number' ? preparationTime : ''}
-                onChange={onChange}
                 flex="auto"
+                id="preparationTime"
+                min="1"
+                name="preparationTime"
+                type="number"
+                value={typeof preparationTime === 'number' ? preparationTime : ''}
                 hasAppendAddon
+                onChange={onChange}
               />
               <InputAddon isAppend>min</InputAddon>
             </Box>
@@ -60,10 +60,10 @@ function BasicInfo({
           <Box mb={3}>
             <Label htmlFor="servingCount">Počet porcí</Label>
             <Input
-              type="number"
-              min="1"
               id="servingCount"
+              min="1"
               name="servingCount"
+              type="number"
               value={typeof servingCount === 'number' ? servingCount : ''}
               onChange={onChange}
             />
@@ -72,11 +72,7 @@ function BasicInfo({
           <AutosuggestWrapper>
             <Label htmlFor="sideDish">Příloha</Label>
             <Autosuggest
-              suggestions={sideDishOptions}
-              onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-              onSuggestionsClearRequested={handleSuggestionsClearRequested}
               getSuggestionValue={s => s}
-              renderSuggestion={(s: string) => <span>{s}</span>}
               inputProps={{
                 id: 'sideDish',
                 name: 'sideDish',
@@ -89,6 +85,10 @@ function BasicInfo({
                 },
                 className: getInputStyle(css)(),
               }}
+              renderSuggestion={(s: string) => <span>{s}</span>}
+              suggestions={sideDishOptions}
+              onSuggestionsClearRequested={handleSuggestionsClearRequested}
+              onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
             />
           </AutosuggestWrapper>
         </>

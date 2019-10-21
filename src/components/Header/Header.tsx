@@ -11,6 +11,7 @@ import { isOnline } from '../../utils';
 import Icon from '../common/Icon';
 import { Box, BoxHeader, BoxNav } from '../core';
 import RecipeSearch from '../RecipeSearch/RecipeSearch';
+
 import cow from './cow.png';
 import pig from './pig.png';
 
@@ -98,12 +99,11 @@ function Header(props: Props) {
             <Box
               display="flex"
               justifyContent="space-between"
-              p={[2, 3]}
               overflow={['auto', 'initial']}
+              p={[2, 3]}
             >
-              <Box display="flex" alignItems="center" css={{ transition: 'opacity 200ms ease' }}>
+              <Box alignItems="center" css={{ transition: 'opacity 200ms ease' }} display="flex">
                 <Link
-                  to="/"
                   className={css`
                     display: flex;
                     align-items: center;
@@ -116,22 +116,23 @@ function Header(props: Props) {
                       text-decoration: none;
                     }
                   `}
+                  to="/"
                 >
-                  <LogoIcon src={pig} alt="Prase" />{' '}
+                  <LogoIcon alt="Prase" src={pig} />{' '}
                   <Box display={['none', 'inline']}>Žrádelník</Box>{' '}
-                  <LogoIcon src={cow} alt="Kráva" />
+                  <LogoIcon alt="Kráva" src={cow} />
                 </Link>
               </Box>
               <BoxNav display="flex">
                 <RecipeSearch recipes={recipes} onSelected={props.onRecipeSelected} />
-                <Link to="/" getProps={getLinkProps}>
+                <Link getProps={getLinkProps} to="/">
                   Recepty
                 </Link>
-                <Link to="/prilohy" getProps={getLinkProps}>
+                <Link getProps={getLinkProps} to="/prilohy">
                   Přílohy
                 </Link>
                 {props.isUserAdmin && (
-                  <Link to="/admin" getProps={getLinkProps}>
+                  <Link getProps={getLinkProps} to="/admin">
                     Admin
                   </Link>
                 )}
@@ -140,12 +141,12 @@ function Header(props: Props) {
                     <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
                     {!token ? (
                       <Link
+                        getProps={getLinkProps}
                         to={
                           !props.pathname || props.pathname.startsWith('/prihlaseni')
                             ? '/prihlaseni'
                             : `/prihlaseni?u=${props.pathname || ''}`
                         }
-                        getProps={getLinkProps}
                       >
                         Přihlásit
                       </Link>
@@ -156,11 +157,11 @@ function Header(props: Props) {
                             <Icon icon="spinner" spin />
                           </NavItem>
                         ) : (
-                          <Link to="/nastaveni" getProps={getLinkProps}>
+                          <Link getProps={getLinkProps} to="/nastaveni">
                             {props.userName}
                           </Link>
                         )}
-                        <Link to={`/odhlaseni?u=${props.pathname || ''}`} getProps={getLinkProps}>
+                        <Link getProps={getLinkProps} to={`/odhlaseni?u=${props.pathname || ''}`}>
                           <Icon icon="sign-out-alt" />
                         </Link>
                       </>

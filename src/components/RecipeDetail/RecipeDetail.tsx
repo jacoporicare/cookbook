@@ -3,9 +3,10 @@ import styled from '@emotion/styled';
 
 import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
-import { Box, Text, BoxAside, BoxSection, BoxArticle } from '../core';
+import { Box, Text, BoxAside } from '../core';
 import { InfoAlert } from '../elements';
 import RichText from '../RichText/RichText';
+
 import IngredientList from './IngredientList';
 
 type Props = {
@@ -65,8 +66,9 @@ function RecipeDetail({
         <Box flex={3}>
           {imageUrl && (
             <ImageBox display={['none', 'block']}>
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a href={imageFullUrl} target="_blank">
-                <Image src={imageUrl} alt={title} />
+                <Image alt={title} src={imageUrl} />
               </a>
             </ImageBox>
           )}
@@ -81,6 +83,7 @@ function RecipeDetail({
       </Box>
       {imageUrl && (
         <Box display={['block', 'none']}>
+          {/* eslint-disable-next-line react/jsx-no-target-blank */}
           <a href={imageFullUrl} target="_blank">
             <ImageXs src={imageUrl} />
           </a>

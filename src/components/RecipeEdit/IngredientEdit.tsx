@@ -3,6 +3,7 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
 import { Box, Text } from '../core';
+
 import IngredientList from './IngredientList';
 import IngredientForm from './IngredientForm';
 import IngredientGroupForm from './IngredientGroupForm';
@@ -95,17 +96,17 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
       <Box mb={3}>
         <Heading>Přidat ingredienci</Heading>
         <IngredientForm
-          name={name}
           amount={amount}
           amountUnit={amountUnit}
           ingredientOptions={ingredientOptions}
-          onChange={handleIngredientChange}
+          name={name}
           onAdd={handleAddIngredient}
+          onChange={handleIngredientChange}
         />
       </Box>
       <Box>
         <Heading>Přidat skupinu</Heading>
-        <IngredientGroupForm group={group} onChange={handleGroupChange} onAdd={handleAddGroup} />
+        <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleGroupChange} />
       </Box>
     </>
   );

@@ -29,7 +29,7 @@ deploy-dev:
     - master
     - tags
   tags:
-    - cookbook_dev
+    - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $DEV_DIR
@@ -51,7 +51,7 @@ stop-env-dev:
     - master
     - tags
   tags:
-    - cookbook_dev
+    - aws-web
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
@@ -69,7 +69,7 @@ deploy-stg:
   only:
     - develop
   tags:
-    - cookbook_stg
+    - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $STG_DIR
@@ -84,7 +84,7 @@ deploy-prd:
   only:
     - master
   tags:
-    - cookbook_prd
+    - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -hlra --delete ./deploy/ $PRD_DIR

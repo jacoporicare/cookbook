@@ -16,16 +16,16 @@ function Directions({ directions = '', onChange }: Props) {
       <Textarea
         id="directions"
         name="directions"
+        rows={20}
         value={directions}
         onChange={onChange}
-        rows={20}
       />
       <Box textAlign="right">
         <Icon icon="question-circle" regular />{' '}
         <a
           href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Návod na Markdown
         </a>

@@ -3,6 +3,7 @@ import React from 'react';
 import { Recipe } from '../../types';
 import { colors } from '../../styles/colors';
 import { BoxArticle, Box } from '../core';
+
 import RecipeListItem from './RecipeListItem';
 
 type Props = {
@@ -15,11 +16,11 @@ const border = `1px solid ${colors.gray200}`;
 function RecipeList({ recipes }: Props) {
   return (
     <Box
-      display="flex"
-      justifyContent="flex-start"
-      flexWrap="wrap"
-      borderTop={[0, border]}
       borderLeft={[0, border]}
+      borderTop={[0, border]}
+      display="flex"
+      flexWrap="wrap"
+      justifyContent="flex-start"
     >
       {recipes
         .slice()
@@ -27,14 +28,14 @@ function RecipeList({ recipes }: Props) {
         .map(recipe => (
           <BoxArticle
             key={recipe._id}
-            flex="auto"
-            width={widths}
-            maxWidth={widths}
-            mb={[3, 0]}
-            borderTop={[border, 0]}
+            borderBottom={border}
             borderLeft={[border, 0]}
             borderRight={border}
-            borderBottom={border}
+            borderTop={[border, 0]}
+            flex="auto"
+            maxWidth={widths}
+            mb={[3, 0]}
+            width={widths}
           >
             <RecipeListItem recipe={recipe} />
           </BoxArticle>

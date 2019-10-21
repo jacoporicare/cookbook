@@ -70,13 +70,13 @@ export default class IngredientList extends Component<Props, State> {
           <Box display="flex" mb={2}>
             <InputAddon isPrepend>Počet porcí</InputAddon>
             <Input
+              flex="auto"
+              min={1}
               type="number"
               value={!servingCount ? '' : servingCount}
-              onChange={this.handleServingCountChange}
-              onBlur={this.handleServingCountBlur}
-              min={1}
-              flex="auto"
               hasPrependAddon
+              onBlur={this.handleServingCountBlur}
+              onChange={this.handleServingCountChange}
             />
           </Box>
         )}
@@ -98,7 +98,7 @@ export default class IngredientList extends Component<Props, State> {
 
               return (
                 <TableRow key={id}>
-                  <TableCell width="20%" textAlign="right">
+                  <TableCell textAlign="right" width="20%">
                     {this.getAmount(amount)}
                   </TableCell>
                   <TableCell width="10%">{amountUnit}</TableCell>

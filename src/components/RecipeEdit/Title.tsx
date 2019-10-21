@@ -23,12 +23,12 @@ function Title({ title = '', onChange }: Props) {
     <Box mb={3}>
       <Input
         ref={ref}
-        type="text"
+        hasError={!title}
         name="title"
+        placeholder="Název"
+        type="text"
         value={title}
         onChange={onChange}
-        placeholder="Název"
-        hasError={!title}
       />
       {!title && <Text color={colors.red}>Název je povinný</Text>}
     </Box>

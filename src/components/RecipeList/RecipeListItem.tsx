@@ -8,7 +8,6 @@ import { getImageUrl } from '../../utils';
 import { colors } from '../../styles/colors';
 import { Box } from '../core';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-
 import placeholder from '../../assets/food-placeholder.png';
 
 type Props = {
@@ -32,6 +31,7 @@ const StyledLink = styled(Link)({
   position: 'relative',
 
   '&:hover': {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Overlay as any]: {
       backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
@@ -62,11 +62,11 @@ function RecipeListItem({ recipe }: Props) {
       <Image style={{ backgroundImage: `url(${imageUrl})` }} />
       <Overlay>
         <Title>{title}</Title>
-        <Box mt={2} color={colors.gray200} fontSize="0.75em">
+        <Box color={colors.gray200} fontSize="0.75em" mt={2}>
           <RecipeInfo
+            placeholder="žádné údaje"
             preparationTime={preparationTime}
             sideDish={sideDish}
-            placeholder="žádné údaje"
           />
         </Box>
       </Overlay>

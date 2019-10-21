@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { useAuth } from '../AuthContext';
 import DocumentTitle from '../components/common/DocumentTitle';
 import LoginForm from '../components/LoginForm/LoginForm';
+
 import { ME_QUERY } from './Layout';
 
 type Props = RouteComponentProps;
@@ -34,6 +35,7 @@ function LoginPage(props: Props) {
   const [login, { loading, error }] = useMutation<LoginMutationData>(LOGIN_MUTATION, {
     refetchQueries: result => {
       const token = result.data && result.data.login.token;
+
       // refetchQueries callback and even those returned queries are called before .then
       // we have to set the token here so the ME_QUERY gets the fresh token
       if (!token) {
@@ -92,13 +94,13 @@ function LoginPage(props: Props) {
     <>
       <DocumentTitle title="Přihlášení" />
       <LoginForm
-        username={username}
+        error={Boolean(error || dataError)}
+        isSubmitting={loading}
         password={password}
         rememberMe={rememberMe}
-        isSubmitting={loading}
+        username={username}
         onChange={handleChange}
         onSubmit={handleSubmit}
-        error={Boolean(error || dataError)}
       />
     </>
   );

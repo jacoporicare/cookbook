@@ -12,13 +12,10 @@ type Props = {
 
 function PageHeading({ children, buttons }: Props) {
   return (
-    <Heading fontSize={[5, 6]} fontWeight={300} mb={[3, 4]} color={theme.primary}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
+    <Heading color={theme.primary} fontSize={[5, 6]} fontWeight={300} mb={[3, 4]}>
+      <Box alignItems="center" display="flex" flexWrap="wrap" justifyContent="space-between">
         <Box flex="auto">{children}</Box>
         <Box
-          flex="auto"
-          display="flex"
-          justifyContent="flex-end"
           css={css`
             button,
             a {
@@ -26,6 +23,9 @@ function PageHeading({ children, buttons }: Props) {
               margin-left: 8px;
             }
           `}
+          display="flex"
+          flex="auto"
+          justifyContent="flex-end"
         >
           {buttons}
         </Box>

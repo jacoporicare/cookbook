@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import Icon from '../common/Icon';
+
 import RecipeInfoItem from './RecipeInfoItem';
 
 type Props = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { css, keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/core';
 
 type Props = {
   delay?: number;

@@ -33,7 +33,7 @@ export type RecipeListQueryData = {
   recipes: Recipe[];
 };
 
-function RecipeListPage(props: Props) {
+function RecipeListPage(_props: Props) {
   // handleFetchAllRecipesClick = () => {
   //   this.props.fetchAllRecipes(
   //     this.props.recipes
@@ -66,7 +66,7 @@ function RecipeListPage(props: Props) {
         }
       >
         Recepty{' '}
-        <Text fontSize="0.5em" fontWeight={200} color={colors.gray600}>
+        <Text color={colors.gray600} fontSize="0.5em" fontWeight={200}>
           {recipes.length}
         </Text>
       </PageHeading>

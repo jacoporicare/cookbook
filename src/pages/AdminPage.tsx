@@ -120,6 +120,15 @@ export type ResetPasswordMutationVariables = {
 
 function AdminPage(_props: Props) {
   const updatingRefTimer = useRef(-1);
+
+  const [[usernameId, username], setUsername] = useState(['', '']);
+  const [[displayNameId, displayName], setDisplayName] = useState(['', '']);
+  const [userIdUpdating, setUserIdUpdating] = useState('');
+
+  const [newUsername, setNewUsername] = useState<string>();
+  const [newDisplayName, setNewDisplayName] = useState<string>();
+  const [newIsAdmin, setNewIsAdmin] = useState(false);
+
   const { data: meData, loading: meLoading } = useQuery<MeQueryData>(ME_QUERY);
   const { data, error, loading: usersLoading } = useQuery<UserListQueryData>(USER_LIST_QUERY);
   const [createUser, { loading: creating }] = useMutation<
@@ -198,14 +207,6 @@ function AdminPage(_props: Props) {
       },
     },
   );
-
-  const [[usernameId, username], setUsername] = useState(['', '']);
-  const [[displayNameId, displayName], setDisplayName] = useState(['', '']);
-  const [userIdUpdating, setUserIdUpdating] = useState('');
-
-  const [newUsername, setNewUsername] = useState<string>();
-  const [newDisplayName, setNewDisplayName] = useState<string>();
-  const [newIsAdmin, setNewIsAdmin] = useState(false);
 
   function setUserIdUpdatingDebounced(id: string) {
     updatingRefTimer.current = window.setTimeout(() => setUserIdUpdating(id), 200);
@@ -334,7 +335,7 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
               <TableHeadCell width="200px">Jméno</TableHeadCell>
               <TableHeadCell width="70px">Admin</TableHeadCell>
               <TableHeadCell>Poslední aktivita</TableHeadCell>
-              <TableHeadCell></TableHeadCell>
+              <TableHeadCell />
             </TableHeadRow>
           </thead>
           <tbody>
@@ -345,38 +346,38 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
                 <TableRow key={user._id}>
                   <TableCell>
                     <Input
-                      type="text"
-                      value={usernameId === user._id ? username : user.username}
-                      onFocus={() => setUsername([user._id, user.username])}
-                      onChange={e => setUsername([user._id, e.currentTarget.value])}
-                      onBlur={() => handleUsernameUpdate(user)}
                       hasError={usernameId === user._id && !username.trim()}
                       readOnly={userUpdating}
+                      type="text"
+                      value={usernameId === user._id ? username : user.username}
+                      onBlur={() => handleUsernameUpdate(user)}
+                      onChange={e => setUsername([user._id, e.currentTarget.value])}
+                      onFocus={() => setUsername([user._id, user.username])}
                     />
                   </TableCell>
                   <TableCell>
                     <Input
-                      type="text"
-                      value={displayNameId === user._id ? displayName : user.displayName}
-                      onFocus={() => setDisplayName([user._id, user.displayName])}
-                      onChange={e => setDisplayName([user._id, e.currentTarget.value])}
-                      onBlur={() => handleDisplayNameUpdate(user)}
                       hasError={displayNameId === user._id && !displayName.trim()}
                       readOnly={userUpdating}
+                      type="text"
+                      value={displayNameId === user._id ? displayName : user.displayName}
+                      onBlur={() => handleDisplayNameUpdate(user)}
+                      onChange={e => setDisplayName([user._id, e.currentTarget.value])}
+                      onFocus={() => setDisplayName([user._id, user.displayName])}
                     />
                   </TableCell>
                   <TableCell textAlign="center">
                     {userUpdating ? (
-                      <Icon icon="spinner" spin lg />
+                      <Icon icon="spinner" lg spin />
                     ) : (
                       <Icon
-                        icon={user.isAdmin ? 'toggle-on' : 'toggle-off'}
-                        lg
                         css={{
                           cursor: user._id !== meData!.me!._id ? 'pointer' : undefined,
                           opacity: user._id !== meData!.me!._id ? 1 : 0.5,
                           color: user.isAdmin ? colors.blue : colors.gray600,
                         }}
+                        icon={user.isAdmin ? 'toggle-on' : 'toggle-off'}
+                        lg
                         onClick={() => handleIsAdminUpdate(user)}
                       />
                     )}
@@ -389,7 +390,7 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
                       disabled={user._id === meData!.me!._id}
                       onClick={() => handleDelete(user)}
                     >
-                      <Icon icon="trash" css={{ marginLeft: '0.5em' }} />
+                      <Icon css={{ marginLeft: '0.5em' }} icon="trash" />
                     </DangerButton>{' '}
                     <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
                   </TableCell>
@@ -399,44 +400,44 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
             <TableRow>
               <TableCell>
                 <Input
+                  hasError={newUsername === ''}
                   type="text"
                   value={newUsername || ''}
                   onChange={e => setNewUsername(e.currentTarget.value)}
-                  hasError={newUsername === ''}
                 />
               </TableCell>
               <TableCell>
                 <Input
+                  hasError={newDisplayName === ''}
                   type="text"
                   value={newDisplayName || ''}
                   onChange={e => setNewDisplayName(e.currentTarget.value)}
-                  hasError={newDisplayName === ''}
                 />
               </TableCell>
               <TableCell textAlign="center">
                 <Icon
-                  icon={newIsAdmin ? 'toggle-on' : 'toggle-off'}
-                  lg
                   css={{
                     cursor: 'pointer',
                     color: newIsAdmin ? colors.blue : colors.gray600,
                   }}
+                  icon={newIsAdmin ? 'toggle-on' : 'toggle-off'}
+                  lg
                   onClick={() => setNewIsAdmin(!newIsAdmin)}
                 />
               </TableCell>
               <TableCell />
               <TableCell textAlign="center">
                 {creating ? (
-                  <Icon icon="spinner" spin lg />
+                  <Icon icon="spinner" lg spin />
                 ) : (
                   <SuccessButton
-                    onClick={handleCreateNew}
                     disabled={
                       !newUsername ||
                       !newUsername.trim() ||
                       !newDisplayName ||
                       !newDisplayName.trim()
                     }
+                    onClick={handleCreateNew}
                   >
                     Přidat
                   </SuccessButton>

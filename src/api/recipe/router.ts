@@ -1,12 +1,12 @@
+import path from 'path';
+
 import { Router } from 'express';
 import fileType from 'file-type';
 import fs from 'fs-extra';
-import path from 'path';
 import sharp from 'sharp';
 
-import { getThumbPath, saltHashPassword } from '../apolloServer';
+import { getThumbPath } from '../apolloServer';
 import recipeModel from '../../models/recipe';
-import userModel from '../../models/user';
 
 const router = Router();
 
@@ -41,6 +41,7 @@ router.get('/:slug/image-:size.jpg', async (req, res) => {
       .jpeg()
       .toBuffer();
 
+    // eslint-disable-next-line no-console
     fs.writeFile(thumbPath, thumb).catch(console.error);
 
     res.contentType(mimeType).send(thumb);

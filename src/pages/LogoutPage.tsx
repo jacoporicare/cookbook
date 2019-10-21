@@ -16,7 +16,7 @@ function LogoutPage(props: Props) {
           ? props.location.search.substring(3)
           : '/',
       );
-  }, []);
+  }, [props, setToken]);
 
   return null;
 }

@@ -16,7 +16,6 @@ function Icon({ icon, spin, fw, lg, regular, css: cssProps, onClick }: Props) {
     <ClassNames>
       {({ cx }) => (
         <i
-          css={cssProps}
           className={cx(
             regular ? 'far' : 'fa',
             `fa-${icon}`,
@@ -24,6 +23,7 @@ function Icon({ icon, spin, fw, lg, regular, css: cssProps, onClick }: Props) {
             { 'fa-fw': Boolean(fw) },
             { 'fa-lg': Boolean(lg) },
           )}
+          css={cssProps}
           onClick={onClick}
         />
       )}

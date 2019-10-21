@@ -60,34 +60,30 @@ function IngredientForm({
           <Box display="flex" mb={2}>
             <Box flex={1} pr={1}>
               <Input
-                type="number"
+                min="0"
                 name="amount"
+                placeholder="Množství"
+                type="number"
                 value={amount}
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
-                min="0"
-                placeholder="Množství"
               />
             </Box>
             <Box flex={1} pl={1}>
               <Input
-                type="text"
                 name="amountUnit"
+                placeholder="Jednotka"
+                type="text"
                 value={amountUnit}
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
-                placeholder="Jednotka"
               />
             </Box>
           </Box>
           <Box display="flex" mb={2}>
             <AutosuggestWrapper css={{ flex: 'auto' }}>
               <Autosuggest
-                suggestions={ingredientOptions}
-                onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-                onSuggestionsClearRequested={handleSuggestionsClearRequested}
                 getSuggestionValue={s => s}
-                renderSuggestion={renderSuggestion}
                 inputProps={{
                   name: 'name',
                   value: name,
@@ -96,9 +92,13 @@ function IngredientForm({
                   className: getInputStyle(css)({ hasAppendAddon: true }),
                   placeholder: 'Název',
                 }}
+                renderSuggestion={renderSuggestion}
+                suggestions={ingredientOptions}
+                onSuggestionsClearRequested={handleSuggestionsClearRequested}
+                onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
               />
             </AutosuggestWrapper>
-            <Button type="button" onClick={onAdd} disabled={!name} isAppendAddon>
+            <Button disabled={!name} type="button" isAppendAddon onClick={onAdd}>
               <Icon icon="plus" /> Přidat
             </Button>
           </Box>

@@ -1,11 +1,12 @@
+import path from 'path';
+
+import 'isomorphic-fetch';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { renderToStringWithData } from '@apollo/react-ssr';
 import { isRedirect, ServerLocation } from '@reach/router';
 import bodyParser from 'body-parser';
 import express from 'express';
-import 'isomorphic-fetch';
-import path from 'path';
 import React from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { renderToStringWithData } from '@apollo/react-ssr';
 import { Helmet } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import Cookies from 'universal-cookie';
@@ -13,8 +14,8 @@ import cookiesMiddleware from 'universal-cookie-express';
 
 import configureClient from './api/apolloClient';
 import apolloServer from './api/apolloServer';
-import App from './App';
 import { authentication } from './api/auth';
+import App from './App';
 import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';
@@ -22,6 +23,7 @@ import routes from './serverRoutes';
 
 db.connect();
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST!);
 const server = express();
 
@@ -43,6 +45,7 @@ apolloServer.applyMiddleware({ app: server });
 
 server.all('*', async (req, res) => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const universalCookies = (req as any).universalCookies as Cookies;
     const authToken = universalCookies.get(AUTH_TOKEN_KEY);
     const apolloClient = configureClient({ authToken });
@@ -208,6 +211,7 @@ server.all('*', async (req, res) => {
 </html>`,
     );
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
 
     if (isRedirect(error)) {
