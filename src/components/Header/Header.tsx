@@ -65,7 +65,7 @@ function Header(props: Props) {
             backgroundColor: theme.primary,
           },
 
-          '&.active::after, &:hover::after': {
+          '&:hover::after': {
             transform: 'scaleX(1)',
           },
 
@@ -75,7 +75,11 @@ function Header(props: Props) {
           },
         });
 
-        const activeStyle = css(linkStyle, { active: true });
+        const activeStyle = css(linkStyle, {
+          '&::after': {
+            transform: 'scaleX(1)',
+          },
+        });
 
         function getLinkProps({ isCurrent }: LinkGetProps) {
           return {
@@ -88,21 +92,22 @@ function Header(props: Props) {
             bg={colors.gray1000}
             color="white"
             css={{
-              transition: 'all 200ms ease',
               position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
               zIndex: 10,
+              boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.2)',
             }}
           >
             <Box
               display="flex"
               justifyContent="space-between"
               overflow={['auto', 'initial']}
-              p={[2, 3]}
+              px={[3, 4]}
+              py={1}
             >
-              <Box alignItems="center" css={{ transition: 'opacity 200ms ease' }} display="flex">
+              <Box alignItems="center" display="flex">
                 <Link
                   className={css`
                     display: flex;
