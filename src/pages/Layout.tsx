@@ -62,7 +62,7 @@ function Layout(props: Props) {
         userName={data && data.me && data.me.displayName}
         onRecipeSelected={handleRecipeSelected}
       />
-      <BoxMain mt={['70px', '86px']} p={[3, 4]}>
+      <BoxMain mt="62px" p={[3, 4]}>
         {props.children}
       </BoxMain>
       <BoxFooter borderTop={`1px solid ${colors.gray200}`} p={[3, 4]}>

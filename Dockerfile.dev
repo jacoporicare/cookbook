@@ -1,9 +1,0 @@
-FROM node:12-alpine as builder
-
-WORKDIR /srv
-COPY package.json yarn.lock ./
-RUN yarn
-
-EXPOSE 3000 3001
-
-CMD ["yarn", "start"]
