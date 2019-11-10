@@ -40,7 +40,7 @@ deploy-dev:
     - docker-compose exec -T web yarn seed
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://$CI_COMMIT_REF_SLUG.zradelnik.jakubricar.cz
+    url: https://$CI_COMMIT_REF_SLUG.zradelnik.eu
     on_stop: stop-env-dev
 
 stop-env-dev:
