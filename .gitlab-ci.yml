@@ -3,12 +3,10 @@ stages:
   - deploy
 
 variables:
+  NGINX_VHOSTD_DIR: /srv/nginx/vhost.d
   DEV_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
   STG_DIR: /home/gitlab-runner/www/cookbook_stg/
   PRD_DIR: /home/gitlab-runner/www/cookbook_prd/
-  DEV_DOMAIN: $CI_COMMIT_REF_SLUG.zradelnik.jakubricar.cz
-  STG_DOMAIN: develop.zradelnik.jakubricar.cz
-  PRD_DOMAIN: zradelnik.jakubricar.cz
 
 build:
   stage: build
@@ -32,7 +30,8 @@ deploy-dev:
     - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -hlra --delete ./deploy/ $DEV_DIR
+    - rsync -a --delete deploy/ $DEV_DIR
+    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd $DEV_DIR
     - envsubst < ".env.dev" > ".env"
     - docker-compose pull
@@ -72,7 +71,8 @@ deploy-stg:
     - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -hlra --delete ./deploy/ $STG_DIR
+    - rsync -a --delete deploy/ $STG_DIR
+    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd $STG_DIR
     - envsubst < ".env.stg" > ".env"
     - docker-compose pull
@@ -87,7 +87,8 @@ deploy-prd:
     - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -hlra --delete ./deploy/ $PRD_DIR
+    - rsync -a --delete deploy/ $PRD_DIR
+    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd $PRD_DIR
     - envsubst < ".env.prd" > ".env"
     - docker-compose pull
