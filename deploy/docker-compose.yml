@@ -25,9 +25,9 @@ services:
         target: /tmp/cookbook
     environment:
       MONGO_URI: mongodb://db/cookbook
-      GRAPHQL_URI: 'https://${DOMAIN}/graphql'
-      VIRTUAL_HOST: '${DOMAIN}'
-      LETSENCRYPT_HOST: '${DOMAIN}'
+      GRAPHQL_URI: 'https://${MAIN_HOST}/graphql'
+      VIRTUAL_HOST: '${HOST}'
+      LETSENCRYPT_HOST: '${HOST}'
       LETSENCRYPT_EMAIL: ***REMOVED***
       JWT_SECRET: 1577C4J2lmsEuYw27Spy1gAONom3jmdF
 
