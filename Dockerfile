@@ -5,7 +5,10 @@ COPY package.json yarn.lock ./
 RUN yarn
 COPY . .
 RUN yarn build
-RUN cp package.json yarn.lock build/ && cd build && NODE_ENV=production yarn
+RUN mkdir app \
+  && cp package.json yarn.lock app/ \
+  && cd app \
+  && NODE_ENV=production yarn
 
 
 FROM node:12-alpine
@@ -14,6 +17,7 @@ ENV NODE_ENV production
 WORKDIR /srv/app
 
 COPY --from=builder /srv/build build
+COPY --from=builder /srv/app .
 
 EXPOSE 3000
 
