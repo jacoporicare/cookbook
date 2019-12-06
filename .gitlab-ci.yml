@@ -27,7 +27,7 @@ deploy-dev:
     - master
     - tags
   tags:
-    - aws-web
+    - azure-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -a --delete deploy/ $DEV_DIR
@@ -50,7 +50,7 @@ stop-env-dev:
     - master
     - tags
   tags:
-    - aws-web
+    - azure-web
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
@@ -68,7 +68,7 @@ deploy-stg:
   only:
     - develop
   tags:
-    - aws-web
+    - azure-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -a --delete deploy/ $STG_DIR
@@ -84,7 +84,7 @@ deploy-prd:
   only:
     - master
   tags:
-    - aws-web
+    - azure-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -a --delete deploy/ $PRD_DIR
