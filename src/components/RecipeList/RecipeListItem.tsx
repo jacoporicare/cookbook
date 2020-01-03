@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from '@reach/router';
 import styled from '@emotion/styled';
 import gql from 'graphql-tag';
+import { LazyImage } from 'react-lazy-images';
 
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
@@ -59,7 +60,13 @@ function RecipeListItem({ recipe }: Props) {
 
   return (
     <StyledLink to={`/recept/${slug}`}>
-      <Image style={{ backgroundImage: `url(${imageUrl})` }} />
+      <LazyImage
+        actual={({ imageProps }) => <Image style={{ backgroundImage: `url(${imageProps.src})` }} />}
+        placeholder={({ ref }) => (
+          <Image ref={ref} style={{ backgroundImage: `url(${placeholder})` }} />
+        )}
+        src={imageUrl}
+      />
       <Overlay>
         <Title>{title}</Title>
         <Box color={colors.gray200} fontSize="0.75em" mt={2}>
