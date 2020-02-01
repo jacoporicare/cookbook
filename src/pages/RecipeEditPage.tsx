@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
-import { RecipeInput } from '../api/apolloServer';
+import { RecipeInput } from '../api/types';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';

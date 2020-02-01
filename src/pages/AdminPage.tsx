@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import React, { useRef, useState } from 'react';
 import { notify } from 'react-notify-toast';
 
-import { UserInput } from '../api/apolloServer';
+import { UserInput } from '../api/types';
 import DocumentTitle from '../components/common/DocumentTitle';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';

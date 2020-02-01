@@ -5,8 +5,8 @@ import fileType from 'file-type';
 import fs from 'fs-extra';
 import sharp from 'sharp';
 
-import { getThumbPath } from '../apolloServer';
 import recipeModel from '../../models/recipe';
+import { getThumbPath } from '../utils';
 
 const router = Router();
 

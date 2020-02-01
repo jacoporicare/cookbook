@@ -2,7 +2,7 @@ import * as db from '../db';
 import recipeModel from '../models/recipe';
 import userModel from '../models/user';
 
-import { saltHashPassword } from './apolloServer';
+import { saltHashPassword } from './utils';
 
 export async function seed() {
   db.connect();
