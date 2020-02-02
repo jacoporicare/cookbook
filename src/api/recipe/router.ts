@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { Router } from 'express';
-import fileType from 'file-type';
+import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 import fs from 'fs-extra';
 import sharp from 'sharp';
 
@@ -27,7 +27,7 @@ router.get('/:slug/image-:size.jpg', async (req, res) => {
       return res.status(404).end();
     }
 
-    const ft = fileType(recipe.image);
+    const ft = await fileTypeFromBuffer(recipe.image);
     const mimeType = ft ? ft.mime : 'image/jpeg';
 
     if (size !== 'thumb') {

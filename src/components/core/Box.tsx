@@ -8,8 +8,6 @@ import {
   BorderRadiusProps,
   borders,
   BordersProps,
-  color,
-  ColorProps,
   display,
   DisplayProps,
   flex,
@@ -44,7 +42,6 @@ export type Props = AlignItemsProps &
   BorderProps &
   BordersProps &
   BorderRadiusProps &
-  ColorProps &
   DisplayProps &
   FlexDirectionProps &
   FlexProps &
@@ -65,7 +62,6 @@ export const Box = styled.div<Props>(
   border,
   borders,
   borderRadius,
-  color,
   display,
   flex,
   flexDirection,

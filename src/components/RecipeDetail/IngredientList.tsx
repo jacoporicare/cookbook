@@ -88,7 +88,7 @@ export default class IngredientList extends Component<Props, State> {
 
               if (isGroup) {
                 return (
-                  <TableRow key={id} bg={colors.gray200}>
+                  <TableRow key={id} css={{ backgroundColor: colors.gray200 }}>
                     <TableCell colSpan={3} textAlign="center">
                       <Text fontWeight={600}> {name}</Text>
                     </TableCell>

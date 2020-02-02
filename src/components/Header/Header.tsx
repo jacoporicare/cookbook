@@ -89,14 +89,14 @@ function Header(props: Props) {
 
         return (
           <BoxHeader
-            bg={colors.gray1000}
-            color="white"
             css={{
               position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
               zIndex: 10,
+              color: 'white',
+              backgroundColor: colors.gray1000,
               boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.2)',
             }}
           >

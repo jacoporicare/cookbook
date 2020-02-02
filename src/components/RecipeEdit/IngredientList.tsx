@@ -54,8 +54,8 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 
   return (
     <Item
-      bg={isGroup ? colors.gray200 : colors.white}
       borderTop={`1px solid ${colors.gray300}`}
+      css={{ backgroundColor: isGroup ? colors.gray200 : colors.white }}
       display="flex"
     >
       <Box
