@@ -1,7 +1,7 @@
 import * as db from '../db';
-import recipeModel from '../models/recipe';
-import userModel from '../models/user';
 
+import recipeModel from './models/recipe';
+import userModel from './models/user';
 import { saltHashPassword } from './utils';
 
 export async function seed() {

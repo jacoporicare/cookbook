@@ -5,9 +5,8 @@ import crypto from 'crypto';
 import fs from 'fs-extra';
 import slug from 'slug';
 
-import recipeModel, { Recipe } from '../models/recipe';
-import { User } from '../models/user';
-
+import recipeModel, { Recipe } from './models/recipe';
+import { User } from './models/user';
 import { RecipeInput, FileUpload } from './types';
 
 export async function prepareRecipe(

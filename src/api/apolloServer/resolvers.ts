@@ -4,8 +4,8 @@ import fs from 'fs-extra';
 import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 
-import recipeModel from '../../models/recipe';
-import userModel, { User } from '../../models/user';
+import recipeModel from '../models/recipe';
+import userModel, { User } from '../models/user';
 import { signToken } from '../auth';
 import {
   checkUserRightsAsync,

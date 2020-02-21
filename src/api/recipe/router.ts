@@ -5,7 +5,7 @@ import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 import fs from 'fs-extra';
 import sharp from 'sharp';
 
-import recipeModel from '../../models/recipe';
+import recipeModel from '../models/recipe';
 import { getThumbPath } from '../utils';
 
 const router = Router();
