@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link } from '@reach/router';
 import styled from '@emotion/styled';
+import { Link } from '@reach/router';
 import gql from 'graphql-tag';
+import React from 'react';
 import { LazyImage } from 'react-lazy-images';
 
+import placeholder from '../../assets/food-placeholder.png';
+import { colors } from '../../styles/colors';
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
-import { colors } from '../../styles/colors';
-import { Box } from '../core';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import placeholder from '../../assets/food-placeholder.png';
+import { Box } from '../core';
 
 type Props = {
   recipe: Recipe;

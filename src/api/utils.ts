@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import path from 'path';
 import crypto from 'crypto';
+import path from 'path';
 
 import fs from 'fs-extra';
 import slug from 'slug';

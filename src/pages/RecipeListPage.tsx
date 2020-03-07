@@ -1,19 +1,18 @@
+import { useQuery } from '@apollo/react-hooks';
 import { Link, RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 
 import { useAuth } from '../AuthContext';
+import RecipeList from '../components/RecipeList/RecipeList';
+import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { Text, BoxSection } from '../components/core';
 import { Button, DangerAlert, InfoAlert } from '../components/elements';
-import RecipeList from '../components/RecipeList/RecipeList';
-import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
 import { colors } from '../styles/colors';
 import { Recipe } from '../types';
-import { isOnline } from '../utils';
 
 type Props = RouteComponentProps;
 
@@ -56,7 +55,6 @@ function RecipeListPage(_props: Props) {
     <BoxSection>
       <PageHeading
         buttons={
-          isOnline() &&
           token && (
             <NewRecipeButton to="/novy-recept">
               <Icon icon="utensils" />

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { SideDish } from '../../types';
-import { Table, TableHeadRow, TableHeadCell } from '../elements';
 import PageHeading from '../common/PageHeading';
+import { Table, TableHeadRow, TableHeadCell } from '../elements';
 
 import SideDishListItem from './SideDishListItem';
 

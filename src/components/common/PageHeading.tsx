@@ -1,5 +1,5 @@
-import React from 'react';
 import { css } from '@emotion/core';
+import React from 'react';
 
 import { theme } from '../../styles/colors';
 import { Box } from '../core';

@@ -1,7 +1,7 @@
+import { ClassNames } from '@emotion/core';
+import matchSorter from 'match-sorter';
 import React, { useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import matchSorter from 'match-sorter';
-import { ClassNames } from '@emotion/core';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 import { Box } from '../core';

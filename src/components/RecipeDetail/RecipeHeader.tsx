@@ -1,12 +1,11 @@
 import { Link } from '@reach/router';
 import React from 'react';
 
-import { isOnline } from '../../utils';
+import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import Icon from '../common/Icon';
 import PageHeading from '../common/PageHeading';
 import { Box } from '../core';
 import { Button, DangerButton } from '../elements';
-import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
 type Props = {
   preparationTime?: number;
@@ -24,7 +23,6 @@ function RecipeHeader({ preparationTime, sideDish, slug, title, isAuthor, onDele
     <>
       <PageHeading
         buttons={
-          isOnline() &&
           isAuthor && (
             <>
               <EditRecipeButton to={`/recept/${slug}/upravit`}>

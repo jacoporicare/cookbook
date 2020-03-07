@@ -1,8 +1,8 @@
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
 
+import Icon from '../common/Icon';
 import { Box } from '../core';
 import { Input, Button } from '../elements';
-import Icon from '../common/Icon';
 
 type Props = {
   group?: string;

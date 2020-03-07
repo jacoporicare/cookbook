@@ -2,6 +2,7 @@ import { Router } from '@reach/router';
 import React from 'react';
 
 import { useAuth } from './AuthContext';
+import AdminPage from './pages/AdminPage';
 import Layout from './pages/Layout';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
@@ -9,9 +10,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import RecipeDetailPage from './pages/RecipeDetailPage';
 import RecipeEditPage from './pages/RecipeEditPage';
 import RecipeListPage from './pages/RecipeListPage';
-import SideDishListPage from './pages/SideDishListPage';
 import SettingsPage from './pages/SettingsPage';
-import AdminPage from './pages/AdminPage';
+import SideDishListPage from './pages/SideDishListPage';
 import Reboot from './styles/Reboot';
 
 import '@fortawesome/fontawesome-free/css/all.css';

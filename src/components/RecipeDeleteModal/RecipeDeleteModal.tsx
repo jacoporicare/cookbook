@@ -1,6 +1,6 @@
+import { ClassNames } from '@emotion/core';
 import React from 'react';
 import Modal from 'react-modal';
-import { ClassNames } from '@emotion/core';
 
 import { colors } from '../../styles/colors';
 import { Box } from '../core';

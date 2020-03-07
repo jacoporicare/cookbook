@@ -1,5 +1,5 @@
-import React from 'react';
 import { Location, WindowLocation } from '@reach/router';
+import React from 'react';
 
 let scrollPositions = {};
 

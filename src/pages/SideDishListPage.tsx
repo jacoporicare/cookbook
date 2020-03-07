@@ -1,9 +1,9 @@
-import React from 'react';
 import { RouteComponentProps } from '@reach/router';
+import React from 'react';
 
-import { SideDish } from '../types';
-import DocumentTitle from '../components/common/DocumentTitle';
 import SideDishList from '../components/SideDishList/SideDishList';
+import DocumentTitle from '../components/common/DocumentTitle';
+import { SideDish } from '../types';
 
 const sideDishes: SideDish[] = [
   { title: 'Brambory', sideWeight: '180 g' },

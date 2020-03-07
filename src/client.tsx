@@ -1,17 +1,17 @@
 import 'core-js/stable';
 
+import { ApolloProvider } from '@apollo/react-hooks';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import React from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
 import ReactDOM from 'react-dom';
 import 'isomorphic-fetch';
 
-import configureClient from './api/apolloClient';
 import App from './App';
-import ManageScroll from './ManageScroll';
-import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './AuthContext';
+import ManageScroll from './ManageScroll';
+import configureClient from './api/apolloClient';
 import { getAuthTokenCookie } from './clientAuth';
+import * as serviceWorker from './serviceWorker';
 
 const apolloClient = configureClient({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

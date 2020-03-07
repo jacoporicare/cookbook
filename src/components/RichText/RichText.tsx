@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
 import { ClassNames } from '@emotion/core';
 import { darken } from 'polished';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import { theme, colorYiq } from '../../styles/colors';
 

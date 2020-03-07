@@ -21,7 +21,3 @@ export function getImageUrl(
 
   return `/api/recipes/${slug}/image-${size}.jpg?${ts}`;
 }
-
-export function isOnline() {
-  return typeof navigator === 'undefined' || navigator.onLine;
-}

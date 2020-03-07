@@ -1,7 +1,7 @@
 import React, { Component, ChangeEvent } from 'react';
 
-import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
+import { Ingredient } from '../../types';
 import { Box, Text } from '../core';
 import { InfoAlert, Input, InputAddon, Table, TableRow, TableCell } from '../elements';
 

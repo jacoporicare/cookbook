@@ -2,10 +2,10 @@ import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { AutosuggestChangeEventHandler, Ingredient } from '../../types';
-import Spinner from '../common/Spinner';
-import { Box } from '../core';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
+import Spinner from '../common/Spinner';
+import { Box } from '../core';
 
 import BasicInfo from './BasicInfo';
 import Directions from './Directions';

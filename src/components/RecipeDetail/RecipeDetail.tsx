@@ -1,11 +1,11 @@
-import React from 'react';
 import styled from '@emotion/styled';
+import React from 'react';
 
-import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
+import { Ingredient } from '../../types';
+import RichText from '../RichText/RichText';
 import { Box, Text, BoxAside } from '../core';
 import { InfoAlert } from '../elements';
-import RichText from '../RichText/RichText';
 
 import IngredientList from './IngredientList';
 
