@@ -3,6 +3,7 @@ export type Recipe = {
   title: string;
   slug: string;
   sideDish?: string;
+  tags?: string[];
   preparationTime?: number;
   user: User;
   hasImage?: boolean;

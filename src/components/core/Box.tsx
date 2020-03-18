@@ -26,6 +26,10 @@ import {
   MaxHeightProps,
   maxWidth,
   MaxWidthProps,
+  minHeight,
+  MinHeightProps,
+  minWidth,
+  MinWidthProps,
   order,
   OrderProps,
   overflow,
@@ -51,6 +55,8 @@ export type Props = AlignItemsProps &
   JustifyContentProps &
   MaxHeightProps &
   MaxWidthProps &
+  MinHeightProps &
+  MinWidthProps &
   OrderProps &
   OverflowProps &
   SpaceProps &
@@ -71,6 +77,8 @@ export const Box = styled.div<Props>(
   justifyContent,
   maxHeight,
   maxWidth,
+  minHeight,
+  minWidth,
   order,
   overflow,
   space,

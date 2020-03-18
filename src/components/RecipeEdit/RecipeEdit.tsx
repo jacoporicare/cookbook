@@ -32,11 +32,14 @@ type Props = {
   onRemoveIngredient: RemoveEventHandler;
   onSortIngredient: SortEndHandler;
   onSubmit: FormEventHandler<HTMLFormElement>;
+  onTagsChange: (tags: string[]) => void;
   preparationTime?: number;
   servingCount?: number;
   sideDish?: string;
   sideDishOptions: string[];
   slug?: string;
+  tags?: string[];
+  tagOptions: string[];
   title?: string;
 };
 
@@ -55,11 +58,14 @@ function RecipeEdit({
   onRemoveIngredient,
   onSortIngredient,
   onSubmit,
+  onTagsChange,
   preparationTime,
   servingCount,
   sideDish,
   sideDishOptions,
   slug,
+  tags,
+  tagOptions,
   title,
 }: Props) {
   return (
@@ -81,7 +87,10 @@ function RecipeEdit({
               servingCount={servingCount}
               sideDish={sideDish}
               sideDishOptions={sideDishOptions}
+              tagOptions={tagOptions}
+              tags={tags}
               onChange={onChange}
+              onTagsChange={onTagsChange}
             />
           </fieldset>
         </Box>

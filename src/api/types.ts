@@ -5,6 +5,7 @@ export type RecipeInput = {
   preparationTime?: number | null;
   servingCount?: number | null;
   ingredients: IngredientInput[];
+  tags?: string[] | null;
 };
 
 export type IngredientInput = {

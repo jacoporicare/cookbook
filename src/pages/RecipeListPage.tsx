@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Link, RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useAuth } from '../AuthContext';
 import RecipeList from '../components/RecipeList/RecipeList';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
+import Search from '../components/RecipeList/Search';
 import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
@@ -23,6 +24,7 @@ export const RECIPE_LIST_QUERY = gql`
     recipes {
       ...recipeBase
     }
+    tags
   }
 
   ${recipeBaseFragment}
@@ -30,6 +32,7 @@ export const RECIPE_LIST_QUERY = gql`
 
 export type RecipeListQueryData = {
   recipes: Recipe[];
+  tags: string[];
 };
 
 function RecipeListPage(_props: Props) {
@@ -42,25 +45,68 @@ function RecipeListPage(_props: Props) {
   // };
 
   const [token] = useAuth();
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchTags, setSearchTags] = useState<string[]>([]);
+  const [matchAll, setMatchAll] = useState(false);
   const { data, error, loading } = useQuery<RecipeListQueryData>(RECIPE_LIST_QUERY);
+
+  function handleSearchVisibilityToggle() {
+    setSearchVisible(!searchVisible);
+
+    if (searchVisible) {
+      handleSearch([]);
+    }
+  }
+
+  function handleSearch(tags: string[]) {
+    setSearchTags(tags);
+  }
+
+  function handleMatchAllChange(matchAll: boolean) {
+    setMatchAll(matchAll);
+  }
 
   if (error) {
     return <DangerAlert>Nastala neočekávná chyba.</DangerAlert>;
   }
 
-  const recipes = (data && data.recipes) || [];
+  const tags = data?.tags || [];
+  const allRecipes = data?.recipes || [];
+  const recipes =
+    searchTags.length > 0
+      ? allRecipes.filter(recipe =>
+          matchAll
+            ? searchTags.every(t => recipe.tags?.includes(t))
+            : searchTags.some(t => recipe.tags?.includes(t)),
+        )
+      : allRecipes;
   const isEmpty = recipes.length === 0;
 
   return (
     <BoxSection>
       <PageHeading
         buttons={
-          token && (
-            <NewRecipeButton to="/novy-recept">
-              <Icon icon="utensils" />
-              Nový recept
-            </NewRecipeButton>
-          )
+          <>
+            <Button onClick={handleSearchVisibilityToggle}>
+              {searchVisible ? (
+                <>
+                  <Icon icon="times" />
+                  Zrušit
+                </>
+              ) : (
+                <>
+                  <Icon icon="search" />
+                  Hledat
+                </>
+              )}
+            </Button>
+            {token && (
+              <NewRecipeButton to="/novy-recept">
+                <Icon icon="utensils" />
+                Nový recept
+              </NewRecipeButton>
+            )}
+          </>
         }
       >
         Recepty{' '}
@@ -68,9 +114,17 @@ function RecipeListPage(_props: Props) {
           {recipes.length}
         </Text>
       </PageHeading>
+      {searchVisible && (
+        <Search
+          multipleSelected={searchTags.length > 1}
+          tagOptions={tags}
+          onMatchAllChange={handleMatchAllChange}
+          onSearch={handleSearch}
+        />
+      )}
       {isEmpty ? (
         <SpinnerIf spinner={loading}>
-          <InfoAlert>Zatím zde není žádný recept.</InfoAlert>
+          <InfoAlert>Žádné recepty.</InfoAlert>
         </SpinnerIf>
       ) : (
         <>

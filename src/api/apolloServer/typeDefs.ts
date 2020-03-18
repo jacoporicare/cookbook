@@ -15,6 +15,7 @@ const typeDefs = gql`
     hasImage: Boolean
     lastModifiedDate: Date!
     ingredients: [Ingredient!]!
+    tags: [String!]
   }
 
   type Ingredient {
@@ -45,6 +46,7 @@ const typeDefs = gql`
     servingCount: Int
     ingredients: [IngredientInput!]!
     image: Upload
+    tags: [String!]
   }
 
   input IngredientInput {
@@ -65,6 +67,7 @@ const typeDefs = gql`
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!
+    tags: [String!]!
     me: User
     users: [User!]
   }

@@ -87,6 +87,7 @@ export const recipeBaseFragment = gql`
     title
     slug
     sideDish
+    tags
     preparationTime
     user {
       _id

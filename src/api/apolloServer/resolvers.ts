@@ -54,6 +54,11 @@ const resolvers: IResolvers = {
 
       return sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
+    tags: async () => {
+      const tags: string[] = await recipeModel.distinct('tags');
+
+      return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
+    },
     me: async (_, __, context) => {
       if (!context.user) {
         return null;

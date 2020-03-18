@@ -30,6 +30,7 @@ export async function prepareRecipe(
         }))
       : [],
     lastModifiedDate: new Date(),
+    tags: recipe.tags || undefined,
   };
 
   if (fileUpload) {

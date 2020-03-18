@@ -126,6 +126,7 @@ function RecipeDetailPage(props: Props) {
     servingCount,
     sideDish,
     slug,
+    tags,
     title,
     hasImage,
     user,
@@ -144,6 +145,7 @@ function RecipeDetailPage(props: Props) {
         preparationTime={preparationTime}
         sideDish={sideDish}
         slug={slug}
+        tags={tags}
         title={title}
         onDeleteShow={() => setDeleteModalVisible(true)}
       />

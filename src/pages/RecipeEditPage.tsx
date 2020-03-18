@@ -32,6 +32,7 @@ export const RECIPE_EDIT_QUERY = gql`
     }
     ingredients
     sideDishes
+    tags
   }
 
   ${recipeDetailFragment}
@@ -60,7 +61,8 @@ export const UPDATE_RECIPE_MUTATION = gql`
 export type RecipeEditQueryData = {
   recipe?: RecipeDetail;
   ingredients: string[];
-  sideDishes: [];
+  sideDishes: string[];
+  tags: string[];
 };
 
 export type CreateRecipeMutationData = {
@@ -99,6 +101,7 @@ function RecipeEditPage(props: Props) {
   const [preparationTime, setPreparationTime] = useState<number | undefined>();
   const [servingCount, setServingCount] = useState<number | undefined>();
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [tags, setTags] = useState<string[]>();
 
   const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
@@ -139,6 +142,7 @@ function RecipeEditPage(props: Props) {
     setId(editedRecipe._id);
     setTitle(editedRecipe.title);
     setSideDish(editedRecipe.sideDish || '');
+    setTags(editedRecipe.tags || []);
     setDirections(editedRecipe.directions || '');
     setPreparationTime(editedRecipe.preparationTime);
     setServingCount(editedRecipe.servingCount);
@@ -248,6 +252,11 @@ function RecipeEditPage(props: Props) {
     setImage(data);
   }
 
+  function handleTagsChange(tags: string[]) {
+    setChanged(true);
+    setTags(tags);
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -262,6 +271,7 @@ function RecipeEditPage(props: Props) {
       sideDish: sideDish || null,
       directions: directions || null,
       ingredients,
+      tags: tags?.length ? tags : null,
     };
 
     if (editedRecipe) {
@@ -330,6 +340,8 @@ function RecipeEditPage(props: Props) {
         sideDish={sideDish}
         sideDishOptions={(data && data.sideDishes) || []}
         slug={props.slug}
+        tagOptions={(data && data.tags) || []}
+        tags={tags}
         title={title}
         onAddGroup={handleAddGroup}
         onAddIngredient={handleAddIngredient}
@@ -338,6 +350,7 @@ function RecipeEditPage(props: Props) {
         onRemoveIngredient={handleRemoveIngredient}
         onSortIngredient={handleSortIngredient}
         onSubmit={handleSubmit}
+        onTagsChange={handleTagsChange}
       />
     </>
   );
