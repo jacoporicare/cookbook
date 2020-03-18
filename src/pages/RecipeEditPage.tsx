@@ -30,12 +30,17 @@ export const RECIPE_EDIT_QUERY = gql`
     recipe(slug: $slug) {
       ...recipeDetail
     }
+  }
+
+  ${recipeDetailFragment}
+`;
+
+export const RECIPE_EDIT_OPTIONS_QUERY = gql`
+  query RecipeEditOptions {
     ingredients
     sideDishes
     tags
   }
-
-  ${recipeDetailFragment}
 `;
 
 export const CREATE_RECIPE_MUTATION = gql`
@@ -60,6 +65,9 @@ export const UPDATE_RECIPE_MUTATION = gql`
 
 export type RecipeEditQueryData = {
   recipe?: RecipeDetail;
+};
+
+export type RecipeEditOptionsQueryData = {
   ingredients: string[];
   sideDishes: string[];
   tags: string[];
@@ -105,6 +113,9 @@ function RecipeEditPage(props: Props) {
 
   const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
+  });
+  const { data: dataOptions } = useQuery<RecipeEditOptionsQueryData>(RECIPE_EDIT_OPTIONS_QUERY, {
+    fetchPolicy: 'cache-and-network',
   });
   const [createRecipe, { loading: creating }] = useMutation<
     CreateRecipeMutationData,
@@ -331,16 +342,16 @@ function RecipeEditPage(props: Props) {
         changed={changed}
         directions={directions}
         imageUrl={imageUrl}
-        ingredientOptions={(data && data.ingredients) || []}
+        ingredientOptions={dataOptions?.ingredients ?? []}
         ingredients={ingredients}
         isNew={!props.slug}
         isSaving={isSaving}
         preparationTime={preparationTime}
         servingCount={servingCount}
         sideDish={sideDish}
-        sideDishOptions={(data && data.sideDishes) || []}
+        sideDishOptions={dataOptions?.sideDishes ?? []}
         slug={props.slug}
-        tagOptions={(data && data.tags) || []}
+        tagOptions={dataOptions?.tags ?? []}
         tags={tags}
         title={title}
         onAddGroup={handleAddGroup}

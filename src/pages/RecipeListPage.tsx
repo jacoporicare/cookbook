@@ -24,14 +24,22 @@ export const RECIPE_LIST_QUERY = gql`
     recipes {
       ...recipeBase
     }
-    tags
   }
 
   ${recipeBaseFragment}
 `;
 
+export const RECIPE_LIST_TAGS_QUERY = gql`
+  query RecipeListTags {
+    tags
+  }
+`;
+
 export type RecipeListQueryData = {
   recipes: Recipe[];
+};
+
+export type RecipeListTagsQueryData = {
   tags: string[];
 };
 
@@ -49,6 +57,9 @@ function RecipeListPage(_props: Props) {
   const [searchTags, setSearchTags] = useState<string[]>([]);
   const [matchAll, setMatchAll] = useState(false);
   const { data, error, loading } = useQuery<RecipeListQueryData>(RECIPE_LIST_QUERY);
+  const { data: dataTags } = useQuery<RecipeListTagsQueryData>(RECIPE_LIST_TAGS_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   function handleSearchVisibilityToggle() {
     setSearchVisible(!searchVisible);
@@ -70,8 +81,8 @@ function RecipeListPage(_props: Props) {
     return <DangerAlert>Nastala neočekávná chyba.</DangerAlert>;
   }
 
-  const tags = data?.tags || [];
-  const allRecipes = data?.recipes || [];
+  const tags = dataTags?.tags ?? [];
+  const allRecipes = data?.recipes ?? [];
   const recipes =
     searchTags.length > 0
       ? allRecipes.filter(recipe =>
