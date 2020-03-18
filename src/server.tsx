@@ -12,11 +12,11 @@ import serialize from 'serialize-javascript';
 import Cookies from 'universal-cookie';
 import cookiesMiddleware from 'universal-cookie-express';
 
+import App from './App';
+import { AuthProvider } from './AuthContext';
 import configureClient from './api/apolloClient';
 import apolloServer from './api/apolloServer';
 import { authentication } from './api/auth';
-import App from './App';
-import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';
 import routes from './serverRoutes';

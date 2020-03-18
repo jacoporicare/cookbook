@@ -1,12 +1,12 @@
+import { ClassNames } from '@emotion/core';
+import matchSorter from 'match-sorter';
 import React, { KeyboardEvent, useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import matchSorter from 'match-sorter';
-import { ClassNames } from '@emotion/core';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Input, getInputStyle, Button } from '../elements';
 import Icon from '../common/Icon';
 import { Box } from '../core';
+import { Input, getInputStyle, Button } from '../elements';
 
 import AutosuggestWrapper from './AutosuggestWrapper';
 

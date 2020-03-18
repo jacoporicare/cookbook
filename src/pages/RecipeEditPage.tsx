@@ -1,16 +1,16 @@
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { RouteComponentProps } from '@reach/router';
 import { ApolloError } from 'apollo-client';
 import gql from 'graphql-tag';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
-import { RecipeInput } from '../api/apolloServer';
+import { RecipeInput } from '../api/types';
+import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import DocumentTitle from '../components/common/DocumentTitle';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { DangerAlert } from '../components/elements';
-import RecipeEdit from '../components/RecipeEdit/RecipeEdit';
 import { AutosuggestChangeEventHandler, Ingredient, RecipeDetail } from '../types';
 import { getImageUrl } from '../utils';
 
@@ -30,11 +30,17 @@ export const RECIPE_EDIT_QUERY = gql`
     recipe(slug: $slug) {
       ...recipeDetail
     }
-    ingredients
-    sideDishes
   }
 
   ${recipeDetailFragment}
+`;
+
+export const RECIPE_EDIT_OPTIONS_QUERY = gql`
+  query RecipeEditOptions {
+    ingredients
+    sideDishes
+    tags
+  }
 `;
 
 export const CREATE_RECIPE_MUTATION = gql`
@@ -59,8 +65,12 @@ export const UPDATE_RECIPE_MUTATION = gql`
 
 export type RecipeEditQueryData = {
   recipe?: RecipeDetail;
+};
+
+export type RecipeEditOptionsQueryData = {
   ingredients: string[];
-  sideDishes: [];
+  sideDishes: string[];
+  tags: string[];
 };
 
 export type CreateRecipeMutationData = {
@@ -99,9 +109,13 @@ function RecipeEditPage(props: Props) {
   const [preparationTime, setPreparationTime] = useState<number | undefined>();
   const [servingCount, setServingCount] = useState<number | undefined>();
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [tags, setTags] = useState<string[]>();
 
   const { data, loading } = useQuery<RecipeEditQueryData>(RECIPE_EDIT_QUERY, {
     variables: { slug: props.slug },
+  });
+  const { data: dataOptions } = useQuery<RecipeEditOptionsQueryData>(RECIPE_EDIT_OPTIONS_QUERY, {
+    fetchPolicy: 'cache-and-network',
   });
   const [createRecipe, { loading: creating }] = useMutation<
     CreateRecipeMutationData,
@@ -139,6 +153,7 @@ function RecipeEditPage(props: Props) {
     setId(editedRecipe._id);
     setTitle(editedRecipe.title);
     setSideDish(editedRecipe.sideDish || '');
+    setTags(editedRecipe.tags || []);
     setDirections(editedRecipe.directions || '');
     setPreparationTime(editedRecipe.preparationTime);
     setServingCount(editedRecipe.servingCount);
@@ -248,6 +263,11 @@ function RecipeEditPage(props: Props) {
     setImage(data);
   }
 
+  function handleTagsChange(tags: string[]) {
+    setChanged(true);
+    setTags(tags);
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -262,6 +282,7 @@ function RecipeEditPage(props: Props) {
       sideDish: sideDish || null,
       directions: directions || null,
       ingredients,
+      tags: tags?.length ? tags : null,
     };
 
     if (editedRecipe) {
@@ -321,15 +342,17 @@ function RecipeEditPage(props: Props) {
         changed={changed}
         directions={directions}
         imageUrl={imageUrl}
-        ingredientOptions={(data && data.ingredients) || []}
+        ingredientOptions={dataOptions?.ingredients ?? []}
         ingredients={ingredients}
         isNew={!props.slug}
         isSaving={isSaving}
         preparationTime={preparationTime}
         servingCount={servingCount}
         sideDish={sideDish}
-        sideDishOptions={(data && data.sideDishes) || []}
+        sideDishOptions={dataOptions?.sideDishes ?? []}
         slug={props.slug}
+        tagOptions={dataOptions?.tags ?? []}
+        tags={tags}
         title={title}
         onAddGroup={handleAddGroup}
         onAddIngredient={handleAddIngredient}
@@ -338,6 +361,7 @@ function RecipeEditPage(props: Props) {
         onRemoveIngredient={handleRemoveIngredient}
         onSortIngredient={handleSortIngredient}
         onSubmit={handleSubmit}
+        onTagsChange={handleTagsChange}
       />
     </>
   );

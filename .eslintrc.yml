@@ -29,10 +29,13 @@ rules:
     - functions: false
       classes: false
       variables: true
+  arrow-body-style: warn
   import/no-extraneous-dependencies: warn
   import/order:
     - warn
     - newlines-between: always
+      alphabetize:
+        order: 'asc'
   no-case-declarations: warn
   no-console: warn
   no-debugger: warn

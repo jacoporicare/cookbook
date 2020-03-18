@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Recipe } from '../../types';
 import { colors } from '../../styles/colors';
+import { Recipe } from '../../types';
 import { BoxArticle, Box } from '../core';
 
 import RecipeListItem from './RecipeListItem';

@@ -8,8 +8,6 @@ import {
   BorderRadiusProps,
   borders,
   BordersProps,
-  color,
-  ColorProps,
   display,
   DisplayProps,
   flex,
@@ -28,6 +26,10 @@ import {
   MaxHeightProps,
   maxWidth,
   MaxWidthProps,
+  minHeight,
+  MinHeightProps,
+  minWidth,
+  MinWidthProps,
   order,
   OrderProps,
   overflow,
@@ -44,7 +46,6 @@ export type Props = AlignItemsProps &
   BorderProps &
   BordersProps &
   BorderRadiusProps &
-  ColorProps &
   DisplayProps &
   FlexDirectionProps &
   FlexProps &
@@ -54,6 +55,8 @@ export type Props = AlignItemsProps &
   JustifyContentProps &
   MaxHeightProps &
   MaxWidthProps &
+  MinHeightProps &
+  MinWidthProps &
   OrderProps &
   OverflowProps &
   SpaceProps &
@@ -65,7 +68,6 @@ export const Box = styled.div<Props>(
   border,
   borders,
   borderRadius,
-  color,
   display,
   flex,
   flexDirection,
@@ -75,6 +77,8 @@ export const Box = styled.div<Props>(
   justifyContent,
   maxHeight,
   maxWidth,
+  minHeight,
+  minWidth,
   order,
   overflow,
   space,

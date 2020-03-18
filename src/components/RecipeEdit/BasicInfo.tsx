@@ -1,7 +1,8 @@
+import { ClassNames } from '@emotion/core';
+import matchSorter from 'match-sorter';
 import React, { useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import matchSorter from 'match-sorter';
-import { ClassNames } from '@emotion/core';
+import Creatable from 'react-select/creatable';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 import { Box } from '../core';
@@ -14,7 +15,10 @@ type Props = {
   servingCount?: number;
   sideDish?: string;
   sideDishOptions: string[];
+  tagOptions: string[];
+  tags?: string[];
   onChange: AutosuggestChangeEventHandler;
+  onTagsChange: (tags: string[]) => void;
 };
 
 function BasicInfo({
@@ -22,7 +26,10 @@ function BasicInfo({
   servingCount,
   sideDish,
   sideDishOptions: serverSideDishOptions,
+  tagOptions,
+  tags,
   onChange,
+  onTagsChange,
 }: Props) {
   const [sideDishOptions, setSideDishOptions] = useState<string[]>(serverSideDishOptions);
 
@@ -69,7 +76,7 @@ function BasicInfo({
             />
           </Box>
 
-          <AutosuggestWrapper>
+          <AutosuggestWrapper mb={3}>
             <Label htmlFor="sideDish">Příloha</Label>
             <Autosuggest
               getSuggestionValue={s => s}
@@ -91,6 +98,24 @@ function BasicInfo({
               onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
             />
           </AutosuggestWrapper>
+
+          <div>
+            <Label htmlFor="tags">Tagy</Label>
+            <Creatable
+              defaultValue={tags?.map(t => ({ value: t, label: t }))}
+              formatCreateLabel={input => `Vytvořit "${input}"`}
+              inputId="tags"
+              noOptionsMessage={() => 'Žádné možnosti'}
+              options={tagOptions.map(t => ({ value: t, label: t }))}
+              placeholder="Vybrat nebo vytvořit..."
+              getv
+              isClearable
+              isMulti
+              onChange={values =>
+                onTagsChange(values instanceof Array ? values.map(v => v.value) : [])
+              }
+            />
+          </div>
         </>
       )}
     </ClassNames>

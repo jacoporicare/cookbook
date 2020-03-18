@@ -1,5 +1,5 @@
-import styled, { Interpolation } from '@emotion/styled';
 import { css } from '@emotion/core';
+import styled, { Interpolation } from '@emotion/styled';
 import { lighten, transparentize } from 'polished';
 
 import { colors } from '../../styles/colors';

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import React, { useState } from 'react';
 import { notify } from 'react-notify-toast';
 
 import Spinner from '../common/Spinner';

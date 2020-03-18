@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 
 import { colors } from '../../styles/colors';
+import { Box } from '../core';
 
-const AutosuggestWrapper = styled.div({
+const AutosuggestWrapper = styled(Box)({
   '.react-autosuggest__container': {
     position: 'relative',
   },

@@ -1,5 +1,5 @@
-import React from 'react';
 import { css } from '@emotion/core';
+import React from 'react';
 
 import { theme } from '../../styles/colors';
 import { Box } from '../core';
@@ -12,9 +12,9 @@ type Props = {
 
 function PageHeading({ children, buttons }: Props) {
   return (
-    <Heading color={theme.primary} fontSize={[5, 6]} fontWeight={300} mb={[3, 4]}>
+    <Heading color={theme.primary} fontSize={[5, 6]} fontWeight={300} m={undefined} mb={[3, 4]}>
       <Box alignItems="center" display="flex" flexWrap="wrap" justifyContent="space-between">
-        <Box flex="auto">{children}</Box>
+        <Box>{children}</Box>
         <Box
           css={css`
             button,

@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { AutosuggestChangeEventHandler } from '../../types';
+import Icon from '../common/Icon';
 import { Box } from '../core';
 import { Textarea } from '../elements';
-import Icon from '../common/Icon';
 
 type Props = {
   directions?: string;

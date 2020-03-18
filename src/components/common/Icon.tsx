@@ -1,5 +1,5 @@
-import React from 'react';
 import { Interpolation, ClassNames } from '@emotion/core';
+import React from 'react';
 
 type Props = {
   icon: string;

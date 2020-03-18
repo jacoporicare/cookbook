@@ -1,7 +1,7 @@
 import React, { Component, ChangeEvent } from 'react';
 
-import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
+import { Ingredient } from '../../types';
 import { Box, Text } from '../core';
 import { InfoAlert, Input, InputAddon, Table, TableRow, TableCell } from '../elements';
 
@@ -88,7 +88,7 @@ export default class IngredientList extends Component<Props, State> {
 
               if (isGroup) {
                 return (
-                  <TableRow key={id} bg={colors.gray200}>
+                  <TableRow key={id} css={{ backgroundColor: colors.gray200 }}>
                     <TableCell colSpan={3} textAlign="center">
                       <Text fontWeight={600}> {name}</Text>
                     </TableCell>

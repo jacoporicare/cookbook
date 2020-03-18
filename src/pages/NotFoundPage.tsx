@@ -1,8 +1,8 @@
-import React from 'react';
 import { RouteComponentProps } from '@reach/router';
+import React from 'react';
 
-import { WarningAlert } from '../components/elements';
 import PageHeading from '../components/common/PageHeading';
+import { WarningAlert } from '../components/elements';
 
 type Props = RouteComponentProps;
 

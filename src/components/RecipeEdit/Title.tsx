@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 
-import { AutosuggestChangeEventHandler } from '../../types';
 import { colors } from '../../styles/colors';
+import { AutosuggestChangeEventHandler } from '../../types';
 import { Box, Text } from '../core';
 import { Input } from '../elements';
 

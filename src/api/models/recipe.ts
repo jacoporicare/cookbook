@@ -21,6 +21,7 @@ export type Recipe = {
   ingredients: Ingredient[];
   image?: Buffer;
   hasImage?: boolean;
+  tags?: string[];
 };
 
 export type RecipeDocument = Document & Recipe;
@@ -44,6 +45,7 @@ const RecipeSchema = new Schema({
   ],
   image: { type: Buffer, select: false },
   hasImage: Boolean,
+  tags: [String],
 });
 
 /**

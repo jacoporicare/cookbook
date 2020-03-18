@@ -1,15 +1,15 @@
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
 import Notifications from 'react-notify-toast';
 
-import { User } from '../types';
-import DocumentTitle from '../components/common/DocumentTitle';
-import { BoxFooter, BoxMain } from '../components/core';
 import Footer from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
+import DocumentTitle from '../components/common/DocumentTitle';
+import { BoxFooter, BoxMain } from '../components/core';
 import { colors } from '../styles/colors';
+import { User } from '../types';
 
 type Props = {
   children: React.ReactNode;

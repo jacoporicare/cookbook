@@ -1,11 +1,11 @@
+import { useMutation } from '@apollo/react-hooks';
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { useMutation } from '@apollo/react-hooks';
 
 import { useAuth } from '../AuthContext';
-import DocumentTitle from '../components/common/DocumentTitle';
 import LoginForm from '../components/LoginForm/LoginForm';
+import DocumentTitle from '../components/common/DocumentTitle';
 
 import { ME_QUERY } from './Layout';
 

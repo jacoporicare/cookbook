@@ -1,21 +1,21 @@
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { RouteComponentProps } from '@reach/router';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
 import { notify } from 'react-notify-toast';
 
 import { useAuth } from '../AuthContext';
-import DocumentTitle from '../components/common/DocumentTitle';
-import Spinner from '../components/common/Spinner';
-import SpinnerIf from '../components/common/SpinnerIf';
-import { DangerAlert } from '../components/elements';
 import RecipeDeleteModal from '../components/RecipeDeleteModal/RecipeDeleteModal';
 import RecipeDetail from '../components/RecipeDetail/RecipeDetail';
 import RecipeHeader from '../components/RecipeDetail/RecipeHeader';
 import { recipeBaseFragment } from '../components/RecipeList/RecipeListItem';
+import DocumentTitle from '../components/common/DocumentTitle';
+import Spinner from '../components/common/Spinner';
+import SpinnerIf from '../components/common/SpinnerIf';
+import { BoxArticle } from '../components/core';
+import { DangerAlert } from '../components/elements';
 import { RecipeDetail as RecipeDetailType, User } from '../types';
 import { getImageUrl } from '../utils';
-import { BoxArticle } from '../components/core';
 
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from './RecipeListPage';
 
@@ -126,6 +126,7 @@ function RecipeDetailPage(props: Props) {
     servingCount,
     sideDish,
     slug,
+    tags,
     title,
     hasImage,
     user,
@@ -144,6 +145,7 @@ function RecipeDetailPage(props: Props) {
         preparationTime={preparationTime}
         sideDish={sideDish}
         slug={slug}
+        tags={tags}
         title={title}
         onDeleteShow={() => setDeleteModalVisible(true)}
       />

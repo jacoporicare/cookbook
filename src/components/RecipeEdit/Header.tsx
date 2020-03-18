@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from '@reach/router';
+import React from 'react';
 
-import PageHeading from '../common/PageHeading';
 import Icon from '../common/Icon';
+import PageHeading from '../common/PageHeading';
 import { Button, SuccessButton } from '../elements';
 
 type Props = {

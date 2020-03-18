@@ -4,7 +4,7 @@ import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
 
-import userModel from '../models/user';
+import userModel from './models/user';
 
 const jwtSecret = process.env.JWT_SECRET!;
 

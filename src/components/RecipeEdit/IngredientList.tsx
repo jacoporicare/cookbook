@@ -1,3 +1,5 @@
+import { css } from '@emotion/core';
+import { darken } from 'polished';
 import React from 'react';
 import {
   SortableContainer,
@@ -5,14 +7,12 @@ import {
   SortableHandle,
   SortEndHandler,
 } from 'react-sortable-hoc';
-import { darken } from 'polished';
-import { css } from '@emotion/core';
 
-import { Ingredient } from '../../types';
 import { colors } from '../../styles/colors';
+import { Ingredient } from '../../types';
+import Icon from '../common/Icon';
 import { Box } from '../core';
 import { InfoAlert } from '../elements';
-import Icon from '../common/Icon';
 
 type RemoveHandler = (index: number) => void;
 
@@ -54,8 +54,8 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
 
   return (
     <Item
-      bg={isGroup ? colors.gray200 : colors.white}
       borderTop={`1px solid ${colors.gray300}`}
+      css={{ backgroundColor: isGroup ? colors.gray200 : colors.white }}
       display="flex"
     >
       <Box

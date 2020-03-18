@@ -1,16 +1,15 @@
+import { useQuery } from '@apollo/react-hooks';
+import { ClassNames } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Link, LinkGetProps } from '@reach/router';
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import styled from '@emotion/styled';
-import { ClassNames } from '@emotion/core';
 
 import { useAuth } from '../../AuthContext';
 import { RecipeListQueryData, RECIPE_LIST_QUERY } from '../../pages/RecipeListPage';
 import { colors, theme } from '../../styles/colors';
-import { isOnline } from '../../utils';
+import RecipeSearch from '../RecipeSearch/RecipeSearch';
 import Icon from '../common/Icon';
 import { Box, BoxHeader, BoxNav } from '../core';
-import RecipeSearch from '../RecipeSearch/RecipeSearch';
 
 import cow from './cow.png';
 import pig from './pig.png';
@@ -89,14 +88,14 @@ function Header(props: Props) {
 
         return (
           <BoxHeader
-            bg={colors.gray1000}
-            color="white"
             css={{
               position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
               zIndex: 10,
+              color: 'white',
+              backgroundColor: colors.gray1000,
               boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.2)',
             }}
           >
@@ -141,36 +140,32 @@ function Header(props: Props) {
                     Admin
                   </Link>
                 )}
-                {isOnline() && (
+                <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
+                {!token ? (
+                  <Link
+                    getProps={getLinkProps}
+                    to={
+                      !props.pathname || props.pathname.startsWith('/prihlaseni')
+                        ? '/prihlaseni'
+                        : `/prihlaseni?u=${props.pathname || ''}`
+                    }
+                  >
+                    Přihlásit
+                  </Link>
+                ) : (
                   <>
-                    <NavItem css={{ paddingLeft: 0, paddingRight: 0 }}>·</NavItem>
-                    {!token ? (
-                      <Link
-                        getProps={getLinkProps}
-                        to={
-                          !props.pathname || props.pathname.startsWith('/prihlaseni')
-                            ? '/prihlaseni'
-                            : `/prihlaseni?u=${props.pathname || ''}`
-                        }
-                      >
-                        Přihlásit
-                      </Link>
+                    {props.isUserLoading ? (
+                      <NavItem>
+                        <Icon icon="spinner" spin />
+                      </NavItem>
                     ) : (
-                      <>
-                        {props.isUserLoading ? (
-                          <NavItem>
-                            <Icon icon="spinner" spin />
-                          </NavItem>
-                        ) : (
-                          <Link getProps={getLinkProps} to="/nastaveni">
-                            {props.userName}
-                          </Link>
-                        )}
-                        <Link getProps={getLinkProps} to={`/odhlaseni?u=${props.pathname || ''}`}>
-                          <Icon icon="sign-out-alt" />
-                        </Link>
-                      </>
+                      <Link getProps={getLinkProps} to="/nastaveni">
+                        {props.userName}
+                      </Link>
                     )}
+                    <Link getProps={getLinkProps} to={`/odhlaseni?u=${props.pathname || ''}`}>
+                      <Icon icon="sign-out-alt" />
+                    </Link>
                   </>
                 )}
               </BoxNav>

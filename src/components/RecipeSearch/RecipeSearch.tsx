@@ -1,17 +1,17 @@
+import { ClassNames } from '@emotion/core';
+import matchSorter from 'match-sorter';
 import React, { FormEvent } from 'react';
 import Autosuggest, {
   SuggestionsFetchRequestedParams,
   SuggestionSelectedEventData,
 } from 'react-autosuggest';
-import matchSorter from 'match-sorter';
-import { ClassNames } from '@emotion/core';
 
+import placeholder from '../../assets/food-placeholder.png';
+import { colors } from '../../styles/colors';
 import { Recipe } from '../../types';
 import { getImageUrl } from '../../utils';
-import { colors } from '../../styles/colors';
-import { Box } from '../core';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import placeholder from '../../assets/food-placeholder.png';
+import { Box } from '../core';
 
 type Props = {
   recipes: Recipe[];
