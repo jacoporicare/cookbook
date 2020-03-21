@@ -13,7 +13,7 @@ type Props = {
 
 function Search(props: Props) {
   return (
-    <Box display="flex" mb={3} mt={[-2, -4]}>
+    <Box display="flex" justifyContent="flex-end" mb={3} mt={[-2, -4]}>
       <Box flex="auto" maxWidth="400px" minWidth="200px">
         <Select
           inputId="tagsearch"
