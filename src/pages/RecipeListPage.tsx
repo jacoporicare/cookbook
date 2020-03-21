@@ -106,8 +106,8 @@ function RecipeListPage(_props: Props) {
                 </>
               ) : (
                 <>
-                  <Icon icon="search" />
-                  Hledat
+                  <Icon icon="tags" />
+                  Tagy
                 </>
               )}
             </Button>
