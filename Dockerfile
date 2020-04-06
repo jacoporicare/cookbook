@@ -19,6 +19,8 @@ WORKDIR /srv/app
 COPY --from=builder /srv/build build
 COPY --from=builder /srv/app .
 
+VOLUME /tmp/cookbook
+
 EXPOSE 3000
 
 CMD ["yarn", "start:prod"]
