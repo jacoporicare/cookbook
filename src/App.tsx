@@ -25,6 +25,7 @@ function App() {
       <Router>
         <Layout path="/">
           <RecipeListPage path="/" />
+          <RecipeListPage path="tagy/:tags" />
           <RecipeDetailPage path="recept/:slug" />
           {token && <RecipeEditPage path="recept/:slug/upravit" />}
           {token && <RecipeEditPage path="novy-recept" />}

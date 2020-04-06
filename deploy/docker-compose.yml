@@ -19,10 +19,6 @@ services:
       - web
     depends_on:
       - db
-    volumes:
-      - type: volume
-        source: tmp
-        target: /tmp/cookbook
     environment:
       MONGO_URI: mongodb://db/cookbook
       GRAPHQL_URI: 'https://${MAIN_HOST}/graphql'
@@ -38,4 +34,3 @@ networks:
 
 volumes:
   dbdata:
-  tmp:
