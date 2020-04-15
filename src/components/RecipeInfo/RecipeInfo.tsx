@@ -42,7 +42,7 @@ function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
 
   return (
     <List>
-      {preparationTime && preparationTime > 0 && (
+      {!!preparationTime && preparationTime > 0 && (
         <RecipeInfoItem icon={<Icon icon="clock" regular />}>
           {formatTime(preparationTime)}
         </RecipeInfoItem>

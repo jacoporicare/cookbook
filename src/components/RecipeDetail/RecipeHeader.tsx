@@ -60,14 +60,14 @@ function RecipeHeader({
         {title}
       </PageHeading>
 
-      {(preparationTime || sideDish || tags?.length) && (
+      {Boolean(preparationTime || sideDish || tags?.length) && (
         <Box display="flex" mb={3}>
-          {(preparationTime || sideDish) && (
+          {Boolean(preparationTime || sideDish) && (
             <Box mr={3}>
               <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
             </Box>
           )}
-          {Boolean(tags?.length) && (
+          {!!tags?.length && (
             <Box>
               {tags?.map(tag => (
                 <Tag key={tag}>{tag}</Tag>
