@@ -9,14 +9,13 @@ import userModel, { User } from '../models/user';
 import { FileUpload, RecipeInput, UserInput } from '../types';
 import {
   checkUserRightsAsync,
-  deleteImageFromS3,
   getRandomString,
   prepareRecipe,
-  renameImageInS3,
   saltHashPassword,
   sha512,
-  uploadImageToS3,
 } from '../utils';
+
+import { deleteImage, renameImage, uploadImage } from './images';
 
 export type Context = {
   user?: User;
@@ -101,7 +100,7 @@ const resolvers: IResolvers = {
 
       if (args.image) {
         // We don't await
-        uploadImageToS3(newRecipe.slug, args.image);
+        uploadImage(newRecipe.slug, args.image);
       }
 
       return newRecipe;
@@ -132,13 +131,13 @@ const resolvers: IResolvers = {
 
         if (args.image) {
           // We don't await
-          uploadImageToS3(newRecipe.slug, args.image);
+          uploadImage(newRecipe.slug, args.image);
 
           if (renamedAndOrigHasImage) {
-            deleteImageFromS3(origRecipe.slug);
+            deleteImage(origRecipe.slug);
           }
         } else if (renamedAndOrigHasImage) {
-          renameImageInS3(origRecipe.slug, newRecipe.slug);
+          renameImage(origRecipe.slug, newRecipe.slug);
         }
       }
 
@@ -156,7 +155,7 @@ const resolvers: IResolvers = {
       }
 
       // We don't await
-      deleteImageFromS3(recipe.slug);
+      deleteImage(recipe.slug);
 
       return true;
     },
