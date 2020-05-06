@@ -2,7 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { darken } from 'polished';
 
-import { colors, theme, colorYiq } from '../../styles/colors';
+import { colors, colorYiq, theme } from '../../styles/colors';
 import { Box, BoxProps } from '../core';
 
 type ButtonProps = {
@@ -21,6 +21,7 @@ const buttonStyle = (props: ButtonProps) =>
       boxShadow: '0 8px 8px -8px rgba(0, 0, 0, 0.2)',
       padding: '0.5em 0.75em',
       fontSize: '1rem',
+      fontWeight: 400,
       lineHeight: '1em',
       whiteSpace: 'nowrap',
       transition:
