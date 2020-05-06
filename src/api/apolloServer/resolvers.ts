@@ -6,15 +6,16 @@ import mongoose from 'mongoose';
 import { signToken } from '../auth';
 import recipeModel from '../models/recipe';
 import userModel, { User } from '../models/user';
-import { RecipeInput, FileUpload, UserInput } from '../types';
+import { FileUpload, RecipeInput, UserInput } from '../types';
 import {
   checkUserRightsAsync,
+  deleteImageFromS3,
   getRandomString,
   prepareRecipe,
+  renameImageInS3,
   saltHashPassword,
   sha512,
   uploadImageToS3,
-  deleteImageFromS3,
 } from '../utils';
 
 export type Context = {
@@ -114,15 +115,31 @@ const resolvers: IResolvers = {
         return null;
       }
 
+      const origRecipe = await recipeModel.findById(args.id);
+
+      if (!origRecipe) {
+        return null;
+      }
+
       const recipeToSave = prepareRecipe(args.recipe, args.image ? true : undefined);
 
       const newRecipe = await recipeModel
         .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
         .populate('user');
 
-      if (newRecipe && args.image) {
-        // We don't await
-        uploadImageToS3(newRecipe.slug, args.image);
+      if (newRecipe) {
+        const renamedAndOrigHasImage = origRecipe.hasImage && origRecipe.slug !== newRecipe.slug;
+
+        if (args.image) {
+          // We don't await
+          uploadImageToS3(newRecipe.slug, args.image);
+
+          if (renamedAndOrigHasImage) {
+            deleteImageFromS3(origRecipe.slug);
+          }
+        } else if (renamedAndOrigHasImage) {
+          renameImageInS3(origRecipe.slug, newRecipe.slug);
+        }
       }
 
       return newRecipe;

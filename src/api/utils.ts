@@ -1,7 +1,12 @@
 /* eslint-disable no-console */
 import crypto from 'crypto';
 
-import { PutObjectCommand, S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3-node';
+import {
+  CopyObjectCommand,
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3-node';
 import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 import slug from 'slug';
 
@@ -9,7 +14,7 @@ import { getImageKey } from '../utils';
 
 import recipeModel, { Recipe } from './models/recipe';
 import { User } from './models/user';
-import { RecipeInput, FileUpload } from './types';
+import { FileUpload, RecipeInput } from './types';
 
 export function prepareRecipe(
   recipe: RecipeInput,
@@ -85,10 +90,13 @@ export function saltHashPassword(password: string) {
   };
 }
 
+// Credentials are automatically provided thanks to IAM role attached to EC2:
+// https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-iam.html
+// Also automatically reads configuration from env vars:
+// AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+const s3 = new S3Client({});
+
 export async function uploadImageToS3(slug: string, fileUpload: Promise<FileUpload>) {
-  // Automatically reads configuration from env vars:
-  // AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
-  const s3 = new S3Client({});
   const stream = (await fileUpload).createReadStream();
   const bufs: Buffer[] = [];
   const image = await new Promise<Buffer>(resolve => {
@@ -115,11 +123,29 @@ export async function uploadImageToS3(slug: string, fileUpload: Promise<FileUplo
   await s3.send(putObjectCommand);
 }
 
-export async function deleteImageFromS3(slug: string) {
-  // Automatically reads configuration from env vars:
-  // AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
-  const s3 = new S3Client({});
+export async function renameImageInS3(srcSlug: string, dstSlug: string) {
+  const copyFull = new CopyObjectCommand({
+    Bucket: process.env.S3_BUCKET!,
+    CopySource: encodeURIComponent(`${process.env.S3_BUCKET}/${getImageKey(srcSlug, 'full')}`),
+    Key: getImageKey(dstSlug, 'full'),
+    ACL: 'public-read',
+  });
 
+  await s3.send(copyFull);
+
+  const copyThumb = new CopyObjectCommand({
+    Bucket: process.env.S3_BUCKET!,
+    CopySource: encodeURIComponent(`${process.env.S3_BUCKET}/${getImageKey(srcSlug, 'thumb')}`),
+    Key: getImageKey(dstSlug, 'thumb'),
+    ACL: 'public-read',
+  });
+
+  await s3.send(copyThumb);
+
+  await deleteImageFromS3(srcSlug);
+}
+
+export async function deleteImageFromS3(slug: string) {
   const deleteFull = new DeleteObjectCommand({
     Bucket: process.env.S3_BUCKET!,
     Key: getImageKey(slug, 'full'),
