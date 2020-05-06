@@ -17,6 +17,7 @@ import { AuthProvider } from './AuthContext';
 import configureClient from './api/apolloClient';
 import apolloServer from './api/apolloServer';
 import { authentication } from './api/auth';
+import { runtimeConfig } from './config';
 import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';
 
@@ -203,6 +204,7 @@ server.all('*', async (req, res) => {
     <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${markup}</div>
         <script>
+          window.env = ${serialize(runtimeConfig)};
           window.__APOLLO_STATE__ = ${serialize(initialApolloState)};
         </script>
     </body>
