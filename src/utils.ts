@@ -12,12 +12,17 @@ export function undefinedToNull<T>(o: T): T {
   return obj;
 }
 
-export function getImageUrl(
-  slug: string,
-  lastModifiedDate: number,
-  size: 'full' | 'thumb' = 'thumb',
-) {
-  const ts = new Date(lastModifiedDate).valueOf();
+export function getImageKey(slug: string, size: 'full' | 'thumb' = 'thumb') {
+  return `recipe-images/${size}/${slug}`;
+}
 
-  return `/api/recipes/${slug}/image-${size}.jpg?${ts}`;
+export function getImageUrl(slug: string, ts: number, size: 'full' | 'thumb' = 'thumb') {
+  const key = getImageKey(slug, size);
+  let s3Url = process.env.RAZZLE_S3_URL!;
+
+  if (s3Url.endsWith('/')) {
+    s3Url = s3Url.slice(0, -1);
+  }
+
+  return `${process.env.RAZZLE_S3_URL}/${key}?${ts}`;
 }

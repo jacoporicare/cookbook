@@ -68,7 +68,7 @@ export default class RecipeSearch extends React.Component<Props, State> {
   };
 
   renderSuggestion = (recipe: Recipe) => {
-    const { slug, hasImage, lastModifiedDate, preparationTime, sideDish } = recipe;
+    const { slug, hasImage, preparationTime, sideDish, lastModifiedDate } = recipe;
     const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
 
     return (
