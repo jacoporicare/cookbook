@@ -68,8 +68,8 @@ export default class RecipeSearch extends React.Component<Props, State> {
   };
 
   renderSuggestion = (recipe: Recipe) => {
-    const { slug, hasImage, preparationTime, sideDish } = recipe;
-    const imageUrl = hasImage ? getImageUrl(slug) : placeholder;
+    const { slug, hasImage, preparationTime, sideDish, lastModifiedDate } = recipe;
+    const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
 
     return (
       <Box borderBottom={`1px solid ${colors.gray300}`} display="flex" height="64px">

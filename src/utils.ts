@@ -16,7 +16,7 @@ export function getImageKey(slug: string, size: 'full' | 'thumb' = 'thumb') {
   return `recipe-images/${size}/${slug}`;
 }
 
-export function getImageUrl(slug: string, size: 'full' | 'thumb' = 'thumb') {
+export function getImageUrl(slug: string, ts: number, size: 'full' | 'thumb' = 'thumb') {
   const key = getImageKey(slug, size);
   let s3Url = process.env.RAZZLE_S3_URL!;
 
@@ -24,5 +24,5 @@ export function getImageUrl(slug: string, size: 'full' | 'thumb' = 'thumb') {
     s3Url = s3Url.slice(0, -1);
   }
 
-  return `${process.env.RAZZLE_S3_URL}/${key}`;
+  return `${process.env.RAZZLE_S3_URL}/${key}?${ts}`;
 }

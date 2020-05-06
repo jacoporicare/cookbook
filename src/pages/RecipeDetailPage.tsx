@@ -132,8 +132,8 @@ function RecipeDetailPage(props: Props) {
     user,
   } = recipe;
 
-  const imageUrl = hasImage ? getImageUrl(slug) : undefined;
-  const imageFullUrl = hasImage ? getImageUrl(slug, 'full') : undefined;
+  const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : undefined;
+  const imageFullUrl = hasImage ? getImageUrl(slug, lastModifiedDate, 'full') : undefined;
 
   return (
     <BoxArticle>
