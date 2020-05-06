@@ -19,7 +19,6 @@ export type Recipe = {
   servingCount?: number;
   lastModifiedDate: Date;
   ingredients: Ingredient[];
-  image?: Buffer;
   hasImage?: boolean;
   tags?: string[];
 };
@@ -43,7 +42,6 @@ const RecipeSchema = new Schema({
       isGroup: Boolean,
     },
   ],
-  image: { type: Buffer, select: false },
   hasImage: Boolean,
   tags: [String],
 });

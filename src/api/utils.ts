@@ -1,19 +1,21 @@
 /* eslint-disable no-console */
 import crypto from 'crypto';
-import path from 'path';
 
-import fs from 'fs-extra';
+import { PutObjectCommand, S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3-node';
+import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 import slug from 'slug';
+
+import { getImageKey } from '../utils';
 
 import recipeModel, { Recipe } from './models/recipe';
 import { User } from './models/user';
 import { RecipeInput, FileUpload } from './types';
 
-export async function prepareRecipe(
+export function prepareRecipe(
   recipe: RecipeInput,
-  fileUpload?: Promise<FileUpload>,
+  hasImage?: boolean,
   user?: User,
-): Promise<Partial<Recipe>> {
+): Partial<Recipe> {
   const slug = toSlug(recipe.title);
   let newRecipe: Partial<Recipe> = {
     ...recipe,
@@ -33,27 +35,11 @@ export async function prepareRecipe(
     tags: recipe.tags || undefined,
   };
 
-  if (fileUpload) {
-    const stream = (await fileUpload).createReadStream();
-    const bufs: Buffer[] = [];
-    const image = await new Promise<Buffer>(resolve => {
-      stream
-        .on('data', (data: Buffer) => {
-          bufs.push(data);
-        })
-        .on('end', () => {
-          resolve(Buffer.concat(bufs));
-        });
-    });
-
+  if (hasImage !== undefined) {
     newRecipe = {
       ...newRecipe,
-      image,
-      hasImage: true,
+      hasImage,
     };
-
-    const thumbPath = getThumbPath(slug);
-    await fs.remove(thumbPath);
   }
 
   if (user) {
@@ -74,10 +60,6 @@ export async function checkUserRightsAsync(user: User | null, recipeId: string) 
   const recipe = await recipeModel.findById(recipeId);
 
   return Boolean(user && recipe && (user.isAdmin || recipe.user === user._id));
-}
-
-export function getThumbPath(slug: string): string {
-  return path.join(`/tmp/cookbook/thumbs/${slug}.jpg`);
 }
 
 export function getRandomString(length: number) {
@@ -101,4 +83,54 @@ export function saltHashPassword(password: string) {
     hash: sha512(password, salt),
     salt,
   };
+}
+
+export async function uploadImageToS3(slug: string, fileUpload: Promise<FileUpload>) {
+  // Automatically reads configuration from env vars:
+  // AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+  const s3 = new S3Client({});
+  const stream = (await fileUpload).createReadStream();
+  const bufs: Buffer[] = [];
+  const image = await new Promise<Buffer>(resolve => {
+    stream
+      .on('data', (data: Buffer) => {
+        bufs.push(data);
+      })
+      .on('end', () => {
+        resolve(Buffer.concat(bufs));
+      });
+  });
+
+  const ft = await fileTypeFromBuffer(image);
+  const mimeType = ft?.mime ?? 'image/jpeg';
+
+  const putObjectCommand = new PutObjectCommand({
+    Body: image,
+    Bucket: process.env.S3_BUCKET!,
+    Key: getImageKey(slug, 'full'),
+    ACL: 'public-read',
+    ContentType: mimeType,
+  });
+
+  await s3.send(putObjectCommand);
+}
+
+export async function deleteImageFromS3(slug: string) {
+  // Automatically reads configuration from env vars:
+  // AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+  const s3 = new S3Client({});
+
+  const deleteFull = new DeleteObjectCommand({
+    Bucket: process.env.S3_BUCKET!,
+    Key: getImageKey(slug, 'full'),
+  });
+
+  await s3.send(deleteFull);
+
+  const deleteThumb = new DeleteObjectCommand({
+    Bucket: process.env.S3_BUCKET!,
+    Key: getImageKey(slug, 'thumb'),
+  });
+
+  await s3.send(deleteThumb);
 }

@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { IResolvers } from 'apollo-server-express';
-import fs from 'fs-extra';
 import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 
@@ -11,10 +10,11 @@ import { RecipeInput, FileUpload, UserInput } from '../types';
 import {
   checkUserRightsAsync,
   getRandomString,
-  getThumbPath,
   prepareRecipe,
   saltHashPassword,
   sha512,
+  uploadImageToS3,
+  deleteImageFromS3,
 } from '../utils';
 
 export type Context = {
@@ -92,11 +92,18 @@ const resolvers: IResolvers = {
         return null;
       }
 
-      const recipeToSave = await prepareRecipe(args.recipe, args.image, context.user);
+      const recipeToSave = prepareRecipe(args.recipe, Boolean(args.image), context.user);
       const recipe = await recipeModel.create(recipeToSave);
       recipe.populate('user');
 
-      return await recipe.execPopulate();
+      const newRecipe = await recipe.execPopulate();
+
+      if (args.image) {
+        // We don't await
+        uploadImageToS3(newRecipe.slug, args.image);
+      }
+
+      return newRecipe;
     },
     updateRecipe: async (
       _,
@@ -107,11 +114,18 @@ const resolvers: IResolvers = {
         return null;
       }
 
-      const recipeToSave = await prepareRecipe(args.recipe, args.image);
+      const recipeToSave = prepareRecipe(args.recipe, args.image ? true : undefined);
 
-      return await recipeModel
+      const newRecipe = await recipeModel
         .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
         .populate('user');
+
+      if (newRecipe && args.image) {
+        // We don't await
+        uploadImageToS3(newRecipe.slug, args.image);
+      }
+
+      return newRecipe;
     },
     deleteRecipe: async (_, args: { id: string }, context: Context) => {
       if (!context.user || !(await checkUserRightsAsync(context.user, args.id))) {
@@ -124,8 +138,8 @@ const resolvers: IResolvers = {
         return false;
       }
 
-      const thumbPath = getThumbPath(recipe.slug);
-      fs.remove(thumbPath).catch(console.log);
+      // We don't await
+      deleteImageFromS3(recipe.slug);
 
       return true;
     },

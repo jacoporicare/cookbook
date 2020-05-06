@@ -19,7 +19,6 @@ import apolloServer from './api/apolloServer';
 import { authentication } from './api/auth';
 import { AUTH_TOKEN_KEY } from './const';
 import * as db from './db';
-import routes from './serverRoutes';
 
 db.connect();
 
@@ -38,8 +37,7 @@ server
   .use(cookiesMiddleware())
   .use(authentication())
   .use(bodyParser.raw({ limit: '10MB', type: 'application/octet-stream' }))
-  .use(bodyParser.json())
-  .use(routes);
+  .use(bodyParser.json());
 
 apolloServer.applyMiddleware({ app: server });
 

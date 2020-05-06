@@ -331,9 +331,7 @@ function RecipeEditPage(props: Props) {
   }
 
   const imageUrl =
-    props.slug && editedRecipe && editedRecipe.hasImage
-      ? getImageUrl(props.slug, editedRecipe.lastModifiedDate)
-      : undefined;
+    props.slug && editedRecipe && editedRecipe.hasImage ? getImageUrl(props.slug) : undefined;
 
   return (
     <>

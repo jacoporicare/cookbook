@@ -54,9 +54,9 @@ const Title = styled.h3({
 });
 
 function RecipeListItem({ recipe }: Props) {
-  const { slug, title, preparationTime, sideDish, hasImage, lastModifiedDate } = recipe;
+  const { slug, title, preparationTime, sideDish, hasImage } = recipe;
 
-  const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
+  const imageUrl = hasImage ? getImageUrl(slug) : placeholder;
 
   return (
     <StyledLink to={`/recept/${slug}`}>

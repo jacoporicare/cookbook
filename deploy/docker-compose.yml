@@ -26,6 +26,11 @@ services:
       LETSENCRYPT_HOST: '${HOST}'
       LETSENCRYPT_EMAIL: ***REMOVED***
       JWT_SECRET: 1577C4J2lmsEuYw27Spy1gAONom3jmdF
+      AWS_ACCESS_KEY_ID: ***REMOVED***
+      AWS_SECRET_ACCESS_KEY: ***REMOVED***
+      AWS_REGION: eu-west-1
+      S3_BUCKET: '${S3_BUCKET}'
+      RAZZLE_S3_URL: '${RAZZLE_S3_URL}'
 
 networks:
   cookbook:
