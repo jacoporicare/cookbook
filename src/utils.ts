@@ -1,3 +1,5 @@
+import { runtimeConfig } from './config';
+
 /**
  * Object -> JSON: undefined to null because undefined is not valid JSON value
  */
@@ -18,11 +20,6 @@ export function getImageKey(slug: string, size: 'full' | 'thumb' = 'thumb') {
 
 export function getImageUrl(slug: string, ts: number, size: 'full' | 'thumb' = 'thumb') {
   const key = getImageKey(slug, size);
-  let s3Url = process.env.RAZZLE_S3_URL!;
 
-  if (s3Url.endsWith('/')) {
-    s3Url = s3Url.slice(0, -1);
-  }
-
-  return `${process.env.RAZZLE_S3_URL}/${key}?${ts}`;
+  return `https://${runtimeConfig.s3Bucket}.s3-${runtimeConfig.awsRegion}.amazonaws.com/${key}?${ts}`;
 }
