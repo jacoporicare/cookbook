@@ -1,4 +1,3 @@
-/* eslint-disable */
 const sharp = require('sharp');
 
 module.exports = async (s3, bucket, srcKey) => {
