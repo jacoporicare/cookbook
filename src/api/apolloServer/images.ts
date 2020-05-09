@@ -10,10 +10,11 @@ import { FileUpload } from '../types';
 // AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 const s3 = new S3();
 
-export async function uploadImage(slug: string, fileUpload: Promise<FileUpload>) {
+export async function fileUploadToBuffer(fileUpload: Promise<FileUpload>) {
   const stream = (await fileUpload).createReadStream();
   const bufs: Buffer[] = [];
-  const image = await new Promise<Buffer>(resolve => {
+
+  return new Promise<Buffer>(resolve => {
     stream
       .on('data', (data: Buffer) => {
         bufs.push(data);
@@ -22,7 +23,9 @@ export async function uploadImage(slug: string, fileUpload: Promise<FileUpload>)
         resolve(Buffer.concat(bufs));
       });
   });
+}
 
+export async function uploadImage(slug: string, image: Buffer) {
   const ft = await fileTypeFromBuffer(image);
   const mimeType = ft?.mime ?? 'image/jpeg';
 

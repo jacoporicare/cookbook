@@ -15,7 +15,7 @@ import {
   sha512,
 } from '../utils';
 
-import { deleteImage, renameImage, uploadImage } from './images';
+import { deleteImage, fileUploadToBuffer, renameImage, uploadImage } from './images';
 
 export type Context = {
   user?: User;
@@ -101,8 +101,9 @@ const resolvers: IResolvers = {
       const newRecipe = await recipe.execPopulate();
 
       if (args.image) {
-        // We don't await
-        uploadImage(newRecipe.slug, args.image);
+        const image = await fileUploadToBuffer(args.image);
+        // We don't await for the upload
+        uploadImage(newRecipe.slug, image);
       }
 
       return newRecipe;
@@ -132,8 +133,9 @@ const resolvers: IResolvers = {
         const renamedAndOrigHasImage = origRecipe.hasImage && origRecipe.slug !== newRecipe.slug;
 
         if (args.image) {
-          // We don't await
-          uploadImage(newRecipe.slug, args.image);
+          const image = await fileUploadToBuffer(args.image);
+          // We don't await for the upload
+          uploadImage(newRecipe.slug, image);
 
           if (renamedAndOrigHasImage) {
             deleteImage(origRecipe.slug);
