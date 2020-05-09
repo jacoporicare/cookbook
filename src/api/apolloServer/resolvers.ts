@@ -43,6 +43,8 @@ const resolvers: IResolvers = {
       if (args.slug) {
         return await recipeModel.findOne({ slug: args.slug }).populate('user');
       }
+
+      return null;
     },
     ingredients: async () => {
       const ingredients: string[] = await recipeModel.distinct('ingredients.name');

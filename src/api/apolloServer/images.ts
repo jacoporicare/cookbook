@@ -32,7 +32,6 @@ export async function uploadImage(slug: string, fileUpload: Promise<FileUpload>)
       Key: getImageKey(slug, 'full'),
       Body: image,
       ContentType: mimeType,
-      ACL: 'public-read',
     })
     .promise();
 }
@@ -43,7 +42,6 @@ export async function renameImage(srcSlug: string, dstSlug: string) {
       Bucket: process.env.S3_BUCKET!,
       CopySource: encodeURIComponent(`${process.env.S3_BUCKET}/${getImageKey(srcSlug, 'full')}`),
       Key: getImageKey(dstSlug, 'full'),
-      ACL: 'public-read',
     })
     .promise();
 
@@ -52,7 +50,6 @@ export async function renameImage(srcSlug: string, dstSlug: string) {
       Bucket: process.env.S3_BUCKET!,
       CopySource: encodeURIComponent(`${process.env.S3_BUCKET}/${getImageKey(srcSlug, 'thumb')}`),
       Key: getImageKey(dstSlug, 'thumb'),
-      ACL: 'public-read',
     })
     .promise();
 
