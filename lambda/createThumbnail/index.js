@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const util = require('util');
 
 const AWS = require('aws-sdk');

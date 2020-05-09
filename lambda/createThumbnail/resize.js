@@ -1,4 +1,3 @@
-/* eslint-disable */
 const sharp = require('sharp');
 
 module.exports = async (s3, bucket, srcKey) => {
@@ -39,7 +38,6 @@ module.exports = async (s3, bucket, srcKey) => {
       Bucket: bucket,
       Key: dstKey,
       Body: buffer,
-      ACL: 'public-read',
       ContentType: 'image/jpeg',
     };
 
