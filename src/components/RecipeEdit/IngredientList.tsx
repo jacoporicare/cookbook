@@ -8,8 +8,8 @@ import {
   SortEndHandler,
 } from 'react-sortable-hoc';
 
+import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Ingredient } from '../../types';
 import Icon from '../common/Icon';
 import { Box } from '../core';
 import { InfoAlert } from '../elements';
@@ -17,7 +17,7 @@ import { InfoAlert } from '../elements';
 type RemoveHandler = (index: number) => void;
 
 type SortableListProps = {
-  items: Ingredient[];
+  items: Omit<Ingredient, '_id'>[];
   onRemove: RemoveHandler;
 };
 
@@ -43,7 +43,7 @@ const Handle = SortableHandle(() => (
 
 type SortableItemProps = {
   itemIndex: number;
-  ingredient: Ingredient;
+  ingredient: Omit<Ingredient, '_id'>;
   onRemove: RemoveHandler;
 };
 

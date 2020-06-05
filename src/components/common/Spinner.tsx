@@ -63,7 +63,7 @@ export default class Spinner extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (!this.state.visible && typeof window !== 'undefined') {
+    if (!this.state.visible) {
       this.timer = window.setTimeout(
         () => this.setState({ visible: true }),
         this.props.delay || 50,

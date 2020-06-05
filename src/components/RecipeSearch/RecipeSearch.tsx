@@ -2,25 +2,24 @@ import { ClassNames } from '@emotion/core';
 import matchSorter from 'match-sorter';
 import React, { FormEvent } from 'react';
 import Autosuggest, {
-  SuggestionsFetchRequestedParams,
   SuggestionSelectedEventData,
+  SuggestionsFetchRequestedParams,
 } from 'react-autosuggest';
 
 import placeholder from '../../assets/food-placeholder.png';
+import { RecipeBaseFragment } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Recipe } from '../../types';
-import { getImageUrl } from '../../utils';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import { Box } from '../core';
 
 type Props = {
-  recipes: Recipe[];
+  recipes: RecipeBaseFragment[];
   onSelected: (slug: string) => void;
 };
 
 type State = {
   value: string;
-  suggestions: Recipe[];
+  suggestions: RecipeBaseFragment[];
 };
 
 // https://feathericons.com search
@@ -61,15 +60,15 @@ export default class RecipeSearch extends React.Component<Props, State> {
 
   handleSelected = (
     event: FormEvent<HTMLInputElement>,
-    { suggestion }: SuggestionSelectedEventData<Recipe>,
+    { suggestion }: SuggestionSelectedEventData<RecipeBaseFragment>,
   ) => {
     this.props.onSelected(suggestion.slug);
     this.setState({ value: '', suggestions: [] });
   };
 
-  renderSuggestion = (recipe: Recipe) => {
-    const { slug, hasImage, preparationTime, sideDish, lastModifiedDate } = recipe;
-    const imageUrl = hasImage ? getImageUrl(slug, lastModifiedDate) : placeholder;
+  renderSuggestion = (recipe: RecipeBaseFragment) => {
+    const { image, preparationTime, sideDish } = recipe;
+    const imageUrl = image?.thumbUrl || placeholder;
 
     return (
       <Box borderBottom={`1px solid ${colors.gray300}`} display="flex" height="64px">
@@ -227,8 +226,8 @@ export default class RecipeSearch extends React.Component<Props, State> {
               renderSuggestion={this.renderSuggestion}
               suggestions={suggestions}
               highlightFirstSuggestion
-              onSuggestionsClearRequested={this.handleClear}
               onSuggestionSelected={this.handleSelected}
+              onSuggestionsClearRequested={this.handleClear}
               onSuggestionsFetchRequested={this.handleFetch}
             />
           </Box>

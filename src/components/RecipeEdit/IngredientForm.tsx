@@ -11,18 +11,18 @@ import { Input, getInputStyle, Button } from '../elements';
 import AutosuggestWrapper from './AutosuggestWrapper';
 
 type Props = {
-  name?: string;
-  amount?: number | string;
-  amountUnit?: string;
+  name: string | null;
+  amount: number | string | null;
+  amountUnit: string | null;
   ingredientOptions: string[];
   onChange: AutosuggestChangeEventHandler;
   onAdd: () => void;
 };
 
 function IngredientForm({
-  name = '',
-  amount = '',
-  amountUnit = '',
+  name,
+  amount,
+  amountUnit,
   ingredientOptions: serverIngredientOptions,
   onChange,
   onAdd,
@@ -64,7 +64,7 @@ function IngredientForm({
                 name="amount"
                 placeholder="Množství"
                 type="number"
-                value={amount}
+                value={amount ?? ''}
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
               />
@@ -74,7 +74,7 @@ function IngredientForm({
                 name="amountUnit"
                 placeholder="Jednotka"
                 type="text"
-                value={amountUnit}
+                value={amountUnit ?? ''}
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
               />
@@ -86,7 +86,7 @@ function IngredientForm({
                 getSuggestionValue={s => s}
                 inputProps={{
                   name: 'name',
-                  value: name,
+                  value: name ?? '',
                   onChange: (event, selectEvent) => onChange(event, selectEvent, 'name'),
                   onKeyPress: handleKeyPress,
                   className: getInputStyle(css)({ hasAppendAddon: true }),

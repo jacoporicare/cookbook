@@ -6,8 +6,8 @@ import Icon from '../common/Icon';
 import RecipeInfoItem from './RecipeInfoItem';
 
 type Props = {
-  preparationTime?: number;
-  sideDish?: string;
+  preparationTime: number | null;
+  sideDish: string | null;
   placeholder?: React.ReactNode;
 };
 

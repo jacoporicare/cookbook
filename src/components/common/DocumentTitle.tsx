@@ -1,5 +1,5 @@
+import Head from 'next/head';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 
 type Props = {
   title?: string;
@@ -7,9 +7,9 @@ type Props = {
 
 function DocumentTitle({ title }: Props) {
   return (
-    <Helmet>
+    <Head>
       <title>{title ? `${title} - Žrádelník` : 'Žrádelník'}</title>
-    </Helmet>
+    </Head>
   );
 }
 

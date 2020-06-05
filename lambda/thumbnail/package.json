@@ -1,0 +1,10 @@
+{
+  "name": "cookbook-api-thumbnail",
+  "private": true,
+  "scripts": {
+    "install:linux": "npm install --arch=x64 --platform=linux"
+  },
+  "dependencies": {
+    "sharp": "^0.25.2"
+  }
+}

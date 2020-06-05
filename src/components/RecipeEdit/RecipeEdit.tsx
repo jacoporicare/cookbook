@@ -1,7 +1,8 @@
 import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { AutosuggestChangeEventHandler, Ingredient } from '../../types';
+import { Ingredient } from '../../generated/graphql';
+import { AutosuggestChangeEventHandler } from '../../types';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
 import Spinner from '../common/Spinner';
@@ -22,7 +23,7 @@ type Props = {
   directions?: string;
   imageUrl?: string;
   ingredientOptions: string[];
-  ingredients: Ingredient[];
+  ingredients: Omit<Ingredient, '_id'>[];
   isNew: boolean;
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
@@ -33,12 +34,12 @@ type Props = {
   onSortIngredient: SortEndHandler;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onTagsChange: (tags: string[]) => void;
-  preparationTime?: number;
-  servingCount?: number;
-  sideDish?: string;
+  preparationTime: number | null;
+  servingCount: number | null;
+  sideDish: string | null;
   sideDishOptions: string[];
   slug?: string;
-  tags?: string[];
+  tags: string[] | null;
   tagOptions: string[];
   title?: string;
 };

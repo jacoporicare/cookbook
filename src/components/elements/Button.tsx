@@ -10,7 +10,7 @@ type ButtonProps = {
   isPrependAddon?: boolean;
 };
 
-type Props = BoxProps & ButtonProps;
+type Props = BoxProps & ButtonProps & { as?: string };
 
 const buttonStyle = (props: ButtonProps) =>
   css(
