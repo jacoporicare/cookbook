@@ -5,8 +5,7 @@ stages:
 variables:
   NGINX_VHOSTD_DIR: /srv/nginx/vhost.d
   DEV_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
-  STG_DIR: /home/gitlab-runner/www/cookbook_stg/
-  PRD_DIR: /home/gitlab-runner/www/cookbook_prd/
+  PROD_DIR: /home/gitlab-runner/www/cookbook_prod/
 
 build:
   stage: build
@@ -37,7 +36,7 @@ deploy-dev:
     - docker-compose pull
     - docker-compose down --remove-orphans --rmi local
     - docker-compose up -d
-    - docker-compose exec -T web yarn seed
+    # - docker-compose exec -T web yarn seed
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://$CI_COMMIT_REF_SLUG.zradelnik.eu
@@ -63,23 +62,7 @@ stop-env-dev:
     - cd ~
     - rm -rf $DEV_DIR
 
-deploy-stg:
-  stage: deploy
-  only:
-    - develop
-  tags:
-    - aws-web
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -a --delete deploy/ $STG_DIR
-    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
-    - cd $STG_DIR
-    - envsubst < ".env.stg" > ".env"
-    - docker-compose pull
-    - docker-compose down --remove-orphans
-    - docker-compose up -d
-
-deploy-prd:
+deploy-prod:
   stage: deploy
   only:
     - master
@@ -87,10 +70,10 @@ deploy-prd:
     - aws-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -a --delete deploy/ $PRD_DIR
+    - rsync -a --delete deploy/ $PROD_DIR
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
-    - cd $PRD_DIR
-    - envsubst < ".env.prd" > ".env"
+    - cd $PROD_DIR
+    - envsubst < ".env.prod" > ".env"
     - docker-compose pull
     - docker-compose down --remove-orphans
     - docker-compose up -d

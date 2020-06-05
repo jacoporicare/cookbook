@@ -1,13 +1,13 @@
 import React from 'react';
 
+import { RecipeBaseFragment } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Recipe } from '../../types';
-import { BoxArticle, Box } from '../core';
+import { Box, BoxArticle } from '../core';
 
 import RecipeListItem from './RecipeListItem';
 
 type Props = {
-  recipes: Recipe[];
+  recipes: RecipeBaseFragment[];
 };
 
 const widths = ['100%', '50%', '33.33333%', '25%'];
@@ -22,24 +22,21 @@ function RecipeList({ recipes }: Props) {
       flexWrap="wrap"
       justifyContent="flex-start"
     >
-      {recipes
-        .slice()
-        .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
-        .map(recipe => (
-          <BoxArticle
-            key={recipe._id}
-            borderBottom={border}
-            borderLeft={[border, 0]}
-            borderRight={border}
-            borderTop={[border, 0]}
-            flex="auto"
-            maxWidth={widths}
-            mb={[3, 0]}
-            width={widths}
-          >
-            <RecipeListItem recipe={recipe} />
-          </BoxArticle>
-        ))}
+      {recipes.map(recipe => (
+        <BoxArticle
+          key={recipe.slug}
+          borderBottom={border}
+          borderLeft={[border, 0]}
+          borderRight={border}
+          borderTop={[border, 0]}
+          flex="auto"
+          maxWidth={widths}
+          mb={[3, 0]}
+          width={widths}
+        >
+          <RecipeListItem recipe={recipe} />
+        </BoxArticle>
+      ))}
     </Box>
   );
 }

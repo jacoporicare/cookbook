@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import React from 'react';
 
+import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Ingredient } from '../../types';
 import RichText from '../RichText/RichText';
 import { Box, Text, BoxAside } from '../core';
 import { InfoAlert } from '../elements';
@@ -11,9 +11,9 @@ import IngredientList from './IngredientList';
 
 type Props = {
   title: string;
-  ingredients?: Ingredient[];
-  servingCount?: number;
-  directions?: string;
+  ingredients: Ingredient[] | null;
+  servingCount: number | null;
+  directions: string | null;
   lastModifiedDate: number;
   imageUrl?: string;
   imageFullUrl?: string;

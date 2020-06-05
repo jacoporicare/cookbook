@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { Ingredient, AutosuggestChangeEventHandler } from '../../types';
+import { Ingredient } from '../../generated/graphql';
+import { AutosuggestChangeEventHandler } from '../../types';
 import { Box, Text } from '../core';
 
 import IngredientForm from './IngredientForm';
@@ -10,14 +11,14 @@ import IngredientList from './IngredientList';
 
 export type AddIngredientEventHandler = (
   name: string,
-  amount?: number,
-  amountUnit?: string,
+  amount: number | null,
+  amountUnit: string | null,
 ) => void;
 export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
 
 type Props = {
-  items: Ingredient[];
+  items: Omit<Ingredient, '_id'>[];
   ingredientOptions: string[];
   onAdd: AddIngredientEventHandler;
   onAddGroup: AddGroupEventHandler;
@@ -31,9 +32,9 @@ Heading.defaultProps = {
 };
 
 function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
-  const [name, setName] = useState<string>();
-  const [amount, setAmount] = useState<number>();
-  const [amountUnit, setAmountUnit] = useState<string>();
+  const [name, setName] = useState<string | null>(null);
+  const [amount, setAmount] = useState<number | null>(null);
+  const [amountUnit, setAmountUnit] = useState<string | null>(null);
   const [group, setGroup] = useState<string>();
 
   const handleIngredientChange: AutosuggestChangeEventHandler = (
@@ -51,7 +52,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
 
       case 'amount': {
         const parsed = Number.parseFloat(value);
-        setAmount(Number.isNaN(parsed) ? undefined : parsed);
+        setAmount(Number.isNaN(parsed) ? null : parsed);
         break;
       }
 
@@ -74,9 +75,9 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
     }
 
     onAdd(name, amount, amountUnit);
-    setName(undefined);
-    setAmount(undefined);
-    setAmountUnit(undefined);
+    setName(null);
+    setAmount(null);
+    setAmountUnit(null);
   }
 
   function handleAddGroup() {

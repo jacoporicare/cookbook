@@ -20,14 +20,11 @@ services:
     depends_on:
       - db
     environment:
-      MONGO_URI: mongodb://db/cookbook
-      GRAPHQL_URI: 'https://${MAIN_HOST}/graphql'
       VIRTUAL_HOST: '${HOST}'
       LETSENCRYPT_HOST: '${HOST}'
       LETSENCRYPT_EMAIL: ***REMOVED***
-      JWT_SECRET: 1577C4J2lmsEuYw27Spy1gAONom3jmdF
-      AWS_REGION: eu-central-1
-      S3_BUCKET: '${S3_BUCKET}'
+      MONGO_URI: mongodb://db/cookbook
+      RECIPE_IMAGES_S3_BUCKET: '${RECIPE_IMAGES_S3_BUCKET}'
 
 networks:
   cookbook:

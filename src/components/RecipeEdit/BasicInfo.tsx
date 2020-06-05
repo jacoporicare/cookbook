@@ -11,12 +11,12 @@ import { Label, Input, getInputStyle, InputAddon } from '../elements';
 import AutosuggestWrapper from './AutosuggestWrapper';
 
 type Props = {
-  preparationTime?: number;
-  servingCount?: number;
-  sideDish?: string;
+  preparationTime: number | null;
+  servingCount: number | null;
+  sideDish: string | null;
   sideDishOptions: string[];
   tagOptions: string[];
-  tags?: string[];
+  tags: string[] | null;
   onChange: AutosuggestChangeEventHandler;
   onTagsChange: (tags: string[]) => void;
 };

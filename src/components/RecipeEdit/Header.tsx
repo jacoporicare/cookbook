@@ -1,4 +1,4 @@
-import { Link } from '@reach/router';
+import Link from 'next/link';
 import React from 'react';
 
 import Icon from '../common/Icon';
@@ -13,8 +13,6 @@ type Props = {
   slug?: string;
 };
 
-const LinkButton = Button.withComponent(Link);
-
 function Header({ title, isNew, isSaving, changed, slug }: Props) {
   return (
     <PageHeading
@@ -24,7 +22,9 @@ function Header({ title, isNew, isSaving, changed, slug }: Props) {
             <Icon icon="save" regular />
             {isSaving ? 'Ukládání…' : 'Uložit'}
           </SuccessButton>
-          <LinkButton to={isNew ? '/' : `/recept/${slug}`}>Zrušit</LinkButton>
+          <Link as={isNew ? '/' : `/recept/${slug}`} href={isNew ? '/' : `/recept/[slug]`} passHref>
+            <Button as="a">Zrušit</Button>
+          </Link>
         </>
       }
     >

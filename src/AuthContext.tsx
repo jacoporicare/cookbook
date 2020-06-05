@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { setAuthTokenCookie } from './clientAuth';
+import { setAuthToken } from './auth';
 
 type ContextValue = [string | null, (token: string | null) => void];
 
@@ -16,7 +16,7 @@ export function AuthProvider(props: Props) {
   const [value, setValue] = useState(props.token);
 
   function set(token: string | null) {
-    setAuthTokenCookie(token);
+    setAuthToken(token);
     setValue(token);
   }
 

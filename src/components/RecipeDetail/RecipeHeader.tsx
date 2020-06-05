@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Link } from '@reach/router';
+import Link from 'next/link';
 import React from 'react';
 
 import { theme } from '../../styles/colors';
@@ -10,16 +10,14 @@ import { Box } from '../core';
 import { Button, DangerButton } from '../elements';
 
 type Props = {
-  preparationTime?: number;
-  sideDish?: string;
+  preparationTime: number | null;
+  sideDish: string | null;
   slug: string;
-  tags?: string[];
+  tags: string[] | null;
   title: string;
   isAuthor?: boolean;
   onDeleteShow: () => void;
 };
-
-const EditRecipeButton = Button.withComponent(Link);
 
 const Tag = styled.span({
   display: 'inline-block',
@@ -45,10 +43,12 @@ function RecipeHeader({
         buttons={
           isAuthor && (
             <>
-              <EditRecipeButton to={`/recept/${slug}/upravit`}>
-                <Icon icon="edit" regular />
-                Upravit
-              </EditRecipeButton>
+              <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit" passHref>
+                <Button as="a">
+                  <Icon icon="edit" regular />
+                  Upravit
+                </Button>
+              </Link>
               <DangerButton onClick={onDeleteShow}>
                 <Icon icon="trash-alt" regular />
                 Smazat

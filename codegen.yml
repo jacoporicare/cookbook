@@ -1,0 +1,15 @@
+schema: http://localhost:3000/api/graphql
+overwrite: true
+documents: './src/**/*.graphql.ts'
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+      - add: '/* eslint-disable */'
+    config:
+      withComponent: false
+      withHOC: false
+      withHooks: true
+      avoidOptionals: true

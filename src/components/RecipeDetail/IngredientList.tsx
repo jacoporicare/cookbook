@@ -1,17 +1,17 @@
-import React, { Component, ChangeEvent } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 
+import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Ingredient } from '../../types';
 import { Box, Text } from '../core';
-import { InfoAlert, Input, InputAddon, Table, TableRow, TableCell } from '../elements';
+import { InfoAlert, Input, InputAddon, Table, TableCell, TableRow } from '../elements';
 
 type Props = {
-  ingredients?: Ingredient[];
-  servingCount?: number;
+  ingredients: Ingredient[] | null;
+  servingCount: number | null;
 };
 
 type State = {
-  servingCount?: number;
+  servingCount: number | null;
 };
 
 export default class IngredientList extends Component<Props, State> {
@@ -29,7 +29,7 @@ export default class IngredientList extends Component<Props, State> {
     });
   }
 
-  getAmount(amount?: number) {
+  getAmount(amount: number | null) {
     if (!amount) {
       return '';
     }
@@ -46,7 +46,7 @@ export default class IngredientList extends Component<Props, State> {
     const parsedValue = Number(event.target.value);
 
     this.setState({
-      servingCount: value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : undefined,
+      servingCount: value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : null,
     });
   };
 
@@ -84,11 +84,11 @@ export default class IngredientList extends Component<Props, State> {
         <Table width={1}>
           <tbody>
             {ingredients.map(ingredient => {
-              const { _id: id, isGroup, name, amount, amountUnit } = ingredient;
+              const { _id, isGroup, name, amount, amountUnit } = ingredient;
 
               if (isGroup) {
                 return (
-                  <TableRow key={id} css={{ backgroundColor: colors.gray200 }}>
+                  <TableRow key={_id} css={{ backgroundColor: colors.gray200 }}>
                     <TableCell colSpan={3} textAlign="center">
                       <Text fontWeight={600}> {name}</Text>
                     </TableCell>
@@ -97,7 +97,7 @@ export default class IngredientList extends Component<Props, State> {
               }
 
               return (
-                <TableRow key={id}>
+                <TableRow key={_id}>
                   <TableCell textAlign="right" width="20%">
                     {this.getAmount(amount)}
                   </TableCell>

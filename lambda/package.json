@@ -1,0 +1,15 @@
+{
+  "name": "cookbook-lambda",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./node_modules/.bin/serverless offline --stage local",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "serverless": "^1.70.0",
+    "serverless-offline": "^6.1.5",
+    "serverless-plugin-warmup": "^4.9.0"
+  }
+}
