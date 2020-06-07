@@ -202,32 +202,36 @@ export default class RecipeSearch extends React.Component<Props, State> {
                   font-size: 16px;
                   margin: 8px;
                   outline: 0;
-                  padding: 5px 5px 5px 16px;
+                  /* padding: 5px 5px 5px 16px; */
+                  padding: 5px 5px 5px 29px;
                   transition: width 200ms ease, padding 200ms ease, background-color 100ms ease;
-                  width: 16px;
+                  /* width: 16px; */
+                  width: calc(100% - 16px);
+                  padding-left: 29px;
 
-                  @media (max-width: 600px) {
+                  /* @media (max-width: 600px) {
                     &:focus {
                       padding-left: 29px;
                       width: 8rem;
                     }
-                  }
+                  } */
 
                   &:focus {
                     background-color: #444;
                   }
 
+                  /*
                   @media (min-width: 601px) {
                     width: 12rem;
                     padding-left: 29px;
-                  }
+                  } */
                 `,
               }}
               renderSuggestion={this.renderSuggestion}
               suggestions={suggestions}
               highlightFirstSuggestion
-              onSuggestionSelected={this.handleSelected}
               onSuggestionsClearRequested={this.handleClear}
+              onSuggestionSelected={this.handleSelected}
               onSuggestionsFetchRequested={this.handleFetch}
             />
           </Box>
