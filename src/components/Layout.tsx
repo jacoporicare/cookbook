@@ -5,7 +5,6 @@ import { colors } from '../styles/colors';
 
 import Footer from './Footer/Footer';
 import Header from './Header';
-import HeaderComponent from './Header/Header';
 import TrackUserActivity from './TrackUserActivity';
 import DocumentTitle from './common/DocumentTitle';
 import { BoxFooter, BoxMain } from './core';
@@ -21,10 +20,10 @@ function Layout(props: Props) {
       <DocumentTitle />
       <Notifications options={{ zIndex: 1100 }} />
       {props.static ? (
-        <HeaderComponent hideUserInfo />
+        <Header />
       ) : (
         <>
-          <Header />
+          <Header showRecipeSearch showUserInfo />
           <TrackUserActivity />
         </>
       )}
