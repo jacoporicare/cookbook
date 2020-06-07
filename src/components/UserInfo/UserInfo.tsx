@@ -41,7 +41,7 @@ function UserInfo(props: Props) {
             <NavLink href="/nastaveni">{props.userName}</NavLink>
           )}
           <NavLink href={`/odhlaseni?u=${router.asPath || ''}`}>
-            <Icon icon="sign-out-alt" />
+            <Icon icon="sign-out-alt" /> <span className="sign-out">Odhlásit</span>
           </NavLink>
         </>
       )}
@@ -50,13 +50,31 @@ function UserInfo(props: Props) {
           color: ${colors.gray600};
           font-size: 20px;
           font-weight: 300;
-          padding: 8px;
+          padding: 4px 8px;
           white-space: nowrap;
         }
 
         .nav-item.divider {
           padding-left: 0;
           padding-right: 0;
+        }
+
+        @media (max-width: 1023px) {
+          .nav-item.divider {
+            border-top: 1px solid ${colors.gray600};
+            height: 0;
+            overflow: hidden;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .nav-item {
+            padding: 8px;
+          }
+
+          .sign-out {
+            display: none;
+          }
         }
       `}</style>
     </>

@@ -29,11 +29,18 @@ function NavLink({ activeHref, children, ...linkProps }: Props) {
           color: ${colors.gray600};
           font-size: 20px;
           font-weight: 300;
-          padding: 8px;
+          padding: 4px 8px;
           white-space: nowrap;
         }
 
+        @media (min-width: 1024px) {
+          .nav-item {
+            padding: 8px;
+          }
+        }
+
         .link {
+          display: block;
           color: white;
           text-decoration: none;
         }

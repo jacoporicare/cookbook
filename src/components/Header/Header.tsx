@@ -29,13 +29,7 @@ function Header(props: Props) {
           boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.2)',
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          overflow={['auto', 'initial']}
-          px={[3, 4]}
-          py={1}
-        >
+        <Box display="flex" justifyContent="space-between" px={[3, 4]} py={1}>
           <Box alignItems="center" display="flex">
             <Link href="/">
               <a className="logo">
