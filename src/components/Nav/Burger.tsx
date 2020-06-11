@@ -12,6 +12,7 @@ function Burger() {
       <style jsx>{`
         input:checked ~ :global(nav) {
           transform: translateX(0);
+          box-shadow: rgba(0, 0, 0, 0.25) -16px 0 32px;
         }
 
         input {
