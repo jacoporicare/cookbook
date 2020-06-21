@@ -2,13 +2,13 @@ FROM node:14-alpine as builder
 
 WORKDIR /srv
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --unsafe-perm
 COPY . .
 RUN npm run build
 RUN mkdir app \
   && cp -a package.json package-lock.json .env public app/ \
   && cd app \
-  && NODE_ENV=production npm install
+  && NODE_ENV=production npm install --unsafe-perm
 
 
 FROM node:14-alpine

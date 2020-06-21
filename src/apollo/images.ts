@@ -21,7 +21,7 @@ export function getImageUrl(slug: string, size: string) {
 }
 
 export async function fileUploadToBuffer(fileUpload: Promise<FileUpload>) {
-  const stream = (await fileUpload).createReadStream();
+  const stream = (await fileUpload).file.createReadStream();
   const bufs: Buffer[] = [];
 
   return new Promise<Buffer>(resolve => {

@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import { connect } from '../db';
 
 import { signToken, authenticated } from './auth';
-import { deleteImage, fileUploadToBuffer, renameImage, uploadImage } from './images';
+import { deleteImage, renameImage, uploadImage, fileUploadToBuffer } from './images';
 import recipeModel from './models/recipe';
 import userModel, { User } from './models/user';
 import { FileUpload, RecipeInput, UserInput } from './types';

@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://www.zradelnik.eu/",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "next",
     "dev:inspect": "NODE_OPTIONS='--inspect' next",
     "build": "next build",
@@ -87,6 +88,10 @@
     "eslint-plugin-react-hooks": "^4.0.4",
     "prettier": "^2.0.5",
     "typescript": "~3.9.3"
+  },
+  "resolutions": {
+    "fs-capacitor": "^6.2.0",
+    "graphql-upload": "^11.0.0"
   },
   "browserslist": {
     "production": [

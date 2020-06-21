@@ -1,3 +1,5 @@
+import { Readable } from 'stream';
+
 export type RecipeInput = {
   title: string;
   directions: string | null;
@@ -16,10 +18,12 @@ export type IngredientInput = {
 };
 
 export type FileUpload = {
-  createReadStream: () => NodeJS.ReadableStream;
-  filename: string;
-  mimetype: string;
-  encoding: string;
+  file: {
+    createReadStream: () => Readable;
+    filename: string;
+    mimetype: string;
+    encoding: string;
+  };
 };
 
 export type UserInput = {
