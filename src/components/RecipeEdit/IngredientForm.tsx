@@ -19,24 +19,17 @@ type Props = {
   onAdd: () => void;
 };
 
-function IngredientForm({
-  name,
-  amount,
-  amountUnit,
-  ingredientOptions: serverIngredientOptions,
-  onChange,
-  onAdd,
-}: Props) {
-  const [ingredientOptions, setIngredientOptions] = useState<string[]>(serverIngredientOptions);
+function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange, onAdd }: Props) {
+  const [ingredientFilter, setIngredientFilter] = useState<string>();
 
   function handleSuggestionsFetchRequested({ value }: SuggestionsFetchRequestedParams) {
     if (value) {
-      setIngredientOptions(matchSorter(ingredientOptions, value));
+      setIngredientFilter(value);
     }
   }
 
   function handleSuggestionsClearRequested() {
-    setIngredientOptions(serverIngredientOptions);
+    setIngredientFilter(undefined);
   }
 
   function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
@@ -52,6 +45,10 @@ function IngredientForm({
   function renderSuggestion(suggestion: string) {
     return <span>{suggestion}</span>;
   }
+
+  const filteredIngredientOptions = ingredientFilter
+    ? matchSorter(ingredientOptions, ingredientFilter)
+    : ingredientOptions;
 
   return (
     <ClassNames>
@@ -93,7 +90,7 @@ function IngredientForm({
                   placeholder: 'Název',
                 }}
                 renderSuggestion={renderSuggestion}
-                suggestions={ingredientOptions}
+                suggestions={filteredIngredientOptions}
                 onSuggestionsClearRequested={handleSuggestionsClearRequested}
                 onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
               />

@@ -25,23 +25,27 @@ function BasicInfo({
   preparationTime,
   servingCount,
   sideDish,
-  sideDishOptions: serverSideDishOptions,
+  sideDishOptions,
   tagOptions,
   tags,
   onChange,
   onTagsChange,
 }: Props) {
-  const [sideDishOptions, setSideDishOptions] = useState<string[]>(serverSideDishOptions);
+  const [sideDishFilter, setSideDishFilter] = useState<string>();
 
   function handleSuggestionsFetchRequested({ value }: SuggestionsFetchRequestedParams) {
     if (value) {
-      setSideDishOptions(matchSorter(sideDishOptions, value));
+      setSideDishFilter(value);
     }
   }
 
   function handleSuggestionsClearRequested() {
-    setSideDishOptions(serverSideDishOptions);
+    setSideDishFilter(undefined);
   }
+
+  const filteredSideDishOptions = sideDishFilter
+    ? matchSorter(sideDishOptions, sideDishFilter)
+    : sideDishOptions;
 
   return (
     <ClassNames>
@@ -93,7 +97,7 @@ function BasicInfo({
                 className: getInputStyle(css)(),
               }}
               renderSuggestion={(s: string) => <span>{s}</span>}
-              suggestions={sideDishOptions}
+              suggestions={filteredSideDishOptions}
               onSuggestionsClearRequested={handleSuggestionsClearRequested}
               onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
             />

@@ -68,7 +68,8 @@ function RecipeListItem({ recipe }: Props) {
         }
 
         .image {
-          height: 250px;
+          height: 30vh;
+          min-height: 250px;
           background-size: cover;
           background-position: center center;
         }

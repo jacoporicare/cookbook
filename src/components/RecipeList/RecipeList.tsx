@@ -10,7 +10,7 @@ type Props = {
   recipes: RecipeBaseFragment[];
 };
 
-const widths = ['100%', '50%', '33.33333%', '25%'];
+const widths = ['100%', '50%', '33.33333%', '25%', '20%'];
 const border = `1px solid ${colors.gray200}`;
 
 function RecipeList({ recipes }: Props) {

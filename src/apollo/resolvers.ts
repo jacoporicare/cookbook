@@ -7,8 +7,8 @@ import { connect } from '../db';
 
 import { signToken, authenticated } from './auth';
 import { deleteImage, renameImage, uploadImage, fileUploadToBuffer } from './images';
-import recipeModel from './models/recipe';
-import userModel, { User } from './models/user';
+import recipeModel, { RecipeDocument } from './models/recipe';
+import userModel, { User, UserDocument } from './models/user';
 import { FileUpload, RecipeInput, UserInput } from './types';
 import {
   checkUserRightsAsync,
@@ -76,7 +76,7 @@ const resolvers: IResolvers = {
     createRecipe: authenticated(
       async (_, args: { recipe: RecipeInput; image?: Promise<FileUpload> }, ctx) => {
         const recipeToSave = prepareRecipe(args.recipe, Boolean(args.image), ctx.currentUser);
-        const recipe = await recipeModel.create(recipeToSave);
+        const recipe = await recipeModel.create(recipeToSave as RecipeDocument);
         recipe.populate('user');
 
         const newRecipe = await recipe.execPopulate();
@@ -162,7 +162,7 @@ const resolvers: IResolvers = {
           isAdmin: args.user.isAdmin ? true : undefined,
         };
 
-        return await userModel.create(userToSave);
+        return await userModel.create(userToSave as UserDocument);
       },
       { requireAdmin: true },
     ),
