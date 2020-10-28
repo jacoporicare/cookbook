@@ -24,7 +24,7 @@ deploy-dev:
   except:
     - master
   tags:
-    - aws-web
+    - hukot-web
   when: manual
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
@@ -47,7 +47,7 @@ stop-env-dev:
     - master
     - tags
   tags:
-    - aws-web
+    - hukot-web
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
@@ -65,7 +65,7 @@ deploy-prod:
   only:
     - master
   tags:
-    - aws-web
+    - hukot-web
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - rsync -a --delete deploy/ $PROD_DIR
