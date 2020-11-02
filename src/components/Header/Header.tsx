@@ -4,6 +4,7 @@ import React from 'react';
 import { colors } from '../../styles/colors';
 import Nav from '../Nav';
 import RecipeSearch from '../RecipeSearch';
+import WakeLock from '../WakeLock';
 import { Box, BoxHeader } from '../core';
 
 import cow from './cow.png';
@@ -39,8 +40,9 @@ function Header(props: Props) {
               </a>
             </Link>
           </Box>
-          <Box display="flex">
+          <Box alignItems="center" display="flex">
             {props.showRecipeSearch && <RecipeSearch />}
+            <WakeLock />
             <Nav showUserInfo={props.showUserInfo} />
           </Box>
         </Box>
