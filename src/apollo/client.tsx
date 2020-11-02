@@ -1,6 +1,5 @@
 /* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-explicit-any  */
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
 import { NextPageContext } from 'next';
 
 /**
@@ -23,7 +22,7 @@ export function createApolloClient(
 
 function createIsomorphLink(ctx: Pick<NextPageContext, 'req' | 'res'>) {
   if (typeof window === 'undefined') {
-    const { SchemaLink } = require('apollo-link-schema');
+    const { SchemaLink } = require('@apollo/client/link/schema');
     const schema = require('./schema').default;
 
     return new SchemaLink({ schema, context: ctx });

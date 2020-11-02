@@ -1,7 +1,5 @@
 /* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-explicit-any  */
-import { ApolloProvider } from '@apollo/react-hooks';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient, ApolloProvider, NormalizedCacheObject } from '@apollo/client';
 import { NextPage, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
@@ -126,7 +124,7 @@ export const withApollo = ({ ssr = true } = {}) => (PageComponent: NextPage) => 
         if (ssr && AppTree) {
           try {
             // Run all GraphQL queries
-            const { getDataFromTree } = await import('@apollo/react-ssr');
+            const { getDataFromTree } = await import('@apollo/client/react/ssr');
 
             // Since AppComponents and PageComponents have different context types
             // we need to modify their props a little.

@@ -1,4 +1,4 @@
-import { ApolloError } from 'apollo-client';
+import { ApolloError } from '@apollo/client';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
