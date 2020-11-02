@@ -15,10 +15,10 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
 
   const recipe = recipeDocument.toObject({ virtuals: true });
 
-  if (recipe.hasImage) {
+  if (recipe.imageName) {
     recipe.image = {
-      fullUrl: getImageUrl(recipe.slug, 'full'),
-      thumbUrl: getImageUrl(recipe.slug, 'thumb'),
+      fullUrl: getImageUrl(recipe.imageName, 'full'),
+      thumbUrl: getImageUrl(recipe.imageName, 'thumb'),
     };
   }
 
@@ -52,7 +52,7 @@ export function prepareRecipe(
   };
 
   if (hasImage !== undefined) {
-    newRecipe.hasImage = hasImage || undefined;
+    newRecipe.imageName = hasImage ? `${newRecipe.slug}_${Date.now()}` : undefined;
   }
 
   if (user) {

@@ -83,8 +83,7 @@ const resolvers: IResolvers = {
 
         if (args.image) {
           const image = await fileUploadToBuffer(args.image);
-          // We don't await for the upload
-          uploadImage(newRecipe.slug, image);
+          await uploadImage(newRecipe.imageName!, image);
         }
 
         return mapRecipe(newRecipe);
@@ -109,18 +108,16 @@ const resolvers: IResolvers = {
           .populate('user');
 
         if (newRecipe) {
-          const renamedAndOrigHasImage = origRecipe.hasImage && origRecipe.slug !== newRecipe.slug;
-
           if (args.image) {
             const image = await fileUploadToBuffer(args.image);
-            // We don't await for the upload
-            uploadImage(newRecipe.slug, image);
 
-            if (renamedAndOrigHasImage) {
-              deleteImage(origRecipe.slug);
+            await uploadImage(newRecipe.imageName!, image);
+
+            if (origRecipe.imageName) {
+              await deleteImage(origRecipe.imageName);
             }
-          } else if (renamedAndOrigHasImage) {
-            renameImage(origRecipe.slug, newRecipe.slug);
+          } else if (origRecipe.imageName && origRecipe.slug !== newRecipe.slug) {
+            await renameImage(origRecipe.imageName, newRecipe.imageName!);
           }
         }
 
@@ -138,8 +135,10 @@ const resolvers: IResolvers = {
         return false;
       }
 
-      // We don't await
-      deleteImage(recipe.slug);
+      if (recipe.imageName) {
+        // We don't await
+        deleteImage(recipe.imageName);
+      }
 
       return true;
     }),

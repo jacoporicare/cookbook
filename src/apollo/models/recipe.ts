@@ -20,7 +20,7 @@ export type Recipe = {
   creationDate: Date;
   lastModifiedDate: Date;
   ingredients?: Ingredient[];
-  hasImage?: boolean;
+  imageName?: string;
   tags?: string[];
 };
 
@@ -46,7 +46,7 @@ const RecipeSchema = new Schema({
     ],
     default: undefined,
   },
-  hasImage: Boolean,
+  imageName: String,
   tags: { type: [String], default: undefined },
 });
 
