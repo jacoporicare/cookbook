@@ -29,6 +29,7 @@ export function prepareRecipe(
   recipe: RecipeInput,
   hasImage?: boolean,
   user?: User,
+  origRecipe?: RecipeDocument,
 ): Partial<Recipe> {
   const newRecipe: Partial<Recipe> = {
     ...recipe,
@@ -51,8 +52,13 @@ export function prepareRecipe(
     tags: recipe.tags && recipe.tags.length > 0 ? recipe.tags : undefined,
   };
 
-  if (hasImage !== undefined) {
-    newRecipe.imageName = hasImage ? `${newRecipe.slug}_${Date.now()}` : undefined;
+  if (
+    hasImage === true ||
+    (origRecipe && origRecipe.imageName && origRecipe.slug !== newRecipe.slug)
+  ) {
+    newRecipe.imageName = `${newRecipe.slug}_${Date.now()}`;
+  } else if (hasImage === false) {
+    newRecipe.imageName = undefined;
   }
 
   if (user) {

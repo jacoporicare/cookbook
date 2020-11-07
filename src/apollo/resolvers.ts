@@ -101,24 +101,31 @@ const resolvers: IResolvers = {
           return null;
         }
 
-        const recipeToSave = prepareRecipe(args.recipe, args.image ? true : undefined);
+        const recipeToSave = prepareRecipe(
+          args.recipe,
+          args.image ? true : undefined,
+          undefined,
+          origRecipe,
+        );
 
         const newRecipe = await recipeModel
           .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
           .populate('user');
 
-        if (newRecipe) {
-          if (args.image) {
-            const image = await fileUploadToBuffer(args.image);
+        if (!newRecipe) {
+          return null;
+        }
 
-            await uploadImage(newRecipe.imageName!, image);
+        if (args.image) {
+          const image = await fileUploadToBuffer(args.image);
 
-            if (origRecipe.imageName) {
-              await deleteImage(origRecipe.imageName);
-            }
-          } else if (origRecipe.imageName && origRecipe.slug !== newRecipe.slug) {
-            await renameImage(origRecipe.imageName, newRecipe.imageName!);
+          await uploadImage(newRecipe.imageName!, image);
+
+          if (origRecipe.imageName) {
+            await deleteImage(origRecipe.imageName);
           }
+        } else if (origRecipe.imageName && origRecipe.slug !== newRecipe.slug) {
+          await renameImage(origRecipe.imageName, newRecipe.imageName!);
         }
 
         return mapRecipe(newRecipe);
