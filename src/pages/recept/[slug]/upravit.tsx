@@ -65,13 +65,16 @@ function RecipeEditPage() {
         return;
       }
 
-      const data = store.readQuery<RecipeListQuery>({ query: RecipeListDocument });
+      const cacheData = store.readQuery<RecipeListQuery>({ query: RecipeListDocument });
 
-      if (!data) {
+      if (!cacheData) {
         return;
       }
 
-      data.recipes.push(result.data.createRecipe);
+      const data = {
+        ...cacheData,
+        recipes: [...cacheData.recipes, result.data.createRecipe],
+      };
 
       store.writeQuery({ query: RecipeListDocument, data });
     },
