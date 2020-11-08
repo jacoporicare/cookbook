@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import Link from 'next/link';
 import React from 'react';
 
@@ -5,7 +6,6 @@ import { colors } from '../../styles/colors';
 import Nav from '../Nav';
 import RecipeSearch from '../RecipeSearch';
 import WakeLock from '../WakeLock';
-import { Box, BoxHeader } from '../core';
 
 import cow from './cow.png';
 import pig from './pig.png';
@@ -18,17 +18,16 @@ type Props = {
 function Header(props: Props) {
   return (
     <>
-      <BoxHeader
-        css={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-          color: 'white',
-          backgroundColor: colors.gray1000,
-          boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.2)',
-        }}
+      <Box
+        bgcolor={colors.gray1000}
+        boxShadow="0px 2px 4px 0px rgba(0,0,0,0.2)"
+        color="white"
+        component="header"
+        left={0}
+        position="fixed"
+        right={0}
+        top={0}
+        zIndex={10}
       >
         <Box display="flex" justifyContent="space-between" px={[3, 4]} py={1}>
           <Box alignItems="center" display="flex">
@@ -46,7 +45,7 @@ function Header(props: Props) {
             <Nav showUserInfo={props.showUserInfo} />
           </Box>
         </Box>
-      </BoxHeader>
+      </Box>
       <style jsx>{`
         .logo {
           display: flex;

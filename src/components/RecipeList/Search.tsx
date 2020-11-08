@@ -1,8 +1,8 @@
+import { Box } from '@material-ui/core';
 import React from 'react';
 import Select from 'react-select';
 
 import Checkbox from '../common/Checkbox';
-import { Box } from '../core';
 
 type Props = {
   multipleSelected: boolean;

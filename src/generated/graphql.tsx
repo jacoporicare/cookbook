@@ -258,7 +258,10 @@ export type RecipeBaseFragment = (
   & { image: Maybe<(
     { __typename?: 'Image' }
     & Pick<Image, 'fullUrl' | 'thumbUrl'>
-  )> }
+  )>, user: (
+    { __typename?: 'User' }
+    & UserFragment
+  ) }
 );
 
 export type RecipeDetailQueryVariables = Exact<{
@@ -283,10 +286,7 @@ export type RecipeDetailFragment = (
   & { ingredients: Maybe<Array<(
     { __typename?: 'Ingredient' }
     & Pick<Ingredient, '_id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'>
-  )>>, user: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
+  )>> }
   & RecipeBaseFragment
 );
 
@@ -320,6 +320,9 @@ export type RecipeListQuery = (
   & { recipes: Array<(
     { __typename?: 'Recipe' }
     & RecipeBaseFragment
+  )>, me: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
   )> }
 );
 
@@ -386,6 +389,15 @@ export type UserListQuery = (
   )>> }
 );
 
+export const UserFragmentDoc = gql`
+    fragment user on User {
+  _id
+  username
+  displayName
+  isAdmin
+  lastActivity
+}
+    `;
 export const RecipeBaseFragmentDoc = gql`
     fragment recipeBase on Recipe {
   _id
@@ -399,17 +411,11 @@ export const RecipeBaseFragmentDoc = gql`
     thumbUrl
   }
   lastModifiedDate
+  user {
+    ...user
+  }
 }
-    `;
-export const UserFragmentDoc = gql`
-    fragment user on User {
-  _id
-  username
-  displayName
-  isAdmin
-  lastActivity
-}
-    `;
+    ${UserFragmentDoc}`;
 export const RecipeDetailFragmentDoc = gql`
     fragment recipeDetail on Recipe {
   ...recipeBase
@@ -422,12 +428,8 @@ export const RecipeDetailFragmentDoc = gql`
     amountUnit
     isGroup
   }
-  user {
-    ...user
-  }
 }
-    ${RecipeBaseFragmentDoc}
-${UserFragmentDoc}`;
+    ${RecipeBaseFragmentDoc}`;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($password: String!, $newPassword: String!) {
   changePassword(password: $password, newPassword: $newPassword)
@@ -760,8 +762,12 @@ export const RecipeListDocument = gql`
     ...recipeBase
   }
   tags
+  me {
+    ...user
+  }
 }
-    ${RecipeBaseFragmentDoc}`;
+    ${RecipeBaseFragmentDoc}
+${UserFragmentDoc}`;
 
 /**
  * __useRecipeListQuery__

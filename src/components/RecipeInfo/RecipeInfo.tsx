@@ -1,9 +1,5 @@
-import styled from '@emotion/styled';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
-
-import Icon from '../common/Icon';
-
-import RecipeInfoItem from './RecipeInfoItem';
 
 type Props = {
   preparationTime: number | null;
@@ -26,31 +22,39 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const List = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+const useStyles = makeStyles((_theme: Theme) =>
+  createStyles({
+    root: {
+      margin: 0,
+      padding: 0,
+      listStyle: 'none',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+    item: {
+      display: 'inline',
+      '& + &::before': {
+        content: "' · '",
+      },
+    },
+  }),
+);
 
 function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
+  const classes = useStyles();
+
   if (!preparationTime && !sideDish) {
     return placeholder ? <div>{placeholder}</div> : null;
   }
 
   return (
-    <List>
+    <ul className={classes.root}>
       {!!preparationTime && preparationTime > 0 && (
-        <RecipeInfoItem icon={<Icon icon="clock" regular />}>
-          {formatTime(preparationTime)}
-        </RecipeInfoItem>
+        <li className={classes.item}>{formatTime(preparationTime)}</li>
       )}
-      {!!sideDish && (
-        <RecipeInfoItem icon={<Icon icon="utensil-spoon" />}>{sideDish}</RecipeInfoItem>
-      )}
-    </List>
+      {!!sideDish && <li className={classes.item}>{sideDish}</li>}
+    </ul>
   );
 }
 

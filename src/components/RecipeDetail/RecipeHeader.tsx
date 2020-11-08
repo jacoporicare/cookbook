@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
+import { Box, Fab, Button } from '@material-ui/core';
+import { Edit, Delete } from '@material-ui/icons';
 import Link from 'next/link';
 import React from 'react';
 
 import { theme } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import Icon from '../common/Icon';
+import FabContainer from '../common/FabContainer';
 import PageHeading from '../common/PageHeading';
-import { Box } from '../core';
-import { Button, DangerButton } from '../elements';
 
 type Props = {
   preparationTime: number | null;
@@ -42,18 +42,9 @@ function RecipeHeader({
       <PageHeading
         buttons={
           isAuthor && (
-            <>
-              <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit" passHref>
-                <Button as="a">
-                  <Icon icon="edit" regular />
-                  Upravit
-                </Button>
-              </Link>
-              <DangerButton onClick={onDeleteShow}>
-                <Icon icon="trash-alt" regular />
-                Smazat
-              </DangerButton>
-            </>
+            <Button startIcon={<Delete />} variant="outlined" onClick={onDeleteShow}>
+              Smazat
+            </Button>
           )
         }
       >
@@ -75,6 +66,16 @@ function RecipeHeader({
             </Box>
           )}
         </Box>
+      )}
+
+      {isAuthor && (
+        <FabContainer>
+          <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit" passHref>
+            <Fab aria-label="Upravit" color="primary" component="a">
+              <Edit />
+            </Fab>
+          </Link>
+        </FabContainer>
       )}
     </>
   );

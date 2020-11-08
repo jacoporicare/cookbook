@@ -1,10 +1,10 @@
 import '@fortawesome/fontawesome-free/css/all.css';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import * as Sentry from '@sentry/browser';
-import { ThemeProvider } from 'emotion-theming';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import React, { useEffect } from 'react';
 
-import Reboot from '../styles/Reboot';
 import theme from '../theme';
 
 if (process.env.NODE_ENV === 'production') {
@@ -12,11 +12,17 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 function CookbookApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    jssStyles?.parentElement?.removeChild(jssStyles);
+  }, []);
+
   return (
     <>
       <Head>
         <meta charSet="utf-8" />
-        <meta content="width=device-width" name="viewport" />
+        <meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
         <meta content="Žrádelník - kuchařka pro všechny, od Kubíka" name="description" />
         <meta content="yes" name="apple-mobile-web-app-capable" />
         <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
@@ -26,6 +32,10 @@ function CookbookApp({ Component, pageProps }: AppProps) {
         <meta content="Žrádelník" name="application-name" />
         <link
           href="https://fonts.googleapis.com/css?family=Amatic+SC|Open+Sans:300,400,400i,700"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           rel="stylesheet"
         />
         <link href="/icons/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
@@ -102,8 +112,8 @@ function CookbookApp({ Component, pageProps }: AppProps) {
           }}
         />
       </Head>
-      <Reboot />
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </>

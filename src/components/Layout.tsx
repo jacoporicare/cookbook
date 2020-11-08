@@ -1,16 +1,16 @@
+import { Container, Box } from '@material-ui/core';
 import React from 'react';
 import Notifications from 'react-notify-toast';
 
 import { colors } from '../styles/colors';
 
-import Footer from './Footer/Footer';
+import Footer from './Footer';
 import Header from './Header';
 import TrackUserActivity from './TrackUserActivity';
 import DocumentTitle from './common/DocumentTitle';
-import { BoxFooter, BoxMain } from './core';
 
 type Props = {
-  children: React.ReactNode;
+  children: NonNullable<React.ReactNode>;
   static?: boolean;
 };
 
@@ -27,12 +27,14 @@ function Layout(props: Props) {
           <TrackUserActivity />
         </>
       )}
-      <BoxMain mt="62px" p={[3, 4]}>
-        {props.children}
-      </BoxMain>
-      <BoxFooter borderTop={`1px solid ${colors.gray200}`} p={[3, 4]}>
-        <Footer />
-      </BoxFooter>
+      <Container maxWidth={false}>
+        <Box component="main" mt="62px" py={[3, 4]}>
+          {props.children}
+        </Box>
+        <Box borderTop={`1px solid ${colors.gray200}`} component="footer" py={[2, 3]}>
+          <Footer />
+        </Box>
+      </Container>
     </>
   );
 }

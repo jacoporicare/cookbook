@@ -1,19 +1,11 @@
-import { keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
-import React from 'react';
+import { CircularProgress } from '@material-ui/core';
+import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
   delay?: number;
   overlay?: boolean;
 };
-
-type State = {
-  visible: boolean;
-};
-
-const stretchAnimation = keyframes`
-  0%, 40%, 100% { transform: scaleY(0.4); }
-  20% { transform: scaleY(1.0); }`;
 
 const Container = styled.div<{ hasOverlay?: boolean }>(props => [
   {
@@ -32,15 +24,6 @@ const Container = styled.div<{ hasOverlay?: boolean }>(props => [
   },
 ]);
 
-const Rect = styled.div<{ delay: number }>(props => ({
-  backgroundColor: '#333',
-  height: '100%',
-  width: '6px',
-  display: 'inline-block',
-  animation: `${stretchAnimation} 1.2s infinite ease-in-out`,
-  animationDelay: `${props.delay}s`,
-}));
-
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -51,47 +34,34 @@ const Overlay = styled.div`
   z-index: 1000;
 `;
 
-export default class Spinner extends React.Component<Props, State> {
-  timer?: number;
+function Spinner(props: Props) {
+  const timer = useRef<number>();
+  const [visible, setVisible] = useState(props.delay ? props.delay < 1 : true);
 
-  constructor(props: Props) {
-    super(props);
+  useEffect(() => {
+    if (!visible) {
+      timer.current = window.setTimeout(() => setVisible(true), props.delay || 50);
+    }
 
-    this.state = {
-      visible: props.delay ? props.delay < 1 : true,
+    return () => {
+      clearTimeout(timer.current);
     };
+  }, [props.delay, visible]);
+
+  if (!visible) {
+    return null;
   }
 
-  componentDidMount() {
-    if (!this.state.visible) {
-      this.timer = window.setTimeout(
-        () => this.setState({ visible: true }),
-        this.props.delay || 50,
-      );
-    }
-  }
+  const { overlay } = props;
+  const OverlayComponent = overlay ? Overlay : 'div';
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-  }
-
-  render() {
-    if (!this.state.visible) {
-      return null;
-    }
-
-    const { overlay } = this.props;
-    const OverlayComponent = overlay ? Overlay : 'div';
-
-    return (
-      <OverlayComponent>
-        <Container hasOverlay={overlay}>
-          <Rect delay={0} /> <Rect delay={-1.1} /> <Rect delay={-1.0} /> <Rect delay={-0.9} />{' '}
-          <Rect delay={-0.8} />
-        </Container>
-      </OverlayComponent>
-    );
-  }
+  return (
+    <OverlayComponent>
+      <Container hasOverlay={overlay}>
+        <CircularProgress />
+      </Container>
+    </OverlayComponent>
+  );
 }
+
+export default Spinner;

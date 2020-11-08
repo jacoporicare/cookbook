@@ -1,88 +1,89 @@
+import {
+  Card,
+  CardActionArea,
+  CardHeader,
+  CardMedia,
+  createStyles,
+  IconButton,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import Link from 'next/link';
 import React from 'react';
-import { LazyImage } from 'react-lazy-images';
 
 import placeholder from '../../assets/food-placeholder.png';
 import { RecipeBaseFragment } from '../../generated/graphql';
-import { colors } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import { Box } from '../core';
 
 type Props = {
   recipe: RecipeBaseFragment;
+  isAuthor?: boolean;
 };
 
-function RecipeListItem({ recipe }: Props) {
+const useStyles = makeStyles((_theme: Theme) =>
+  createStyles({
+    root: {
+      '&:hover $action': {
+        display: 'block',
+      },
+    },
+    content: {
+      minWidth: 0,
+    },
+    title: {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+    action: {
+      display: 'none',
+    },
+    media: {
+      height: 0,
+      paddingTop: '75%', // 4:3
+    },
+  }),
+);
+
+function RecipeListItem({ recipe, isAuthor }: Props) {
+  const classes = useStyles();
+
   const { slug, title, preparationTime, sideDish, image } = recipe;
   const imageUrl = image?.thumbUrl || placeholder;
 
   return (
-    <>
+    <Card className={classes.root}>
       <Link as={`/recept/${slug}`} href="/recept/[slug]">
-        <a className="link">
-          <LazyImage
-            actual={({ imageProps }) => (
-              <div className="image" style={{ backgroundImage: `url(${imageProps.src})` }} />
-            )}
-            placeholder={({ ref }) => (
-              <div
-                ref={ref}
-                className="image"
-                style={{ backgroundImage: `url('${placeholder}')` }}
-              />
-            )}
-            src={imageUrl}
-          />
-          <div className="overlay">
-            <h3 className="title">{title}</h3>
-            <Box color={colors.gray200} fontSize="0.75em" mt={2}>
+        <CardActionArea href={`/recept/${slug}`}>
+          <CardHeader
+            action={
+              isAuthor && (
+                <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit">
+                  <IconButton
+                    aria-label="settings"
+                    href={`/recept/${slug}/upravit`}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <Edit />
+                  </IconButton>
+                </Link>
+              )
+            }
+            classes={{ content: classes.content, title: classes.title, action: classes.action }}
+            subheader={
               <RecipeInfo
                 placeholder="žádné údaje"
                 preparationTime={preparationTime}
                 sideDish={sideDish}
               />
-            </Box>
-          </div>
-        </a>
+            }
+            title={title}
+          />
+          <CardMedia className={classes.media} image={imageUrl} title={title} />
+        </CardActionArea>
       </Link>
-      <style jsx>{`
-        .link {
-          display: block;
-          color: ${colors.gray900};
-          text-decoration: none;
-          position: relative;
-        }
-
-        .link:hover .overlay {
-          background-color: rgba(0, 0, 0, 0.6);
-        }
-
-        .overlay {
-          color: ${colors.white};
-          background-color: rgba(0, 0, 0, 0.4);
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          padding: 8px;
-        }
-
-        .image {
-          height: 30vh;
-          min-height: 250px;
-          background-size: cover;
-          background-position: center center;
-        }
-
-        .title {
-          margin: 0;
-          font-weight: 400;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      `}</style>
-    </>
+    </Card>
   );
 }
 
