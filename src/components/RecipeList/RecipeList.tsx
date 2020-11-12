@@ -1,33 +1,44 @@
-import { Grid } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import React from 'react';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
+import { colors } from '../../styles/colors';
 
 import RecipeListItem from './RecipeListItem';
 
 type Props = {
   recipes: RecipeBaseFragment[];
-  loggedInUser?: {
-    username: string;
-    isAdmin: boolean;
-  };
 };
 
-function RecipeList({ recipes, loggedInUser }: Props) {
+const widths = ['100%', '50%', '33.33333%', '25%', '20%'];
+const border = `1px solid ${colors.gray200}`;
+
+function RecipeList({ recipes }: Props) {
   return (
-    <Grid spacing={2} container>
+    <Box
+      borderLeft={[0, border]}
+      borderTop={[0, border]}
+      display="flex"
+      flexWrap="wrap"
+      justifyContent="flex-start"
+    >
       {recipes.map(recipe => (
-        <Grid key={recipe.slug} component="article" lg={3} md={4} sm={6} xs={12} item>
-          <RecipeListItem
-            isAuthor={Boolean(
-              loggedInUser &&
-                (loggedInUser.username === recipe.user.username || loggedInUser.isAdmin),
-            )}
-            recipe={recipe}
-          />
-        </Grid>
+        <Box
+          key={recipe.slug}
+          borderBottom={border}
+          borderLeft={[border, 0]}
+          borderRight={border}
+          borderTop={[border, 0]}
+          component="article"
+          flex="auto"
+          maxWidth={widths}
+          mb={[3, 0]}
+          width={widths}
+        >
+          <RecipeListItem recipe={recipe} />
+        </Box>
       ))}
-    </Grid>
+    </Box>
   );
 }
 

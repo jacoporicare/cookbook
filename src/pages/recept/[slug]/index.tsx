@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -13,7 +14,6 @@ import RecipeHeader from '../../../components/RecipeDetail/RecipeHeader';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import Spinner from '../../../components/common/Spinner';
 import SpinnerIf from '../../../components/common/SpinnerIf';
-import { BoxArticle } from '../../../components/core';
 import { DangerAlert } from '../../../components/elements';
 import {
   RecipeListQuery,
@@ -97,7 +97,7 @@ function RecipeDetailPage() {
 
   return (
     <Layout>
-      <BoxArticle>
+      <Box component="article">
         <DocumentTitle title={title} />
         <RecipeHeader
           isAuthor={Boolean(
@@ -127,7 +127,7 @@ function RecipeDetailPage() {
           onClose={() => setDeleteModalVisible(false)}
           onConfirm={handleDeleteConfirm}
         />
-      </BoxArticle>
+      </Box>
     </Layout>
   );
 }

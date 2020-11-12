@@ -15,11 +15,24 @@ export type Scalars = {
   Upload: any;
 };
 
-export type AuthPayload = {
-  __typename?: 'AuthPayload';
-  token: Maybe<Scalars['String']>;
-};
 
+
+export type Recipe = {
+  __typename?: 'Recipe';
+  _id: Scalars['ID'];
+  title: Scalars['String'];
+  slug: Scalars['String'];
+  directions: Maybe<Scalars['String']>;
+  sideDish: Maybe<Scalars['String']>;
+  preparationTime: Maybe<Scalars['Int']>;
+  servingCount: Maybe<Scalars['Int']>;
+  user: User;
+  image: Maybe<Image>;
+  creationDate: Scalars['Date'];
+  lastModifiedDate: Scalars['Date'];
+  ingredients: Maybe<Array<Ingredient>>;
+  tags: Maybe<Array<Scalars['String']>>;
+};
 
 export type Image = {
   __typename?: 'Image';
@@ -36,11 +49,59 @@ export type Ingredient = {
   isGroup: Maybe<Scalars['Boolean']>;
 };
 
+export type AuthPayload = {
+  __typename?: 'AuthPayload';
+  token: Maybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  _id: Scalars['ID'];
+  username: Scalars['String'];
+  displayName: Scalars['String'];
+  isAdmin: Maybe<Scalars['Boolean']>;
+  lastActivity: Maybe<Scalars['Date']>;
+};
+
+export type RecipeInput = {
+  title: Scalars['String'];
+  directions: Maybe<Scalars['String']>;
+  sideDish: Maybe<Scalars['String']>;
+  preparationTime: Maybe<Scalars['Int']>;
+  servingCount: Maybe<Scalars['Int']>;
+  ingredients: Maybe<Array<IngredientInput>>;
+  image: Maybe<Scalars['Upload']>;
+  tags: Maybe<Array<Scalars['String']>>;
+};
+
 export type IngredientInput = {
   amount: Maybe<Scalars['Float']>;
   amountUnit: Maybe<Scalars['String']>;
   name: Scalars['String'];
   isGroup: Maybe<Scalars['Boolean']>;
+};
+
+export type UserInput = {
+  username: Scalars['String'];
+  displayName: Scalars['String'];
+  isAdmin: Maybe<Scalars['Boolean']>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  recipes: Array<Recipe>;
+  recipe: Maybe<Recipe>;
+  ingredients: Array<Scalars['String']>;
+  sideDishes: Array<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  me: Maybe<User>;
+  users: Maybe<Array<User>>;
+};
+
+
+export type QueryRecipeArgs = {
+  id: Maybe<Scalars['ID']>;
+  slug: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -106,67 +167,6 @@ export type MutationResetPasswordArgs = {
 export type MutationChangePasswordArgs = {
   password: Scalars['String'];
   newPassword: Scalars['String'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  recipes: Array<Recipe>;
-  recipe: Maybe<Recipe>;
-  ingredients: Array<Scalars['String']>;
-  sideDishes: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  me: Maybe<User>;
-  users: Maybe<Array<User>>;
-};
-
-
-export type QueryRecipeArgs = {
-  id: Maybe<Scalars['ID']>;
-  slug: Maybe<Scalars['String']>;
-};
-
-export type Recipe = {
-  __typename?: 'Recipe';
-  _id: Scalars['ID'];
-  title: Scalars['String'];
-  slug: Scalars['String'];
-  directions: Maybe<Scalars['String']>;
-  sideDish: Maybe<Scalars['String']>;
-  preparationTime: Maybe<Scalars['Int']>;
-  servingCount: Maybe<Scalars['Int']>;
-  user: User;
-  image: Maybe<Image>;
-  creationDate: Scalars['Date'];
-  lastModifiedDate: Scalars['Date'];
-  ingredients: Maybe<Array<Ingredient>>;
-  tags: Maybe<Array<Scalars['String']>>;
-};
-
-export type RecipeInput = {
-  title: Scalars['String'];
-  directions: Maybe<Scalars['String']>;
-  sideDish: Maybe<Scalars['String']>;
-  preparationTime: Maybe<Scalars['Int']>;
-  servingCount: Maybe<Scalars['Int']>;
-  ingredients: Maybe<Array<IngredientInput>>;
-  image: Maybe<Scalars['Upload']>;
-  tags: Maybe<Array<Scalars['String']>>;
-};
-
-
-export type User = {
-  __typename?: 'User';
-  _id: Scalars['ID'];
-  username: Scalars['String'];
-  displayName: Scalars['String'];
-  isAdmin: Maybe<Scalars['Boolean']>;
-  lastActivity: Maybe<Scalars['Date']>;
-};
-
-export type UserInput = {
-  username: Scalars['String'];
-  displayName: Scalars['String'];
-  isAdmin: Maybe<Scalars['Boolean']>;
 };
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -320,9 +320,6 @@ export type RecipeListQuery = (
   & { recipes: Array<(
     { __typename?: 'Recipe' }
     & RecipeBaseFragment
-  )>, me: Maybe<(
-    { __typename?: 'User' }
-    & UserFragment
   )> }
 );
 
@@ -682,7 +679,7 @@ ${UserFragmentDoc}`;
  *   },
  * });
  */
-export function useRecipeDetailQuery(baseOptions?: Apollo.QueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
+export function useRecipeDetailQuery(baseOptions: Apollo.QueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
         return Apollo.useQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(RecipeDetailDocument, baseOptions);
       }
 export function useRecipeDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
@@ -715,7 +712,7 @@ export const RecipeEditDocument = gql`
  *   },
  * });
  */
-export function useRecipeEditQuery(baseOptions?: Apollo.QueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
+export function useRecipeEditQuery(baseOptions: Apollo.QueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
         return Apollo.useQuery<RecipeEditQuery, RecipeEditQueryVariables>(RecipeEditDocument, baseOptions);
       }
 export function useRecipeEditLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
@@ -762,12 +759,8 @@ export const RecipeListDocument = gql`
     ...recipeBase
   }
   tags
-  me {
-    ...user
-  }
 }
-    ${RecipeBaseFragmentDoc}
-${UserFragmentDoc}`;
+    ${RecipeBaseFragmentDoc}`;
 
 /**
  * __useRecipeListQuery__

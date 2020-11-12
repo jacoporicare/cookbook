@@ -87,5 +87,4 @@ export const Box = styled.div<Props>(
 );
 
 export const BoxSection = Box.withComponent('section');
-export const BoxArticle = Box.withComponent('article');
 export const BoxAside = Box.withComponent('aside');

@@ -97,14 +97,7 @@ function RecipeListPage() {
             <Alert severity="info">Žádné recepty.</Alert>
           </SpinnerIf>
         ) : (
-          <RecipeList
-            loggedInUser={
-              data?.me
-                ? { username: data.me.username, isAdmin: data.me.isAdmin || false }
-                : undefined
-            }
-            recipes={recipes}
-          />
+          <RecipeList recipes={recipes} />
         )}
       </section>
       {token && (
