@@ -1,0 +1,42 @@
+version: '3.2'
+
+services:
+  db:
+    image: mongo:4.2
+    volumes:
+      - type: bind
+        source: ~/dev/private/mongo_data/cookbook
+        target: /data/db
+
+  admin:
+    image: mongo-express
+    ports:
+      - '8081:8081'
+    depends_on:
+      - db
+    environment:
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_URL: mongodb://db/cookbook
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: .
+        target: /srv
+      - type: volume
+        source: node_modules
+        target: /srv/node_modules
+    ports:
+      - '3000:3000'
+    environment:
+      MONGO_URI: mongodb://db/cookbook
+    tty: true
+    stdin_open: true
+
+volumes:
+  node_modules:

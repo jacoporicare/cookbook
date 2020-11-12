@@ -53,6 +53,7 @@ function Header(props: Props) {
           font-family: 'Amatic SC', cursive;
           font-size: 36px;
           color: white;
+          text-decoration: none;
         }
 
         .logo:hover {
