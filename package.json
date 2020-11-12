@@ -39,6 +39,7 @@
     "react-autosuggest": "^10.0.2",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.1.0",
+    "react-image-lightbox": "^5.1.1",
     "react-lazy-images": "^1.1.0",
     "react-markdown": "^4.3.1",
     "react-modal": "^3.11.2",

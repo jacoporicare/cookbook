@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useState } from 'react';
+import Lightbox from 'react-image-lightbox';
 
 import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
@@ -50,6 +51,13 @@ function RecipeDetail({
   imageFullUrl,
   userName,
 }: Props) {
+  const [isImageOpen, setIsImageOpen] = useState(false);
+
+  function handleImageClick(e: React.MouseEvent) {
+    e.preventDefault();
+    setIsImageOpen(true);
+  }
+
   return (
     <>
       <Box display={['block', 'flex']}>
@@ -67,7 +75,7 @@ function RecipeDetail({
           {imageUrl && (
             <ImageBox display={['none', 'block']}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={imageFullUrl} target="_blank">
+              <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
                 <Image alt={title} src={imageUrl} />
               </a>
             </ImageBox>
@@ -84,10 +92,13 @@ function RecipeDetail({
       {imageUrl && (
         <Box display={['block', 'none']}>
           {/* eslint-disable-next-line react/jsx-no-target-blank */}
-          <a href={imageFullUrl} target="_blank">
+          <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
             <ImageXs src={imageUrl} />
           </a>
         </Box>
+      )}
+      {isImageOpen && (
+        <Lightbox mainSrc={imageFullUrl!} onCloseRequest={() => setIsImageOpen(false)} />
       )}
     </>
   );
