@@ -1,4 +1,5 @@
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'react-image-lightbox/style.css';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import * as Sentry from '@sentry/browser';
 import { AppProps } from 'next/app';
