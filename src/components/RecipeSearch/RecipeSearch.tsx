@@ -1,5 +1,5 @@
 import { ClassNames } from '@emotion/core';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 import React, { FormEvent } from 'react';
 import Autosuggest, {
   SuggestionSelectedEventData,
@@ -230,8 +230,8 @@ export default class RecipeSearch extends React.Component<Props, State> {
               renderSuggestion={this.renderSuggestion}
               suggestions={suggestions}
               highlightFirstSuggestion
-              onSuggestionsClearRequested={this.handleClear}
               onSuggestionSelected={this.handleSelected}
+              onSuggestionsClearRequested={this.handleClear}
               onSuggestionsFetchRequested={this.handleFetch}
             />
           </Box>

@@ -1,5 +1,5 @@
 import { ClassNames } from '@emotion/core';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 import React, { KeyboardEvent, useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
 
