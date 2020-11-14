@@ -1,16 +1,16 @@
 import {
-  Button,
   CircularProgress,
   colors,
   createStyles,
   Fab,
   makeStyles,
   Theme,
+  Zoom,
 } from '@material-ui/core';
 import { Save } from '@material-ui/icons';
-import Link from 'next/link';
 import React from 'react';
 
+import useHideOnScroll from '../../hooks/useHideOnScroll';
 import FabContainer from '../common/FabContainer';
 import PageHeading from '../common/PageHeading';
 
@@ -19,7 +19,6 @@ type Props = {
   isNew: boolean;
   isSaving: boolean;
   changed: boolean;
-  slug?: string;
 };
 
 const useStyles = makeStyles((_theme: Theme) =>
@@ -34,32 +33,25 @@ const useStyles = makeStyles((_theme: Theme) =>
   }),
 );
 
-function Header({ title, isNew, isSaving, changed, slug }: Props) {
+function Header({ title, isNew, isSaving, changed }: Props) {
   const classes = useStyles();
+  const fabHidden = useHideOnScroll();
 
   return (
     <>
-      <PageHeading
-        buttons={
-          <Link as={isNew ? '/' : `/recept/${slug}`} href={isNew ? '/' : `/recept/[slug]`} passHref>
-            <Button component="a" variant="outlined">
-              Zrušit
-            </Button>
-          </Link>
-        }
-      >
-        {title || (isNew ? 'Nový recept' : 'Název receptu')}
-      </PageHeading>
+      <PageHeading>{title || (isNew ? 'Nový recept' : 'Název receptu')}</PageHeading>
       <FabContainer>
-        <Fab
-          aria-label="Uložit"
-          color="primary"
-          disabled={!title || isSaving || !changed}
-          type="submit"
-        >
-          <Save />
-          {isSaving && <CircularProgress className={classes.fabProgress} size={68} />}
-        </Fab>
+        <Zoom in={!fabHidden}>
+          <Fab
+            aria-label="Uložit"
+            color="primary"
+            disabled={!title || isSaving || !changed}
+            type="submit"
+          >
+            <Save />
+            {isSaving && <CircularProgress className={classes.fabProgress} size={68} />}
+          </Fab>
+        </Zoom>
       </FabContainer>
     </>
   );

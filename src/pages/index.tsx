@@ -1,4 +1,4 @@
-import { Button, Fab, Typography } from '@material-ui/core';
+import { Button, Fab, Typography, Zoom } from '@material-ui/core';
 import { Add, Close, FilterList } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import flow from 'lodash.flow';
@@ -17,6 +17,7 @@ import FabContainer from '../components/common/FabContainer';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
 import { useRecipeListQuery } from '../generated/graphql';
+import useHideOnScroll from '../hooks/useHideOnScroll';
 
 function RecipeListPage() {
   const router = useRouter();
@@ -26,6 +27,7 @@ function RecipeListPage() {
   const [searchVisible, setSearchVisible] = useState(searchTags.length > 0);
   const [matchAll, setMatchAll] = useState(false);
   const { data, error, loading } = useRecipeListQuery();
+  const fabHidden = useHideOnScroll();
 
   function handleSearchVisibilityToggle() {
     setSearchVisible(!searchVisible);
@@ -103,9 +105,11 @@ function RecipeListPage() {
       {token && (
         <FabContainer>
           <Link href="/novy-recept" passHref>
-            <Fab aria-label="Nový recept" color="primary" component="a">
-              <Add fontSize="large" />
-            </Fab>
+            <Zoom in={!fabHidden}>
+              <Fab aria-label="Nový recept" color="primary" component="a">
+                <Add fontSize="large" />
+              </Fab>
+            </Zoom>
           </Link>
         </FabContainer>
       )}

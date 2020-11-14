@@ -287,7 +287,6 @@ function RecipeEditPage() {
         servingCount={servingCount}
         sideDish={sideDish}
         sideDishOptions={dataOptions?.sideDishes ?? []}
-        slug={slug}
         tagOptions={dataOptions?.tags ?? []}
         tags={tags}
         title={title}

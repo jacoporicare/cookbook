@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
+import { Box, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 
 import { Ingredient } from '../../generated/graphql';
-import { colors } from '../../styles/colors';
 import RichText from '../RichText/RichText';
-import { Box, Text, BoxAside } from '../core';
 import { InfoAlert } from '../elements';
 
 import IngredientList from './IngredientList';
@@ -61,15 +60,21 @@ function RecipeDetail({
   return (
     <>
       <Box display={['block', 'flex']}>
-        <BoxAside flex={1} pr={[0, 3]}>
+        <Box component="aside" flex={1} pr={[0, 3]}>
           <IngredientList ingredients={ingredients} servingCount={servingCount} />
           <Box my={4}>
-            <Text color={colors.gray600}>Autor:</Text>
-            <Box>{userName}</Box>
-            <Text color={colors.gray600}>Naposledy upraveno:</Text>
-            <Box>{new Date(lastModifiedDate).toLocaleDateString('cs')}</Box>
+            <Typography color="textSecondary" variant="subtitle1">
+              Autor:
+            </Typography>
+            <Typography variant="body1">{userName}</Typography>
+            <Typography color="textSecondary" variant="subtitle1">
+              Naposledy upraveno:
+            </Typography>
+            <Typography variant="body1">
+              {new Date(lastModifiedDate).toLocaleDateString('cs')}
+            </Typography>
           </Box>
-        </BoxAside>
+        </Box>
 
         <Box flex={3}>
           {imageUrl && (

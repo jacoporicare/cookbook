@@ -38,7 +38,6 @@ type Props = {
   servingCount: number | null;
   sideDish: string | null;
   sideDishOptions: string[];
-  slug?: string;
   tags: string[] | null;
   tagOptions: string[];
   title?: string;
@@ -64,7 +63,6 @@ function RecipeEdit({
   servingCount,
   sideDish,
   sideDishOptions,
-  slug,
   tags,
   tagOptions,
   title,
@@ -73,7 +71,7 @@ function RecipeEdit({
     <form onSubmit={onSubmit}>
       {isSaving && <Spinner overlay />}
 
-      <Header changed={changed} isNew={isNew} isSaving={isSaving} slug={slug} title={title} />
+      <Header changed={changed} isNew={isNew} isSaving={isSaving} title={title} />
 
       <fieldset>
         <Title title={title} onChange={onChange} />

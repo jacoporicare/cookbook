@@ -33,9 +33,14 @@ const useStyles = makeStyles((_theme: Theme) =>
       textOverflow: 'ellipsis',
     },
     item: {
-      display: 'inline',
+      display: 'inline-block',
+      '& + &': {
+        marginLeft: '4px',
+      },
       '& + &::before': {
-        content: "' · '",
+        display: 'inline-block',
+        content: "'·'",
+        marginRight: '4px',
       },
     },
   }),
