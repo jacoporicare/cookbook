@@ -8,7 +8,7 @@ function WakeLock() {
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
   const wakeLock = useRef<WakeLock>();
 
-  const wakeLockSupported = typeof navigator !== 'undefined' && 'wakeLock' in navigator;
+  const wakeLockSupported = 'wakeLock' in navigator;
 
   useEffect(() => {
     if (wakeLockEnabled) {
