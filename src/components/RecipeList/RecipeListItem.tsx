@@ -1,9 +1,12 @@
+import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import React from 'react';
 import { LazyImage } from 'react-lazy-images';
 
+import { AppStateData } from '../../apollo/types';
 import placeholder from '../../assets/food-placeholder.png';
 import { RecipeBaseFragment } from '../../generated/graphql';
+import appState from '../../graphql/local/appState';
 import { colors } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import { Box } from '../core';
@@ -13,8 +16,11 @@ type Props = {
 };
 
 function RecipeListItem({ recipe }: Props) {
+  const { data: appStateData } = useQuery<AppStateData>(appState);
+  const supportsWebP = appStateData?.appState.supportsWebP;
+
   const { slug, title, preparationTime, sideDish, image } = recipe;
-  const imageUrl = image?.thumbUrl || placeholder;
+  const imageUrl = (supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl) || placeholder;
 
   return (
     <>

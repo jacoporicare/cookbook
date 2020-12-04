@@ -9,5 +9,6 @@ exports.handler = async (event, context, callback) => {
   // Object key may have spaces or unicode non-ASCII characters.
   const srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
 
-  await resize(s3, bucket, srcKey);
+  await resize(s3, bucket, srcKey, 'jpeg');
+  await resize(s3, bucket, srcKey, 'webp');
 };

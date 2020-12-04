@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { notify } from 'react-notify-toast';
 import { SortEnd } from 'react-sortable-hoc';
 
 import { withApollo } from '../../../apollo';
+import { AppStateData } from '../../../apollo/types';
 import { withAuth } from '../../../auth';
 import Layout from '../../../components/Layout';
 import RecipeEdit from '../../../components/RecipeEdit/RecipeEdit';
@@ -24,6 +25,7 @@ import {
   useUpdateRecipeMutation,
   RecipeInput,
 } from '../../../generated/graphql';
+import appState from '../../../graphql/local/appState';
 import { AutosuggestChangeEventHandler } from '../../../types';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
@@ -49,6 +51,9 @@ function RecipeEditPage() {
   const [tags, setTags] = useState<string[] | null>(null);
 
   const slug = router.query.slug?.toString();
+
+  const { data: appStateData } = useQuery<AppStateData>(appState);
+  const supportsWebP = appStateData?.appState.supportsWebP;
 
   const { data, loading } = useRecipeEditQuery({
     variables: { slug: slug! },
@@ -278,7 +283,7 @@ function RecipeEditPage() {
       <RecipeEdit
         changed={changed}
         directions={directions}
-        imageUrl={editedRecipe?.image?.thumbUrl}
+        imageUrl={supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl}
         ingredientOptions={dataOptions?.ingredients ?? []}
         ingredients={ingredients}
         isNew={!slug}

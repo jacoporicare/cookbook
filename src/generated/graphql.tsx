@@ -25,6 +25,7 @@ export type Image = {
   __typename?: 'Image';
   fullUrl: Scalars['String'];
   thumbUrl: Scalars['String'];
+  thumbWebPUrl: Scalars['String'];
 };
 
 export type Ingredient = {
@@ -257,7 +258,7 @@ export type RecipeBaseFragment = (
   & Pick<Recipe, '_id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'>
   & { image: Maybe<(
     { __typename?: 'Image' }
-    & Pick<Image, 'fullUrl' | 'thumbUrl'>
+    & Pick<Image, 'fullUrl' | 'thumbUrl' | 'thumbWebPUrl'>
   )> }
 );
 
@@ -397,6 +398,7 @@ export const RecipeBaseFragmentDoc = gql`
   image {
     fullUrl
     thumbUrl
+    thumbWebPUrl
   }
   lastModifiedDate
 }

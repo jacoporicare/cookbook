@@ -3,7 +3,7 @@ import crypto from 'crypto';
 
 import slug from 'slug';
 
-import { getImageUrl } from './images';
+import { getFullImageUrl, getThumbImageUrl } from './images';
 import recipeModel, { Recipe, RecipeDocument } from './models/recipe';
 import { User } from './models/user';
 import { RecipeInput } from './types';
@@ -17,8 +17,9 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
 
   if (recipe.imageName) {
     recipe.image = {
-      fullUrl: getImageUrl(recipe.imageName, 'full'),
-      thumbUrl: getImageUrl(recipe.imageName, 'thumb'),
+      fullUrl: getFullImageUrl(recipe.imageName),
+      thumbUrl: getThumbImageUrl(recipe.imageName, 'jpeg'),
+      thumbWebPUrl: getThumbImageUrl(recipe.imageName, 'webp'),
     };
   }
 

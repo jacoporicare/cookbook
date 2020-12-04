@@ -1,7 +1,7 @@
 const sharp = require('sharp');
 
-module.exports = async (s3, bucket, srcKey) => {
-  const dstKey = srcKey.replace(/^full\//, 'thumb/');
+module.exports = async (s3, bucket, srcKey, format) => {
+  const dstKey = `${srcKey.replace(/^full\//, 'thumb/')}.${format}`;
 
   let origimage;
 
@@ -20,7 +20,7 @@ module.exports = async (s3, bucket, srcKey) => {
   let buffer;
 
   try {
-    buffer = await sharp(origimage.Body).rotate().resize(800, 800).jpeg().toBuffer();
+    buffer = await sharp(origimage.Body).rotate().resize(800, 800).toFormat(format).toBuffer();
   } catch (error) {
     console.error(error);
 
@@ -32,7 +32,7 @@ module.exports = async (s3, bucket, srcKey) => {
       Bucket: bucket,
       Key: dstKey,
       Body: buffer,
-      ContentType: 'image/jpeg',
+      ContentType: `image/${format}`,
     };
 
     await s3.putObject(destparams).promise();
