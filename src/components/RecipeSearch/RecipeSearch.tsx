@@ -45,7 +45,10 @@ function RecipeSearch(props: Props) {
     setSuggestions([]);
   }
 
-  function handleSelected({ suggestion }: SuggestionSelectedEventData<RecipeBaseFragment>) {
+  function handleSelected(
+    _event: FormEvent<HTMLInputElement>,
+    { suggestion }: SuggestionSelectedEventData<RecipeBaseFragment>,
+  ) {
     props.onSelected(suggestion.slug);
     setValue('');
     setSuggestions([]);
