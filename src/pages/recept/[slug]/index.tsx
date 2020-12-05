@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -6,7 +5,6 @@ import { notify } from 'react-notify-toast';
 
 import { useAuth } from '../../../AuthContext';
 import { withApollo } from '../../../apollo';
-import { AppStateData } from '../../../apollo/types';
 import { withAuth } from '../../../auth';
 import Layout from '../../../components/Layout';
 import RecipeDeleteModal from '../../../components/RecipeDeleteModal/RecipeDeleteModal';
@@ -23,16 +21,14 @@ import {
   useRecipeDetailQuery,
   useDeleteRecipeMutation,
 } from '../../../generated/graphql';
-import appState from '../../../graphql/local/appState';
+import useSupportsWebP from '../../../hooks/useSupportsWebP';
 
 function RecipeDetailPage() {
   const [token] = useAuth();
   const router = useRouter();
+  const supportsWebP = useSupportsWebP();
 
   const querySlug = router.query.slug?.toString();
-
-  const { data: appStateData } = useQuery<AppStateData>(appState);
-  const supportsWebP = appStateData?.appState.supportsWebP;
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { data, loading } = useRecipeDetailQuery({

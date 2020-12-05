@@ -1,12 +1,9 @@
-import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import React from 'react';
 import { LazyImage } from 'react-lazy-images';
 
-import { AppStateData } from '../../apollo/types';
-import placeholder from '../../assets/food-placeholder.png';
 import { RecipeBaseFragment } from '../../generated/graphql';
-import appState from '../../graphql/local/appState';
+import useSupportsWebP from '../../hooks/useSupportsWebP';
 import { colors } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import { Box } from '../core';
@@ -16,11 +13,12 @@ type Props = {
 };
 
 function RecipeListItem({ recipe }: Props) {
-  const { data: appStateData } = useQuery<AppStateData>(appState);
-  const supportsWebP = appStateData?.appState.supportsWebP;
+  const supportsWebP = useSupportsWebP();
 
   const { slug, title, preparationTime, sideDish, image } = recipe;
-  const imageUrl = (supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl) || placeholder;
+  const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
+  const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
+  const imageUrl = thumbUrl || placeholderUrl;
 
   return (
     <>
@@ -34,7 +32,7 @@ function RecipeListItem({ recipe }: Props) {
               <div
                 ref={ref}
                 className="image"
-                style={{ backgroundImage: `url('${placeholder}')` }}
+                style={{ backgroundImage: `url('${placeholderUrl}')` }}
               />
             )}
             src={imageUrl}
