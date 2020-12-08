@@ -1,8 +1,9 @@
 import { ApolloError } from '@apollo/client';
+import { Snackbar } from '@material-ui/core';
+import { Alert, Color } from '@material-ui/lab';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react';
-import { notify } from 'react-notify-toast';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { SortEnd } from 'react-sortable-hoc';
 
 import { withApollo } from '../../../apollo';
@@ -39,6 +40,8 @@ function isCreateMutation(
 function RecipeEditPage() {
   const router = useRouter();
   const supportsWebP = useSupportsWebP();
+
+  const [snackbar, setSnackbar] = useState<[Color, string]>();
 
   const [changed, setChanged] = useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
@@ -253,15 +256,15 @@ function RecipeEditPage() {
       return;
     }
 
-    notify.show('Recept úspěšně uložen', 'success');
+    setSnackbar(['success', 'Recept úspěšně uložen']);
     router.push('/recept/[slug]', `/recept/${recipe.slug}`);
   }
 
   function handleError(error: ApolloError) {
     if (error.graphQLErrors[0] && error.graphQLErrors[0].message.startsWith('EEXIST')) {
-      notify.show('Zadaný název již existuje', 'warning');
+      setSnackbar(['warning', 'Zadaný název již existuje']);
     } else {
-      notify.show('Recept se nepodařilo uložit', 'error');
+      setSnackbar(['error', 'Recept se nepodařilo uložit']);
     }
   }
 
@@ -276,33 +279,42 @@ function RecipeEditPage() {
   }
 
   return (
-    <Layout>
+    <>
       <DocumentTitle title={!title && !slug ? 'Nový recept' : title} />
-      <RecipeEdit
-        changed={changed}
-        directions={directions}
-        imageUrl={supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl}
-        ingredientOptions={dataOptions?.ingredients ?? []}
-        ingredients={ingredients}
-        isNew={!slug}
-        isSaving={isSaving}
-        preparationTime={preparationTime}
-        servingCount={servingCount}
-        sideDish={sideDish}
-        sideDishOptions={dataOptions?.sideDishes ?? []}
-        tagOptions={dataOptions?.tags ?? []}
-        tags={tags}
-        title={title}
-        onAddGroup={handleAddGroup}
-        onAddIngredient={handleAddIngredient}
-        onChange={handleChange}
-        onImageChange={handleImageChange}
-        onRemoveIngredient={handleRemoveIngredient}
-        onSortIngredient={handleSortIngredient}
-        onSubmit={handleSubmit}
-        onTagsChange={handleTagsChange}
-      />
-    </Layout>
+      <Layout>
+        <RecipeEdit
+          changed={changed}
+          directions={directions}
+          imageUrl={
+            supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl
+          }
+          ingredientOptions={dataOptions?.ingredients ?? []}
+          ingredients={ingredients}
+          isNew={!slug}
+          isSaving={isSaving}
+          preparationTime={preparationTime}
+          servingCount={servingCount}
+          sideDish={sideDish}
+          sideDishOptions={dataOptions?.sideDishes ?? []}
+          tagOptions={dataOptions?.tags ?? []}
+          tags={tags}
+          title={title}
+          onAddGroup={handleAddGroup}
+          onAddIngredient={handleAddIngredient}
+          onChange={handleChange}
+          onImageChange={handleImageChange}
+          onRemoveIngredient={handleRemoveIngredient}
+          onSortIngredient={handleSortIngredient}
+          onSubmit={handleSubmit}
+          onTagsChange={handleTagsChange}
+        />
+      </Layout>
+      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
+        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
+          {snackbar?.[1]}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

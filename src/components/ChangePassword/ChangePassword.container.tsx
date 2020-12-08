@@ -1,5 +1,6 @@
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
-import { notify } from 'react-notify-toast';
 
 import { useChangePasswordMutation } from '../../generated/graphql';
 
@@ -10,11 +11,12 @@ function ChangePasswordContainer() {
   const [newPassword, setNewPassword] = useState<string>();
   const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>();
   const [invalidPassword, setInvalidPassword] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
 
   const [changePassword, { loading: submitting }] = useChangePasswordMutation({
     onCompleted: data => {
       if (data.changePassword) {
-        notify.show('Heslo změněno', 'success');
+        setSuccessOpen(true);
         setPassword(undefined);
         setNewPassword(undefined);
         setNewPasswordConfirm(undefined);
@@ -35,18 +37,25 @@ function ChangePasswordContainer() {
   }
 
   return (
-    <ChangePassword
-      invalidPassword={invalidPassword}
-      newPassword={newPassword}
-      newPasswordConfirm={newPasswordConfirm}
-      password={password}
-      submitting={submitting}
-      onInvalidPasswordChange={setInvalidPassword}
-      onNewPasswordChange={setNewPassword}
-      onNewPasswordConfirmChange={setNewPasswordConfirm}
-      onPasswordChange={setPassword}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <ChangePassword
+        invalidPassword={invalidPassword}
+        newPassword={newPassword}
+        newPasswordConfirm={newPasswordConfirm}
+        password={password}
+        submitting={submitting}
+        onInvalidPasswordChange={setInvalidPassword}
+        onNewPasswordChange={setNewPassword}
+        onNewPasswordConfirmChange={setNewPasswordConfirm}
+        onPasswordChange={setPassword}
+        onSubmit={handleSubmit}
+      />
+      <Snackbar autoHideDuration={5000} open={successOpen} onClose={() => setSuccessOpen(false)}>
+        <Alert severity="success" onClose={() => setSuccessOpen(false)}>
+          Heslo změněno!
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

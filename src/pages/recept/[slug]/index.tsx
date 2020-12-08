@@ -1,8 +1,8 @@
-import { Box } from '@material-ui/core';
+import { Box, Snackbar } from '@material-ui/core';
+import { Alert, Color } from '@material-ui/lab';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { notify } from 'react-notify-toast';
 
 import { useAuth } from '../../../AuthContext';
 import { withApollo } from '../../../apollo';
@@ -30,6 +30,8 @@ function RecipeDetailPage() {
 
   const querySlug = router.query.slug?.toString();
 
+  const [snackbar, setSnackbar] = useState<[Color, string]>();
+
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { data, loading } = useRecipeDetailQuery({
     variables: { slug: querySlug! },
@@ -37,11 +39,10 @@ function RecipeDetailPage() {
   });
   const [deleteRecipe] = useDeleteRecipeMutation({
     onCompleted: () => {
-      notify.show('Recept smazán', 'success');
       router.push('/');
     },
     onError: () => {
-      notify.show('Nastala neočekávaná chyba', 'error');
+      setSnackbar(['error', 'Nastala neočekávaná chyba']);
     },
     update: (store, result) => {
       if (!result.data || !result.data) {
@@ -98,39 +99,46 @@ function RecipeDetailPage() {
   } = recipe;
 
   return (
-    <Layout>
-      <Box component="article">
-        <DocumentTitle title={title} />
-        <RecipeHeader
-          isAuthor={Boolean(
-            token && data && data.me && (data.me.username === user.username || data.me.isAdmin),
-          )}
-          preparationTime={preparationTime}
-          sideDish={sideDish}
-          slug={slug}
-          tags={tags}
-          title={title}
-          onDeleteShow={() => setDeleteModalVisible(true)}
-        />
-        {loading && <Spinner />}
-        <RecipeDetail
-          directions={directions}
-          imageFullUrl={image?.fullUrl}
-          imageUrl={supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl}
-          ingredients={ingredients}
-          lastModifiedDate={lastModifiedDate}
-          servingCount={servingCount}
-          title={title}
-          userName={user.displayName}
-        />
-        <RecipeDeleteModal
-          recipeTitle={title}
-          show={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDeleteConfirm}
-        />
-      </Box>
-    </Layout>
+    <>
+      <Layout>
+        <Box component="article">
+          <DocumentTitle title={title} />
+          <RecipeHeader
+            isAuthor={Boolean(
+              token && data && data.me && (data.me.username === user.username || data.me.isAdmin),
+            )}
+            preparationTime={preparationTime}
+            sideDish={sideDish}
+            slug={slug}
+            tags={tags}
+            title={title}
+            onDeleteShow={() => setDeleteModalVisible(true)}
+          />
+          {loading && <Spinner />}
+          <RecipeDetail
+            directions={directions}
+            imageFullUrl={image?.fullUrl}
+            imageUrl={supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl}
+            ingredients={ingredients}
+            lastModifiedDate={lastModifiedDate}
+            servingCount={servingCount}
+            title={title}
+            userName={user.displayName}
+          />
+          <RecipeDeleteModal
+            recipeTitle={title}
+            show={deleteModalVisible}
+            onClose={() => setDeleteModalVisible(false)}
+            onConfirm={handleDeleteConfirm}
+          />
+        </Box>
+      </Layout>
+      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
+        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
+          {snackbar?.[1]}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

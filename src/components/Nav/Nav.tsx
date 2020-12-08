@@ -29,7 +29,7 @@ function Nav(props: Props) {
             height: 100%;
             transform: translateX(250px);
             transition: transform 250ms ease-in-out;
-            background: ${colors.gray1000};
+            background: ${colors.gray900};
           }
         }
 

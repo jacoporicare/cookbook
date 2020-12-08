@@ -1,6 +1,5 @@
 import { Container, Box } from '@material-ui/core';
 import React from 'react';
-import Notifications from 'react-notify-toast';
 
 import { colors } from '../styles/colors';
 
@@ -18,7 +17,6 @@ function Layout(props: Props) {
   return (
     <>
       <DocumentTitle />
-      <Notifications options={{ zIndex: 1100 }} />
       {props.static ? (
         <Header />
       ) : (

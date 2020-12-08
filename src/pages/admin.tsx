@@ -1,7 +1,19 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Snackbar,
+  Switch,
+} from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
+import { Alert, Color } from '@material-ui/lab';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
-import { notify } from 'react-notify-toast';
+import React, { useRef, useState } from 'react';
 
 import { withApollo } from '../apollo';
 import { withAuth } from '../auth';
@@ -12,11 +24,8 @@ import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
 import { BoxSection } from '../components/core';
 import {
-  Button,
   DangerAlert,
-  DangerButton,
   Input,
-  SuccessButton,
   Table,
   TableCell,
   TableHeadCell,
@@ -33,11 +42,23 @@ import {
   UserFragment,
   UserInput,
 } from '../generated/graphql';
-import { colors } from '../styles/colors';
+
+type DialogOptions = {
+  title?: React.ReactNode;
+  content?: React.ReactNode;
+  button?: {
+    label: React.ReactNode;
+    onClick: () => void;
+  };
+};
 
 function AdminPage() {
   const router = useRouter();
   const updatingRefTimer = useRef(-1);
+
+  const [snackbar, setSnackbar] = useState<[Color, string]>();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialog, setDialog] = useState<DialogOptions>();
 
   const [[usernameId, username], setUsername] = useState(['', '']);
   const [[displayNameId, displayName], setDisplayName] = useState(['', '']);
@@ -58,7 +79,7 @@ function AdminPage() {
       clearTimeout(updatingRefTimer.current);
     },
     onError: () => {
-      notify.show('Nastala neočekávaná chyba', 'error');
+      setSnackbar(['error', 'Nastala neočekávaná chyba']);
     },
     update: () => {
       refetchUsers();
@@ -70,12 +91,12 @@ function AdminPage() {
       clearTimeout(updatingRefTimer.current);
     },
     onError: () => {
-      notify.show('Nastala neočekávaná chyba', 'error');
+      setSnackbar(['error', 'Nastala neočekávaná chyba']);
     },
   });
   const [deleteUser] = useDeleteUserMutation({
     onError: () => {
-      notify.show('Nastala neočekávaná chyba', 'error');
+      setSnackbar(['error', 'Nastala neočekávaná chyba']);
     },
     update: () => {
       refetchUsers();
@@ -83,10 +104,14 @@ function AdminPage() {
   });
   const [resetPassword] = useResetPasswordMutation({
     onCompleted: data => {
-      window.alert(`Nové heslo: ${data.resetPassword}`);
+      setDialog({
+        title: 'Nové heslo',
+        content: data?.resetPassword,
+      });
+      setDialogOpen(true);
     },
     onError: () => {
-      notify.show('Nastala neočekávaná chyba', 'error');
+      setSnackbar(['error', 'Nastala neočekávaná chyba']);
     },
   });
 
@@ -157,24 +182,38 @@ function AdminPage() {
       return;
     }
 
-    if (!window.confirm(`Opravdu smazat uživatele ${user.displayName}?`)) {
-      return;
-    }
-
-    deleteUser({ variables: { id: user._id } });
+    setDialog({
+      title: user.displayName,
+      content: 'Opravdu smazat tohoto uživatele?',
+      button: {
+        label: 'Smazat',
+        onClick: () => {
+          setDialogOpen(false);
+          deleteUser({ variables: { id: user._id } });
+        },
+      },
+    });
+    setDialogOpen(true);
   }
 
   function handleResetPassword(user: UserFragment) {
-    if (
-      !window.confirm(
-        `Opravdu resetovat heslo uživatele ${user.displayName}?
-Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
-      )
-    ) {
-      return;
-    }
-
-    resetPassword({ variables: { id: user._id } });
+    setDialog({
+      title: user.displayName,
+      content: (
+        <>
+          Opravdu tomuto uživateli resetovat heslo?
+          <br />
+          Nové heslo se zobrazí pouze jednorázově na obrazovce.
+        </>
+      ),
+      button: {
+        label: 'Resetovat',
+        onClick: () => {
+          resetPassword({ variables: { id: user._id } });
+        },
+      },
+    });
+    setDialogOpen(true);
   }
 
   function handleCreateNew() {
@@ -216,130 +255,154 @@ Nové heslo se zobrazí pouze jednorázově na obrazovce.`,
   const users = (data && data.users) || [];
 
   return (
-    <Layout>
+    <>
       <DocumentTitle title="Správa uživatelů" />
-      <BoxSection>
-        <PageHeading>Správa uživatelů</PageHeading>
-        <Table>
-          <thead>
-            <TableHeadRow>
-              <TableHeadCell width="200px">Uživatel</TableHeadCell>
-              <TableHeadCell width="200px">Jméno</TableHeadCell>
-              <TableHeadCell width="70px">Admin</TableHeadCell>
-              <TableHeadCell>Poslední aktivita</TableHeadCell>
-              <TableHeadCell />
-            </TableHeadRow>
-          </thead>
-          <tbody>
-            {users.map(user => {
-              const userUpdating = userIdUpdating === user._id && updating;
+      <Layout>
+        <BoxSection>
+          <PageHeading>Správa uživatelů</PageHeading>
+          <Table>
+            <thead>
+              <TableHeadRow>
+                <TableHeadCell width="200px">Uživatel</TableHeadCell>
+                <TableHeadCell width="200px">Jméno</TableHeadCell>
+                <TableHeadCell width="70px">Admin</TableHeadCell>
+                <TableHeadCell>Poslední aktivita</TableHeadCell>
+                <TableHeadCell />
+              </TableHeadRow>
+            </thead>
+            <tbody>
+              {users.map(user => {
+                const userUpdating = userIdUpdating === user._id && updating;
 
-              return (
-                <TableRow key={user._id}>
-                  <TableCell>
-                    <Input
-                      hasError={usernameId === user._id && !username.trim()}
-                      readOnly={userUpdating}
-                      type="text"
-                      value={usernameId === user._id ? username : user.username}
-                      onBlur={() => handleUsernameUpdate(user)}
-                      onChange={e => setUsername([user._id, e.currentTarget.value])}
-                      onFocus={() => setUsername([user._id, user.username])}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      hasError={displayNameId === user._id && !displayName.trim()}
-                      readOnly={userUpdating}
-                      type="text"
-                      value={displayNameId === user._id ? displayName : user.displayName}
-                      onBlur={() => handleDisplayNameUpdate(user)}
-                      onChange={e => setDisplayName([user._id, e.currentTarget.value])}
-                      onFocus={() => setDisplayName([user._id, user.displayName])}
-                    />
-                  </TableCell>
-                  <TableCell textAlign="center">
-                    {userUpdating ? (
-                      <Icon icon="spinner" lg spin />
-                    ) : (
-                      <Icon
-                        css={{
-                          cursor: user._id !== meData.me!._id ? 'pointer' : undefined,
-                          opacity: user._id !== meData.me!._id ? 1 : 0.5,
-                          color: user.isAdmin ? colors.blue : colors.gray600,
-                        }}
-                        icon={user.isAdmin ? 'toggle-on' : 'toggle-off'}
-                        lg
-                        onClick={() => handleIsAdminUpdate(user)}
+                return (
+                  <TableRow key={user._id}>
+                    <TableCell>
+                      <Input
+                        hasError={usernameId === user._id && !username.trim()}
+                        readOnly={userUpdating}
+                        type="text"
+                        value={usernameId === user._id ? username : user.username}
+                        onBlur={() => handleUsernameUpdate(user)}
+                        onChange={e => setUsername([user._id, e.currentTarget.value])}
+                        onFocus={() => setUsername([user._id, user.username])}
                       />
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
-                  </TableCell>
-                  <TableCell textAlign="center">
-                    <DangerButton
-                      disabled={user._id === meData!.me!._id}
-                      onClick={() => handleDelete(user)}
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        hasError={displayNameId === user._id && !displayName.trim()}
+                        readOnly={userUpdating}
+                        type="text"
+                        value={displayNameId === user._id ? displayName : user.displayName}
+                        onBlur={() => handleDisplayNameUpdate(user)}
+                        onChange={e => setDisplayName([user._id, e.currentTarget.value])}
+                        onFocus={() => setDisplayName([user._id, user.displayName])}
+                      />
+                    </TableCell>
+                    <TableCell textAlign="center">
+                      {userUpdating ? (
+                        <Icon icon="spinner" lg spin />
+                      ) : (
+                        <Switch
+                          checked={user.isAdmin || false}
+                          color="primary"
+                          disabled={user._id === meData!.me!._id}
+                          inputProps={{ 'aria-label': 'Admin' }}
+                          onChange={() => handleIsAdminUpdate(user)}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                    </TableCell>
+                    <TableCell textAlign="center">
+                      <IconButton
+                        aria-label="Smazat"
+                        disabled={user._id === meData!.me!._id}
+                        onClick={() => handleDelete(user)}
+                      >
+                        <Delete />
+                      </IconButton>{' '}
+                      <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+              <TableRow>
+                <TableCell>
+                  <Input
+                    hasError={newUsername === ''}
+                    type="text"
+                    value={newUsername || ''}
+                    onChange={e => setNewUsername(e.currentTarget.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Input
+                    hasError={newDisplayName === ''}
+                    type="text"
+                    value={newDisplayName || ''}
+                    onChange={e => setNewDisplayName(e.currentTarget.value)}
+                  />
+                </TableCell>
+                <TableCell textAlign="center">
+                  <Switch
+                    checked={newIsAdmin}
+                    color="primary"
+                    inputProps={{ 'aria-label': 'Admin' }}
+                    onChange={() => setNewIsAdmin(!newIsAdmin)}
+                  />
+                </TableCell>
+                <TableCell />
+                <TableCell textAlign="center">
+                  {creating ? (
+                    <Icon icon="spinner" lg spin />
+                  ) : (
+                    <Button
+                      color="primary"
+                      disabled={
+                        !newUsername ||
+                        !newUsername.trim() ||
+                        !newDisplayName ||
+                        !newDisplayName.trim()
+                      }
+                      onClick={handleCreateNew}
                     >
-                      <Icon css={{ marginLeft: '0.5em' }} icon="trash" />
-                    </DangerButton>{' '}
-                    <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-            <TableRow>
-              <TableCell>
-                <Input
-                  hasError={newUsername === ''}
-                  type="text"
-                  value={newUsername || ''}
-                  onChange={e => setNewUsername(e.currentTarget.value)}
-                />
-              </TableCell>
-              <TableCell>
-                <Input
-                  hasError={newDisplayName === ''}
-                  type="text"
-                  value={newDisplayName || ''}
-                  onChange={e => setNewDisplayName(e.currentTarget.value)}
-                />
-              </TableCell>
-              <TableCell textAlign="center">
-                <Icon
-                  css={{
-                    cursor: 'pointer',
-                    color: newIsAdmin ? colors.blue : colors.gray600,
-                  }}
-                  icon={newIsAdmin ? 'toggle-on' : 'toggle-off'}
-                  lg
-                  onClick={() => setNewIsAdmin(!newIsAdmin)}
-                />
-              </TableCell>
-              <TableCell />
-              <TableCell textAlign="center">
-                {creating ? (
-                  <Icon icon="spinner" lg spin />
-                ) : (
-                  <SuccessButton
-                    disabled={
-                      !newUsername ||
-                      !newUsername.trim() ||
-                      !newDisplayName ||
-                      !newDisplayName.trim()
-                    }
-                    onClick={handleCreateNew}
-                  >
-                    Přidat
-                  </SuccessButton>
-                )}
-              </TableCell>
-            </TableRow>
-          </tbody>
-        </Table>
-      </BoxSection>
-    </Layout>
+                      Přidat
+                    </Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            </tbody>
+          </Table>
+        </BoxSection>
+      </Layout>
+      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
+        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
+          {snackbar?.[1]}
+        </Alert>
+      </Snackbar>
+      <Dialog
+        aria-describedby="alert-dialog-description"
+        aria-labelledby="alert-dialog-title"
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      >
+        <DialogTitle id="alert-dialog-title">{dialog?.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">{dialog?.content}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus={!dialog?.button} color="primary" onClick={() => setDialogOpen(false)}>
+            {dialog?.button ? 'Zrušit' : 'Zavřít'}
+          </Button>
+          {dialog?.button && (
+            <Button color="primary" autoFocus onClick={dialog.button?.onClick}>
+              {dialog.button?.label}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

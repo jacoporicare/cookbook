@@ -1,5 +1,4 @@
 import { ClassNames } from '@emotion/core';
-import { darken } from 'polished';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -41,10 +40,8 @@ function RichText({ text = '' }: Props) {
                 top: -${(stepSize - stepLineHeight) / 2}em;
                 width: ${stepSize}em;
                 height: ${stepSize}em;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid ${darken(0.1, theme.primary)};
+                line-height: ${stepSize}em;
+                text-align: center;
                 border-radius: 50%;
                 color: ${colorYiq(theme.primary)};
                 background-color: ${theme.primary};

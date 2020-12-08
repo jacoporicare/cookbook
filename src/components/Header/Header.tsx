@@ -19,7 +19,7 @@ function Header(props: Props) {
   return (
     <>
       <Box
-        bgcolor={colors.gray1000}
+        bgcolor={colors.gray900}
         boxShadow="0px 2px 4px 0px rgba(0,0,0,0.2)"
         color="white"
         component="header"
