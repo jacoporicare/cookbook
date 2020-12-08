@@ -6,8 +6,16 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Paper,
   Snackbar,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { Alert, Color } from '@material-ui/lab';
@@ -23,15 +31,7 @@ import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
 import { BoxSection } from '../components/core';
-import {
-  DangerAlert,
-  Input,
-  Table,
-  TableCell,
-  TableHeadCell,
-  TableHeadRow,
-  TableRow,
-} from '../components/elements';
+import { DangerAlert } from '../components/elements';
 import {
   useMeQuery,
   useUserListQuery,
@@ -260,120 +260,120 @@ function AdminPage() {
       <Layout>
         <BoxSection>
           <PageHeading>Správa uživatelů</PageHeading>
-          <Table>
-            <thead>
-              <TableHeadRow>
-                <TableHeadCell width="200px">Uživatel</TableHeadCell>
-                <TableHeadCell width="200px">Jméno</TableHeadCell>
-                <TableHeadCell width="70px">Admin</TableHeadCell>
-                <TableHeadCell>Poslední aktivita</TableHeadCell>
-                <TableHeadCell />
-              </TableHeadRow>
-            </thead>
-            <tbody>
-              {users.map(user => {
-                const userUpdating = userIdUpdating === user._id && updating;
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell width="200px">Uživatel</TableCell>
+                  <TableCell width="200px">Jméno</TableCell>
+                  <TableCell width="70px">Admin</TableCell>
+                  <TableCell width="250px">Poslední aktivita</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map(user => {
+                  const userUpdating = userIdUpdating === user._id && updating;
 
-                return (
-                  <TableRow key={user._id}>
-                    <TableCell>
-                      <Input
-                        hasError={usernameId === user._id && !username.trim()}
-                        readOnly={userUpdating}
-                        type="text"
-                        value={usernameId === user._id ? username : user.username}
-                        onBlur={() => handleUsernameUpdate(user)}
-                        onChange={e => setUsername([user._id, e.currentTarget.value])}
-                        onFocus={() => setUsername([user._id, user.username])}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Input
-                        hasError={displayNameId === user._id && !displayName.trim()}
-                        readOnly={userUpdating}
-                        type="text"
-                        value={displayNameId === user._id ? displayName : user.displayName}
-                        onBlur={() => handleDisplayNameUpdate(user)}
-                        onChange={e => setDisplayName([user._id, e.currentTarget.value])}
-                        onFocus={() => setDisplayName([user._id, user.displayName])}
-                      />
-                    </TableCell>
-                    <TableCell textAlign="center">
-                      {userUpdating ? (
-                        <Icon icon="spinner" lg spin />
-                      ) : (
-                        <Switch
-                          checked={user.isAdmin || false}
-                          color="primary"
-                          disabled={user._id === meData!.me!._id}
-                          inputProps={{ 'aria-label': 'Admin' }}
-                          onChange={() => handleIsAdminUpdate(user)}
+                  return (
+                    <TableRow key={user._id}>
+                      <TableCell>
+                        <TextField
+                          disabled={userUpdating}
+                          error={usernameId === user._id && !username.trim()}
+                          value={usernameId === user._id ? username : user.username}
+                          onBlur={() => handleUsernameUpdate(user)}
+                          onChange={e => setUsername([user._id, e.currentTarget.value])}
+                          onFocus={() => setUsername([user._id, user.username])}
                         />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
-                    </TableCell>
-                    <TableCell textAlign="center">
-                      <IconButton
-                        aria-label="Smazat"
-                        disabled={user._id === meData!.me!._id}
-                        onClick={() => handleDelete(user)}
-                      >
-                        <Delete />
-                      </IconButton>{' '}
-                      <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              <TableRow>
-                <TableCell>
-                  <Input
-                    hasError={newUsername === ''}
-                    type="text"
-                    value={newUsername || ''}
-                    onChange={e => setNewUsername(e.currentTarget.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    hasError={newDisplayName === ''}
-                    type="text"
-                    value={newDisplayName || ''}
-                    onChange={e => setNewDisplayName(e.currentTarget.value)}
-                  />
-                </TableCell>
-                <TableCell textAlign="center">
-                  <Switch
-                    checked={newIsAdmin}
-                    color="primary"
-                    inputProps={{ 'aria-label': 'Admin' }}
-                    onChange={() => setNewIsAdmin(!newIsAdmin)}
-                  />
-                </TableCell>
-                <TableCell />
-                <TableCell textAlign="center">
-                  {creating ? (
-                    <Icon icon="spinner" lg spin />
-                  ) : (
-                    <Button
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          disabled={userUpdating}
+                          error={displayNameId === user._id && !displayName.trim()}
+                          value={displayNameId === user._id ? displayName : user.displayName}
+                          onBlur={() => handleDisplayNameUpdate(user)}
+                          onChange={e => setDisplayName([user._id, e.currentTarget.value])}
+                          onFocus={() => setDisplayName([user._id, user.displayName])}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {userUpdating ? (
+                          <Icon icon="spinner" lg spin />
+                        ) : (
+                          <Switch
+                            checked={user.isAdmin || false}
+                            color="primary"
+                            disabled={user._id === meData!.me!._id}
+                            inputProps={{ 'aria-label': 'Admin' }}
+                            onChange={() => handleIsAdminUpdate(user)}
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                      </TableCell>
+                      <TableCell align="left">
+                        <IconButton
+                          aria-label="Smazat"
+                          disabled={user._id === meData!.me!._id}
+                          onClick={() => handleDelete(user)}
+                        >
+                          <Delete />
+                        </IconButton>{' '}
+                        <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+                <TableRow>
+                  <TableCell>
+                    <TextField
+                      error={newUsername === ''}
+                      label="Nový uživatel"
+                      value={newUsername || ''}
+                      onChange={e => setNewUsername(e.currentTarget.value)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      error={newDisplayName === ''}
+                      label="Jméno"
+                      value={newDisplayName || ''}
+                      onChange={e => setNewDisplayName(e.currentTarget.value)}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Switch
+                      checked={newIsAdmin}
                       color="primary"
-                      disabled={
-                        !newUsername ||
-                        !newUsername.trim() ||
-                        !newDisplayName ||
-                        !newDisplayName.trim()
-                      }
-                      onClick={handleCreateNew}
-                    >
-                      Přidat
-                    </Button>
-                  )}
-                </TableCell>
-              </TableRow>
-            </tbody>
-          </Table>
+                      inputProps={{ 'aria-label': 'Admin' }}
+                      onChange={() => setNewIsAdmin(!newIsAdmin)}
+                    />
+                  </TableCell>
+                  <TableCell />
+                  <TableCell align="left">
+                    {creating ? (
+                      <Icon icon="spinner" lg spin />
+                    ) : (
+                      <Button
+                        color="primary"
+                        disabled={
+                          !newUsername ||
+                          !newUsername.trim() ||
+                          !newDisplayName ||
+                          !newDisplayName.trim()
+                        }
+                        onClick={handleCreateNew}
+                      >
+                        Přidat
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </BoxSection>
       </Layout>
       <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
