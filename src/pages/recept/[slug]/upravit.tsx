@@ -24,6 +24,7 @@ import {
   useUpdateRecipeMutation,
   RecipeInput,
 } from '../../../generated/graphql';
+import useSupportsWebP from '../../../hooks/useSupportsWebP';
 import { AutosuggestChangeEventHandler } from '../../../types';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
@@ -37,6 +38,8 @@ function isCreateMutation(
 
 function RecipeEditPage() {
   const router = useRouter();
+  const supportsWebP = useSupportsWebP();
+
   const [changed, setChanged] = useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
   const [id, setId] = useState('');
@@ -278,7 +281,7 @@ function RecipeEditPage() {
       <RecipeEdit
         changed={changed}
         directions={directions}
-        imageUrl={editedRecipe?.image?.thumbUrl}
+        imageUrl={supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl}
         ingredientOptions={dataOptions?.ingredients ?? []}
         ingredients={ingredients}
         isNew={!slug}

@@ -23,6 +23,7 @@ const typeDefs = gql`
   type Image {
     fullUrl: String!
     thumbUrl: String!
+    thumbWebPUrl: String!
   }
 
   type Ingredient {

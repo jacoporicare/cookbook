@@ -1,15 +1,12 @@
 import { Box } from '@material-ui/core';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 import { colors } from '../../styles/colors';
 import Nav from '../Nav';
 import RecipeSearch from '../RecipeSearch';
-
-// import cow from './cow.png';
-// import pig from './pig.png';
-import piggy from './piggy.png';
 
 const WakeLock = dynamic(() => import('../WakeLock'), { ssr: false });
 
@@ -36,9 +33,10 @@ function Header(props: Props) {
           <Box alignItems="center" display="flex">
             <Link href="/">
               <a className="logo">
-                <img alt="Ikona" className="icon" src={piggy} />
-                <Box display={['none', 'inline']}>Žrádelník</Box>
-                {/* <img alt="Kráva" className="icon" src={cow} /> */}
+                <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
+                <Box display={['none', 'inline']} ml={3}>
+                  Žrádelník
+                </Box>
               </a>
             </Link>
           </Box>
@@ -62,12 +60,6 @@ function Header(props: Props) {
         .logo:hover {
           color: white;
           text-decoration: none;
-        }
-
-        .icon {
-          width: 33px;
-          height: 40px;
-          margin-right: 12px;
         }
       `}</style>
     </>

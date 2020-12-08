@@ -5,6 +5,8 @@ const resize = require('./resize');
 const s3 = new AWS.S3();
 
 exports.handler = async (event, context, callback) => {
+  console.log('Event', event);
+
   const bucket = event.bucket;
 
   const listParams = {
@@ -12,16 +14,11 @@ exports.handler = async (event, context, callback) => {
     Prefix: 'full/',
   };
 
-  try {
-    const data = await s3.listObjectsV2(listParams).promise();
+  const data = await s3.listObjectsV2(listParams).promise();
 
-    for (o of data.Contents) {
-      await resize(s3, bucket, o.Key);
-    }
-  } catch (error) {
-    console.error(error, error.stack);
-
-    return;
+  for (o of data.Contents) {
+    await resize(s3, bucket, o.Key, 'jpeg');
+    await resize(s3, bucket, o.Key, 'webp');
   }
 
   console.log('Recreation complete');

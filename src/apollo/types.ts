@@ -31,3 +31,11 @@ export type UserInput = {
   displayName: string;
   isAdmin: boolean | null;
 };
+
+export type AppState = {
+  supportsWebP: boolean;
+};
+
+export type AppStateData = {
+  appState: AppState;
+};

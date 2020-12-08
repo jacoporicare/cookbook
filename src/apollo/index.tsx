@@ -4,7 +4,10 @@ import { NextPage, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 
+import appState from '../graphql/local/appState';
+
 import { createApolloClient } from './client';
+import { AppStateData } from './types';
 
 // import { getAuthToken } from '../auth';
 
@@ -21,7 +24,18 @@ function initApolloClient(
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
-    return createApolloClient(ctx, initialState);
+    const client = createApolloClient(ctx, initialState);
+
+    client.cache.writeQuery<AppStateData>({
+      query: appState,
+      data: {
+        appState: {
+          supportsWebP: ctx.req?.headers.accept?.includes('image/webp') || false,
+        },
+      },
+    });
+
+    return client;
   }
 
   // Reuse client on the client-side

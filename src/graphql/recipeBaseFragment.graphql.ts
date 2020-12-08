@@ -13,6 +13,7 @@ export default gql`
     image {
       fullUrl
       thumbUrl
+      thumbWebPUrl
     }
     lastModifiedDate
     user {

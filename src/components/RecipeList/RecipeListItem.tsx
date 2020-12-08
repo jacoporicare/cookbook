@@ -3,8 +3,8 @@ import Link from 'next/link';
 import React from 'react';
 import { LazyImage } from 'react-lazy-images';
 
-import placeholder from '../../assets/food-placeholder.png';
 import { RecipeBaseFragment } from '../../generated/graphql';
+import useSupportsWebP from '../../hooks/useSupportsWebP';
 import { colors } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
@@ -26,9 +26,12 @@ const useStyles = makeStyles((_theme: Theme) =>
 
 function RecipeListItem({ recipe }: Props) {
   const classes = useStyles();
+  const supportsWebP = useSupportsWebP();
 
   const { slug, title, preparationTime, sideDish, image } = recipe;
-  const imageUrl = image?.thumbUrl || placeholder;
+  const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
+  const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
+  const imageUrl = thumbUrl || placeholderUrl;
 
   return (
     <>
@@ -42,7 +45,7 @@ function RecipeListItem({ recipe }: Props) {
               <div
                 ref={ref}
                 className="image"
-                style={{ backgroundImage: `url('${placeholder}')` }}
+                style={{ backgroundImage: `url('${placeholderUrl}')` }}
               />
             )}
             src={imageUrl}

@@ -21,10 +21,12 @@ import {
   useRecipeDetailQuery,
   useDeleteRecipeMutation,
 } from '../../../generated/graphql';
+import useSupportsWebP from '../../../hooks/useSupportsWebP';
 
 function RecipeDetailPage() {
   const [token] = useAuth();
   const router = useRouter();
+  const supportsWebP = useSupportsWebP();
 
   const querySlug = router.query.slug?.toString();
 
@@ -114,7 +116,7 @@ function RecipeDetailPage() {
         <RecipeDetail
           directions={directions}
           imageFullUrl={image?.fullUrl}
-          imageUrl={image?.thumbUrl}
+          imageUrl={supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl}
           ingredients={ingredients}
           lastModifiedDate={lastModifiedDate}
           servingCount={servingCount}
