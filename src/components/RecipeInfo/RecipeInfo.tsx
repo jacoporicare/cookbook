@@ -45,25 +45,33 @@ function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   const classes = useStyles();
 
   if (!preparationTime && !sideDish) {
-    return placeholder ? <div>{placeholder}</div> : null;
+    return placeholder ? (
+      <Typography color="textSecondary" variant="body1">
+        {placeholder}
+      </Typography>
+    ) : null;
   }
 
   return (
     <ul className={classes.root}>
       {!!preparationTime && preparationTime > 0 && (
         <li className={classes.item}>
-          <Typography color="textSecondary" component="span">
+          <Typography color="textSecondary" component="span" variant="body1">
             Doba přípravy
           </Typography>{' '}
-          <Typography component="span">{formatTime(preparationTime)}</Typography>{' '}
+          <Typography component="span" variant="body1">
+            {formatTime(preparationTime)}
+          </Typography>{' '}
         </li>
       )}
       {!!sideDish && (
         <li className={classes.item}>
-          <Typography color="textSecondary" component="span">
+          <Typography color="textSecondary" component="span" variant="body1">
             Příloha
           </Typography>{' '}
-          <Typography component="span">{sideDish}</Typography>
+          <Typography component="span" variant="body1">
+            {sideDish}
+          </Typography>
         </li>
       )}
     </ul>

@@ -21,6 +21,7 @@ function RichText({ text = '' }: Props) {
               list-style-type: none;
               padding-left: 0;
               margin-bottom: 1.5em;
+              margin-top: 0;
 
               li {
                 counter-increment: step-counter;

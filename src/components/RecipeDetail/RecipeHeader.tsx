@@ -50,12 +50,12 @@ function RecipeHeader({
         <Box mb={2}>
           <Grid alignItems="center" spacing={1} container>
             {Boolean(preparationTime || sideDish) && (
-              <Grid xs={12} item>
+              <Grid xs={12} item md>
                 <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
               </Grid>
             )}
             {!!tags?.length && (
-              <Grid xs={12} item>
+              <Grid xs={12} item md>
                 <Grid alignItems="center" justify="flex-end" spacing={2} container>
                   <Grid item>
                     <Typography color="textSecondary" component="span">

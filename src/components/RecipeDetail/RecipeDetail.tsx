@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Paper, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
@@ -77,21 +77,28 @@ function RecipeDetail({
         </Grid>
 
         <Grid lg={8} md={7} xl={9} xs={12} item>
-          {imageUrl && (
-            <ImageBox display={['none', 'block']}>
-              {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
-                <Image alt={title} src={imageUrl} />
-              </a>
-            </ImageBox>
-          )}
-          {directions ? (
-            <RichText text={directions} />
-          ) : (
-            <Box mr={[0, !directions && imageUrl ? '215px' : 0]}>
-              <Alert severity="info">Žádný postup.</Alert>
+          <Typography component="h3" variant="h5" gutterBottom>
+            Postup
+          </Typography>
+          <Paper>
+            <Box p={3}>
+              {imageUrl && (
+                <ImageBox display={['none', 'block']}>
+                  {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                  <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
+                    <Image alt={title} src={imageUrl} />
+                  </a>
+                </ImageBox>
+              )}
+              {directions ? (
+                <RichText text={directions} />
+              ) : (
+                <Box mr={[0, !directions && imageUrl ? '215px' : 0]}>
+                  <Alert severity="info">Žádný postup.</Alert>
+                </Box>
+              )}
             </Box>
-          )}
+          </Paper>
         </Grid>
       </Grid>
       {imageUrl && (
