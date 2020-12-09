@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 
 import { Ingredient } from '../../generated/graphql';
 import RichText from '../RichText/RichText';
-import { InfoAlert } from '../elements';
 
 import IngredientList from './IngredientList';
 
@@ -59,8 +59,8 @@ function RecipeDetail({
 
   return (
     <>
-      <Box display={['block', 'flex']}>
-        <Box component="aside" flex={1} pr={[0, 3]}>
+      <Grid spacing={4} container>
+        <Grid lg={4} md={5} xl={3} xs={12} item>
           <IngredientList ingredients={ingredients} servingCount={servingCount} />
           <Box my={4}>
             <Typography color="textSecondary" variant="subtitle1">
@@ -74,9 +74,9 @@ function RecipeDetail({
               {new Date(lastModifiedDate).toLocaleDateString('cs')}
             </Typography>
           </Box>
-        </Box>
+        </Grid>
 
-        <Box flex={3}>
+        <Grid lg={8} md={7} xl={9} xs={12} item>
           {imageUrl && (
             <ImageBox display={['none', 'block']}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
@@ -89,11 +89,11 @@ function RecipeDetail({
             <RichText text={directions} />
           ) : (
             <Box mr={[0, !directions && imageUrl ? '215px' : 0]}>
-              <InfoAlert>Žádný postup.</InfoAlert>
+              <Alert severity="info">Žádný postup.</Alert>
             </Box>
           )}
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
       {imageUrl && (
         <Box display={['block', 'none']}>
           {/* eslint-disable-next-line react/jsx-no-target-blank */}

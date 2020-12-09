@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 
 type Props = {
@@ -22,29 +22,24 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const useStyles = makeStyles((_theme: Theme) =>
-  createStyles({
-    root: {
-      margin: 0,
-      padding: 0,
-      listStyle: 'none',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+const useStyles = makeStyles({
+  root: {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+  },
+  item: {
+    display: 'inline-block',
+    '& + &': {
+      marginLeft: '4px',
     },
-    item: {
+    '& + &::before': {
       display: 'inline-block',
-      '& + &': {
-        marginLeft: '4px',
-      },
-      '& + &::before': {
-        display: 'inline-block',
-        content: "'·'",
-        marginRight: '4px',
-      },
+      content: "'·'",
+      marginRight: '4px',
     },
-  }),
-);
+  },
+});
 
 function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   const classes = useStyles();
@@ -56,9 +51,21 @@ function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
   return (
     <ul className={classes.root}>
       {!!preparationTime && preparationTime > 0 && (
-        <li className={classes.item}>{formatTime(preparationTime)}</li>
+        <li className={classes.item}>
+          <Typography color="textSecondary" component="span">
+            Doba přípravy
+          </Typography>{' '}
+          <Typography component="span">{formatTime(preparationTime)}</Typography>{' '}
+        </li>
       )}
-      {!!sideDish && <li className={classes.item}>{sideDish}</li>}
+      {!!sideDish && (
+        <li className={classes.item}>
+          <Typography color="textSecondary" component="span">
+            Příloha
+          </Typography>{' '}
+          <Typography component="span">{sideDish}</Typography>
+        </li>
+      )}
     </ul>
   );
 }

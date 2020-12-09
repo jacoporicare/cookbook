@@ -1,12 +1,12 @@
 import { ClassNames } from '@emotion/core';
+import { Box, Grid, TextField } from '@material-ui/core';
 import { matchSorter } from 'match-sorter';
 import React, { KeyboardEvent, useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
 
 import { AutosuggestChangeEventHandler } from '../../types';
 import Icon from '../common/Icon';
-import { Box } from '../core';
-import { Input, getInputStyle, Button } from '../elements';
+import { getInputStyle, Button } from '../elements';
 
 import AutosuggestWrapper from './AutosuggestWrapper';
 
@@ -54,30 +54,31 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
     <ClassNames>
       {({ css }) => (
         <>
-          <Box display="flex" mb={2}>
-            <Box flex={1} pr={1}>
-              <Input
-                min="0"
+          <Grid spacing={2} container>
+            <Grid item xs>
+              <TextField
+                inputProps={{ min: 0 }}
+                label="Množství"
                 name="amount"
-                placeholder="Množství"
                 type="number"
                 value={amount ?? ''}
+                fullWidth
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
               />
-            </Box>
-            <Box flex={1} pl={1}>
-              <Input
+            </Grid>
+            <Grid item xs>
+              <TextField
+                label="Jednotka"
                 name="amountUnit"
-                placeholder="Jednotka"
-                type="text"
                 value={amountUnit ?? ''}
+                fullWidth
                 onChange={onChange}
                 onKeyPress={handleKeyPress}
               />
-            </Box>
-          </Box>
-          <Box display="flex" mb={2}>
+            </Grid>
+          </Grid>
+          <Box display="flex" mt={2}>
             <AutosuggestWrapper css={{ flex: 'auto' }}>
               <Autosuggest
                 getSuggestionValue={s => s}

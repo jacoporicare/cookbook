@@ -21,7 +21,7 @@ import useHideOnScroll from '../hooks/useHideOnScroll';
 
 function RecipeListPage() {
   const router = useRouter();
-  const searchTags = router.query.tagy?.toString().split(' ') ?? [];
+  const searchTags = router.query.stitky?.toString().split(' ') ?? [];
 
   const [token] = useAuth();
   const [searchVisible, setSearchVisible] = useState(searchTags.length > 0);
@@ -38,7 +38,7 @@ function RecipeListPage() {
   }
 
   function handleSearch(tags: string[]) {
-    router.push(tags.length > 0 ? `/?tagy=${tags.join('+')}` : '/');
+    router.push(tags.length > 0 ? `/?stitky=${tags.join('+')}` : '/');
   }
 
   function handleMatchAllChange(matchAll: boolean) {

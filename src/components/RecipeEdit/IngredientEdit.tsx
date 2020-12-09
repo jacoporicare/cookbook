@@ -1,9 +1,9 @@
+import { Box } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Box, Text } from '../core';
 
 import IngredientForm from './IngredientForm';
 import IngredientGroupForm from './IngredientGroupForm';
@@ -24,11 +24,6 @@ type Props = {
   onAddGroup: AddGroupEventHandler;
   onRemove: RemoveEventHandler;
   onSort: SortEndHandler;
-};
-
-const Heading = Text.withComponent('h3');
-Heading.defaultProps = {
-  fontWeight: 300,
 };
 
 function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
@@ -91,11 +86,8 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
 
   return (
     <>
-      <Box mb={3}>
-        <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
-      </Box>
-      <Box mb={3}>
-        <Heading>Přidat ingredienci</Heading>
+      <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+      <Box mt={3}>
         <IngredientForm
           amount={amount}
           amountUnit={amountUnit}
@@ -105,8 +97,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
           onChange={handleIngredientChange}
         />
       </Box>
-      <Box>
-        <Heading>Přidat skupinu</Heading>
+      <Box mt={3}>
         <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleGroupChange} />
       </Box>
     </>

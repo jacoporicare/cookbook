@@ -1,3 +1,4 @@
+import { Grid, Paper, Typography } from '@material-ui/core';
 import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
@@ -73,54 +74,68 @@ function RecipeEdit({
 
       <Header changed={changed} isNew={isNew} isSaving={isSaving} title={title} />
 
-      <fieldset>
-        <Title title={title} onChange={onChange} />
-      </fieldset>
+      <Title title={title} onChange={onChange} />
 
-      <Box display={['block', 'block', 'flex']}>
-        <Box flex={1} mb={3} pr={[0, 0, 3]}>
-          <fieldset>
-            <legend>Základní údaje</legend>
-            <BasicInfo
-              preparationTime={preparationTime}
-              servingCount={servingCount}
-              sideDish={sideDish}
-              sideDishOptions={sideDishOptions}
-              tagOptions={tagOptions}
-              tags={tags}
-              onChange={onChange}
-              onTagsChange={onTagsChange}
-            />
-          </fieldset>
-        </Box>
+      <Box mt={4}>
+        <Grid spacing={4} container>
+          <Grid md={2} xs={12} item>
+            <Typography component="h3" variant="h5" gutterBottom>
+              Základní údaje
+            </Typography>
+            <Paper>
+              <Box p={3}>
+                <BasicInfo
+                  preparationTime={preparationTime}
+                  servingCount={servingCount}
+                  sideDish={sideDish}
+                  sideDishOptions={sideDishOptions}
+                  tagOptions={tagOptions}
+                  tags={tags}
+                  onChange={onChange}
+                  onTagsChange={onTagsChange}
+                />
+              </Box>
+            </Paper>
+          </Grid>
 
-        <Box flex={[1, 1, 1, 2]} mb={3} px={[0, 0, 3]}>
-          <fieldset>
-            <legend>Ingredience</legend>
-            <IngredientEdit
-              ingredientOptions={ingredientOptions}
-              items={ingredients}
-              onAdd={onAddIngredient}
-              onAddGroup={onAddGroup}
-              onRemove={onRemoveIngredient}
-              onSort={onSortIngredient}
-            />
-          </fieldset>
-        </Box>
+          <Grid md={4} xs={12} item>
+            <Typography component="h3" variant="h5" gutterBottom>
+              Ingredience
+            </Typography>
+            <Paper>
+              <Box p={3}>
+                <IngredientEdit
+                  ingredientOptions={ingredientOptions}
+                  items={ingredients}
+                  onAdd={onAddIngredient}
+                  onAddGroup={onAddGroup}
+                  onRemove={onRemoveIngredient}
+                  onSort={onSortIngredient}
+                />
+              </Box>
+            </Paper>
+          </Grid>
 
-        <Box flex={[1, 1, 1, 3]} mb={3} pl={[0, 0, 3]}>
-          <fieldset>
-            <legend>Postup</legend>
-            <Directions directions={directions} onChange={onChange} />
-          </fieldset>
-        </Box>
+          <Grid md={6} xs={12} item>
+            <Typography component="h3" variant="h5" gutterBottom>
+              Postup
+            </Typography>
+            <Paper>
+              <Box p={3}>
+                <Directions directions={directions} onChange={onChange} />
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
       </Box>
 
-      <fieldset>
-        <legend>Náhled postupu</legend>
+      <Box mt={4}>
+        <Typography component="h3" variant="h5" gutterBottom>
+          Náhled postupu
+        </Typography>
         <ImageUpload imageUrl={imageUrl} onImageChange={onImageChange} />
         <RichText text={directions} />
-      </fieldset>
+      </Box>
     </form>
   );
 }

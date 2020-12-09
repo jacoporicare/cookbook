@@ -3,9 +3,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  createStyles,
   makeStyles,
-  Theme,
   Typography,
 } from '@material-ui/core';
 import Link from 'next/link';
@@ -19,19 +17,17 @@ type Props = {
   recipe: RecipeBaseFragment;
 };
 
-const useStyles = makeStyles((_theme: Theme) =>
-  createStyles({
-    title: {
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    media: {
-      height: 0,
-      paddingTop: '75%', // 4:3
-    },
-  }),
-);
+const useStyles = makeStyles({
+  title: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  media: {
+    height: 0,
+    paddingTop: '75%', // 4:3
+  },
+});
 
 function RecipeListItem({ recipe }: Props) {
   const classes = useStyles();

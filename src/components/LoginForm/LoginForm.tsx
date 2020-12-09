@@ -1,11 +1,10 @@
+import { Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
-import Checkbox from '../common/Checkbox';
-import Lead from '../common/Lead';
 import PageHeading from '../common/PageHeading';
 import Spinner from '../common/Spinner';
 import { Box } from '../core';
-import { DangerAlert, Input, Label, SuccessButton } from '../elements';
 
 type Props = {
   username: string;
@@ -22,45 +21,58 @@ function LoginForm(props: Props) {
     <>
       {props.isSubmitting && <Spinner overlay />}
       <PageHeading>Přihlášení</PageHeading>
-      <Lead>Zadej své uživatelské jméno a heslo.</Lead>
-      {props.error && <DangerAlert>Neplatné uživatelské jméno nebo heslo.</DangerAlert>}
+      <Typography component="h3" variant="h4" gutterBottom>
+        Zadej své uživatelské jméno a heslo.
+      </Typography>
+      {props.error && <Alert severity="error">Neplatné uživatelské jméno nebo heslo.</Alert>}
       <form onSubmit={props.onSubmit}>
-        <Box maxWidth={400}>
-          <Box mb={3}>
-            <Label htmlFor="username">Uživatel</Label>
-            <Input
-              id="username"
-              name="username"
-              type="text"
-              value={props.username}
-              required
-              onChange={props.onChange}
-            />
-          </Box>
-          <Box mb={3}>
-            <Label htmlFor="password">Heslo</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={props.password}
-              required
-              onChange={props.onChange}
-            />
-          </Box>
-          <Box alignItems="center" display="flex" justifyContent="space-between">
-            <Checkbox
-              checked={props.rememberMe}
-              id="rememberMe"
-              name="rememberMe"
-              onChange={props.onChange}
-            >
-              Neodhlašovat
-            </Checkbox>
-            <SuccessButton disabled={props.isSubmitting} type="submit">
-              Přihlásit
-            </SuccessButton>
-          </Box>
+        <Box maxWidth="400px">
+          <Grid direction="column" spacing={3} container>
+            <Grid item>
+              <TextField
+                label="Uživatel"
+                name="username"
+                value={props.username}
+                fullWidth
+                required
+                onChange={props.onChange}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Heslo"
+                name="password"
+                type="password"
+                value={props.password}
+                fullWidth
+                required
+                onChange={props.onChange}
+              />
+            </Grid>
+            <Grid item>
+              <Box alignItems="center" display="flex" justifyContent="space-between">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={props.rememberMe}
+                      color="primary"
+                      name="rememberMe"
+                      onChange={props.onChange}
+                    />
+                  }
+                  label="Neodhlašovat"
+                />
+                <Button
+                  color="primary"
+                  disabled={props.isSubmitting}
+                  type="submit"
+                  variant="contained"
+                >
+                  Přihlásit
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
       </form>
     </>

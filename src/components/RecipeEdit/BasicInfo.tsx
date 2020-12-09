@@ -1,12 +1,12 @@
 import { ClassNames } from '@emotion/core';
+import { Box, InputAdornment, TextField } from '@material-ui/core';
 import { matchSorter } from 'match-sorter';
 import React, { useState } from 'react';
 import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest';
 import Creatable from 'react-select/creatable';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Box } from '../core';
-import { Label, Input, getInputStyle, InputAddon } from '../elements';
+import { Label, getInputStyle } from '../elements';
 
 import AutosuggestWrapper from './AutosuggestWrapper';
 
@@ -51,36 +51,30 @@ function BasicInfo({
     <ClassNames>
       {({ css }) => (
         <>
-          <Box mb={3}>
-            <Label htmlFor="preparationTime">Doba přípravy</Label>
-            <Box display="flex">
-              <Input
-                flex="auto"
-                id="preparationTime"
-                min="1"
-                name="preparationTime"
-                type="number"
-                value={typeof preparationTime === 'number' ? preparationTime : ''}
-                hasAppendAddon
-                onChange={onChange}
-              />
-              <InputAddon isAppend>min</InputAddon>
-            </Box>
-          </Box>
+          <TextField
+            InputProps={{ endAdornment: <InputAdornment position="end">min</InputAdornment> }}
+            inputProps={{ min: 1 }}
+            label="Doba přípravy"
+            name="preparationTime"
+            type="number"
+            value={typeof preparationTime === 'number' ? preparationTime : ''}
+            fullWidth
+            onChange={onChange}
+          />
 
-          <Box mb={3}>
-            <Label htmlFor="servingCount">Počet porcí</Label>
-            <Input
-              id="servingCount"
-              min="1"
+          <Box mt={3}>
+            <TextField
+              inputProps={{ min: 1 }}
+              label="Počet porcí"
               name="servingCount"
               type="number"
               value={typeof servingCount === 'number' ? servingCount : ''}
+              fullWidth
               onChange={onChange}
             />
           </Box>
 
-          <AutosuggestWrapper mb={3}>
+          <AutosuggestWrapper mt={3}>
             <Label htmlFor="sideDish">Příloha</Label>
             <Autosuggest
               getSuggestionValue={s => s}
@@ -103,8 +97,8 @@ function BasicInfo({
             />
           </AutosuggestWrapper>
 
-          <div>
-            <Label htmlFor="tags">Tagy</Label>
+          <Box mt={3}>
+            <Label htmlFor="tags">Štítky</Label>
             <Creatable
               defaultValue={tags?.map(t => ({ value: t, label: t }))}
               formatCreateLabel={input => `Vytvořit "${input}"`}
@@ -119,7 +113,7 @@ function BasicInfo({
                 onTagsChange(values instanceof Array ? values.map(v => v.value) : [])
               }
             />
-          </div>
+          </Box>
         </>
       )}
     </ClassNames>

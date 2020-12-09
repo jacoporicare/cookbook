@@ -3,7 +3,6 @@ import { CircularProgress } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
-  delay?: number;
   overlay?: boolean;
 };
 
@@ -36,17 +35,17 @@ const Overlay = styled.div`
 
 function Spinner(props: Props) {
   const timer = useRef<number>();
-  const [visible, setVisible] = useState(props.delay ? props.delay < 1 : true);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (!visible) {
-      timer.current = window.setTimeout(() => setVisible(true), props.delay || 50);
+      timer.current = window.setTimeout(() => setVisible(true), 800);
     }
 
     return () => {
       clearTimeout(timer.current);
     };
-  }, [props.delay, visible]);
+  }, [visible]);
 
   if (!visible) {
     return null;

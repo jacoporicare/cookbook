@@ -1,12 +1,4 @@
-import {
-  CircularProgress,
-  colors,
-  createStyles,
-  Fab,
-  makeStyles,
-  Theme,
-  Zoom,
-} from '@material-ui/core';
+import { CircularProgress, colors, Fab, makeStyles, Zoom } from '@material-ui/core';
 import { Save } from '@material-ui/icons';
 import React from 'react';
 
@@ -21,17 +13,15 @@ type Props = {
   changed: boolean;
 };
 
-const useStyles = makeStyles((_theme: Theme) =>
-  createStyles({
-    fabProgress: {
-      color: colors.green[500],
-      position: 'absolute',
-      top: -6,
-      left: -6,
-      zIndex: 1,
-    },
-  }),
-);
+const useStyles = makeStyles({
+  fabProgress: {
+    color: colors.green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+});
 
 function Header({ title, isNew, isSaving, changed }: Props) {
   const classes = useStyles();
@@ -39,7 +29,7 @@ function Header({ title, isNew, isSaving, changed }: Props) {
 
   return (
     <>
-      <PageHeading>{title || (isNew ? 'Nový recept' : 'Název receptu')}</PageHeading>
+      <PageHeading>{title || (isNew ? 'Nový recept' : ' receptu')}</PageHeading>
       <FabContainer>
         <Zoom in={!fabHidden}>
           <Fab

@@ -1,9 +1,7 @@
+import { TextField } from '@material-ui/core';
 import React, { useRef, useEffect } from 'react';
 
-import { colors } from '../../styles/colors';
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Box, Text } from '../core';
-import { Input } from '../elements';
 
 type Props = {
   title?: string;
@@ -20,18 +18,16 @@ function Title({ title = '', onChange }: Props) {
   }, []);
 
   return (
-    <Box mb={3}>
-      <Input
-        ref={ref}
-        hasError={!title}
-        name="title"
-        placeholder="Název"
-        type="text"
-        value={title}
-        onChange={onChange}
-      />
-      {!title && <Text color={colors.red}>Název je povinný</Text>}
-    </Box>
+    <TextField
+      ref={ref}
+      error={!title}
+      helperText={!title ? 'Název je povinný' : undefined}
+      label="Název"
+      name="title"
+      value={title}
+      fullWidth
+      onChange={onChange}
+    />
   );
 }
 

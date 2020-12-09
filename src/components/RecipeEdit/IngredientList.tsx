@@ -1,5 +1,16 @@
-import { css } from '@emotion/core';
-import { darken } from 'polished';
+import {
+  Box,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
+} from '@material-ui/core';
+import { Delete, Menu } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import React from 'react';
 import {
   SortableContainer,
@@ -10,9 +21,6 @@ import {
 
 import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import Icon from '../common/Icon';
-import { Box } from '../core';
-import { InfoAlert } from '../elements';
 
 type RemoveHandler = (index: number) => void;
 
@@ -25,21 +33,7 @@ type Props = SortableListProps & {
   onSort: SortEndHandler;
 };
 
-const Handle = SortableHandle(() => (
-  <Box
-    css={css`
-      color: ${colors.gray600};
-      cursor: pointer;
-
-      &:hover {
-        color: ${colors.gray900};
-      }
-    `}
-    p={2}
-  >
-    <Icon icon="bars" />
-  </Box>
-));
+const Handle = SortableHandle(() => <Menu />);
 
 type SortableItemProps = {
   itemIndex: number;
@@ -47,57 +41,52 @@ type SortableItemProps = {
   onRemove: RemoveHandler;
 };
 
-const Item = Box.withComponent('li');
+const useStyles = makeStyles({
+  item: {
+    listStyle: 'none',
+  },
+  group: {
+    listStyle: 'none',
+    backgroundColor: colors.gray200,
+  },
+});
 
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
+  const classes = useStyles();
+
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   return (
-    <Item
-      borderTop={`1px solid ${colors.gray300}`}
-      css={{ backgroundColor: isGroup ? colors.gray200 : colors.white }}
-      display="flex"
-    >
-      <Box
-        css={css`
-          color: ${colors.red};
-          cursor: pointer;
-          &:hover {
-            color: ${darken(0.1, colors.red)};
-          }
-        `}
-        p={2}
-        onClick={() => {
-          onRemove(itemIndex);
-        }}
-      >
-        <Icon icon="trash" />
-      </Box>
+    <ListItem ContainerProps={{ className: isGroup ? classes.group : classes.item }}>
+      <ListItemIcon>
+        <Handle />
+      </ListItemIcon>
 
-      {!isGroup ? (
-        <>
-          <Box flex={2} p={2} textAlign="right">
-            {amount ? amount.toLocaleString('cs') : ''}
-          </Box>
-          <Box flex={1} p={2} pl={0}>
+      <ListItemText>
+        <Grid spacing={1} container>
+          <Grid xs={1} item>
+            <Box textAlign="right">{amount ? amount.toLocaleString('cs') : ''}</Box>
+          </Grid>
+          <Grid xs={3} item>
             {amountUnit}
-          </Box>
-          <Box flex={7} p={2}>
-            {name}
-          </Box>
-        </>
-      ) : (
-        <Box flex={1} p={2} textAlign="center">
-          <b>{name}</b>
-        </Box>
-      )}
-      <Handle />
-    </Item>
+          </Grid>
+          <Grid xs={8} item>
+            {isGroup ? <b>{name}</b> : name}
+          </Grid>
+        </Grid>
+      </ListItemText>
+
+      <ListItemSecondaryAction>
+        <IconButton aria-label="Smazat" edge="end" onClick={() => onRemove(itemIndex)}>
+          <Delete />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 });
 
 const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <ul css={{ listStyle: 'none', margin: 0, padding: 0 }}>
+  <List>
     {items.map((ingredient, index) => (
       <SortableItem
         // eslint-disable-next-line react/no-array-index-key
@@ -108,12 +97,12 @@ const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) 
         onRemove={onRemove}
       />
     ))}
-  </ul>
+  </List>
 ));
 
 function IngredientList({ items, onRemove, onSort }: Props) {
   if (items.length === 0) {
-    return <InfoAlert>Zatím žádné ingredience.</InfoAlert>;
+    return <Alert severity="info">Zatím žádné ingredience.</Alert>;
   }
 
   return <SortableList items={items} useDragHandle onRemove={onRemove} onSortEnd={onSort} />;

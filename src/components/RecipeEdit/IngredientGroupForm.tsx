@@ -1,8 +1,5 @@
+import { Button, Grid, TextField } from '@material-ui/core';
 import React, { KeyboardEvent, ChangeEventHandler } from 'react';
-
-import Icon from '../common/Icon';
-import { Box } from '../core';
-import { Input, Button } from '../elements';
 
 type Props = {
   group?: string;
@@ -22,21 +19,23 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
   }
 
   return (
-    <Box display="flex">
-      <Input
-        flex="auto"
-        name="newGroup"
-        placeholder="Nová skupina"
-        type="text"
-        value={group}
-        hasAppendAddon
-        onChange={onChange}
-        onKeyPress={handleKeyPress}
-      />
-      <Button disabled={!group} type="button" isAppendAddon onClick={onAdd}>
-        <Icon icon="plus" /> Přidat
-      </Button>
-    </Box>
+    <Grid alignItems="flex-end" spacing={2} container>
+      <Grid item xs>
+        <TextField
+          label="Nová skupina"
+          name="newGroup"
+          value={group}
+          fullWidth
+          onChange={onChange}
+          onKeyPress={handleKeyPress}
+        />
+      </Grid>
+      <Grid item>
+        <Button disabled={!group} onClick={onAdd}>
+          Přidat
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 

@@ -1,20 +1,36 @@
-import { Box, Typography } from '@material-ui/core';
+import {
+  Box,
+  InputAdornment,
+  makeStyles,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { InfoAlert, Input, InputAddon, Table, TableCell, TableRow } from '../elements';
 
 type Props = {
   ingredients: Ingredient[] | null;
   servingCount: number | null;
 };
 
-type State = {
-  servingCount: number | null;
-};
+const useStyles = makeStyles({
+  group: {
+    backgroundColor: colors.gray200,
+  },
+});
 
 function IngredientList(props: Props) {
+  const classes = useStyles();
+
   const [servingCount, setServingCount] = useState(props.servingCount);
 
   useEffect(() => {
@@ -49,45 +65,52 @@ function IngredientList(props: Props) {
   const { ingredients, servingCount: initialServingCount } = props;
 
   if (!ingredients || !ingredients.length) {
-    return <InfoAlert>Žádné ingredience.</InfoAlert>;
+    return <Alert severity="info">Žádné ingredience.</Alert>;
   }
 
   return (
     <>
-      {Boolean(initialServingCount) && (
-        <Box display="flex" mb={2}>
-          <InputAddon isPrepend>Počet porcí</InputAddon>
-          <Input
-            flex="auto"
-            min={1}
-            type="number"
-            value={!servingCount ? '' : servingCount}
-            hasPrependAddon
-            onBlur={handleServingCountBlur}
-            onChange={handleServingCountChange}
-          />
-        </Box>
-      )}
+      <Box mb={2}>
+        <Typography component="h3" variant="h5">
+          Ingredience
+        </Typography>
+        {Boolean(initialServingCount) && (
+          <Box mt={1}>
+            <TextField
+              InputProps={{
+                startAdornment: <InputAdornment position="start">Počet porcí</InputAdornment>,
+              }}
+              inputProps={{ min: 1 }}
+              type="number"
+              value={!servingCount ? '' : servingCount}
+              onBlur={handleServingCountBlur}
+              onChange={handleServingCountChange}
+            />
+          </Box>
+        )}
+      </Box>
 
-      <Table cellSpacing={0} width={1}>
-        <tbody>
-          {ingredients.map(ingredient => {
-            const { _id, isGroup, name, amount, amountUnit } = ingredient;
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableBody>
+            {ingredients.map(ingredient => {
+              const { _id, isGroup, name, amount, amountUnit } = ingredient;
 
-            return (
-              <TableRow key={_id} css={isGroup && { backgroundColor: colors.gray200 }}>
-                <TableCell textAlign="right" width="20%">
-                  {!isGroup && getAmount(amount)}
-                </TableCell>
-                <TableCell width="10%">{!isGroup && amountUnit}</TableCell>
-                <TableCell>
-                  <Typography variant={isGroup ? 'subtitle1' : 'body1'}>{name}</Typography>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </tbody>
-      </Table>
+              return (
+                <TableRow key={_id} className={isGroup ? classes.group : undefined}>
+                  <TableCell align="right" width="20%">
+                    {!isGroup && getAmount(amount)}
+                  </TableCell>
+                  <TableCell width="10%">{!isGroup && amountUnit}</TableCell>
+                  <TableCell>
+                    <Typography variant={isGroup ? 'subtitle1' : 'body1'}>{name}</Typography>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }

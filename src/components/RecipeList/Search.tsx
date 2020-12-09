@@ -20,7 +20,7 @@ function Search(props: Props) {
           inputId="tagsearch"
           noOptionsMessage={input => `"${input.inputValue}" nenalezeno`}
           options={props.tagOptions}
-          placeholder="Hledat podle tagů..."
+          placeholder="Hledat podle štítků..."
           value={
             props.selectedTags.length > 0
               ? props.tagOptions.filter(o => props.selectedTags.includes(o.value))
