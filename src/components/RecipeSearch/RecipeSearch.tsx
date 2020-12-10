@@ -1,4 +1,5 @@
 import { ClassNames } from '@emotion/core';
+import { Typography } from '@material-ui/core';
 import { matchSorter } from 'match-sorter';
 import React, { FormEvent, useState } from 'react';
 import Autosuggest, {
@@ -96,14 +97,10 @@ function RecipeSearch(props: Props) {
             overflow="hidden"
             width="100%"
           >
-            {recipe.title}
+            <Typography variant="body1">{recipe.title}</Typography>
           </Box>
           <Box color="#777" fontSize="0.75em">
-            <RecipeInfo
-              placeholder="žádné údaje"
-              preparationTime={preparationTime}
-              sideDish={sideDish}
-            />
+            <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} small />
           </Box>
         </Box>
       </Box>

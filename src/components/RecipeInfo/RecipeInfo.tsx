@@ -5,6 +5,7 @@ type Props = {
   preparationTime: number | null;
   sideDish: string | null;
   placeholder?: React.ReactNode;
+  small?: boolean;
 };
 
 function formatTime(time: number) {
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
+function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
   const classes = useStyles();
 
   if (!preparationTime && !sideDish) {
@@ -56,20 +57,32 @@ function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
     <ul className={classes.root}>
       {!!preparationTime && preparationTime > 0 && (
         <li className={classes.item}>
-          <Typography color="textSecondary" component="span" variant="body1">
-            Doba přípravy
-          </Typography>{' '}
-          <Typography component="span" variant="body1">
+          {!small && (
+            <Typography color="textSecondary" component="span" variant="body1">
+              Doba přípravy{' '}
+            </Typography>
+          )}
+          <Typography
+            color={small ? 'textSecondary' : undefined}
+            component="span"
+            variant={small ? 'body2' : 'body1'}
+          >
             {formatTime(preparationTime)}
           </Typography>{' '}
         </li>
       )}
       {!!sideDish && (
         <li className={classes.item}>
-          <Typography color="textSecondary" component="span" variant="body1">
-            Příloha
-          </Typography>{' '}
-          <Typography component="span" variant="body1">
+          {!small && (
+            <Typography color="textSecondary" component="span" variant="body1">
+              Příloha{' '}
+            </Typography>
+          )}
+          <Typography
+            color={small ? 'textSecondary' : undefined}
+            component="span"
+            variant={small ? 'body2' : 'body1'}
+          >
             {sideDish}
           </Typography>
         </li>
