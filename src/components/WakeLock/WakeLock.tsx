@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import { DesktopMac } from '@material-ui/icons';
+import { DesktopWindows } from '@material-ui/icons';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -49,7 +49,7 @@ function WakeLock() {
       className={classNames(classes.wakeLock, { [classes.active]: wakeLockEnabled })}
       onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
     >
-      <DesktopMac />
+      <DesktopWindows fontSize="small" />
       <div>Nevypínat</div>
     </div>
   );

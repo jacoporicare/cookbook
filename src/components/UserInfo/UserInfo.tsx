@@ -1,4 +1,5 @@
-import { makeStyles } from '@material-ui/core';
+import { CircularProgress, makeStyles } from '@material-ui/core';
+import { ExitToApp } from '@material-ui/icons';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -6,7 +7,6 @@ import React from 'react';
 import { useAuth } from '../../AuthContext';
 import { colors } from '../../styles/colors';
 import NavLink from '../Nav/NavLink';
-import Icon from '../common/Icon';
 
 type Props = {
   userName?: string;
@@ -73,13 +73,13 @@ function UserInfo(props: Props) {
         <>
           {props.isUserLoading ? (
             <div className={classes.navItem}>
-              <Icon icon="spinner" spin />
+              <CircularProgress size="1.5rem" />
             </div>
           ) : (
             <NavLink href="/nastaveni">{props.userName}</NavLink>
           )}
           <NavLink href={`/odhlaseni?u=${router.asPath || ''}`}>
-            <Icon icon="sign-out-alt" /> <span className={classes.signOut}>Odhlásit</span>
+            <ExitToApp fontSize="inherit" /> <span className={classes.signOut}>Odhlásit</span>
           </NavLink>
         </>
       )}

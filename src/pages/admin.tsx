@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -27,7 +28,6 @@ import { withApollo } from '../apollo';
 import { withAuth } from '../auth';
 import Layout from '../components/Layout';
 import DocumentTitle from '../components/common/DocumentTitle';
-import Icon from '../components/common/Icon';
 import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
 import { BoxSection } from '../components/core';
@@ -299,7 +299,7 @@ function AdminPage() {
                       </TableCell>
                       <TableCell align="center">
                         {userUpdating ? (
-                          <Icon icon="spinner" lg spin />
+                          <CircularProgress size="1.5rem" />
                         ) : (
                           <Switch
                             checked={user.isAdmin || false}
@@ -354,7 +354,7 @@ function AdminPage() {
                   <TableCell />
                   <TableCell align="left">
                     {creating ? (
-                      <Icon icon="spinner" lg spin />
+                      <CircularProgress size="1.5rem" />
                     ) : (
                       <Button
                         color="primary"

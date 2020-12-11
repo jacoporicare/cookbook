@@ -1,4 +1,4 @@
-import { ClassNames } from '@emotion/core';
+import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -11,58 +11,50 @@ type Props = {
 const stepSize = 2;
 const stepLineHeight = 1.5;
 
+const useStyles = makeStyles({
+  container: {
+    '& ol': {
+      listStyleType: 'none',
+      paddingLeft: 0,
+      marginBottom: '1.5em',
+      marginTop: 0,
+
+      '& li': {
+        counterIncrement: 'step-counter',
+        position: 'relative',
+        paddingLeft: `${stepSize + 1}em`,
+        lineHeight: `${stepLineHeight}em`,
+
+        '& + li': {
+          marginTop: '1em',
+        },
+
+        '&::before': {
+          content: 'counter(step-counter)',
+          position: 'absolute',
+          left: 0,
+          top: `-${(stepSize - stepLineHeight) / 2}em`,
+          width: `${stepSize}em`,
+          height: `${stepSize}em`,
+          lineHeight: `${stepSize}em`,
+          textAlign: 'center',
+          borderRadius: '50%',
+          color: colorYiq(theme.primary),
+          backgroundColor: theme.primary,
+        },
+      },
+    },
+
+    '& h1, & h2, & h3, & h4, & h5, & h6': {
+      marginTop: 0,
+    },
+  },
+});
+
 function RichText({ text = '' }: Props) {
-  return (
-    <ClassNames>
-      {({ css }) => (
-        <ReactMarkdown
-          className={css`
-            ol {
-              list-style-type: none;
-              padding-left: 0;
-              margin-bottom: 1.5em;
-              margin-top: 0;
+  const classes = useStyles();
 
-              li {
-                counter-increment: step-counter;
-                position: relative;
-                padding-left: ${stepSize + 1}em;
-                line-height: ${stepLineHeight}em;
-
-                & + li {
-                  margin-top: 1em;
-                }
-              }
-
-              li::before {
-                content: counter(step-counter);
-                position: absolute;
-                left: 0;
-                top: -${(stepSize - stepLineHeight) / 2}em;
-                width: ${stepSize}em;
-                height: ${stepSize}em;
-                line-height: ${stepSize}em;
-                text-align: center;
-                border-radius: 50%;
-                color: ${colorYiq(theme.primary)};
-                background-color: ${theme.primary};
-              }
-            }
-
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6 {
-              margin-top: 0;
-            }
-          `}
-          source={text}
-        />
-      )}
-    </ClassNames>
-  );
+  return <ReactMarkdown className={classes.container} source={text} />;
 }
 
 export default RichText;
