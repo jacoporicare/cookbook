@@ -1,3 +1,5 @@
+import { makeStyles } from '@material-ui/core';
+import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -12,14 +14,50 @@ type Props = {
   isUserAdmin?: boolean;
 };
 
+const useStyles = makeStyles({
+  navItem: {
+    color: colors.gray600,
+    fontSize: '20px',
+    fontWeight: 300,
+    padding: '4px 8px',
+    whiteSpace: 'nowrap',
+  },
+  divider: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  signOut: {},
+  '@media (max-width: 1023px)': {
+    divider: {
+      borderTop: `1px solid ${colors.gray600}`,
+      height: 0,
+      overflow: 'hidden',
+    },
+  },
+  '@media (min-width: 1024px)': {
+    navItem: {
+      padding: '8px',
+    },
+    divider: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    signOut: {
+      display: 'none',
+    },
+  },
+});
+
 function UserInfo(props: Props) {
+  const classes = useStyles();
+
   const [token] = useAuth();
   const router = useRouter();
 
   return (
     <>
       {props.isUserAdmin && <NavLink href="/admin">Admin</NavLink>}
-      <div className="nav-item divider">·</div>
+      <div className={classNames(classes.navItem, classes.divider)}>·</div>
       {!token ? (
         <NavLink
           activeHref="/prihlaseni"
@@ -34,49 +72,17 @@ function UserInfo(props: Props) {
       ) : (
         <>
           {props.isUserLoading ? (
-            <div className="nav-item">
+            <div className={classes.navItem}>
               <Icon icon="spinner" spin />
             </div>
           ) : (
             <NavLink href="/nastaveni">{props.userName}</NavLink>
           )}
           <NavLink href={`/odhlaseni?u=${router.asPath || ''}`}>
-            <Icon icon="sign-out-alt" /> <span className="sign-out">Odhlásit</span>
+            <Icon icon="sign-out-alt" /> <span className={classes.signOut}>Odhlásit</span>
           </NavLink>
         </>
       )}
-      <style jsx>{`
-        .nav-item {
-          color: ${colors.gray600};
-          font-size: 20px;
-          font-weight: 300;
-          padding: 4px 8px;
-          white-space: nowrap;
-        }
-
-        .nav-item.divider {
-          padding-left: 0;
-          padding-right: 0;
-        }
-
-        @media (max-width: 1023px) {
-          .nav-item.divider {
-            border-top: 1px solid ${colors.gray600};
-            height: 0;
-            overflow: hidden;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .nav-item {
-            padding: 8px;
-          }
-
-          .sign-out {
-            display: none;
-          }
-        }
-      `}</style>
     </>
   );
 }

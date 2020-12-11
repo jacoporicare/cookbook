@@ -1,10 +1,26 @@
+import { makeStyles } from '@material-ui/core';
+import { DesktopMac } from '@material-ui/icons';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { colors } from '../../styles/colors';
-import Icon from '../common/Icon';
+
+const useStyles = makeStyles({
+  wakeLock: {
+    cursor: 'pointer',
+    textAlign: 'center',
+    fontSize: '0.8em',
+    color: colors.gray600,
+    marginRight: '1rem',
+  },
+  active: {
+    color: colors.white,
+  },
+});
 
 function WakeLock() {
+  const classes = useStyles();
+
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
   const wakeLock = useRef<WakeLock>();
 
@@ -29,28 +45,13 @@ function WakeLock() {
   }
 
   return (
-    <>
-      <div
-        className={classNames('wake-lock', { active: wakeLockEnabled })}
-        onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
-      >
-        <Icon icon="desktop" />
-        <div>Nevypínat</div>
-      </div>
-      <style jsx>{`
-        .wake-lock {
-          cursor: pointer;
-          text-align: center;
-          font-size: 0.8em;
-          color: ${colors.gray600};
-          margin-right: 1rem;
-        }
-
-        .wake-lock.active {
-          color: ${colors.white};
-        }
-      `}</style>
-    </>
+    <div
+      className={classNames(classes.wakeLock, { [classes.active]: wakeLockEnabled })}
+      onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
+    >
+      <DesktopMac />
+      <div>Nevypínat</div>
+    </div>
   );
 }
 

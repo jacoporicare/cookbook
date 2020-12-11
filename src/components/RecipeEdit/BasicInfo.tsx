@@ -1,4 +1,3 @@
-import { ClassNames } from '@emotion/core';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
 import { matchSorter } from 'match-sorter';
 import React, { useState } from 'react';
@@ -6,7 +5,7 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import Creatable from 'react-select/creatable';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Label, getInputStyle } from '../elements';
+import { Label, useInputStyles } from '../elements';
 
 import AutosuggestWrapper from './AutosuggestWrapper';
 
@@ -31,6 +30,8 @@ function BasicInfo({
   onChange,
   onTagsChange,
 }: Props) {
+  const inputClasses = useInputStyles();
+
   const [sideDishFilter, setSideDishFilter] = useState<string>();
 
   function handleSuggestionsFetchRequested({ value }: SuggestionsFetchRequestedParams) {
@@ -48,75 +49,69 @@ function BasicInfo({
     : sideDishOptions;
 
   return (
-    <ClassNames>
-      {({ css }) => (
-        <>
-          <TextField
-            InputProps={{ endAdornment: <InputAdornment position="end">min</InputAdornment> }}
-            inputProps={{ min: 1 }}
-            label="Doba přípravy"
-            name="preparationTime"
-            type="number"
-            value={typeof preparationTime === 'number' ? preparationTime : ''}
-            fullWidth
-            onChange={onChange}
-          />
+    <>
+      <TextField
+        InputProps={{ endAdornment: <InputAdornment position="end">min</InputAdornment> }}
+        inputProps={{ min: 1 }}
+        label="Doba přípravy"
+        name="preparationTime"
+        type="number"
+        value={typeof preparationTime === 'number' ? preparationTime : ''}
+        fullWidth
+        onChange={onChange}
+      />
 
-          <Box mt={3}>
-            <TextField
-              inputProps={{ min: 1 }}
-              label="Počet porcí"
-              name="servingCount"
-              type="number"
-              value={typeof servingCount === 'number' ? servingCount : ''}
-              fullWidth
-              onChange={onChange}
-            />
-          </Box>
+      <Box mt={3}>
+        <TextField
+          inputProps={{ min: 1 }}
+          label="Počet porcí"
+          name="servingCount"
+          type="number"
+          value={typeof servingCount === 'number' ? servingCount : ''}
+          fullWidth
+          onChange={onChange}
+        />
+      </Box>
 
-          <AutosuggestWrapper mt={3}>
-            <Label htmlFor="sideDish">Příloha</Label>
-            <Autosuggest
-              getSuggestionValue={s => s}
-              inputProps={{
-                id: 'sideDish',
-                name: 'sideDish',
-                value: sideDish || '',
-                onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
-                onKeyPress: e => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                  }
-                },
-                className: getInputStyle(css)(),
-              }}
-              renderSuggestion={(s: string) => <span>{s}</span>}
-              suggestions={filteredSideDishOptions}
-              onSuggestionsClearRequested={handleSuggestionsClearRequested}
-              onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-            />
-          </AutosuggestWrapper>
-
-          <Box mt={3}>
-            <Label htmlFor="tags">Štítky</Label>
-            <Creatable
-              defaultValue={tags?.map(t => ({ value: t, label: t }))}
-              formatCreateLabel={input => `Vytvořit "${input}"`}
-              inputId="tags"
-              noOptionsMessage={() => 'Žádné možnosti'}
-              options={tagOptions.map(t => ({ value: t, label: t }))}
-              placeholder="Vybrat nebo vytvořit..."
-              getv
-              isClearable
-              isMulti
-              onChange={values =>
-                onTagsChange(values instanceof Array ? values.map(v => v.value) : [])
+      <AutosuggestWrapper mt={3}>
+        <Label htmlFor="sideDish">Příloha</Label>
+        <Autosuggest
+          getSuggestionValue={s => s}
+          inputProps={{
+            id: 'sideDish',
+            name: 'sideDish',
+            value: sideDish || '',
+            onChange: (event, selectEvent) => onChange(event, selectEvent, 'sideDish'),
+            onKeyPress: e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
               }
-            />
-          </Box>
-        </>
-      )}
-    </ClassNames>
+            },
+            className: inputClasses.input,
+          }}
+          renderSuggestion={(s: string) => <span>{s}</span>}
+          suggestions={filteredSideDishOptions}
+          onSuggestionsClearRequested={handleSuggestionsClearRequested}
+          onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+        />
+      </AutosuggestWrapper>
+
+      <Box mt={3}>
+        <Label htmlFor="tags">Štítky</Label>
+        <Creatable
+          defaultValue={tags?.map(t => ({ value: t, label: t }))}
+          formatCreateLabel={input => `Vytvořit "${input}"`}
+          inputId="tags"
+          noOptionsMessage={() => 'Žádné možnosti'}
+          options={tagOptions.map(t => ({ value: t, label: t }))}
+          placeholder="Vybrat nebo vytvořit..."
+          getv
+          isClearable
+          isMulti
+          onChange={values => onTagsChange(values instanceof Array ? values.map(v => v.value) : [])}
+        />
+      </Box>
+    </>
   );
 }
 
