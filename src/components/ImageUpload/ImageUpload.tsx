@@ -1,5 +1,6 @@
-import styled from '@emotion/styled';
-import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 type Props = {
@@ -7,41 +8,29 @@ type Props = {
   onImageChange: (data: File) => void;
 };
 
-type State = {
-  image?: string;
-};
-
-const Text = styled.div`
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.7);
-  font-weight: bold;
-  z-index: 1;
-`;
-
-const Preview = styled.div`
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  background-size: cover;
-  background-position: center center;
-  border-radius: 4px;
-  z-index: 2;
-`;
-
-type DropzonePlaceProps = {
-  isDragActive: boolean;
-  isDragAccept: boolean;
-  isDragReject: boolean;
-};
-
-const DropzonePlace = styled.div<DropzonePlaceProps>(props => [
-  {
+const useStyles = makeStyles({
+  text: {
+    position: 'absolute',
+    width: '200px',
+    height: '200px',
+    display: 'flex',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: 'bold',
+    zIndex: 1,
+  },
+  preview: {
+    position: 'absolute',
+    width: '200px',
+    height: '200px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
+    borderRadius: '4px',
+    zIndex: 2,
+  },
+  dropzone: {
     float: 'right',
     marginLeft: '15px',
     position: 'relative',
@@ -60,64 +49,66 @@ const DropzonePlace = styled.div<DropzonePlaceProps>(props => [
       },
     },
   },
-  props.isDragActive && {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [Text as any]: {
+  active: {
+    '& $text': {
       zIndex: 3,
     },
   },
-  props.isDragAccept && {
+  accept: {
     borderStyle: 'solid',
     borderColor: 'rgb(63, 195, 0)',
   },
-  props.isDragReject && {
+  reject: {
     borderStyle: 'solid',
     borderColor: 'rgb(195, 31, 31)',
   },
-]);
+});
 
-export class ImageUpload extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+function ImageUpload(props: Props) {
+  const classes = useStyles();
 
-    this.state = { image: undefined };
-  }
+  const [image, setImage] = useState<string>();
 
-  componentWillUnmount() {
-    if (this.state.image) {
-      URL.revokeObjectURL(this.state.image);
-    }
-  }
+  useEffect(
+    () => () => {
+      if (image) {
+        URL.revokeObjectURL(image);
+      }
+    },
+    [image],
+  );
 
-  handleDrop = (files: File[]) => {
+  function handleDrop(files: File[]) {
     if (files.length === 0) {
       return;
     }
 
     const file = files[0];
-    this.setState({ image: URL.createObjectURL(file) });
+    setImage(URL.createObjectURL(file));
 
-    this.props.onImageChange(file);
-  };
-
-  render() {
-    const src = this.state.image || this.props.imageUrl;
-
-    return (
-      <Dropzone accept="image/*" multiple={false} onDrop={this.handleDrop}>
-        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
-          <DropzonePlace
-            {...getRootProps()}
-            isDragAccept={isDragAccept}
-            isDragActive={isDragActive}
-            isDragReject={isDragReject}
-          >
-            <input {...getInputProps()} />
-            {src && <Preview style={{ backgroundImage: `url(${src})` }} />}
-            <Text>Klikni nebo sem přetáhni obrázek</Text>
-          </DropzonePlace>
-        )}
-      </Dropzone>
-    );
+    props.onImageChange(file);
   }
+
+  const src = image || props.imageUrl;
+
+  return (
+    <Dropzone accept="image/*" multiple={false} onDrop={handleDrop}>
+      {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
+        <div
+          {...getRootProps()}
+          className={classNames(classes.dropzone, {
+            [classes.accept]: isDragAccept,
+            [classes.active]: isDragActive,
+            [classes.reject]: isDragReject,
+          })}
+        >
+          <input {...getInputProps()} />
+          {src && <div className={classes.preview} style={{ backgroundImage: `url(${src})` }} />}
+          <div className={classes.text}>Klikni nebo sem přetáhni obrázek</div>
+        </div>
+      )}
+    </Dropzone>
+  );
 }
+
+export default ImageUpload;

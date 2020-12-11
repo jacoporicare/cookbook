@@ -1,8 +1,6 @@
-import { Box } from '@material-ui/core';
+import { Box, Checkbox, FormControlLabel } from '@material-ui/core';
 import React from 'react';
 import Select from 'react-select';
-
-import Checkbox from '../common/Checkbox';
 
 type Props = {
   multipleSelected: boolean;
@@ -34,9 +32,15 @@ function Search(props: Props) {
       </Box>
       {props.multipleSelected && (
         <Box alignItems="center" display="flex" ml={2}>
-          <Checkbox id="matchall" onChange={event => props.onMatchAllChange(event.target.checked)}>
-            Pouze všechny
-          </Checkbox>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                onChange={event => props.onMatchAllChange(event.target.checked)}
+              />
+            }
+            label="Pouze všechny"
+          />
         </Box>
       )}
     </Box>

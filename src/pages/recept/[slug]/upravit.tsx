@@ -12,7 +12,6 @@ import Layout from '../../../components/Layout';
 import RecipeEdit from '../../../components/RecipeEdit/RecipeEdit';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import SpinnerIf from '../../../components/common/SpinnerIf';
-import { DangerAlert } from '../../../components/elements';
 import {
   RecipeListQuery,
   RecipeListDocument,
@@ -272,7 +271,9 @@ function RecipeEditPage() {
     return (
       <Layout>
         <SpinnerIf spinner={loading}>
-          <DangerAlert>Recept nenalezen.</DangerAlert>
+          <Alert elevation={1} severity="error">
+            Recept nenalezen.
+          </Alert>
         </SpinnerIf>
       </Layout>
     );

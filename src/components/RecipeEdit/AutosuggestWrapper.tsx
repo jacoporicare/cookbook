@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { Box } from '@material-ui/core';
 
 import { colors } from '../../styles/colors';
-import { Box } from '../core';
 
 const AutosuggestWrapper = styled(Box)({
   '.react-autosuggest__container': {

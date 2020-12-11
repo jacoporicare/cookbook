@@ -1,5 +1,4 @@
-import styled from '@emotion/styled';
-import { Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
@@ -20,25 +19,25 @@ type Props = {
   userName: string;
 };
 
-const ImageBox = styled(Box)`
-  float: right;
-  position: relative;
-  z-index: 2;
-`;
-
-const Image = styled.img`
-  width: 200px;
-  height: 200px;
-  margin-left: 15px;
-  margin-bottom: 15px;
-  border-radius: 4px;
-`;
-
-const ImageXs = styled.img`
-  width: 100%;
-  border-radius: 4px;
-  margin-top: 15px;
-`;
+const useStyles = makeStyles({
+  imageBox: {
+    float: 'right',
+    position: 'relative',
+    zIndex: 2,
+  },
+  image: {
+    width: '200px',
+    height: '200px',
+    marginLeft: '15px',
+    marginBottom: '15px',
+    borderRadius: '4px',
+  },
+  imageXs: {
+    width: '100%',
+    borderRadius: '4px',
+    marginTop: '15px',
+  },
+});
 
 function RecipeDetail({
   title,
@@ -50,6 +49,8 @@ function RecipeDetail({
   imageFullUrl,
   userName,
 }: Props) {
+  const classes = useStyles();
+
   const [isImageOpen, setIsImageOpen] = useState(false);
 
   function handleImageClick(e: React.MouseEvent) {
@@ -83,12 +84,12 @@ function RecipeDetail({
           <Paper>
             <Box p={3}>
               {imageUrl && (
-                <ImageBox display={['none', 'block']}>
+                <Box className={classes.imageBox} display={['none', 'block']}>
                   {/* eslint-disable-next-line react/jsx-no-target-blank */}
                   <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
-                    <Image alt={title} src={imageUrl} />
+                    <img alt={title} className={classes.image} src={imageUrl} />
                   </a>
-                </ImageBox>
+                </Box>
               )}
               {directions ? (
                 <RichText text={directions} />
@@ -105,7 +106,7 @@ function RecipeDetail({
         <Box display={['block', 'none']}>
           {/* eslint-disable-next-line react/jsx-no-target-blank */}
           <a href={imageFullUrl} target="_blank" onClick={handleImageClick}>
-            <ImageXs src={imageUrl} />
+            <img alt={title} className={classes.imageXs} src={imageUrl} />
           </a>
         </Box>
       )}

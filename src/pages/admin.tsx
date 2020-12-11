@@ -30,8 +30,6 @@ import Layout from '../components/Layout';
 import DocumentTitle from '../components/common/DocumentTitle';
 import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
-import { BoxSection } from '../components/core';
-import { DangerAlert } from '../components/elements';
 import {
   useMeQuery,
   useUserListQuery,
@@ -247,7 +245,9 @@ function AdminPage() {
   if (error) {
     return (
       <Layout>
-        <DangerAlert>Nastala neočekávná chyba.</DangerAlert>
+        <Alert elevation={1} severity="error">
+          Nastala neočekávná chyba.
+        </Alert>
       </Layout>
     );
   }
@@ -258,7 +258,7 @@ function AdminPage() {
     <>
       <DocumentTitle title="Správa uživatelů" />
       <Layout>
-        <BoxSection>
+        <section>
           <PageHeading>Správa uživatelů</PageHeading>
           <TableContainer component={Paper}>
             <Table>
@@ -374,7 +374,7 @@ function AdminPage() {
               </TableBody>
             </Table>
           </TableContainer>
-        </BoxSection>
+        </section>
       </Layout>
       <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
         <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>

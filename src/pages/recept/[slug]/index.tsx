@@ -14,7 +14,6 @@ import RecipeHeader from '../../../components/RecipeDetail/RecipeHeader';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import Spinner from '../../../components/common/Spinner';
 import SpinnerIf from '../../../components/common/SpinnerIf';
-import { DangerAlert } from '../../../components/elements';
 import {
   RecipeListQuery,
   RecipeListDocument,
@@ -78,7 +77,9 @@ function RecipeDetailPage() {
     return (
       <Layout>
         <SpinnerIf spinner={loading}>
-          <DangerAlert>Recept nenalezen.</DangerAlert>
+          <Alert elevation={1} severity="error">
+            Recept nenalezen.
+          </Alert>
         </SpinnerIf>
       </Layout>
     );

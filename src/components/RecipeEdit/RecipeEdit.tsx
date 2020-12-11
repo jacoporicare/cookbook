@@ -1,13 +1,12 @@
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Grid, Paper, Typography } from '@material-ui/core';
 import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
 import { AutosuggestChangeEventHandler } from '../../types';
-import { ImageUpload } from '../ImageUpload/ImageUpload';
+import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
 import Spinner from '../common/Spinner';
-import { Box } from '../core';
 
 import BasicInfo from './BasicInfo';
 import Directions from './Directions';

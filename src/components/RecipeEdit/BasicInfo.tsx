@@ -5,7 +5,7 @@ import Autosuggest, { SuggestionsFetchRequestedParams } from 'react-autosuggest'
 import Creatable from 'react-select/creatable';
 
 import { AutosuggestChangeEventHandler } from '../../types';
-import { Label, useInputStyles } from '../elements';
+import { useInputStyles } from '../elements';
 
 import AutosuggestWrapper from './AutosuggestWrapper';
 
@@ -74,7 +74,7 @@ function BasicInfo({
       </Box>
 
       <AutosuggestWrapper mt={3}>
-        <Label htmlFor="sideDish">Příloha</Label>
+        <label htmlFor="sideDish">Příloha</label>
         <Autosuggest
           getSuggestionValue={s => s}
           inputProps={{
@@ -97,7 +97,7 @@ function BasicInfo({
       </AutosuggestWrapper>
 
       <Box mt={3}>
-        <Label htmlFor="tags">Štítky</Label>
+        <label htmlFor="tags">Štítky</label>
         <Creatable
           defaultValue={tags?.map(t => ({ value: t, label: t }))}
           formatCreateLabel={input => `Vytvořit "${input}"`}

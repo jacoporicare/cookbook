@@ -96,7 +96,9 @@ function RecipeListPage() {
         )}
         {isEmpty ? (
           <SpinnerIf spinner={loading}>
-            <Alert severity="info">Žádné recepty.</Alert>
+            <Alert elevation={1} severity="info">
+              Žádné recepty.
+            </Alert>
           </SpinnerIf>
         ) : (
           <RecipeList recipes={recipes} />

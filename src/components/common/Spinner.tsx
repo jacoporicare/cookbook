@@ -1,39 +1,39 @@
-import styled from '@emotion/styled';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, makeStyles } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
   overlay?: boolean;
 };
 
-const Container = styled.div<{ hasOverlay?: boolean }>(props => [
-  {
+const useStyles = makeStyles({
+  container: {
     margin: '100px auto',
     width: '50px',
     height: '20px',
     textAlign: 'center',
     fontSize: '10px',
   },
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    zIndex: 1000,
 
-  props.hasOverlay && {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    '& > $container': {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    },
   },
-]);
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  z-index: 1000;
-`;
+});
 
 function Spinner(props: Props) {
+  const classes = useStyles();
+
   const timer = useRef<number>();
   const [visible, setVisible] = useState(false);
 
@@ -51,15 +51,12 @@ function Spinner(props: Props) {
     return null;
   }
 
-  const { overlay } = props;
-  const OverlayComponent = overlay ? Overlay : 'div';
-
   return (
-    <OverlayComponent>
-      <Container hasOverlay={overlay}>
+    <div className={props.overlay ? classes.overlay : undefined}>
+      <div className={classes.container}>
         <CircularProgress />
-      </Container>
-    </OverlayComponent>
+      </div>
+    </div>
   );
 }
 
