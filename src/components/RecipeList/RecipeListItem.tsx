@@ -18,11 +18,6 @@ type Props = {
 };
 
 const useStyles = makeStyles({
-  title: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
   media: {
     height: 0,
     paddingTop: '75%', // 4:3
@@ -52,7 +47,7 @@ function RecipeListItem({ recipe }: Props) {
             src={imageUrl}
           />
           <CardContent>
-            <Typography className={classes.title} component="h2" variant="h5">
+            <Typography component="h2" variant="h5" noWrap>
               {recipe.title}
             </Typography>
           </CardContent>

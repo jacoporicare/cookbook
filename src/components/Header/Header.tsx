@@ -58,7 +58,11 @@ function Header(props: Props) {
           </Link>
         </Box>
         <Box alignItems="center" display="flex">
-          {props.showRecipeSearch && <RecipeSearch />}
+          {props.showRecipeSearch && (
+            <Box mr={2}>
+              <RecipeSearch />
+            </Box>
+          )}
           <WakeLock />
           <Nav showUserInfo={props.showUserInfo} />
         </Box>
