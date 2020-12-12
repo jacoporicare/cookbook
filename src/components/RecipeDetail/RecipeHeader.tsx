@@ -48,15 +48,15 @@ function RecipeHeader({
 
       {Boolean(preparationTime || sideDish || tags?.length) && (
         <Box mb={2}>
-          <Grid alignItems="center" spacing={1} container>
+          <Grid alignItems="center" justify="space-between" spacing={1} container>
             {Boolean(preparationTime || sideDish) && (
-              <Grid xs={12} item md>
+              <Grid md="auto" xs={12} item>
                 <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
               </Grid>
             )}
             {!!tags?.length && (
-              <Grid xs={12} item md>
-                <Grid alignItems="center" justify="flex-end" spacing={2} container>
+              <Grid md="auto" xs={12} item>
+                <Grid alignItems="center" spacing={2} container>
                   <Grid item>
                     <Typography color="textSecondary" component="span">
                       Štítky

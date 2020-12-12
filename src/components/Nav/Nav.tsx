@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   '@media (max-width: 1023px)': {
     nav: {
       position: 'fixed',
-      top: '58px',
+      top: '57px',
       right: 0,
       width: '250px',
       height: '100%',

@@ -6,6 +6,7 @@ import {
   ListItemText,
   makeStyles,
   OutlinedInput,
+  Paper,
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -44,7 +45,7 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     color: colors.white,
     padding: '8px 8px 8px 32px',
-    transition: 'width 200ms ease, padding 200ms ease, background-color 100ms ease',
+    transition: 'background-color 200ms ease',
 
     '&:focus': {
       backgroundColor: colors.gray800,
@@ -64,11 +65,6 @@ const useStyles = makeStyles({
     left: '0.5rem',
     right: '0.5rem',
     maxHeight: '288px',
-    color: colors.gray900,
-    backgroundColor: colors.white,
-    borderRadius: '4px',
-    boxShadow:
-      '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)',
     overflowX: 'hidden',
     overflowY: 'auto',
     zIndex: 1001,
@@ -160,50 +156,56 @@ function RecipeSearch(props: Props) {
           }}
         />
       </div>
-      <List className={classNames(classes.menu, { [classes.open]: isOpen })} {...getMenuProps()}>
-        {inputValue && suggestions.length === 0 && (
-          <ListItem>
-            <Alert className={classes.alert} severity="info">
-              Žádné výsledky.
-            </Alert>
-          </ListItem>
-        )}
-        {suggestions.map((recipe, index) => {
-          const { image, preparationTime, sideDish } = recipe;
-
-          const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
-          const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-          const imageUrl = thumbUrl || placeholderUrl;
-
-          return (
-            <ListItem
-              key={recipe._id}
-              className={highlightedIndex === index ? classes.highlighted : undefined}
-              {...getItemProps({ item: recipe, index })}
-            >
-              <ListItemAvatar>
-                <Avatar alt={recipe.title} src={imageUrl} variant="rounded" />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1" noWrap>
-                    {recipe.title}
-                  </Typography>
-                }
-                secondary={
-                  <RecipeInfo
-                    placeholder={<>&nbsp;</>}
-                    preparationTime={preparationTime ?? undefined}
-                    sideDish={sideDish ?? undefined}
-                    small
-                  />
-                }
-                disableTypography
-              />
+      <Paper
+        className={classNames(classes.menu, { [classes.open]: isOpen })}
+        elevation={8}
+        {...getMenuProps()}
+      >
+        <List>
+          {inputValue && suggestions.length === 0 && (
+            <ListItem>
+              <Alert className={classes.alert} severity="info">
+                Žádné výsledky.
+              </Alert>
             </ListItem>
-          );
-        })}
-      </List>
+          )}
+          {suggestions.map((recipe, index) => {
+            const { image, preparationTime, sideDish } = recipe;
+
+            const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
+            const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
+            const imageUrl = thumbUrl || placeholderUrl;
+
+            return (
+              <ListItem
+                key={recipe._id}
+                className={highlightedIndex === index ? classes.highlighted : undefined}
+                {...getItemProps({ item: recipe, index })}
+              >
+                <ListItemAvatar>
+                  <Avatar alt={recipe.title} src={imageUrl} variant="rounded" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" noWrap>
+                      {recipe.title}
+                    </Typography>
+                  }
+                  secondary={
+                    <RecipeInfo
+                      placeholder={<>&nbsp;</>}
+                      preparationTime={preparationTime ?? undefined}
+                      sideDish={sideDish ?? undefined}
+                      small
+                    />
+                  }
+                  disableTypography
+                />
+              </ListItem>
+            );
+          })}
+        </List>
+      </Paper>
     </div>
   );
 }
