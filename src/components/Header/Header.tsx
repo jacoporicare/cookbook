@@ -59,7 +59,7 @@ function Header(props: Props) {
         </Box>
         <Box alignItems="center" display="flex">
           {props.showRecipeSearch && (
-            <Box mr={2}>
+            <Box mx={2}>
               <RecipeSearch />
             </Box>
           )}
