@@ -193,8 +193,8 @@ function RecipeSearch(props: Props) {
                 secondary={
                   <RecipeInfo
                     placeholder={<>&nbsp;</>}
-                    preparationTime={preparationTime}
-                    sideDish={sideDish}
+                    preparationTime={preparationTime ?? undefined}
+                    sideDish={sideDish ?? undefined}
                     small
                   />
                 }

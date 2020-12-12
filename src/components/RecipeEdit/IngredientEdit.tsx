@@ -1,17 +1,17 @@
 import { Box } from '@material-ui/core';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
 
-import IngredientForm from './IngredientForm';
-import IngredientGroupForm from './IngredientGroupForm';
+import IngredientForm, { IngredientFields } from './IngredientForm';
+import IngredientGroupForm, { IngredientGroupFields } from './IngredientGroupForm';
 import IngredientList from './IngredientList';
 
 export type AddIngredientEventHandler = (
   name: string,
-  amount: number | null,
-  amountUnit: string | null,
+  amount?: number,
+  amountUnit?: string,
 ) => void;
 export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
@@ -26,14 +26,12 @@ type Props = {
 };
 
 function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
-  const [name, setName] = useState<string | null>(null);
-  const [amount, setAmount] = useState<number | null>(null);
-  const [amountUnit, setAmountUnit] = useState<string | null>(null);
+  const [name, setName] = useState<string>();
+  const [amount, setAmount] = useState<number>();
+  const [amountUnit, setAmountUnit] = useState<string>();
   const [group, setGroup] = useState<string>();
 
-  function handleIngredientChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.currentTarget;
-
+  function handleChange(name: IngredientFields | IngredientGroupFields, value: string) {
     switch (name) {
       case 'name':
         setName(value);
@@ -41,7 +39,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
 
       case 'amount': {
         const parsed = Number.parseFloat(value);
-        setAmount(Number.isNaN(parsed) ? null : parsed);
+        setAmount(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
@@ -49,13 +47,13 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
         setAmountUnit(value);
         break;
 
+      case 'group':
+        setGroup(value);
+        break;
+
       default:
         break;
     }
-  }
-
-  function handleGroupChange(event: ChangeEvent<HTMLInputElement>) {
-    setGroup(event.target.value);
   }
 
   function handleAddIngredient() {
@@ -64,9 +62,9 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
     }
 
     onAdd(name, amount, amountUnit);
-    setName(null);
-    setAmount(null);
-    setAmountUnit(null);
+    setName(undefined);
+    setAmount(undefined);
+    setAmountUnit(undefined);
   }
 
   function handleAddGroup() {
@@ -88,11 +86,11 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
           ingredientOptions={ingredientOptions}
           name={name}
           onAdd={handleAddIngredient}
-          onChange={handleIngredientChange}
+          onChange={handleChange}
         />
       </Box>
       <Box mt={3}>
-        <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleGroupChange} />
+        <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleChange} />
       </Box>
     </>
   );

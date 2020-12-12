@@ -7,10 +7,10 @@ import RecipeInfo from '../RecipeInfo/RecipeInfo';
 import PageHeading from '../common/PageHeading';
 
 type Props = {
-  preparationTime: number | null;
-  sideDish: string | null;
+  preparationTime?: number;
+  sideDish?: string;
   slug: string;
-  tags: string[] | null;
+  tags?: string[];
   title: string;
   isAuthor?: boolean;
   onDeleteShow: () => void;

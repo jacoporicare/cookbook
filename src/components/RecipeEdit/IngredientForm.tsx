@@ -2,12 +2,14 @@ import { Box, Button, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, { KeyboardEvent } from 'react';
 
+export type IngredientFields = 'amount' | 'amountUnit' | 'name';
+
 type Props = {
-  name: string | null;
-  amount: number | string | null;
-  amountUnit: string | null;
+  name?: string;
+  amount?: number | string;
+  amountUnit?: string;
   ingredientOptions: string[];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (name: IngredientFields, value: string) => void;
   onAdd: () => void;
 };
 
@@ -29,21 +31,19 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
           <TextField
             inputProps={{ min: 0 }}
             label="Množství"
-            name="amount"
             type="number"
             value={amount ?? ''}
             fullWidth
-            onChange={onChange}
+            onChange={e => onChange('amount', e.currentTarget.value)}
             onKeyPress={handleKeyPress}
           />
         </Grid>
         <Grid item xs>
           <TextField
             label="Jednotka"
-            name="amountUnit"
             value={amountUnit ?? ''}
             fullWidth
-            onChange={onChange}
+            onChange={e => onChange('amountUnit', e.currentTarget.value)}
             onKeyPress={handleKeyPress}
           />
         </Grid>
@@ -53,10 +53,18 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
           <Grid item xs>
             <Autocomplete
               options={ingredientOptions}
-              renderInput={params => <TextField {...params} label="Název" name="name" />}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Název"
+                  onChange={e => onChange('name', e.currentTarget.value)}
+                  onKeyPress={handleKeyPress}
+                />
+              )}
+              value={name ?? ''}
               disableClearable
               freeSolo
-              onChange={onChange as React.ChangeEventHandler<{}>}
+              onChange={(_, value) => onChange('name', value)}
             />
           </Grid>
           <Grid item>

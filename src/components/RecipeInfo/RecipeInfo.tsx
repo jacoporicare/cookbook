@@ -2,8 +2,8 @@ import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 
 type Props = {
-  preparationTime: number | null;
-  sideDish: string | null;
+  preparationTime?: number;
+  sideDish?: string;
   placeholder?: React.ReactNode;
   small?: boolean;
 };

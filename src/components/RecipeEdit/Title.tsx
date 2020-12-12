@@ -1,9 +1,11 @@
 import { TextField } from '@material-ui/core';
 import React, { useRef, useEffect } from 'react';
 
+export type TitleFields = 'title';
+
 type Props = {
   title?: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (name: TitleFields, value: string) => void;
 };
 
 function Title({ title = '', onChange }: Props) {
@@ -21,10 +23,9 @@ function Title({ title = '', onChange }: Props) {
       error={!title}
       helperText={!title ? 'Název je povinný' : undefined}
       label="Název"
-      name="title"
       value={title}
       fullWidth
-      onChange={onChange}
+      onChange={e => onChange('title', e.currentTarget.value)}
     />
   );
 }

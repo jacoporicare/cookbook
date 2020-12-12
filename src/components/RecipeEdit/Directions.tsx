@@ -2,9 +2,11 @@ import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { Help } from '@material-ui/icons';
 import React from 'react';
 
+export type DirectionsFields = 'directions';
+
 type Props = {
   directions?: string;
-  onChange: React.ChangeEventHandler;
+  onChange: (name: DirectionsFields, value: string) => void;
 };
 
 function Directions({ directions = '', onChange }: Props) {
@@ -12,11 +14,10 @@ function Directions({ directions = '', onChange }: Props) {
     <>
       <TextField
         label="Postup"
-        name="directions"
         value={directions}
         fullWidth
         multiline
-        onChange={onChange}
+        onChange={e => onChange('directions', e.currentTarget.value)}
       />
       <Box mt={2} textAlign="right">
         <Typography variant="caption">

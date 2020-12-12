@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 
-export function setAuthToken(token: string | null): void {
+export function setAuthToken(token?: string): void {
   if (typeof window === 'undefined') {
     return;
   }
@@ -22,7 +22,7 @@ export function setAuthToken(token: string | null): void {
 }
 
 export const withAuth = () => (PageComponent: NextPage) => {
-  const WithAuth: NextPage<{ authToken: string | null }, { authToken: string | null }> = ({
+  const WithAuth: NextPage<{ authToken?: string }, { authToken?: string }> = ({
     authToken,
     ...pageProps
   }) => (
@@ -42,7 +42,7 @@ export const withAuth = () => (PageComponent: NextPage) => {
 
     return {
       ...pageProps,
-      authToken: new Cookies(ctx.req?.headers.cookie).get(AUTH_TOKEN_KEY) || null,
+      authToken: new Cookies(ctx.req?.headers.cookie).get(AUTH_TOKEN_KEY),
     };
   };
 

@@ -1,9 +1,11 @@
 import { Button, Grid, TextField } from '@material-ui/core';
-import React, { KeyboardEvent, ChangeEventHandler } from 'react';
+import React, { KeyboardEvent } from 'react';
+
+export type IngredientGroupFields = 'group';
 
 type Props = {
   group?: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onChange: (name: IngredientGroupFields, value: string) => void;
   onAdd: () => void;
 };
 
@@ -23,10 +25,9 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
       <Grid item xs>
         <TextField
           label="Nová skupina"
-          name="newGroup"
           value={group}
           fullWidth
-          onChange={onChange}
+          onChange={e => onChange('group', e.currentTarget.value)}
           onKeyPress={handleKeyPress}
         />
       </Grid>

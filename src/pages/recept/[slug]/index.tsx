@@ -108,21 +108,21 @@ function RecipeDetailPage() {
             isAuthor={Boolean(
               token && data && data.me && (data.me.username === user.username || data.me.isAdmin),
             )}
-            preparationTime={preparationTime}
-            sideDish={sideDish}
+            preparationTime={preparationTime ?? undefined}
+            sideDish={sideDish ?? undefined}
             slug={slug}
-            tags={tags}
+            tags={tags ?? undefined}
             title={title}
             onDeleteShow={() => setDeleteModalVisible(true)}
           />
           {loading && <Spinner />}
           <RecipeDetail
-            directions={directions}
+            directions={directions ?? undefined}
             imageFullUrl={image?.fullUrl}
             imageUrl={supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl}
-            ingredients={ingredients}
+            ingredients={ingredients ?? undefined}
             lastModifiedDate={lastModifiedDate}
-            servingCount={servingCount}
+            servingCount={servingCount ?? undefined}
             title={title}
             userName={user.displayName}
           />

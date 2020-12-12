@@ -9,7 +9,7 @@ function LogoutPage() {
   const [, setToken] = useAuth();
 
   useEffect(() => {
-    setToken(null);
+    setToken(undefined);
     router.push(router.query.u?.toString() || '/');
   }, [router, setToken]);
 

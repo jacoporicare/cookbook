@@ -11,7 +11,7 @@ import { AppStateData } from './types';
 
 // import { getAuthToken } from '../auth';
 
-let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+let globalApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 /**
  * Always creates a new apollo client on the server

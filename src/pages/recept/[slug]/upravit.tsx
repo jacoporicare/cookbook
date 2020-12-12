@@ -9,7 +9,7 @@ import { SortEnd } from 'react-sortable-hoc';
 import { withApollo } from '../../../apollo';
 import { withAuth } from '../../../auth';
 import Layout from '../../../components/Layout';
-import RecipeEdit from '../../../components/RecipeEdit/RecipeEdit';
+import RecipeEdit, { RecipeEditFields } from '../../../components/RecipeEdit/RecipeEdit';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import SpinnerIf from '../../../components/common/SpinnerIf';
 import {
@@ -125,9 +125,7 @@ function RecipeEditPage() {
     };
   }, [changed]);
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.currentTarget;
-
+  function handleChange(name: RecipeEditFields, value: string) {
     switch (name) {
       case 'title':
         setTitle(value);
@@ -160,14 +158,14 @@ function RecipeEditPage() {
     setChanged(true);
   }
 
-  function handleAddIngredient(name: string, amount: number | null, amountUnit: string | null) {
+  function handleAddIngredient(name: string, amount?: number, amountUnit?: string) {
     setChanged(true);
     setIngredients([
       ...ingredients,
       {
         name,
-        amount,
-        amountUnit,
+        amount: amount ?? null,
+        amountUnit: amountUnit ?? null,
         isGroup: false,
       },
     ]);

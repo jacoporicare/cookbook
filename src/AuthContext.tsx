@@ -2,20 +2,20 @@ import React, { useContext, useState } from 'react';
 
 import { setAuthToken } from './auth';
 
-type ContextValue = [string | null, (token: string | null) => void];
+type ContextValue = [string | undefined, (token?: string) => void];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const Context = React.createContext<ContextValue>([null, () => {}]);
+const Context = React.createContext<ContextValue>([undefined, () => {}]);
 
 type Props = {
   children: React.ReactNode;
-  token: string | null;
+  token?: string;
 };
 
 export function AuthProvider(props: Props) {
   const [value, setValue] = useState(props.token);
 
-  function set(token: string | null) {
+  function set(token?: string) {
     setAuthToken(token);
     setValue(token);
   }

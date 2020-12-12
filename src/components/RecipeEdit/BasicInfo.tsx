@@ -9,11 +9,12 @@ import {
   MenuItem,
   Select,
   TextField,
-  Theme,
   useTheme,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React from 'react';
+
+export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
 
 type Props = {
   preparationTime?: number;
@@ -22,7 +23,7 @@ type Props = {
   sideDishOptions: string[];
   tagOptions: string[];
   tags?: string[];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (name: BasicInfoFields, value: string) => void;
   onTagsChange: (tags: string[]) => void;
 };
 
@@ -67,33 +68,37 @@ function BasicInfo({
         InputProps={{ endAdornment: <InputAdornment position="end">min</InputAdornment> }}
         inputProps={{ min: 1 }}
         label="Doba přípravy"
-        name="preparationTime"
         type="number"
-        value={typeof preparationTime === 'number' ? preparationTime : ''}
+        value={preparationTime ?? ''}
         fullWidth
-        onChange={onChange}
+        onChange={e => onChange('preparationTime', e.currentTarget.value)}
       />
 
       <Box mt={3}>
         <TextField
           inputProps={{ min: 1 }}
           label="Počet porcí"
-          name="servingCount"
           type="number"
-          value={typeof servingCount === 'number' ? servingCount : ''}
+          value={servingCount ?? ''}
           fullWidth
-          onChange={onChange}
+          onChange={e => onChange('servingCount', e.currentTarget.value)}
         />
       </Box>
 
       <Box mt={3}>
         <Autocomplete
           options={sideDishOptions}
-          renderInput={params => <TextField {...params} label="Příloha" name="sideDish" />}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label="Příloha"
+              onChange={e => onChange('sideDish', e.currentTarget.value)}
+            />
+          )}
           value={sideDish}
           disableClearable
           freeSolo
-          onChange={onChange as React.ChangeEventHandler<{}>}
+          onChange={(_, value) => onChange('sideDish', value)}
         />
       </Box>
 

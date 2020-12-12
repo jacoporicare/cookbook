@@ -7,15 +7,17 @@ import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
 import Spinner from '../common/Spinner';
 
-import BasicInfo from './BasicInfo';
-import Directions from './Directions';
+import BasicInfo, { BasicInfoFields } from './BasicInfo';
+import Directions, { DirectionsFields } from './Directions';
 import Header from './Header';
 import IngredientEdit, {
   AddGroupEventHandler,
   AddIngredientEventHandler,
   RemoveEventHandler,
 } from './IngredientEdit';
-import Title from './Title';
+import Title, { TitleFields } from './Title';
+
+export type RecipeEditFields = TitleFields | BasicInfoFields | DirectionsFields;
 
 type Props = {
   changed: boolean;
@@ -27,7 +29,7 @@ type Props = {
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
   onAddIngredient: AddIngredientEventHandler;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (name: RecipeEditFields, value: string) => void;
   onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
   onSortIngredient: SortEndHandler;
