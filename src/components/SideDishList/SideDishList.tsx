@@ -1,8 +1,17 @@
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 import React from 'react';
 
 import { SideDish } from '../../types';
 import PageHeading from '../common/PageHeading';
-import { Table, TableHeadRow, TableHeadCell } from '../elements';
 
 import SideDishListItem from './SideDishListItem';
 
@@ -15,22 +24,32 @@ function SideDishList({ sideDishes }: Props) {
     <>
       <PageHeading>Přílohy</PageHeading>
 
-      <Table>
-        <thead>
-          <TableHeadRow>
-            <TableHeadCell>Název</TableHeadCell>
-            <TableHeadCell>Příloha</TableHeadCell>
-            <TableHeadCell>Hlavní</TableHeadCell>
-            <TableHeadCell>Po uvaření</TableHeadCell>
-          </TableHeadRow>
-        </thead>
+      <Box maxWidth="600px">
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell width="40%">Název</TableCell>
+                <TableCell align="right" width="20%">
+                  Příloha
+                </TableCell>
+                <TableCell align="right" width="20%">
+                  Hlavní
+                </TableCell>
+                <TableCell align="right" width="20%">
+                  Po uvaření
+                </TableCell>
+              </TableRow>
+            </TableHead>
 
-        <tbody>
-          {sideDishes.map(sideDish => (
-            <SideDishListItem key={sideDish.title} {...sideDish} />
-          ))}
-        </tbody>
-      </Table>
+            <TableBody>
+              {sideDishes.map(sideDish => (
+                <SideDishListItem key={sideDish.title} {...sideDish} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </>
   );
 }

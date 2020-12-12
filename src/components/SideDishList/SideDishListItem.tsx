@@ -1,7 +1,7 @@
+import { TableRow, TableCell } from '@material-ui/core';
 import React from 'react';
 
 import { SideDish } from '../../types';
-import { TableRow, TableCell } from '../elements';
 
 type Props = SideDish;
 
@@ -9,9 +9,9 @@ function SideDishListItem({ title, sideWeight, mainWeight, multiplicator }: Prop
   return (
     <TableRow>
       <TableCell>{title}</TableCell>
-      <TableCell textAlign="right">{sideWeight}</TableCell>
-      <TableCell textAlign="right">{mainWeight}</TableCell>
-      <TableCell textAlign="right">
+      <TableCell align="right">{sideWeight}</TableCell>
+      <TableCell align="right">{mainWeight}</TableCell>
+      <TableCell align="right">
         {multiplicator &&
           `×${multiplicator.toLocaleString('cs', {
             minimumFractionDigits: 2,

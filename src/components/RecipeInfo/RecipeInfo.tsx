@@ -1,14 +1,11 @@
-import styled from '@emotion/styled';
+import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-
-import Icon from '../common/Icon';
-
-import RecipeInfoItem from './RecipeInfoItem';
 
 type Props = {
   preparationTime: number | null;
   sideDish: string | null;
   placeholder?: React.ReactNode;
+  small?: boolean;
 };
 
 function formatTime(time: number) {
@@ -26,31 +23,71 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const List = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+const useStyles = makeStyles({
+  root: {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+  },
+  item: {
+    display: 'inline-block',
+    '& + &': {
+      marginLeft: '4px',
+    },
+    '& + &::before': {
+      display: 'inline-block',
+      content: "'·'",
+      marginRight: '4px',
+    },
+  },
+});
 
-function RecipeInfo({ preparationTime, sideDish, placeholder }: Props) {
+function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
+  const classes = useStyles();
+
   if (!preparationTime && !sideDish) {
-    return placeholder ? <div>{placeholder}</div> : null;
+    return placeholder ? (
+      <Typography color="textSecondary" variant="body1">
+        {placeholder}
+      </Typography>
+    ) : null;
   }
 
   return (
-    <List>
+    <ul className={classes.root}>
       {!!preparationTime && preparationTime > 0 && (
-        <RecipeInfoItem icon={<Icon icon="clock" regular />}>
-          {formatTime(preparationTime)}
-        </RecipeInfoItem>
+        <li className={classes.item}>
+          {!small && (
+            <Typography color="textSecondary" component="span" variant="body1">
+              Doba přípravy{' '}
+            </Typography>
+          )}
+          <Typography
+            color={small ? 'textSecondary' : undefined}
+            component="span"
+            variant={small ? 'body2' : 'body1'}
+          >
+            {formatTime(preparationTime)}
+          </Typography>{' '}
+        </li>
       )}
       {!!sideDish && (
-        <RecipeInfoItem icon={<Icon icon="utensil-spoon" />}>{sideDish}</RecipeInfoItem>
+        <li className={classes.item}>
+          {!small && (
+            <Typography color="textSecondary" component="span" variant="body1">
+              Příloha{' '}
+            </Typography>
+          )}
+          <Typography
+            color={small ? 'textSecondary' : undefined}
+            component="span"
+            variant={small ? 'body2' : 'body1'}
+          >
+            {sideDish}
+          </Typography>
+        </li>
       )}
-    </List>
+    </ul>
   );
 }
 

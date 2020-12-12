@@ -1,4 +1,6 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
+
+import userFragment from './userFragment.graphql';
 
 export default gql`
   fragment recipeBase on Recipe {
@@ -14,5 +16,10 @@ export default gql`
       thumbWebPUrl
     }
     lastModifiedDate
+    user {
+      ...user
+    }
   }
+
+  ${userFragment}
 `;

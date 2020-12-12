@@ -1,8 +1,9 @@
 import { ApolloError } from '@apollo/client';
+import { Snackbar } from '@material-ui/core';
+import { Alert, Color } from '@material-ui/lab';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react';
-import { notify } from 'react-notify-toast';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { SortEnd } from 'react-sortable-hoc';
 
 import { withApollo } from '../../../apollo';
@@ -11,7 +12,6 @@ import Layout from '../../../components/Layout';
 import RecipeEdit from '../../../components/RecipeEdit/RecipeEdit';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import SpinnerIf from '../../../components/common/SpinnerIf';
-import { DangerAlert } from '../../../components/elements';
 import {
   RecipeListQuery,
   RecipeListDocument,
@@ -25,7 +25,6 @@ import {
   RecipeInput,
 } from '../../../generated/graphql';
 import useSupportsWebP from '../../../hooks/useSupportsWebP';
-import { AutosuggestChangeEventHandler } from '../../../types';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -40,16 +39,18 @@ function RecipeEditPage() {
   const router = useRouter();
   const supportsWebP = useSupportsWebP();
 
+  const [snackbar, setSnackbar] = useState<[Color, string]>();
+
   const [changed, setChanged] = useState(false);
-  const [image, setImage] = useState<File | undefined>(undefined);
+  const [image, setImage] = useState<File>();
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [sideDish, setSideDish] = useState('');
   const [directions, setDirections] = useState('');
-  const [preparationTime, setPreparationTime] = useState<number | null>(null);
-  const [servingCount, setServingCount] = useState<number | null>(null);
+  const [preparationTime, setPreparationTime] = useState<number>();
+  const [servingCount, setServingCount] = useState<number>();
   const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id'>[]>([]);
-  const [tags, setTags] = useState<string[] | null>(null);
+  const [tags, setTags] = useState<string[]>();
 
   const slug = router.query.slug?.toString();
 
@@ -95,8 +96,8 @@ function RecipeEditPage() {
     setSideDish(editedRecipe.sideDish || '');
     setTags(editedRecipe.tags || []);
     setDirections(editedRecipe.directions || '');
-    setPreparationTime(editedRecipe.preparationTime);
-    setServingCount(editedRecipe.servingCount);
+    setPreparationTime(editedRecipe.preparationTime ?? undefined);
+    setServingCount(editedRecipe.servingCount ?? undefined);
     setIngredients(
       // To remove __typename
       (editedRecipe.ingredients || []).map(i => ({
@@ -124,33 +125,31 @@ function RecipeEditPage() {
     };
   }, [changed]);
 
-  const handleChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.currentTarget;
-    const key = targetName || name;
-    const rawValue = selectEvent ? selectEvent.newValue : value;
 
-    switch (key) {
+    switch (name) {
       case 'title':
-        setTitle(rawValue);
+        setTitle(value);
         break;
 
       case 'sideDish':
-        setSideDish(rawValue);
+        setSideDish(value);
         break;
 
       case 'directions':
-        setDirections(rawValue);
+        setDirections(value);
         break;
 
       case 'preparationTime': {
-        const parsed = Number.parseInt(rawValue, 10);
-        setPreparationTime(Number.isNaN(parsed) ? null : parsed);
+        const parsed = Number.parseInt(value, 10);
+        setPreparationTime(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
       case 'servingCount': {
-        const parsed = Number.parseInt(rawValue, 10);
-        setServingCount(Number.isNaN(parsed) ? null : parsed);
+        const parsed = Number.parseInt(value, 10);
+        setServingCount(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
@@ -159,7 +158,7 @@ function RecipeEditPage() {
     }
 
     setChanged(true);
-  };
+  }
 
   function handleAddIngredient(name: string, amount: number | null, amountUnit: string | null) {
     setChanged(true);
@@ -253,15 +252,15 @@ function RecipeEditPage() {
       return;
     }
 
-    notify.show('Recept úspěšně uložen', 'success');
+    setSnackbar(['success', 'Recept úspěšně uložen']);
     router.push('/recept/[slug]', `/recept/${recipe.slug}`);
   }
 
   function handleError(error: ApolloError) {
     if (error.graphQLErrors[0] && error.graphQLErrors[0].message.startsWith('EEXIST')) {
-      notify.show('Zadaný název již existuje', 'warning');
+      setSnackbar(['warning', 'Zadaný název již existuje']);
     } else {
-      notify.show('Recept se nepodařilo uložit', 'error');
+      setSnackbar(['error', 'Recept se nepodařilo uložit']);
     }
   }
 
@@ -269,41 +268,51 @@ function RecipeEditPage() {
     return (
       <Layout>
         <SpinnerIf spinner={loading}>
-          <DangerAlert>Recept nenalezen.</DangerAlert>
+          <Alert elevation={1} severity="error">
+            Recept nenalezen.
+          </Alert>
         </SpinnerIf>
       </Layout>
     );
   }
 
   return (
-    <Layout>
+    <>
       <DocumentTitle title={!title && !slug ? 'Nový recept' : title} />
-      <RecipeEdit
-        changed={changed}
-        directions={directions}
-        imageUrl={supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl}
-        ingredientOptions={dataOptions?.ingredients ?? []}
-        ingredients={ingredients}
-        isNew={!slug}
-        isSaving={isSaving}
-        preparationTime={preparationTime}
-        servingCount={servingCount}
-        sideDish={sideDish}
-        sideDishOptions={dataOptions?.sideDishes ?? []}
-        slug={slug}
-        tagOptions={dataOptions?.tags ?? []}
-        tags={tags}
-        title={title}
-        onAddGroup={handleAddGroup}
-        onAddIngredient={handleAddIngredient}
-        onChange={handleChange}
-        onImageChange={handleImageChange}
-        onRemoveIngredient={handleRemoveIngredient}
-        onSortIngredient={handleSortIngredient}
-        onSubmit={handleSubmit}
-        onTagsChange={handleTagsChange}
-      />
-    </Layout>
+      <Layout>
+        <RecipeEdit
+          changed={changed}
+          directions={directions}
+          imageUrl={
+            supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl
+          }
+          ingredientOptions={dataOptions?.ingredients ?? []}
+          ingredients={ingredients}
+          isNew={!slug}
+          isSaving={isSaving}
+          preparationTime={preparationTime}
+          servingCount={servingCount}
+          sideDish={sideDish}
+          sideDishOptions={dataOptions?.sideDishes ?? []}
+          tagOptions={dataOptions?.tags ?? []}
+          tags={tags}
+          title={title}
+          onAddGroup={handleAddGroup}
+          onAddIngredient={handleAddIngredient}
+          onChange={handleChange}
+          onImageChange={handleImageChange}
+          onRemoveIngredient={handleRemoveIngredient}
+          onSortIngredient={handleSortIngredient}
+          onSubmit={handleSubmit}
+          onTagsChange={handleTagsChange}
+        />
+      </Layout>
+      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
+        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
+          {snackbar?.[1]}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

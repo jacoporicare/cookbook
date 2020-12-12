@@ -15,117 +15,6 @@ export type Scalars = {
   Upload: any;
 };
 
-export type AuthPayload = {
-  __typename?: 'AuthPayload';
-  token: Maybe<Scalars['String']>;
-};
-
-
-export type Image = {
-  __typename?: 'Image';
-  fullUrl: Scalars['String'];
-  thumbUrl: Scalars['String'];
-  thumbWebPUrl: Scalars['String'];
-};
-
-export type Ingredient = {
-  __typename?: 'Ingredient';
-  _id: Scalars['ID'];
-  amount: Maybe<Scalars['Float']>;
-  amountUnit: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  isGroup: Maybe<Scalars['Boolean']>;
-};
-
-export type IngredientInput = {
-  amount: Maybe<Scalars['Float']>;
-  amountUnit: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  isGroup: Maybe<Scalars['Boolean']>;
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  login: AuthPayload;
-  createRecipe: Maybe<Recipe>;
-  updateRecipe: Maybe<Recipe>;
-  deleteRecipe: Scalars['Boolean'];
-  updateUserLastActivity: Scalars['Boolean'];
-  createUser: Maybe<User>;
-  updateUser: Maybe<User>;
-  deleteUser: Maybe<Scalars['ID']>;
-  resetPassword: Maybe<Scalars['String']>;
-  changePassword: Scalars['Boolean'];
-};
-
-
-export type MutationLoginArgs = {
-  username: Scalars['String'];
-  password: Maybe<Scalars['String']>;
-};
-
-
-export type MutationCreateRecipeArgs = {
-  recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
-};
-
-
-export type MutationUpdateRecipeArgs = {
-  id: Scalars['ID'];
-  recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
-};
-
-
-export type MutationDeleteRecipeArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateUserArgs = {
-  user: UserInput;
-};
-
-
-export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
-  user: UserInput;
-};
-
-
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationResetPasswordArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationChangePasswordArgs = {
-  password: Scalars['String'];
-  newPassword: Scalars['String'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  recipes: Array<Recipe>;
-  recipe: Maybe<Recipe>;
-  ingredients: Array<Scalars['String']>;
-  sideDishes: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  me: Maybe<User>;
-  users: Maybe<Array<User>>;
-};
-
-
-export type QueryRecipeArgs = {
-  id: Maybe<Scalars['ID']>;
-  slug: Maybe<Scalars['String']>;
-};
-
 export type Recipe = {
   __typename?: 'Recipe';
   _id: Scalars['ID'];
@@ -143,6 +32,36 @@ export type Recipe = {
   tags: Maybe<Array<Scalars['String']>>;
 };
 
+export type Image = {
+  __typename?: 'Image';
+  fullUrl: Scalars['String'];
+  thumbUrl: Scalars['String'];
+  thumbWebPUrl: Scalars['String'];
+};
+
+export type Ingredient = {
+  __typename?: 'Ingredient';
+  _id: Scalars['ID'];
+  amount: Maybe<Scalars['Float']>;
+  amountUnit: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  isGroup: Maybe<Scalars['Boolean']>;
+};
+
+export type AuthPayload = {
+  __typename?: 'AuthPayload';
+  token: Maybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  _id: Scalars['ID'];
+  username: Scalars['String'];
+  displayName: Scalars['String'];
+  isAdmin: Maybe<Scalars['Boolean']>;
+  lastActivity: Maybe<Scalars['Date']>;
+};
+
 export type RecipeInput = {
   title: Scalars['String'];
   directions: Maybe<Scalars['String']>;
@@ -154,14 +73,11 @@ export type RecipeInput = {
   tags: Maybe<Array<Scalars['String']>>;
 };
 
-
-export type User = {
-  __typename?: 'User';
-  _id: Scalars['ID'];
-  username: Scalars['String'];
-  displayName: Scalars['String'];
-  isAdmin: Maybe<Scalars['Boolean']>;
-  lastActivity: Maybe<Scalars['Date']>;
+export type IngredientInput = {
+  amount: Maybe<Scalars['Float']>;
+  amountUnit: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  isGroup: Maybe<Scalars['Boolean']>;
 };
 
 export type UserInput = {
@@ -170,169 +86,186 @@ export type UserInput = {
   isAdmin: Maybe<Scalars['Boolean']>;
 };
 
+export type Query = {
+  __typename?: 'Query';
+  recipes: Array<Recipe>;
+  recipe: Maybe<Recipe>;
+  ingredients: Array<Scalars['String']>;
+  sideDishes: Array<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  me: Maybe<User>;
+  users: Maybe<Array<User>>;
+};
+
+export type QueryRecipeArgs = {
+  id: Maybe<Scalars['ID']>;
+  slug: Maybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  login: AuthPayload;
+  createRecipe: Maybe<Recipe>;
+  updateRecipe: Maybe<Recipe>;
+  deleteRecipe: Scalars['Boolean'];
+  updateUserLastActivity: Scalars['Boolean'];
+  createUser: Maybe<User>;
+  updateUser: Maybe<User>;
+  deleteUser: Maybe<Scalars['ID']>;
+  resetPassword: Maybe<Scalars['String']>;
+  changePassword: Scalars['Boolean'];
+};
+
+export type MutationLoginArgs = {
+  username: Scalars['String'];
+  password: Maybe<Scalars['String']>;
+};
+
+export type MutationCreateRecipeArgs = {
+  recipe: RecipeInput;
+  image: Maybe<Scalars['Upload']>;
+};
+
+export type MutationUpdateRecipeArgs = {
+  id: Scalars['ID'];
+  recipe: RecipeInput;
+  image: Maybe<Scalars['Upload']>;
+};
+
+export type MutationDeleteRecipeArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateUserArgs = {
+  user: UserInput;
+};
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID'];
+  user: UserInput;
+};
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationResetPasswordArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationChangePasswordArgs = {
+  password: Scalars['String'];
+  newPassword: Scalars['String'];
+};
+
 export type ChangePasswordMutationVariables = Exact<{
   password: Scalars['String'];
   newPassword: Scalars['String'];
 }>;
 
+export type ChangePasswordMutation = { __typename?: 'Mutation' } & Pick<Mutation, 'changePassword'>;
 
-export type ChangePasswordMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'changePassword'>
-);
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = (
-  { __typename?: 'Query' }
-  & { me: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin'>
-  )> }
-);
+export type MeQuery = { __typename?: 'Query' } & {
+  me: Maybe<{ __typename?: 'User' } & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin'>>;
+};
 
 export type CreateRecipeMutationVariables = Exact<{
   recipe: RecipeInput;
   image: Maybe<Scalars['Upload']>;
 }>;
 
-
-export type CreateRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & { createRecipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )> }
-);
+export type CreateRecipeMutation = { __typename?: 'Mutation' } & {
+  createRecipe: Maybe<{ __typename?: 'Recipe' } & RecipeDetailFragment>;
+};
 
 export type CreateUserMutationVariables = Exact<{
   user: UserInput;
 }>;
 
-
-export type CreateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { createUser: Maybe<(
-    { __typename?: 'User' }
-    & UserFragment
-  )> }
-);
+export type CreateUserMutation = { __typename?: 'Mutation' } & {
+  createUser: Maybe<{ __typename?: 'User' } & UserFragment>;
+};
 
 export type DeleteRecipeMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-
-export type DeleteRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteRecipe'>
-);
+export type DeleteRecipeMutation = { __typename?: 'Mutation' } & Pick<Mutation, 'deleteRecipe'>;
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-
-export type DeleteUserMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUser'>
-);
+export type DeleteUserMutation = { __typename?: 'Mutation' } & Pick<Mutation, 'deleteUser'>;
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
+export type LoginMutation = { __typename?: 'Mutation' } & {
+  login: { __typename?: 'AuthPayload' } & Pick<AuthPayload, 'token'>;
+};
 
-export type LoginMutation = (
-  { __typename?: 'Mutation' }
-  & { login: (
-    { __typename?: 'AuthPayload' }
-    & Pick<AuthPayload, 'token'>
-  ) }
-);
-
-export type RecipeBaseFragment = (
-  { __typename?: 'Recipe' }
-  & Pick<Recipe, '_id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'>
-  & { image: Maybe<(
-    { __typename?: 'Image' }
-    & Pick<Image, 'fullUrl' | 'thumbUrl' | 'thumbWebPUrl'>
-  )> }
-);
+export type RecipeBaseFragment = { __typename?: 'Recipe' } & Pick<
+  Recipe,
+  '_id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'
+> & {
+    image: Maybe<{ __typename?: 'Image' } & Pick<Image, 'fullUrl' | 'thumbUrl' | 'thumbWebPUrl'>>;
+    user: { __typename?: 'User' } & UserFragment;
+  };
 
 export type RecipeDetailQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
+export type RecipeDetailQuery = { __typename?: 'Query' } & {
+  recipe: Maybe<{ __typename?: 'Recipe' } & RecipeDetailFragment>;
+  me: Maybe<{ __typename?: 'User' } & UserFragment>;
+};
 
-export type RecipeDetailQuery = (
-  { __typename?: 'Query' }
-  & { recipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )>, me: Maybe<(
-    { __typename?: 'User' }
-    & UserFragment
-  )> }
-);
-
-export type RecipeDetailFragment = (
-  { __typename?: 'Recipe' }
-  & Pick<Recipe, 'directions' | 'servingCount'>
-  & { ingredients: Maybe<Array<(
-    { __typename?: 'Ingredient' }
-    & Pick<Ingredient, '_id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'>
-  )>>, user: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
-  & RecipeBaseFragment
-);
+export type RecipeDetailFragment = { __typename?: 'Recipe' } & Pick<
+  Recipe,
+  'directions' | 'servingCount'
+> & {
+    ingredients: Maybe<
+      Array<
+        { __typename?: 'Ingredient' } & Pick<
+          Ingredient,
+          '_id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'
+        >
+      >
+    >;
+  } & RecipeBaseFragment;
 
 export type RecipeEditQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
+export type RecipeEditQuery = { __typename?: 'Query' } & {
+  recipe: Maybe<{ __typename?: 'Recipe' } & RecipeDetailFragment>;
+};
 
-export type RecipeEditQuery = (
-  { __typename?: 'Query' }
-  & { recipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )> }
-);
+export type RecipeEditOptionsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type RecipeEditOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+export type RecipeEditOptionsQuery = { __typename?: 'Query' } & Pick<
+  Query,
+  'ingredients' | 'sideDishes' | 'tags'
+>;
 
+export type RecipeListQueryVariables = Exact<{ [key: string]: never }>;
 
-export type RecipeEditOptionsQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'ingredients' | 'sideDishes' | 'tags'>
-);
-
-export type RecipeListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RecipeListQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'tags'>
-  & { recipes: Array<(
-    { __typename?: 'Recipe' }
-    & RecipeBaseFragment
-  )> }
-);
+export type RecipeListQuery = { __typename?: 'Query' } & Pick<Query, 'tags'> & {
+    recipes: Array<{ __typename?: 'Recipe' } & RecipeBaseFragment>;
+  };
 
 export type ResetPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-
-export type ResetPasswordMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'resetPassword'>
-);
+export type ResetPasswordMutation = { __typename?: 'Mutation' } & Pick<Mutation, 'resetPassword'>;
 
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -340,102 +273,90 @@ export type UpdateRecipeMutationVariables = Exact<{
   image: Maybe<Scalars['Upload']>;
 }>;
 
-
-export type UpdateRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & { updateRecipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )> }
-);
+export type UpdateRecipeMutation = { __typename?: 'Mutation' } & {
+  updateRecipe: Maybe<{ __typename?: 'Recipe' } & RecipeDetailFragment>;
+};
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
   user: UserInput;
 }>;
 
+export type UpdateUserMutation = { __typename?: 'Mutation' } & {
+  updateUser: Maybe<{ __typename?: 'User' } & UserFragment>;
+};
 
-export type UpdateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { updateUser: Maybe<(
-    { __typename?: 'User' }
-    & UserFragment
-  )> }
-);
+export type UpdateUserLastActivityMutationVariables = Exact<{ [key: string]: never }>;
 
-export type UpdateUserLastActivityMutationVariables = Exact<{ [key: string]: never; }>;
+export type UpdateUserLastActivityMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'updateUserLastActivity'
+>;
 
+export type UserFragment = { __typename?: 'User' } & Pick<
+  User,
+  '_id' | 'username' | 'displayName' | 'isAdmin' | 'lastActivity'
+>;
 
-export type UpdateUserLastActivityMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'updateUserLastActivity'>
-);
+export type UserListQueryVariables = Exact<{ [key: string]: never }>;
 
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin' | 'lastActivity'>
-);
+export type UserListQuery = { __typename?: 'Query' } & {
+  users: Maybe<Array<{ __typename?: 'User' } & UserFragment>>;
+};
 
-export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserListQuery = (
-  { __typename?: 'Query' }
-  & { users: Maybe<Array<(
-    { __typename?: 'User' }
-    & UserFragment
-  )>> }
-);
-
-export const RecipeBaseFragmentDoc = gql`
-    fragment recipeBase on Recipe {
-  _id
-  slug
-  title
-  sideDish
-  tags
-  preparationTime
-  image {
-    fullUrl
-    thumbUrl
-    thumbWebPUrl
-  }
-  lastModifiedDate
-}
-    `;
 export const UserFragmentDoc = gql`
-    fragment user on User {
-  _id
-  username
-  displayName
-  isAdmin
-  lastActivity
-}
-    `;
-export const RecipeDetailFragmentDoc = gql`
-    fragment recipeDetail on Recipe {
-  ...recipeBase
-  directions
-  servingCount
-  ingredients {
+  fragment user on User {
     _id
-    name
-    amount
-    amountUnit
-    isGroup
+    username
+    displayName
+    isAdmin
+    lastActivity
   }
-  user {
-    ...user
+`;
+export const RecipeBaseFragmentDoc = gql`
+  fragment recipeBase on Recipe {
+    _id
+    slug
+    title
+    sideDish
+    tags
+    preparationTime
+    image {
+      fullUrl
+      thumbUrl
+      thumbWebPUrl
+    }
+    lastModifiedDate
+    user {
+      ...user
+    }
   }
-}
-    ${RecipeBaseFragmentDoc}
-${UserFragmentDoc}`;
+  ${UserFragmentDoc}
+`;
+export const RecipeDetailFragmentDoc = gql`
+  fragment recipeDetail on Recipe {
+    ...recipeBase
+    directions
+    servingCount
+    ingredients {
+      _id
+      name
+      amount
+      amountUnit
+      isGroup
+    }
+  }
+  ${RecipeBaseFragmentDoc}
+`;
 export const ChangePasswordDocument = gql`
-    mutation ChangePassword($password: String!, $newPassword: String!) {
-  changePassword(password: $password, newPassword: $newPassword)
-}
-    `;
-export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+  mutation ChangePassword($password: String!, $newPassword: String!) {
+    changePassword(password: $password, newPassword: $newPassword)
+  }
+`;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
 
 /**
  * __useChangePasswordMutation__
@@ -455,22 +376,30 @@ export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMut
  *   },
  * });
  */
-export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
-        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, baseOptions);
-      }
+export function useChangePasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>,
+) {
+  return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(
+    ChangePasswordDocument,
+    baseOptions,
+  );
+}
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
-export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
 export const MeDocument = gql`
-    query Me {
-  me {
-    _id
-    username
-    displayName
-    isAdmin
+  query Me {
+    me {
+      _id
+      username
+      displayName
+      isAdmin
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useMeQuery__
@@ -488,22 +417,28 @@ export const MeDocument = gql`
  * });
  */
 export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-        }
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>,
+) {
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+}
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const CreateRecipeDocument = gql`
-    mutation CreateRecipe($recipe: RecipeInput!, $image: Upload) {
-  createRecipe(recipe: $recipe, image: $image) {
-    ...recipeDetail
+  mutation CreateRecipe($recipe: RecipeInput!, $image: Upload) {
+    createRecipe(recipe: $recipe, image: $image) {
+      ...recipeDetail
+    }
   }
-}
-    ${RecipeDetailFragmentDoc}`;
-export type CreateRecipeMutationFn = Apollo.MutationFunction<CreateRecipeMutation, CreateRecipeMutationVariables>;
+  ${RecipeDetailFragmentDoc}
+`;
+export type CreateRecipeMutationFn = Apollo.MutationFunction<
+  CreateRecipeMutation,
+  CreateRecipeMutationVariables
+>;
 
 /**
  * __useCreateRecipeMutation__
@@ -523,20 +458,32 @@ export type CreateRecipeMutationFn = Apollo.MutationFunction<CreateRecipeMutatio
  *   },
  * });
  */
-export function useCreateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<CreateRecipeMutation, CreateRecipeMutationVariables>) {
-        return Apollo.useMutation<CreateRecipeMutation, CreateRecipeMutationVariables>(CreateRecipeDocument, baseOptions);
-      }
+export function useCreateRecipeMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateRecipeMutation, CreateRecipeMutationVariables>,
+) {
+  return Apollo.useMutation<CreateRecipeMutation, CreateRecipeMutationVariables>(
+    CreateRecipeDocument,
+    baseOptions,
+  );
+}
 export type CreateRecipeMutationHookResult = ReturnType<typeof useCreateRecipeMutation>;
 export type CreateRecipeMutationResult = Apollo.MutationResult<CreateRecipeMutation>;
-export type CreateRecipeMutationOptions = Apollo.BaseMutationOptions<CreateRecipeMutation, CreateRecipeMutationVariables>;
+export type CreateRecipeMutationOptions = Apollo.BaseMutationOptions<
+  CreateRecipeMutation,
+  CreateRecipeMutationVariables
+>;
 export const CreateUserDocument = gql`
-    mutation CreateUser($user: UserInput!) {
-  createUser(user: $user) {
-    ...user
+  mutation CreateUser($user: UserInput!) {
+    createUser(user: $user) {
+      ...user
+    }
   }
-}
-    ${UserFragmentDoc}`;
-export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+  ${UserFragmentDoc}
+`;
+export type CreateUserMutationFn = Apollo.MutationFunction<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>;
 
 /**
  * __useCreateUserMutation__
@@ -555,18 +502,29 @@ export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, C
  *   },
  * });
  */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, baseOptions);
-      }
+export function useCreateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>,
+) {
+  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(
+    CreateUserDocument,
+    baseOptions,
+  );
+}
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>;
 export const DeleteRecipeDocument = gql`
-    mutation DeleteRecipe($id: ID!) {
-  deleteRecipe(id: $id)
-}
-    `;
-export type DeleteRecipeMutationFn = Apollo.MutationFunction<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
+  mutation DeleteRecipe($id: ID!) {
+    deleteRecipe(id: $id)
+  }
+`;
+export type DeleteRecipeMutationFn = Apollo.MutationFunction<
+  DeleteRecipeMutation,
+  DeleteRecipeMutationVariables
+>;
 
 /**
  * __useDeleteRecipeMutation__
@@ -585,18 +543,29 @@ export type DeleteRecipeMutationFn = Apollo.MutationFunction<DeleteRecipeMutatio
  *   },
  * });
  */
-export function useDeleteRecipeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>) {
-        return Apollo.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(DeleteRecipeDocument, baseOptions);
-      }
+export function useDeleteRecipeMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>,
+) {
+  return Apollo.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(
+    DeleteRecipeDocument,
+    baseOptions,
+  );
+}
 export type DeleteRecipeMutationHookResult = ReturnType<typeof useDeleteRecipeMutation>;
 export type DeleteRecipeMutationResult = Apollo.MutationResult<DeleteRecipeMutation>;
-export type DeleteRecipeMutationOptions = Apollo.BaseMutationOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
+export type DeleteRecipeMutationOptions = Apollo.BaseMutationOptions<
+  DeleteRecipeMutation,
+  DeleteRecipeMutationVariables
+>;
 export const DeleteUserDocument = gql`
-    mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
-}
-    `;
-export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+  mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+  }
+`;
+export type DeleteUserMutationFn = Apollo.MutationFunction<
+  DeleteUserMutation,
+  DeleteUserMutationVariables
+>;
 
 /**
  * __useDeleteUserMutation__
@@ -615,19 +584,27 @@ export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, D
  *   },
  * });
  */
-export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
-        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, baseOptions);
-      }
+export function useDeleteUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>,
+) {
+  return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
+    DeleteUserDocument,
+    baseOptions,
+  );
+}
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
-export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<
+  DeleteUserMutation,
+  DeleteUserMutationVariables
+>;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password) {
-    token
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+    }
   }
-}
-    `;
+`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -648,23 +625,29 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
-      }
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>,
+) {
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
 export const RecipeDetailDocument = gql`
-    query RecipeDetail($slug: String!) {
-  recipe(slug: $slug) {
-    ...recipeDetail
+  query RecipeDetail($slug: String!) {
+    recipe(slug: $slug) {
+      ...recipeDetail
+    }
+    me {
+      ...user
+    }
   }
-  me {
-    ...user
-  }
-}
-    ${RecipeDetailFragmentDoc}
-${UserFragmentDoc}`;
+  ${RecipeDetailFragmentDoc}
+  ${UserFragmentDoc}
+`;
 
 /**
  * __useRecipeDetailQuery__
@@ -682,22 +665,36 @@ ${UserFragmentDoc}`;
  *   },
  * });
  */
-export function useRecipeDetailQuery(baseOptions?: Apollo.QueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
-        return Apollo.useQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(RecipeDetailDocument, baseOptions);
-      }
-export function useRecipeDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
-          return Apollo.useLazyQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(RecipeDetailDocument, baseOptions);
-        }
+export function useRecipeDetailQuery(
+  baseOptions: Apollo.QueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>,
+) {
+  return Apollo.useQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(
+    RecipeDetailDocument,
+    baseOptions,
+  );
+}
+export function useRecipeDetailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>,
+) {
+  return Apollo.useLazyQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(
+    RecipeDetailDocument,
+    baseOptions,
+  );
+}
 export type RecipeDetailQueryHookResult = ReturnType<typeof useRecipeDetailQuery>;
 export type RecipeDetailLazyQueryHookResult = ReturnType<typeof useRecipeDetailLazyQuery>;
-export type RecipeDetailQueryResult = Apollo.QueryResult<RecipeDetailQuery, RecipeDetailQueryVariables>;
+export type RecipeDetailQueryResult = Apollo.QueryResult<
+  RecipeDetailQuery,
+  RecipeDetailQueryVariables
+>;
 export const RecipeEditDocument = gql`
-    query RecipeEdit($slug: String!) {
-  recipe(slug: $slug) {
-    ...recipeDetail
+  query RecipeEdit($slug: String!) {
+    recipe(slug: $slug) {
+      ...recipeDetail
+    }
   }
-}
-    ${RecipeDetailFragmentDoc}`;
+  ${RecipeDetailFragmentDoc}
+`;
 
 /**
  * __useRecipeEditQuery__
@@ -715,22 +712,32 @@ export const RecipeEditDocument = gql`
  *   },
  * });
  */
-export function useRecipeEditQuery(baseOptions?: Apollo.QueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
-        return Apollo.useQuery<RecipeEditQuery, RecipeEditQueryVariables>(RecipeEditDocument, baseOptions);
-      }
-export function useRecipeEditLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
-          return Apollo.useLazyQuery<RecipeEditQuery, RecipeEditQueryVariables>(RecipeEditDocument, baseOptions);
-        }
+export function useRecipeEditQuery(
+  baseOptions: Apollo.QueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>,
+) {
+  return Apollo.useQuery<RecipeEditQuery, RecipeEditQueryVariables>(
+    RecipeEditDocument,
+    baseOptions,
+  );
+}
+export function useRecipeEditLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>,
+) {
+  return Apollo.useLazyQuery<RecipeEditQuery, RecipeEditQueryVariables>(
+    RecipeEditDocument,
+    baseOptions,
+  );
+}
 export type RecipeEditQueryHookResult = ReturnType<typeof useRecipeEditQuery>;
 export type RecipeEditLazyQueryHookResult = ReturnType<typeof useRecipeEditLazyQuery>;
 export type RecipeEditQueryResult = Apollo.QueryResult<RecipeEditQuery, RecipeEditQueryVariables>;
 export const RecipeEditOptionsDocument = gql`
-    query RecipeEditOptions {
-  ingredients
-  sideDishes
-  tags
-}
-    `;
+  query RecipeEditOptions {
+    ingredients
+    sideDishes
+    tags
+  }
+`;
 
 /**
  * __useRecipeEditOptionsQuery__
@@ -747,23 +754,40 @@ export const RecipeEditOptionsDocument = gql`
  *   },
  * });
  */
-export function useRecipeEditOptionsQuery(baseOptions?: Apollo.QueryHookOptions<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>) {
-        return Apollo.useQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(RecipeEditOptionsDocument, baseOptions);
-      }
-export function useRecipeEditOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>) {
-          return Apollo.useLazyQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(RecipeEditOptionsDocument, baseOptions);
-        }
+export function useRecipeEditOptionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>,
+) {
+  return Apollo.useQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(
+    RecipeEditOptionsDocument,
+    baseOptions,
+  );
+}
+export function useRecipeEditOptionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    RecipeEditOptionsQuery,
+    RecipeEditOptionsQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(
+    RecipeEditOptionsDocument,
+    baseOptions,
+  );
+}
 export type RecipeEditOptionsQueryHookResult = ReturnType<typeof useRecipeEditOptionsQuery>;
 export type RecipeEditOptionsLazyQueryHookResult = ReturnType<typeof useRecipeEditOptionsLazyQuery>;
-export type RecipeEditOptionsQueryResult = Apollo.QueryResult<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>;
+export type RecipeEditOptionsQueryResult = Apollo.QueryResult<
+  RecipeEditOptionsQuery,
+  RecipeEditOptionsQueryVariables
+>;
 export const RecipeListDocument = gql`
-    query RecipeList {
-  recipes {
-    ...recipeBase
+  query RecipeList {
+    recipes {
+      ...recipeBase
+    }
+    tags
   }
-  tags
-}
-    ${RecipeBaseFragmentDoc}`;
+  ${RecipeBaseFragmentDoc}
+`;
 
 /**
  * __useRecipeListQuery__
@@ -780,21 +804,34 @@ export const RecipeListDocument = gql`
  *   },
  * });
  */
-export function useRecipeListQuery(baseOptions?: Apollo.QueryHookOptions<RecipeListQuery, RecipeListQueryVariables>) {
-        return Apollo.useQuery<RecipeListQuery, RecipeListQueryVariables>(RecipeListDocument, baseOptions);
-      }
-export function useRecipeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeListQuery, RecipeListQueryVariables>) {
-          return Apollo.useLazyQuery<RecipeListQuery, RecipeListQueryVariables>(RecipeListDocument, baseOptions);
-        }
+export function useRecipeListQuery(
+  baseOptions?: Apollo.QueryHookOptions<RecipeListQuery, RecipeListQueryVariables>,
+) {
+  return Apollo.useQuery<RecipeListQuery, RecipeListQueryVariables>(
+    RecipeListDocument,
+    baseOptions,
+  );
+}
+export function useRecipeListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<RecipeListQuery, RecipeListQueryVariables>,
+) {
+  return Apollo.useLazyQuery<RecipeListQuery, RecipeListQueryVariables>(
+    RecipeListDocument,
+    baseOptions,
+  );
+}
 export type RecipeListQueryHookResult = ReturnType<typeof useRecipeListQuery>;
 export type RecipeListLazyQueryHookResult = ReturnType<typeof useRecipeListLazyQuery>;
 export type RecipeListQueryResult = Apollo.QueryResult<RecipeListQuery, RecipeListQueryVariables>;
 export const ResetPasswordDocument = gql`
-    mutation ResetPassword($id: ID!) {
-  resetPassword(id: $id)
-}
-    `;
-export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+  mutation ResetPassword($id: ID!) {
+    resetPassword(id: $id)
+  }
+`;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
 
 /**
  * __useResetPasswordMutation__
@@ -813,20 +850,32 @@ export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutat
  *   },
  * });
  */
-export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
-        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, baseOptions);
-      }
+export function useResetPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>,
+) {
+  return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(
+    ResetPasswordDocument,
+    baseOptions,
+  );
+}
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
-export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
 export const UpdateRecipeDocument = gql`
-    mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!, $image: Upload) {
-  updateRecipe(id: $id, recipe: $recipe, image: $image) {
-    ...recipeDetail
+  mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!, $image: Upload) {
+    updateRecipe(id: $id, recipe: $recipe, image: $image) {
+      ...recipeDetail
+    }
   }
-}
-    ${RecipeDetailFragmentDoc}`;
-export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+  ${RecipeDetailFragmentDoc}
+`;
+export type UpdateRecipeMutationFn = Apollo.MutationFunction<
+  UpdateRecipeMutation,
+  UpdateRecipeMutationVariables
+>;
 
 /**
  * __useUpdateRecipeMutation__
@@ -847,20 +896,32 @@ export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutatio
  *   },
  * });
  */
-export function useUpdateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>) {
-        return Apollo.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(UpdateRecipeDocument, baseOptions);
-      }
+export function useUpdateRecipeMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>,
+) {
+  return Apollo.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(
+    UpdateRecipeDocument,
+    baseOptions,
+  );
+}
 export type UpdateRecipeMutationHookResult = ReturnType<typeof useUpdateRecipeMutation>;
 export type UpdateRecipeMutationResult = Apollo.MutationResult<UpdateRecipeMutation>;
-export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<
+  UpdateRecipeMutation,
+  UpdateRecipeMutationVariables
+>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($id: ID!, $user: UserInput!) {
-  updateUser(id: $id, user: $user) {
-    ...user
+  mutation UpdateUser($id: ID!, $user: UserInput!) {
+    updateUser(id: $id, user: $user) {
+      ...user
+    }
   }
-}
-    ${UserFragmentDoc}`;
-export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+  ${UserFragmentDoc}
+`;
+export type UpdateUserMutationFn = Apollo.MutationFunction<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>;
 
 /**
  * __useUpdateUserMutation__
@@ -880,18 +941,29 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  *   },
  * });
  */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
-      }
+export function useUpdateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>,
+) {
+  return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    UpdateUserDocument,
+    baseOptions,
+  );
+}
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>;
 export const UpdateUserLastActivityDocument = gql`
-    mutation UpdateUserLastActivity {
-  updateUserLastActivity
-}
-    `;
-export type UpdateUserLastActivityMutationFn = Apollo.MutationFunction<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>;
+  mutation UpdateUserLastActivity {
+    updateUserLastActivity
+  }
+`;
+export type UpdateUserLastActivityMutationFn = Apollo.MutationFunction<
+  UpdateUserLastActivityMutation,
+  UpdateUserLastActivityMutationVariables
+>;
 
 /**
  * __useUpdateUserLastActivityMutation__
@@ -909,19 +981,35 @@ export type UpdateUserLastActivityMutationFn = Apollo.MutationFunction<UpdateUse
  *   },
  * });
  */
-export function useUpdateUserLastActivityMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>) {
-        return Apollo.useMutation<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>(UpdateUserLastActivityDocument, baseOptions);
-      }
-export type UpdateUserLastActivityMutationHookResult = ReturnType<typeof useUpdateUserLastActivityMutation>;
-export type UpdateUserLastActivityMutationResult = Apollo.MutationResult<UpdateUserLastActivityMutation>;
-export type UpdateUserLastActivityMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>;
-export const UserListDocument = gql`
-    query UserList {
-  users {
-    ...user
-  }
+export function useUpdateUserLastActivityMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUserLastActivityMutation,
+    UpdateUserLastActivityMutationVariables
+  >,
+) {
+  return Apollo.useMutation<
+    UpdateUserLastActivityMutation,
+    UpdateUserLastActivityMutationVariables
+  >(UpdateUserLastActivityDocument, baseOptions);
 }
-    ${UserFragmentDoc}`;
+export type UpdateUserLastActivityMutationHookResult = ReturnType<
+  typeof useUpdateUserLastActivityMutation
+>;
+export type UpdateUserLastActivityMutationResult = Apollo.MutationResult<
+  UpdateUserLastActivityMutation
+>;
+export type UpdateUserLastActivityMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserLastActivityMutation,
+  UpdateUserLastActivityMutationVariables
+>;
+export const UserListDocument = gql`
+  query UserList {
+    users {
+      ...user
+    }
+  }
+  ${UserFragmentDoc}
+`;
 
 /**
  * __useUserListQuery__
@@ -938,12 +1026,16 @@ export const UserListDocument = gql`
  *   },
  * });
  */
-export function useUserListQuery(baseOptions?: Apollo.QueryHookOptions<UserListQuery, UserListQueryVariables>) {
-        return Apollo.useQuery<UserListQuery, UserListQueryVariables>(UserListDocument, baseOptions);
-      }
-export function useUserListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserListQuery, UserListQueryVariables>) {
-          return Apollo.useLazyQuery<UserListQuery, UserListQueryVariables>(UserListDocument, baseOptions);
-        }
+export function useUserListQuery(
+  baseOptions?: Apollo.QueryHookOptions<UserListQuery, UserListQueryVariables>,
+) {
+  return Apollo.useQuery<UserListQuery, UserListQueryVariables>(UserListDocument, baseOptions);
+}
+export function useUserListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<UserListQuery, UserListQueryVariables>,
+) {
+  return Apollo.useLazyQuery<UserListQuery, UserListQueryVariables>(UserListDocument, baseOptions);
+}
 export type UserListQueryHookResult = ReturnType<typeof useUserListQuery>;
 export type UserListLazyQueryHookResult = ReturnType<typeof useUserListLazyQuery>;
 export type UserListQueryResult = Apollo.QueryResult<UserListQuery, UserListQueryVariables>;

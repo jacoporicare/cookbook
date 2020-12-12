@@ -1,3 +1,10 @@
-export default {
-  breakpoints: ['40em', '52em', '64em', '76em'],
-};
+import { blue } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+});
+
+export default theme;

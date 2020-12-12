@@ -1,36 +1,37 @@
+import { Box, Button, TextField, Typography } from '@material-ui/core';
+import { Help } from '@material-ui/icons';
 import React from 'react';
-
-import { AutosuggestChangeEventHandler } from '../../types';
-import Icon from '../common/Icon';
-import { Box } from '../core';
-import { Textarea } from '../elements';
 
 type Props = {
   directions?: string;
-  onChange: AutosuggestChangeEventHandler;
+  onChange: React.ChangeEventHandler;
 };
 
 function Directions({ directions = '', onChange }: Props) {
   return (
-    <Box mb={3}>
-      <Textarea
-        id="directions"
+    <>
+      <TextField
+        label="Postup"
         name="directions"
-        rows={20}
         value={directions}
+        fullWidth
+        multiline
         onChange={onChange}
       />
-      <Box textAlign="right">
-        <Icon icon="question-circle" regular />{' '}
-        <a
-          href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Návod na Markdown
-        </a>
+      <Box mt={2} textAlign="right">
+        <Typography variant="caption">
+          <Button
+            href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
+            rel="noopener noreferrer"
+            size="small"
+            startIcon={<Help />}
+            target="_blank"
+          >
+            Návod na Markdown
+          </Button>
+        </Typography>
       </Box>
-    </Box>
+    </>
   );
 }
 

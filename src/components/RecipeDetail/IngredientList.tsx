@@ -1,114 +1,124 @@
-import React, { ChangeEvent, Component } from 'react';
+import {
+  Box,
+  InputAdornment,
+  makeStyles,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
-import { Box, Text } from '../core';
-import { InfoAlert, Input, InputAddon, Table, TableCell, TableRow } from '../elements';
 
 type Props = {
-  ingredients: Ingredient[] | null;
-  servingCount: number | null;
+  ingredients?: Ingredient[];
+  servingCount?: number;
 };
 
-type State = {
-  servingCount: number | null;
-};
+const useStyles = makeStyles(theme => ({
+  group: {
+    backgroundColor: colors.gray200,
+  },
+  adorment: {
+    paddingLeft: theme.spacing(2),
+  },
+}));
 
-export default class IngredientList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+function IngredientList(props: Props) {
+  const classes = useStyles();
 
-    this.state = {
-      servingCount: props.servingCount,
-    };
-  }
+  const [servingCount, setServingCount] = useState(props.servingCount);
 
-  componentWillReceiveProps(nextProps: Props) {
-    this.setState({
-      servingCount: nextProps.servingCount,
-    });
-  }
+  useEffect(() => {
+    setServingCount(props.servingCount);
+  }, [props.servingCount]);
 
-  getAmount(amount: number | null) {
+  function getAmount(amount?: number) {
     if (!amount) {
       return '';
     }
 
-    if (!this.state.servingCount || !this.props.servingCount) {
+    if (!servingCount || !props.servingCount) {
       return amount.toLocaleString('cs');
     }
 
-    return ((amount / this.props.servingCount) * this.state.servingCount).toLocaleString('cs');
+    return ((amount / props.servingCount) * servingCount).toLocaleString('cs');
   }
 
-  handleServingCountChange = (event: ChangeEvent<HTMLInputElement>) => {
+  function handleServingCountChange(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
     const parsedValue = Number(event.target.value);
 
-    this.setState({
-      servingCount: value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : null,
-    });
-  };
+    setServingCount(value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : undefined);
+  }
 
-  handleServingCountBlur = () => {
-    if (this.props.servingCount && !this.state.servingCount) {
-      this.setState({ servingCount: this.props.servingCount });
+  function handleServingCountBlur() {
+    if (props.servingCount && !servingCount) {
+      setServingCount(props.servingCount);
     }
-  };
+  }
 
-  render() {
-    const { ingredients, servingCount: initialServingCount } = this.props;
-    const { servingCount } = this.state;
+  const { ingredients, servingCount: initialServingCount } = props;
 
-    if (!ingredients || !ingredients.length) {
-      return <InfoAlert>Žádné ingredience.</InfoAlert>;
-    }
+  return (
+    <>
+      <Typography component="h3" variant="h5" gutterBottom>
+        Ingredience
+      </Typography>
+      <TableContainer component={Paper}>
+        {(!ingredients || !ingredients.length) && <Alert severity="info">Žádné ingredience.</Alert>}
 
-    return (
-      <>
         {Boolean(initialServingCount) && (
-          <Box display="flex" mb={2}>
-            <InputAddon isPrepend>Počet porcí</InputAddon>
-            <Input
-              flex="auto"
-              min={1}
+          <Box mt={1}>
+            <TextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment className={classes.adorment} position="start">
+                    Počet porcí
+                  </InputAdornment>
+                ),
+              }}
+              inputProps={{ min: 1 }}
               type="number"
               value={!servingCount ? '' : servingCount}
-              hasPrependAddon
-              onBlur={this.handleServingCountBlur}
-              onChange={this.handleServingCountChange}
+              fullWidth
+              onBlur={handleServingCountBlur}
+              onChange={handleServingCountChange}
             />
           </Box>
         )}
 
-        <Table width={1}>
-          <tbody>
-            {ingredients.map(ingredient => {
-              const { _id, isGroup, name, amount, amountUnit } = ingredient;
+        {ingredients && ingredients.length > 0 && (
+          <Table size="small">
+            <TableBody>
+              {ingredients.map(ingredient => {
+                const { _id, isGroup, name, amount, amountUnit } = ingredient;
 
-              if (isGroup) {
                 return (
-                  <TableRow key={_id} css={{ backgroundColor: colors.gray200 }}>
-                    <TableCell colSpan={3} textAlign="center">
-                      <Text fontWeight={600}> {name}</Text>
+                  <TableRow key={_id} className={isGroup ? classes.group : undefined}>
+                    <TableCell align="right" width="20%">
+                      {!isGroup && getAmount(amount ?? undefined)}
+                    </TableCell>
+                    <TableCell width="10%">{!isGroup && amountUnit}</TableCell>
+                    <TableCell>
+                      <Typography variant={isGroup ? 'subtitle1' : 'body1'}>{name}</Typography>
                     </TableCell>
                   </TableRow>
                 );
-              }
-
-              return (
-                <TableRow key={_id}>
-                  <TableCell textAlign="right" width="20%">
-                    {this.getAmount(amount)}
-                  </TableCell>
-                  <TableCell width="10%">{amountUnit}</TableCell>
-                  <TableCell>{name}</TableCell>
-                </TableRow>
-              );
-            })}
-          </tbody>
-        </Table>
-      </>
-    );
-  }
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </TableContainer>
+    </>
+  );
 }
+
+export default IngredientList;

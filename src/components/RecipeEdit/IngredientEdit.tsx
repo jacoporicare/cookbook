@@ -1,9 +1,8 @@
+import { Box } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
-import { AutosuggestChangeEventHandler } from '../../types';
-import { Box, Text } from '../core';
 
 import IngredientForm from './IngredientForm';
 import IngredientGroupForm from './IngredientGroupForm';
@@ -26,24 +25,14 @@ type Props = {
   onSort: SortEndHandler;
 };
 
-const Heading = Text.withComponent('h3');
-Heading.defaultProps = {
-  fontWeight: 300,
-};
-
 function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
   const [name, setName] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [amountUnit, setAmountUnit] = useState<string | null>(null);
   const [group, setGroup] = useState<string>();
 
-  const handleIngredientChange: AutosuggestChangeEventHandler = (
-    event,
-    selectEvent,
-    targetName,
-  ) => {
-    const name = targetName || event.currentTarget.name;
-    const value = selectEvent ? selectEvent.newValue : event.currentTarget.value;
+  function handleIngredientChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.currentTarget;
 
     switch (name) {
       case 'name':
@@ -63,7 +52,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
       default:
         break;
     }
-  };
+  }
 
   function handleGroupChange(event: ChangeEvent<HTMLInputElement>) {
     setGroup(event.target.value);
@@ -91,11 +80,8 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
 
   return (
     <>
-      <Box mb={3}>
-        <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
-      </Box>
-      <Box mb={3}>
-        <Heading>Přidat ingredienci</Heading>
+      <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+      <Box mt={3}>
         <IngredientForm
           amount={amount}
           amountUnit={amountUnit}
@@ -105,8 +91,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
           onChange={handleIngredientChange}
         />
       </Box>
-      <Box>
-        <Heading>Přidat skupinu</Heading>
+      <Box mt={3}>
         <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleGroupChange} />
       </Box>
     </>

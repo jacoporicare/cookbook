@@ -1,9 +1,5 @@
-import { css } from '@emotion/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 import React from 'react';
-
-import { theme } from '../../styles/colors';
-import { Box } from '../core';
-import { Heading } from '../elements';
 
 type Props = {
   children: React.ReactNode;
@@ -12,25 +8,14 @@ type Props = {
 
 function PageHeading({ children, buttons }: Props) {
   return (
-    <Heading color={theme.primary} fontSize={[5, 6]} fontWeight={300} m={undefined} mb={[3, 4]}>
-      <Box alignItems="center" display="flex" flexWrap="wrap" justifyContent="space-between">
-        <Box>{children}</Box>
-        <Box
-          css={css`
-            button,
-            a {
-              display: inline-block;
-              margin-left: 8px;
-            }
-          `}
-          display="flex"
-          flex="auto"
-          justifyContent="flex-end"
-        >
-          {buttons}
-        </Box>
-      </Box>
-    </Heading>
+    <Box mb={[3, 4]}>
+      <Grid alignItems="center" justify="space-between" wrap="wrap" container>
+        <Grid item>
+          <Typography variant="h2">{children}</Typography>
+        </Grid>
+        <Grid item>{buttons}</Grid>
+      </Grid>
+    </Box>
   );
 }
 

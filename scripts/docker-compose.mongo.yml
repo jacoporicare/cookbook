@@ -3,6 +3,7 @@ version: '3.2'
 services:
   db:
     image: mongo:4.2
+    restart: always
     ports:
       - '27017:27017'
     volumes:
@@ -12,6 +13,7 @@ services:
 
   admin:
     image: mongo-express
+    restart: always
     ports:
       - '8081:8081'
     depends_on:

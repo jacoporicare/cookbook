@@ -1,13 +1,10 @@
-import styled from '@emotion/styled';
+import { Box, Chip, Grid, IconButton, Typography } from '@material-ui/core';
+import { Edit, Delete } from '@material-ui/icons';
 import Link from 'next/link';
 import React from 'react';
 
-import { theme } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import Icon from '../common/Icon';
 import PageHeading from '../common/PageHeading';
-import { Box } from '../core';
-import { Button, DangerButton } from '../elements';
 
 type Props = {
   preparationTime: number | null;
@@ -18,15 +15,6 @@ type Props = {
   isAuthor?: boolean;
   onDeleteShow: () => void;
 };
-
-const Tag = styled.span({
-  display: 'inline-block',
-  marginRight: '0.5rem',
-  padding: '0 0.25rem',
-  backgroundColor: theme.primary,
-  color: 'white',
-  fontSize: '0.75rem',
-});
 
 function RecipeHeader({
   preparationTime,
@@ -44,15 +32,13 @@ function RecipeHeader({
           isAuthor && (
             <>
               <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit" passHref>
-                <Button as="a">
-                  <Icon icon="edit" regular />
-                  Upravit
-                </Button>
-              </Link>
-              <DangerButton onClick={onDeleteShow}>
-                <Icon icon="trash-alt" regular />
-                Smazat
-              </DangerButton>
+                <IconButton aria-label="Upravit" component="a">
+                  <Edit />
+                </IconButton>
+              </Link>{' '}
+              <IconButton aria-label="Smazat" onClick={onDeleteShow}>
+                <Delete />
+              </IconButton>
             </>
           )
         }
@@ -61,19 +47,30 @@ function RecipeHeader({
       </PageHeading>
 
       {Boolean(preparationTime || sideDish || tags?.length) && (
-        <Box display="flex" mb={3}>
-          {Boolean(preparationTime || sideDish) && (
-            <Box mr={3}>
-              <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
-            </Box>
-          )}
-          {!!tags?.length && (
-            <Box>
-              {tags?.map(tag => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </Box>
-          )}
+        <Box mb={2}>
+          <Grid alignItems="center" spacing={1} container>
+            {Boolean(preparationTime || sideDish) && (
+              <Grid xs={12} item md>
+                <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
+              </Grid>
+            )}
+            {!!tags?.length && (
+              <Grid xs={12} item md>
+                <Grid alignItems="center" justify="flex-end" spacing={2} container>
+                  <Grid item>
+                    <Typography color="textSecondary" component="span">
+                      Štítky
+                    </Typography>
+                  </Grid>
+                  {tags?.map(tag => (
+                    <Grid key={tag} item>
+                      <Chip color="primary" label={tag} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
         </Box>
       )}
     </>

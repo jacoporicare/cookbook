@@ -1,8 +1,8 @@
+import { Box, Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React from 'react';
 
 import Spinner from '../common/Spinner';
-import { Box } from '../core';
-import { DangerAlert, Input, Label, SuccessButton } from '../elements';
 
 type Props = {
   invalidPassword?: boolean;
@@ -21,67 +21,79 @@ function ChangePassword(props: Props) {
   return (
     <>
       {props.submitting && <Spinner overlay />}
-      <h2>Změna hesla</h2>
+      <Typography component="h3" variant="h4" gutterBottom>
+        Změna hesla
+      </Typography>
       <form onSubmit={props.onSubmit}>
-        <Box maxWidth={400}>
-          <Box mb={3}>
-            <Label htmlFor="password">Současné heslo</Label>
-            <Input
-              hasError={props.password === ''}
-              id="password"
-              name="password"
-              type="password"
-              value={props.password || ''}
-              required
-              onChange={e => {
-                props.onPasswordChange(e.currentTarget.value);
-                props.onInvalidPasswordChange(false);
-              }}
-            />
-          </Box>
-          <Box mb={3}>
-            <Label htmlFor="newPassword">Nové heslo</Label>
-            <Input
-              hasError={props.newPassword === ''}
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              value={props.newPassword || ''}
-              required
-              onChange={e => props.onNewPasswordChange(e.currentTarget.value)}
-            />
-          </Box>
-          <Box mb={3}>
-            <Label htmlFor="newPasswordConfirm">Potvrďte nové heslo</Label>
-            <Input
-              hasError={props.newPasswordConfirm === ''}
-              id="newPasswordConfirm"
-              name="newPasswordConfirm"
-              type="password"
-              value={props.newPasswordConfirm || ''}
-              required
-              onChange={e => props.onNewPasswordConfirmChange(e.currentTarget.value)}
-            />
-          </Box>
-          <Box>
-            <SuccessButton
-              disabled={
-                props.submitting ||
-                !props.password ||
-                !props.newPassword ||
-                !props.newPasswordConfirm ||
-                props.newPassword !== props.newPasswordConfirm
-              }
-              type="submit"
-            >
-              Změnit heslo
-            </SuccessButton>
-          </Box>
+        <Box maxWidth="400px">
+          <Grid direction="column" spacing={3} container>
+            <Grid item>
+              <TextField
+                error={props.password === ''}
+                label="Současné heslo"
+                name="password"
+                type="password"
+                value={props.password || ''}
+                fullWidth
+                required
+                onChange={e => {
+                  props.onPasswordChange(e.currentTarget.value);
+                  props.onInvalidPasswordChange(false);
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                error={props.newPassword === ''}
+                label="Nové heslo"
+                name="newPassword"
+                type="password"
+                value={props.newPassword || ''}
+                fullWidth
+                required
+                onChange={e => props.onNewPasswordChange(e.currentTarget.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                error={props.newPasswordConfirm === ''}
+                label="Potvrďte nové heslo"
+                name="newPasswordConfirm"
+                type="password"
+                value={props.newPasswordConfirm || ''}
+                fullWidth
+                required
+                onChange={e => props.onNewPasswordConfirmChange(e.currentTarget.value)}
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                color="primary"
+                disabled={
+                  props.submitting ||
+                  !props.password ||
+                  !props.newPassword ||
+                  !props.newPasswordConfirm ||
+                  props.newPassword !== props.newPasswordConfirm
+                }
+                type="submit"
+                variant="contained"
+              >
+                Změnit heslo
+              </Button>
+            </Grid>
+            {props.invalidPassword && (
+              <Grid item>
+                <Alert severity="error">Neplatné současné heslo.</Alert>
+              </Grid>
+            )}
+            {(props.newPassword || '') !== (props.newPasswordConfirm || '') && (
+              <Grid item>
+                <Alert severity="error">Nová hesla se neshodují.</Alert>
+              </Grid>
+            )}
+          </Grid>
         </Box>
-        {props.invalidPassword && <DangerAlert mt={3}>Neplatné současné heslo.</DangerAlert>}
-        {(props.newPassword || '') !== (props.newPasswordConfirm || '') && (
-          <DangerAlert mt={3}>Nová hesla se neshodují.</DangerAlert>
-        )}
       </form>
     </>
   );

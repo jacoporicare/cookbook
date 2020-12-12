@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { Text } from '../core';
-
 function Footer() {
-  return <Text fontSize="0.75em">© {new Date().getFullYear()} · Žrádelník</Text>;
+  return <>© {new Date().getFullYear()} · Žrádelník</>;
 }
 
 export default Footer;

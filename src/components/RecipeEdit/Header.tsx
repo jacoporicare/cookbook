@@ -1,35 +1,49 @@
-import Link from 'next/link';
+import { CircularProgress, colors, Fab, makeStyles, Zoom } from '@material-ui/core';
+import { Save } from '@material-ui/icons';
 import React from 'react';
 
-import Icon from '../common/Icon';
+import useHideOnScroll from '../../hooks/useHideOnScroll';
+import FabContainer from '../common/FabContainer';
 import PageHeading from '../common/PageHeading';
-import { Button, SuccessButton } from '../elements';
 
 type Props = {
   title?: string;
   isNew: boolean;
   isSaving: boolean;
   changed: boolean;
-  slug?: string;
 };
 
-function Header({ title, isNew, isSaving, changed, slug }: Props) {
+const useStyles = makeStyles({
+  fabProgress: {
+    color: colors.green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+});
+
+function Header({ title, isNew, isSaving, changed }: Props) {
+  const classes = useStyles();
+  const fabHidden = useHideOnScroll();
+
   return (
-    <PageHeading
-      buttons={
-        <>
-          <SuccessButton disabled={!title || isSaving || !changed}>
-            <Icon icon="save" regular />
-            {isSaving ? 'Ukládání…' : 'Uložit'}
-          </SuccessButton>
-          <Link as={isNew ? '/' : `/recept/${slug}`} href={isNew ? '/' : `/recept/[slug]`} passHref>
-            <Button as="a">Zrušit</Button>
-          </Link>
-        </>
-      }
-    >
-      {title || (isNew ? 'Nový recept' : 'Název receptu')}
-    </PageHeading>
+    <>
+      <PageHeading>{title || (isNew ? 'Nový recept' : ' receptu')}</PageHeading>
+      <FabContainer>
+        <Zoom in={!fabHidden}>
+          <Fab
+            aria-label="Uložit"
+            color="primary"
+            disabled={!title || isSaving || !changed}
+            type="submit"
+          >
+            <Save />
+            {isSaving && <CircularProgress className={classes.fabProgress} size={68} />}
+          </Fab>
+        </Zoom>
+      </FabContainer>
+    </>
   );
 }
 
