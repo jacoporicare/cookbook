@@ -3,7 +3,6 @@ import React, { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
-import { AutosuggestChangeEventHandler } from '../../types';
 import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
 import Spinner from '../common/Spinner';
@@ -28,17 +27,17 @@ type Props = {
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
   onAddIngredient: AddIngredientEventHandler;
-  onChange: AutosuggestChangeEventHandler;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
   onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
   onSortIngredient: SortEndHandler;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onTagsChange: (tags: string[]) => void;
-  preparationTime: number | null;
-  servingCount: number | null;
-  sideDish: string | null;
+  preparationTime?: number;
+  servingCount?: number;
+  sideDish?: string;
   sideDishOptions: string[];
-  tags: string[] | null;
+  tags?: string[];
   tagOptions: string[];
   title?: string;
 };
@@ -77,7 +76,7 @@ function RecipeEdit({
 
       <Box mt={4}>
         <Grid spacing={4} container>
-          <Grid md={2} xs={12} item>
+          <Grid md={3} xl={2} xs={12} item>
             <Typography component="h3" variant="h5" gutterBottom>
               Základní údaje
             </Typography>
@@ -115,7 +114,7 @@ function RecipeEdit({
             </Paper>
           </Grid>
 
-          <Grid md={6} xs={12} item>
+          <Grid md={5} xl={6} xs={12} item>
             <Typography component="h3" variant="h5" gutterBottom>
               Postup
             </Typography>

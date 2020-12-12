@@ -42,11 +42,8 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     cursor: 'pointer',
     overflow: 'hidden',
-    '&:hover': {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [Text as any]: {
-        zIndex: 3,
-      },
+    '&:hover $text': {
+      zIndex: 3,
     },
   },
   active: {

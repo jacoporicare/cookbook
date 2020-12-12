@@ -1,11 +1,9 @@
 import { TextField } from '@material-ui/core';
 import React, { useRef, useEffect } from 'react';
 
-import { AutosuggestChangeEventHandler } from '../../types';
-
 type Props = {
   title?: string;
-  onChange: AutosuggestChangeEventHandler;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 function Title({ title = '', onChange }: Props) {

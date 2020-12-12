@@ -10,9 +10,9 @@ import IngredientList from './IngredientList';
 
 type Props = {
   title: string;
-  ingredients: Ingredient[] | null;
-  servingCount: number | null;
-  directions: string | null;
+  ingredients?: Ingredient[];
+  servingCount?: number;
+  directions?: string;
   lastModifiedDate: number;
   imageUrl?: string;
   imageFullUrl?: string;

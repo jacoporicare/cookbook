@@ -1,5 +1,4 @@
-import { blue, cyan, green, grey, red, yellow } from '@material-ui/core/colors';
-import { parseToRgb } from 'polished';
+import { blue, grey, red } from '@material-ui/core/colors';
 
 export const colors = {
   white: '#fff',
@@ -16,20 +15,3 @@ export const colors = {
   blue: blue[500],
   red: red[700],
 };
-
-export const theme = {
-  primary: blue[500],
-  success: green[800],
-  info: cyan[600],
-  warning: yellow[500],
-  danger: red[700],
-  dark: grey[900],
-  light: grey[100],
-};
-
-export function colorYiq(color: string) {
-  const { red, green, blue } = parseToRgb(color);
-  const yiq = (red * 299 + green * 587 + blue * 114) / 1000;
-
-  return yiq >= 150 ? grey[900] : 'white';
-}

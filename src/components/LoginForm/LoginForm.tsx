@@ -1,10 +1,17 @@
-import { Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
 import PageHeading from '../common/PageHeading';
 import Spinner from '../common/Spinner';
-import { Box } from '../core';
 
 type Props = {
   username: string;

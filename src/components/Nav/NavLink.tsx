@@ -4,14 +4,14 @@ import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { colors, theme } from '../../styles/colors';
+import { colors } from '../../styles/colors';
 
 type Props = LinkProps & {
   activeHref?: string;
   children: React.ReactNode;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   navItem: {
     color: colors.gray600,
     fontSize: '20px',
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
       height: '4px',
       transition: 'transform 250ms ease',
       transform: 'scaleX(0)',
-      backgroundColor: theme.primary,
+      backgroundColor: theme.palette.primary.main,
     },
 
     '&:hover': {
@@ -54,7 +54,7 @@ const useStyles = makeStyles({
     },
   },
   active: {},
-});
+}));
 
 function NavLink({ activeHref, children, ...linkProps }: Props) {
   const classes = useStyles();

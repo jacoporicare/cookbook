@@ -2,11 +2,9 @@ import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { Help } from '@material-ui/icons';
 import React from 'react';
 
-import { AutosuggestChangeEventHandler } from '../../types';
-
 type Props = {
   directions?: string;
-  onChange: AutosuggestChangeEventHandler;
+  onChange: React.ChangeEventHandler;
 };
 
 function Directions({ directions = '', onChange }: Props) {

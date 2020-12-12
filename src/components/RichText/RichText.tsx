@@ -2,8 +2,6 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { theme, colorYiq } from '../../styles/colors';
-
 type Props = {
   text?: string;
 };
@@ -11,7 +9,7 @@ type Props = {
 const stepSize = 2;
 const stepLineHeight = 1.5;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     '& ol': {
       listStyleType: 'none',
@@ -39,8 +37,8 @@ const useStyles = makeStyles({
           lineHeight: `${stepSize}em`,
           textAlign: 'center',
           borderRadius: '50%',
-          color: colorYiq(theme.primary),
-          backgroundColor: theme.primary,
+          color: theme.palette.primary.contrastText,
+          backgroundColor: theme.palette.primary.main,
         },
       },
     },
@@ -49,7 +47,7 @@ const useStyles = makeStyles({
       marginTop: 0,
     },
   },
-});
+}));
 
 function RichText({ text = '' }: Props) {
   const classes = useStyles();

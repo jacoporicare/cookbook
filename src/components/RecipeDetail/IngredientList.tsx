@@ -18,8 +18,8 @@ import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
 
 type Props = {
-  ingredients: Ingredient[] | null;
-  servingCount: number | null;
+  ingredients?: Ingredient[];
+  servingCount?: number;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +40,7 @@ function IngredientList(props: Props) {
     setServingCount(props.servingCount);
   }, [props.servingCount]);
 
-  function getAmount(amount: number | null) {
+  function getAmount(amount?: number) {
     if (!amount) {
       return '';
     }
@@ -56,7 +56,7 @@ function IngredientList(props: Props) {
     const { value } = event.target;
     const parsedValue = Number(event.target.value);
 
-    setServingCount(value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : null);
+    setServingCount(value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : undefined);
   }
 
   function handleServingCountBlur() {
@@ -104,7 +104,7 @@ function IngredientList(props: Props) {
                 return (
                   <TableRow key={_id} className={isGroup ? classes.group : undefined}>
                     <TableCell align="right" width="20%">
-                      {!isGroup && getAmount(amount)}
+                      {!isGroup && getAmount(amount ?? undefined)}
                     </TableCell>
                     <TableCell width="10%">{!isGroup && amountUnit}</TableCell>
                     <TableCell>

@@ -3,7 +3,6 @@ import React, { ChangeEvent, useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
-import { AutosuggestChangeEventHandler } from '../../types';
 
 import IngredientForm from './IngredientForm';
 import IngredientGroupForm from './IngredientGroupForm';
@@ -32,13 +31,8 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
   const [amountUnit, setAmountUnit] = useState<string | null>(null);
   const [group, setGroup] = useState<string>();
 
-  const handleIngredientChange: AutosuggestChangeEventHandler = (
-    event,
-    selectEvent,
-    targetName,
-  ) => {
-    const name = targetName || event.currentTarget.name;
-    const value = selectEvent ? selectEvent.newValue : event.currentTarget.value;
+  function handleIngredientChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.currentTarget;
 
     switch (name) {
       case 'name':
@@ -58,7 +52,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
       default:
         break;
     }
-  };
+  }
 
   function handleGroupChange(event: ChangeEvent<HTMLInputElement>) {
     setGroup(event.target.value);

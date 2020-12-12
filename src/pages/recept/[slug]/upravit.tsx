@@ -25,7 +25,6 @@ import {
   RecipeInput,
 } from '../../../generated/graphql';
 import useSupportsWebP from '../../../hooks/useSupportsWebP';
-import { AutosuggestChangeEventHandler } from '../../../types';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -43,15 +42,15 @@ function RecipeEditPage() {
   const [snackbar, setSnackbar] = useState<[Color, string]>();
 
   const [changed, setChanged] = useState(false);
-  const [image, setImage] = useState<File | undefined>(undefined);
+  const [image, setImage] = useState<File>();
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [sideDish, setSideDish] = useState('');
   const [directions, setDirections] = useState('');
-  const [preparationTime, setPreparationTime] = useState<number | null>(null);
-  const [servingCount, setServingCount] = useState<number | null>(null);
+  const [preparationTime, setPreparationTime] = useState<number>();
+  const [servingCount, setServingCount] = useState<number>();
   const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id'>[]>([]);
-  const [tags, setTags] = useState<string[] | null>(null);
+  const [tags, setTags] = useState<string[]>();
 
   const slug = router.query.slug?.toString();
 
@@ -97,8 +96,8 @@ function RecipeEditPage() {
     setSideDish(editedRecipe.sideDish || '');
     setTags(editedRecipe.tags || []);
     setDirections(editedRecipe.directions || '');
-    setPreparationTime(editedRecipe.preparationTime);
-    setServingCount(editedRecipe.servingCount);
+    setPreparationTime(editedRecipe.preparationTime ?? undefined);
+    setServingCount(editedRecipe.servingCount ?? undefined);
     setIngredients(
       // To remove __typename
       (editedRecipe.ingredients || []).map(i => ({
@@ -126,33 +125,31 @@ function RecipeEditPage() {
     };
   }, [changed]);
 
-  const handleChange: AutosuggestChangeEventHandler = (event, selectEvent, targetName) => {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.currentTarget;
-    const key = targetName || name;
-    const rawValue = selectEvent ? selectEvent.newValue : value;
 
-    switch (key) {
+    switch (name) {
       case 'title':
-        setTitle(rawValue);
+        setTitle(value);
         break;
 
       case 'sideDish':
-        setSideDish(rawValue);
+        setSideDish(value);
         break;
 
       case 'directions':
-        setDirections(rawValue);
+        setDirections(value);
         break;
 
       case 'preparationTime': {
-        const parsed = Number.parseInt(rawValue, 10);
-        setPreparationTime(Number.isNaN(parsed) ? null : parsed);
+        const parsed = Number.parseInt(value, 10);
+        setPreparationTime(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
       case 'servingCount': {
-        const parsed = Number.parseInt(rawValue, 10);
-        setServingCount(Number.isNaN(parsed) ? null : parsed);
+        const parsed = Number.parseInt(value, 10);
+        setServingCount(Number.isNaN(parsed) ? undefined : parsed);
         break;
       }
 
@@ -161,7 +158,7 @@ function RecipeEditPage() {
     }
 
     setChanged(true);
-  };
+  }
 
   function handleAddIngredient(name: string, amount: number | null, amountUnit: string | null) {
     setChanged(true);
