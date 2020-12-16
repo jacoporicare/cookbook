@@ -23,6 +23,7 @@ deploy-dev:
   stage: deploy
   except:
     - master
+    - tags
   tags:
     - hukot-web
   when: manual
