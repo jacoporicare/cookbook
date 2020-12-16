@@ -70,7 +70,9 @@ const resolvers: IResolvers = {
 
       return {
         token:
-          user && sha512(args.password, user.salt) === user.password ? signToken(user.id) : null,
+          user?.id && sha512(args.password, user.salt) === user.password
+            ? signToken(user.id)
+            : null,
       };
     },
     createRecipe: authenticated(

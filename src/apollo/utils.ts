@@ -16,7 +16,8 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
   const recipe = recipeDocument.toObject({ virtuals: true });
 
   if (recipe.imageName) {
-    recipe.image = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (recipe as any).image = {
       fullUrl: getFullImageUrl(recipe.imageName),
       thumbUrl: getThumbImageUrl(recipe.imageName, 'jpeg'),
       thumbWebPUrl: getThumbImageUrl(recipe.imageName, 'webp'),

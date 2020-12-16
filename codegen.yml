@@ -14,3 +14,6 @@ generates:
       withHOC: false
       withHooks: true
       avoidOptionals: true
+  schema.json:
+    plugins:
+      - introspection
