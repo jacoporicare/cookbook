@@ -7,6 +7,8 @@ const apolloServer = new ApolloServer({
   context: ctx => ctx,
   playground:
     process.env.NODE_ENV !== 'production' || process.env.APOLLO_PLAYGROUND_ENABLED === 'true',
+  introspection:
+    process.env.NODE_ENV !== 'production' || process.env.APOLLO_PLAYGROUND_ENABLED === 'true',
 });
 
 export const config = {
