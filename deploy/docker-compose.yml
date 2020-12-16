@@ -25,6 +25,7 @@ services:
       LETSENCRYPT_EMAIL: ***REMOVED***
       MONGO_URI: mongodb://db/cookbook
       RECIPE_IMAGES_S3_BUCKET: '${RECIPE_IMAGES_S3_BUCKET}'
+      APOLLO_PLAYGROUND_ENABLED: '${APOLLO_PLAYGROUND_ENABLED}'
 
 networks:
   cookbook:
