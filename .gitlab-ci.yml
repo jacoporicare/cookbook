@@ -22,6 +22,7 @@ build:
 deploy-dev:
   stage: deploy
   except:
+    - develop
     - master
     - tags
   tags:
@@ -60,6 +61,22 @@ stop-env-dev:
     - docker-compose rm
     - cd ~
     - rm -rf $DEV_DIR
+
+deploy-test:
+  stage: deploy
+  only:
+    - develop
+  tags:
+    - hukot-web
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - rsync -a --delete deploy/ $DEV_DIR
+    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
+    - cd $DEV_DIR
+    - envsubst < ".env.dev" > ".env"
+    - docker-compose pull
+    - docker-compose down --remove-orphans
+    - docker-compose up -d
 
 deploy-prod:
   stage: deploy
