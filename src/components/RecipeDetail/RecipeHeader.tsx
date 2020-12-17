@@ -49,11 +49,11 @@ function RecipeHeader({
       {Boolean(preparationTime || sideDish || tags?.length) && (
         <Box mb={2}>
           <Grid alignItems="center" justify="space-between" spacing={1} container>
-            {Boolean(preparationTime || sideDish) && (
-              <Grid md="auto" xs={12} item>
+            <Grid md="auto" xs={12} item>
+              {Boolean(preparationTime || sideDish) && (
                 <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />
-              </Grid>
-            )}
+              )}
+            </Grid>
             {!!tags?.length && (
               <Grid md="auto" xs={12} item>
                 <Grid alignItems="center" spacing={2} container>
