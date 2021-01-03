@@ -85,7 +85,8 @@ const resolvers: IResolvers = {
 
         if (args.image) {
           const image = await fileUploadToBuffer(args.image);
-          await uploadImage(newRecipe.imageName!, image);
+          // No await to speed up the request
+          uploadImage(newRecipe.imageName!, image).catch(console.error);
         }
 
         return mapRecipe(newRecipe);
@@ -120,12 +121,16 @@ const resolvers: IResolvers = {
 
         if (args.image) {
           const image = await fileUploadToBuffer(args.image);
+          const origRecipeImageName = origRecipe.imageName;
 
-          await uploadImage(newRecipe.imageName!, image);
-
-          if (origRecipe.imageName) {
-            await deleteImage(origRecipe.imageName);
-          }
+          // No await to speed up the request
+          uploadImage(newRecipe.imageName!, image)
+            .then(() => {
+              if (origRecipeImageName) {
+                return deleteImage(origRecipeImageName);
+              }
+            })
+            .catch(console.error);
         } else if (origRecipe.imageName && origRecipe.slug !== newRecipe.slug) {
           await renameImage(origRecipe.imageName, newRecipe.imageName!);
         }
@@ -145,7 +150,7 @@ const resolvers: IResolvers = {
       }
 
       if (recipe.imageName) {
-        // We don't await
+        // No await to speed up the request
         deleteImage(recipe.imageName);
       }
 
