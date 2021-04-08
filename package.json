@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://www.zradelnik.eu/",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "next",
     "dev:inspect": "NODE_OPTIONS='--inspect' next",
     "build": "next build",
@@ -52,7 +53,6 @@
     "@types/classnames": "^2.2.11",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/lodash.flow": "^3.5.6",
-    "@types/match-sorter": "^6.0.0",
     "@types/mongoose": "^5.10.4",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
@@ -85,5 +85,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "fs-capacitor": "^6.2.0"
   }
 }
