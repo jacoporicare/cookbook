@@ -24,6 +24,8 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
     };
   }
 
+  recipe.deleted = Boolean(recipe.deleted);
+
   return recipe;
 }
 

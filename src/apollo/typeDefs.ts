@@ -18,6 +18,7 @@ const typeDefs = gql`
     lastModifiedDate: Date!
     ingredients: [Ingredient!]
     tags: [String!]
+    deleted: Boolean!
   }
 
   type Image {
@@ -71,7 +72,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    recipes: [Recipe!]!
+    recipes(since: Date, deleted: Boolean): [Recipe!]!
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!

@@ -23,10 +23,22 @@ connect();
 
 const resolvers: IResolvers = {
   Query: {
-    recipes: async () =>
-      (await recipeModel.find({}).populate('user'))
+    recipes: async (_, args: { since?: Date; deleted?: boolean }) => {
+      const filter: mongoose.FilterQuery<RecipeDocument> = {};
+
+      if (args.since) {
+        filter.lastModifiedDate = { $gt: args.since };
+      }
+
+      if (!args.deleted) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        filter.deleted = { $in: [false, null] as any };
+      }
+
+      return (await recipeModel.find(filter).populate('user'))
         .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
-        .map(mapRecipe),
+        .map(mapRecipe);
+    },
     recipe: async (_, args: { id?: string; slug?: string }) => {
       if (!args.id && !args.slug) {
         return null;
@@ -78,6 +90,7 @@ const resolvers: IResolvers = {
     createRecipe: authenticated(
       async (_, args: { recipe: RecipeInput; image?: Promise<FileUpload> }, ctx) => {
         const recipeToSave = prepareRecipe(args.recipe, Boolean(args.image), ctx.currentUser);
+        await recipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
         const recipe = await recipeModel.create(recipeToSave as RecipeDocument);
         recipe.populate('user');
 
@@ -143,7 +156,10 @@ const resolvers: IResolvers = {
         throw new Error('Unauthorized');
       }
 
-      const recipe = await recipeModel.findByIdAndRemove(args.id);
+      const recipe = await recipeModel.findByIdAndUpdate(args.id, {
+        deleted: true,
+        lastModifiedDate: new Date(),
+      });
 
       if (!recipe) {
         return false;

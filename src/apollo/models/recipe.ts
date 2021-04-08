@@ -22,6 +22,7 @@ export type Recipe = {
   ingredients?: Ingredient[];
   imageName?: string;
   tags?: string[];
+  deleted?: boolean;
 };
 
 export type RecipeDocument = Document & Recipe;
@@ -48,6 +49,7 @@ const RecipeSchema = new Schema({
   },
   imageName: String,
   tags: { type: [String], default: undefined },
+  deleted: Boolean,
 });
 
 /**
