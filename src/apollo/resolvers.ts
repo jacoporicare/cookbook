@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import { connect } from '../db';
 
 import { signToken, authenticated } from './auth';
-import { deleteImage, renameImage, uploadImage, fileUploadToBuffer } from './images';
+import { deleteImage, renameImage, uploadImage } from './images';
 import recipeModel, { RecipeDocument } from './models/recipe';
 import userModel, { User, UserDocument } from './models/user';
 import { FileUpload, RecipeInput, UserInput } from './types';
@@ -97,9 +97,8 @@ const resolvers: IResolvers = {
         const newRecipe = await recipe.execPopulate();
 
         if (args.image) {
-          const image = await fileUploadToBuffer(args.image);
-          // No await to speed up the request
-          uploadImage(newRecipe.imageName!, image).catch(console.error);
+          const fileUpload = await args.image;
+          await uploadImage(newRecipe.imageName!, fileUpload);
         }
 
         return mapRecipe(newRecipe);
@@ -133,17 +132,14 @@ const resolvers: IResolvers = {
         }
 
         if (args.image) {
-          const image = await fileUploadToBuffer(args.image);
           const origRecipeImageName = origRecipe.imageName;
 
-          // No await to speed up the request
-          uploadImage(newRecipe.imageName!, image)
-            .then(() => {
-              if (origRecipeImageName) {
-                return deleteImage(origRecipeImageName);
-              }
-            })
-            .catch(console.error);
+          const fileUpload = await args.image;
+          await uploadImage(newRecipe.imageName!, fileUpload);
+
+          if (origRecipeImageName) {
+            await deleteImage(origRecipeImageName);
+          }
         } else if (origRecipe.imageName && origRecipe.slug !== newRecipe.slug) {
           await renameImage(origRecipe.imageName, newRecipe.imageName!);
         }
@@ -166,8 +162,7 @@ const resolvers: IResolvers = {
       }
 
       if (recipe.imageName) {
-        // No await to speed up the request
-        deleteImage(recipe.imageName);
+        await deleteImage(recipe.imageName);
       }
 
       return true;

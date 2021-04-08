@@ -1,5 +1,4 @@
 import { S3 } from 'aws-sdk';
-import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 
 import { FileUpload } from './types';
 
@@ -35,31 +34,13 @@ export function getThumbImageUrl(name: string, ext: ThumbExt) {
   return `${BASE_URL}/${key}`;
 }
 
-export async function fileUploadToBuffer(fileUpload: Promise<FileUpload>) {
-  const stream = (await fileUpload).createReadStream();
-  const bufs: Buffer[] = [];
-
-  return new Promise<Buffer>(resolve => {
-    stream
-      .on('data', (data: Buffer) => {
-        bufs.push(data);
-      })
-      .on('end', () => {
-        resolve(Buffer.concat(bufs));
-      });
-  });
-}
-
-export async function uploadImage(name: string, image: Buffer) {
-  const ft = await fileTypeFromBuffer(image);
-  const mimeType = ft?.mime ?? 'image/jpeg';
-
+export async function uploadImage(name: string, fileUpload: FileUpload) {
   await s3
-    .putObject({
+    .upload({
       Bucket: RECIPE_IMAGES_S3_BUCKET!,
       Key: getFullImageKey(name),
-      Body: image,
-      ContentType: mimeType,
+      Body: fileUpload.createReadStream(),
+      ContentType: fileUpload.mimetype,
     })
     .promise();
 }
