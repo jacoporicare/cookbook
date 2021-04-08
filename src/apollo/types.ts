@@ -18,12 +18,10 @@ export type IngredientInput = {
 };
 
 export type FileUpload = {
-  file: {
-    createReadStream: () => Readable;
-    filename: string;
-    mimetype: string;
-    encoding: string;
-  };
+  createReadStream: () => Readable;
+  filename: string;
+  mimetype: string;
+  encoding: string;
 };
 
 export type UserInput = {

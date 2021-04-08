@@ -36,7 +36,7 @@ export function getThumbImageUrl(name: string, ext: ThumbExt) {
 }
 
 export async function fileUploadToBuffer(fileUpload: Promise<FileUpload>) {
-  const stream = (await fileUpload).file.createReadStream();
+  const stream = (await fileUpload).createReadStream();
   const bufs: Buffer[] = [];
 
   return new Promise<Buffer>(resolve => {
