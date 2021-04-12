@@ -1,4 +1,4 @@
-schema: http://localhost:3000/api/graphql
+schema: './schema.json'
 overwrite: true
 documents: './src/**/*.graphql.ts'
 generates:
