@@ -7,14 +7,14 @@ const s3 = new AWS.S3();
 exports.handler = async (event, context, callback) => {
   console.log('Event', event);
 
-  const bucket = event.bucket;
+  const { bucket } = event;
 
-  const listParams = {
-    Bucket: bucket,
-    Prefix: 'full/',
-  };
-
-  const data = await s3.listObjectsV2(listParams).promise();
+  const data = await s3
+    .listObjectsV2({
+      Bucket: bucket,
+      Prefix: 'full/',
+    })
+    .promise();
 
   for (o of data.Contents) {
     await resize(s3, bucket, o.Key, 'jpeg');
