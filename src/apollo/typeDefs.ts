@@ -36,7 +36,7 @@ const typeDefs = gql`
   }
 
   type AuthPayload {
-    token: String
+    token: String!
   }
 
   type User {
@@ -77,20 +77,20 @@ const typeDefs = gql`
     ingredients: [String!]!
     sideDishes: [String!]!
     tags: [String!]!
-    me: User
+    me: User!
     users: [User!]
   }
 
   type Mutation {
-    login(username: String!, password: String): AuthPayload!
-    createRecipe(recipe: RecipeInput!, image: Upload): Recipe
-    updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe
+    login(username: String!, password: String!): AuthPayload!
+    createRecipe(recipe: RecipeInput!, image: Upload): Recipe!
+    updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe!
     deleteRecipe(id: ID!): Boolean!
     updateUserLastActivity: Boolean!
-    createUser(user: UserInput!): User
-    updateUser(id: ID!, user: UserInput!): User
-    deleteUser(id: ID!): ID
-    resetPassword(id: ID!): String
+    createUser(user: UserInput!): User!
+    updateUser(id: ID!, user: UserInput!): User!
+    deleteUser(id: ID!): ID!
+    resetPassword(id: ID!): String!
     changePassword(password: String!, newPassword: String!): Boolean!
   }
 `;

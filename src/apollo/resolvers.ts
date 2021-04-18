@@ -73,19 +73,24 @@ const resolvers: IResolvers = {
 
       return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
-    me: authenticated(async (_, __, ctx) => ctx.currentUser, { dontThrow: true }),
+    me: authenticated(async (_, __, ctx) => {
+      if (!ctx.currentUser) {
+        throw new Error('Unauthorized');
+      }
+
+      return ctx.currentUser;
+    }),
     users: authenticated(async () => await userModel.find(), { requireAdmin: true }),
   },
   Mutation: {
     login: async (_, args: { username: string; password: string }) => {
       const user = await userModel.findOne({ username: args.username });
 
-      return {
-        token:
-          user?.id && sha512(args.password, user.salt) === user.password
-            ? signToken(user.id)
-            : null,
-      };
+      if (!user || sha512(args.password, user.salt) !== user.password) {
+        throw new Error('Invalid credentials');
+      }
+
+      return { token: signToken(user.id) };
     },
     createRecipe: authenticated(
       async (_, args: { recipe: RecipeInput; image?: Promise<FileUpload> }, ctx) => {
@@ -113,7 +118,7 @@ const resolvers: IResolvers = {
         const origRecipe = await recipeModel.findById(args.id);
 
         if (!origRecipe) {
-          return null;
+          throw new Error('Recipe not found');
         }
 
         const recipeToSave = prepareRecipe(
@@ -128,7 +133,7 @@ const resolvers: IResolvers = {
           .populate('user');
 
         if (!newRecipe) {
-          return null;
+          throw new Error('Recipe cannot be updated');
         }
 
         if (args.image) {
@@ -158,7 +163,7 @@ const resolvers: IResolvers = {
       });
 
       if (!recipe) {
-        return false;
+        throw new Error('Recipe not found or cannot be deleted');
       }
 
       if (recipe.imageName) {
@@ -199,7 +204,17 @@ const resolvers: IResolvers = {
           isAdmin: args.user.isAdmin ? true : undefined,
         };
 
-        return await userModel.findByIdAndUpdate(args.id, { $set: userToSave }, { new: true });
+        const user = await userModel.findByIdAndUpdate(
+          args.id,
+          { $set: userToSave },
+          { new: true },
+        );
+
+        if (!user) {
+          throw new Error('User not found or cannot be updated');
+        }
+
+        return user;
       },
       { requireAdmin: true },
     ),
@@ -207,7 +222,11 @@ const resolvers: IResolvers = {
       async (_, args: { id: string }) => {
         const user = await userModel.findByIdAndRemove(args.id);
 
-        return user ? user._id : null;
+        if (!user) {
+          throw new Error('User not found or cannot be deleted');
+        }
+
+        return user;
       },
       { requireAdmin: true },
     ),
@@ -216,12 +235,16 @@ const resolvers: IResolvers = {
         const password = getRandomString(10);
         const { hash, salt } = saltHashPassword(password);
 
-        await userModel.findByIdAndUpdate(args.id, {
+        const user = await userModel.findByIdAndUpdate(args.id, {
           $set: {
             password: hash,
             salt,
           },
         });
+
+        if (!user) {
+          throw new Error('User not found or cannot be updated');
+        }
 
         return password;
       },
@@ -235,12 +258,16 @@ const resolvers: IResolvers = {
 
         const { hash, salt } = saltHashPassword(args.newPassword);
 
-        await userModel.findByIdAndUpdate(ctx.currentUser._id, {
+        const user = await userModel.findByIdAndUpdate(ctx.currentUser._id, {
           $set: {
             password: hash,
             salt,
           },
         });
+
+        if (!user) {
+          throw new Error('User not found or cannot be updated');
+        }
 
         return true;
       },

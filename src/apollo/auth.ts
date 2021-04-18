@@ -25,7 +25,7 @@ export function verifyToken<T>(token: string) {
 
 export function authenticated<TArgs = Record<string, any>>(
   next: IFieldResolver<unknown, { currentUser: User }, TArgs>,
-  options: { requireAdmin?: boolean; dontThrow?: boolean } = {},
+  options: { requireAdmin?: boolean } = {},
 ) {
   const fn: IFieldResolver<
     unknown,
@@ -47,10 +47,6 @@ export function authenticated<TArgs = Record<string, any>>(
     }
 
     if (!userDocument || (options.requireAdmin && !userDocument.isAdmin)) {
-      if (options.dontThrow) {
-        return null;
-      }
-
       throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
     }
 
