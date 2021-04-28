@@ -65,7 +65,7 @@ function RecipeEditPage() {
     onCompleted: handleSave,
     onError: handleError,
     update: (store, result) => {
-      if (!result.data || !result.data.createRecipe) {
+      if (!result.data?.createRecipe) {
         return;
       }
 
@@ -245,10 +245,6 @@ function RecipeEditPage() {
 
   function handleSave(data: CreateRecipeMutation | UpdateRecipeMutation) {
     const recipe = isCreateMutation(data) ? data.createRecipe : data.updateRecipe;
-
-    if (!recipe) {
-      return;
-    }
 
     setSnackbar(['success', 'Recept úspěšně uložen']);
     router.push('/recept/[slug]', `/recept/${recipe.slug}`);

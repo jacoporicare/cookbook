@@ -16,7 +16,6 @@ function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
-  const [dataError, setDataError] = useState(false);
 
   const [login, { loading, error }] = useLoginMutation({
     refetchQueries: result => {
@@ -32,13 +31,7 @@ function LoginPage() {
 
       return [{ query: MeDocument }];
     },
-    onCompleted: data => {
-      if (!data || !data.login.token) {
-        setDataError(true);
-
-        return;
-      }
-
+    onCompleted: () => {
       router.push(router.query.u?.toString() || '/');
     },
   });
@@ -67,7 +60,6 @@ function LoginPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setDataError(false);
     login({ variables: { username, password } });
   }
 
@@ -75,7 +67,7 @@ function LoginPage() {
     <Layout>
       <DocumentTitle title="Přihlášení" />
       <LoginForm
-        error={Boolean(error || dataError)}
+        error={Boolean(error)}
         isSubmitting={loading}
         password={password}
         rememberMe={rememberMe}

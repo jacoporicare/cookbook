@@ -104,7 +104,7 @@ function AdminPage() {
     onCompleted: data => {
       setDialog({
         title: 'Nové heslo',
-        content: data?.resetPassword,
+        content: data.resetPassword,
       });
       setDialogOpen(true);
     },
