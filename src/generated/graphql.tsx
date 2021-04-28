@@ -23,7 +23,7 @@ export type Scalars = {
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
-  token: Maybe<Scalars['String']>;
+  token: Scalars['String'];
 };
 
 
@@ -53,21 +53,21 @@ export type IngredientInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   login: AuthPayload;
-  createRecipe: Maybe<Recipe>;
-  updateRecipe: Maybe<Recipe>;
+  createRecipe: Recipe;
+  updateRecipe: Recipe;
   deleteRecipe: Scalars['Boolean'];
   updateUserLastActivity: Scalars['Boolean'];
-  createUser: Maybe<User>;
-  updateUser: Maybe<User>;
-  deleteUser: Maybe<Scalars['ID']>;
-  resetPassword: Maybe<Scalars['String']>;
+  createUser: User;
+  updateUser: User;
+  deleteUser: Scalars['ID'];
+  resetPassword: Scalars['String'];
   changePassword: Scalars['Boolean'];
 };
 
 
 export type MutationLoginArgs = {
   username: Scalars['String'];
-  password: Maybe<Scalars['String']>;
+  password: Scalars['String'];
 };
 
 
@@ -122,7 +122,7 @@ export type Query = {
   ingredients: Array<Scalars['String']>;
   sideDishes: Array<Scalars['String']>;
   tags: Array<Scalars['String']>;
-  me: Maybe<User>;
+  me: User;
   users: Maybe<Array<User>>;
 };
 
@@ -199,10 +199,10 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me: Maybe<(
+  & { me: (
     { __typename?: 'User' }
     & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin'>
-  )> }
+  ) }
 );
 
 export type CreateRecipeMutationVariables = Exact<{
@@ -213,10 +213,10 @@ export type CreateRecipeMutationVariables = Exact<{
 
 export type CreateRecipeMutation = (
   { __typename?: 'Mutation' }
-  & { createRecipe: Maybe<(
+  & { createRecipe: (
     { __typename?: 'Recipe' }
     & RecipeDetailFragment
-  )> }
+  ) }
 );
 
 export type CreateUserMutationVariables = Exact<{
@@ -226,10 +226,10 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = (
   { __typename?: 'Mutation' }
-  & { createUser: Maybe<(
+  & { createUser: (
     { __typename?: 'User' }
     & UserFragment
-  )> }
+  ) }
 );
 
 export type DeleteRecipeMutationVariables = Exact<{
@@ -288,10 +288,10 @@ export type RecipeDetailQuery = (
   & { recipe: Maybe<(
     { __typename?: 'Recipe' }
     & RecipeDetailFragment
-  )>, me: Maybe<(
+  )>, me: (
     { __typename?: 'User' }
     & UserFragment
-  )> }
+  ) }
 );
 
 export type RecipeDetailFragment = (
@@ -356,10 +356,10 @@ export type UpdateRecipeMutationVariables = Exact<{
 
 export type UpdateRecipeMutation = (
   { __typename?: 'Mutation' }
-  & { updateRecipe: Maybe<(
+  & { updateRecipe: (
     { __typename?: 'Recipe' }
     & RecipeDetailFragment
-  )> }
+  ) }
 );
 
 export type UpdateUserMutationVariables = Exact<{
@@ -370,10 +370,10 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = (
   { __typename?: 'Mutation' }
-  & { updateUser: Maybe<(
+  & { updateUser: (
     { __typename?: 'User' }
     & UserFragment
-  )> }
+  ) }
 );
 
 export type UpdateUserLastActivityMutationVariables = Exact<{ [key: string]: never; }>;

@@ -11,8 +11,9 @@
     "start": "next start",
     "prettier": "prettier --write './src/**/*.{ts,tsx}'",
     "lint": "eslint '**/*.{ts,tsx}'",
-    "generate:local": "npx apollo client:download-schema --endpoint=http://localhost:3000/api/graphql schema.json && graphql-codegen",
-    "generate:dev": "npx apollo client:download-schema --endpoint=https://develop.zradelnik.eu/api/graphql schema.json && graphql-codegen"
+    "schema:local": "npx apollo client:download-schema --endpoint=http://localhost:3000/api/graphql schema.json",
+    "schema:dev": "npx apollo client:download-schema --endpoint=https://develop.zradelnik.eu/api/graphql schema.json",
+    "generate": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "^3.3.14",
