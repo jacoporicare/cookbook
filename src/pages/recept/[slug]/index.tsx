@@ -19,6 +19,7 @@ import {
   RecipeListDocument,
   useRecipeDetailQuery,
   useDeleteRecipeMutation,
+  useMeQuery,
 } from '../../../generated/graphql';
 import useSupportsWebP from '../../../hooks/useSupportsWebP';
 
@@ -32,9 +33,12 @@ function RecipeDetailPage() {
   const [snackbar, setSnackbar] = useState<[Color, string]>();
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const { data, loading } = useRecipeDetailQuery({
+  const { data: recipeData, loading: recipeLoading } = useRecipeDetailQuery({
     variables: { slug: querySlug! },
     skip: !querySlug,
+  });
+  const { data: meData, loading: meLoading } = useMeQuery({
+    skip: !token,
   });
   const [deleteRecipe] = useDeleteRecipeMutation({
     onCompleted: () => {
@@ -63,7 +67,9 @@ function RecipeDetailPage() {
     },
   });
 
-  const recipe = data && data.recipe;
+  const recipe = recipeData?.recipe;
+  const me = meData?.me;
+  const loading = recipeLoading || meLoading;
 
   function handleDeleteConfirm() {
     if (!recipe) {
@@ -105,9 +111,7 @@ function RecipeDetailPage() {
         <Box component="article">
           <DocumentTitle title={title} />
           <RecipeHeader
-            isAuthor={Boolean(
-              token && data && data.me && (data.me.username === user.username || data.me.isAdmin),
-            )}
+            isAuthor={Boolean(me && (me.username === user.username || me.isAdmin))}
             preparationTime={preparationTime ?? undefined}
             sideDish={sideDish ?? undefined}
             slug={slug}

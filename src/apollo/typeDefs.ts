@@ -78,7 +78,7 @@ const typeDefs = gql`
     sideDishes: [String!]!
     tags: [String!]!
     me: User!
-    users: [User!]
+    users: [User!]!
   }
 
   type Mutation {

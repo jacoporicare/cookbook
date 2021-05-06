@@ -57,10 +57,14 @@ function LoginPage() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    login({ variables: { username, password } });
+    try {
+      await login({ variables: { username, password } });
+    } catch (e) {
+      // To prevent uncaught promise, using error from the tuple
+    }
   }
 
   return (

@@ -285,10 +285,7 @@ export type RecipeDetailQuery = (
   & { recipe: Maybe<(
     { __typename?: 'Recipe' }
     & RecipeDetailFragment
-  )>, me: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
+  )> }
 );
 
 export type RecipeDetailFragment = (
@@ -680,12 +677,8 @@ export const RecipeDetailDocument = gql`
   recipe(slug: $slug) {
     ...recipeDetail
   }
-  me {
-    ...user
-  }
 }
-    ${RecipeDetailFragmentDoc}
-${UserFragmentDoc}`;
+    ${RecipeDetailFragmentDoc}`;
 
 /**
  * __useRecipeDetailQuery__

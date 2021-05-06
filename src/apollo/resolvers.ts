@@ -73,13 +73,7 @@ const resolvers: IResolvers = {
 
       return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
-    me: authenticated(async (_, __, ctx) => {
-      if (!ctx.currentUser) {
-        throw new Error('Unauthorized');
-      }
-
-      return ctx.currentUser;
-    }),
+    me: authenticated(async (_, __, ctx) => ctx.currentUser),
     users: authenticated(async () => await userModel.find(), { requireAdmin: true }),
   },
   Mutation: {
