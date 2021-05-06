@@ -10,7 +10,8 @@ export type Ingredient = {
 };
 
 export type Recipe = {
-  user: User | string;
+  userId: string;
+  user: User;
   title: string;
   slug: string;
   directions?: string;
@@ -28,7 +29,7 @@ export type Recipe = {
 export type RecipeDocument = Document & Recipe;
 
 const RecipeSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
   directions: String,
@@ -55,6 +56,13 @@ const RecipeSchema = new Schema({
 /**
  * Virtuals
  */
+
+RecipeSchema.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+  justOne: true,
+});
 
 RecipeSchema.virtual('creationDate').get(function (this: Document) {
   return this._id.getTimestamp();

@@ -32,7 +32,7 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
 export function prepareRecipe(
   recipe: RecipeInput,
   hasImage?: boolean,
-  user?: User,
+  userId?: string,
   origRecipe?: RecipeDocument,
 ): Partial<Recipe> {
   const newRecipe: Partial<Recipe> = {
@@ -65,8 +65,8 @@ export function prepareRecipe(
     newRecipe.imageName = undefined;
   }
 
-  if (user) {
-    newRecipe.user = user;
+  if (userId) {
+    newRecipe.userId = userId;
   }
 
   return newRecipe;
@@ -79,7 +79,7 @@ export function toSlug(title: string) {
 export async function checkUserRightsAsync(user: User | null, recipeId: string) {
   const recipe = await recipeModel.findById(recipeId);
 
-  return Boolean(user && recipe && (user.isAdmin || recipe.user === user._id));
+  return Boolean(user && recipe && (user.isAdmin || recipe.userId === user._id));
 }
 
 export function getRandomString(length: number) {

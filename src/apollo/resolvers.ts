@@ -94,7 +94,7 @@ const resolvers: IResolvers = {
     },
     createRecipe: authenticated(
       async (_, args: { recipe: RecipeInput; image?: Promise<FileUpload> }, ctx) => {
-        const recipeToSave = prepareRecipe(args.recipe, Boolean(args.image), ctx.currentUser);
+        const recipeToSave = prepareRecipe(args.recipe, Boolean(args.image), ctx.currentUser._id);
         await recipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
         const recipe = await recipeModel.create(recipeToSave as RecipeDocument);
         recipe.populate('user');
