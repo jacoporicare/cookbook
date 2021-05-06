@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-import userFragment from './userFragment.graphql';
-
 export default gql`
   fragment recipeBase on Recipe {
     _id
@@ -16,10 +14,5 @@ export default gql`
       thumbWebPUrl
     }
     lastModifiedDate
-    user {
-      ...user
-    }
   }
-
-  ${userFragment}
 `;
