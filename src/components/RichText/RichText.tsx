@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 function RichText({ text = '' }: Props) {
   const classes = useStyles();
 
-  return <ReactMarkdown className={classes.container} source={text} />;
+  return <ReactMarkdown className={classes.container}>{text}</ReactMarkdown>;
 }
 
 export default RichText;
