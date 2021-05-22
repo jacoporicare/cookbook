@@ -1,4 +1,6 @@
+.git
 .next
 .vscode
+deploy
 lambda
 node_modules

@@ -4,8 +4,7 @@ stages:
 
 variables:
   NGINX_VHOSTD_DIR: /srv/nginx/vhost.d
-  DEV_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
-  PROD_DIR: /home/gitlab-runner/www/cookbook_prod/
+  TARGET_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
 
 build:
   stage: build
@@ -15,9 +14,9 @@ build:
   services:
     - docker:dind
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
 
 deploy-dev:
   stage: deploy
@@ -29,11 +28,11 @@ deploy-dev:
     - hukot-web
   when: manual
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -a --delete deploy/ $DEV_DIR
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
-    - cd $DEV_DIR
-    - envsubst < ".env.dev" > ".env"
+    - cd "$TARGET_DIR"
+    - envsubst < .env.dev > .env
     - docker-compose pull
     - docker-compose down --remove-orphans --rmi local
     - docker-compose up -d
@@ -55,41 +54,27 @@ stop-env-dev:
     action: stop
   when: manual
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - cd $DEV_DIR
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - cd "$TARGET_DIR"
     - docker-compose down --remove-orphans --volumes --rmi local
     - docker-compose rm
     - cd ~
-    - rm -rf $DEV_DIR
+    - rm -rf "$TARGET_DIR"
 
-deploy-test:
+deploy:
   stage: deploy
   only:
     - develop
-  tags:
-    - hukot-web
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -a --delete deploy/ $DEV_DIR
-    - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
-    - cd $DEV_DIR
-    - envsubst < ".env.dev" > ".env"
-    - docker-compose pull
-    - docker-compose down --remove-orphans
-    - docker-compose up -d
-
-deploy-prod:
-  stage: deploy
-  only:
     - master
   tags:
     - hukot-web
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - rsync -a --delete deploy/ $PROD_DIR
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
-    - cd $PROD_DIR
-    - envsubst < ".env.prod" > ".env"
+    - cd "$TARGET_DIR"
+    - envsubst < ".env.dev" > ".env"
+    - '[ "$CI_COMMIT_REF_SLUG" = master ] && envsubst < .env.prod > .env || envsubst < .env.dev > .env'
     - docker-compose pull
     - docker-compose down --remove-orphans
     - docker-compose up -d
