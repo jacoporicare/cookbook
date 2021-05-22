@@ -76,7 +76,7 @@ function RecipeDetailPage() {
       return;
     }
 
-    deleteRecipe({ variables: { id: recipe._id } });
+    deleteRecipe({ variables: { id: recipe.id } });
   }
 
   if (!recipe) {

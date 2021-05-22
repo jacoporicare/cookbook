@@ -178,7 +178,7 @@ function RecipeSearch(props: Props) {
 
             return (
               <ListItem
-                key={recipe._id}
+                key={recipe.id}
                 className={highlightedIndex === index ? classes.highlighted : undefined}
                 {...getItemProps({ item: recipe, index })}
               >

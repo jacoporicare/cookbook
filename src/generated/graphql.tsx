@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -36,7 +35,9 @@ export type Image = {
 
 export type Ingredient = {
   __typename?: 'Ingredient';
+  /** @deprecated Use `id`. */
   _id: Scalars['ID'];
+  id: Scalars['ID'];
   amount: Maybe<Scalars['Float']>;
   amountUnit: Maybe<Scalars['String']>;
   name: Scalars['String'];
@@ -123,7 +124,7 @@ export type Query = {
   sideDishes: Array<Scalars['String']>;
   tags: Array<Scalars['String']>;
   me: User;
-  users: Maybe<Array<User>>;
+  users: Array<User>;
 };
 
 
@@ -140,7 +141,9 @@ export type QueryRecipeArgs = {
 
 export type Recipe = {
   __typename?: 'Recipe';
+  /** @deprecated Use `id`. */
   _id: Scalars['ID'];
+  id: Scalars['ID'];
   title: Scalars['String'];
   slug: Scalars['String'];
   directions: Maybe<Scalars['String']>;
@@ -170,7 +173,9 @@ export type RecipeInput = {
 
 export type User = {
   __typename?: 'User';
+  /** @deprecated Use `id`. */
   _id: Scalars['ID'];
+  id: Scalars['ID'];
   username: Scalars['String'];
   displayName: Scalars['String'];
   isAdmin: Maybe<Scalars['Boolean']>;
@@ -201,7 +206,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'User' }
-    & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin'>
+    & Pick<User, 'id' | 'username' | 'displayName' | 'isAdmin'>
   ) }
 );
 
@@ -268,7 +273,7 @@ export type LoginMutation = (
 
 export type RecipeBaseFragment = (
   { __typename?: 'Recipe' }
-  & Pick<Recipe, '_id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'>
+  & Pick<Recipe, 'id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'>
   & { image: Maybe<(
     { __typename?: 'Image' }
     & Pick<Image, 'fullUrl' | 'thumbUrl' | 'thumbWebPUrl'>
@@ -293,7 +298,7 @@ export type RecipeDetailFragment = (
   & Pick<Recipe, 'directions' | 'servingCount'>
   & { ingredients: Maybe<Array<(
     { __typename?: 'Ingredient' }
-    & Pick<Ingredient, '_id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'>
+    & Pick<Ingredient, 'id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'>
   )>>, user: (
     { __typename?: 'User' }
     & UserFragment
@@ -383,7 +388,7 @@ export type UpdateUserLastActivityMutation = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, '_id' | 'username' | 'displayName' | 'isAdmin' | 'lastActivity'>
+  & Pick<User, 'id' | 'username' | 'displayName' | 'isAdmin' | 'lastActivity'>
 );
 
 export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
@@ -391,15 +396,15 @@ export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UserListQuery = (
   { __typename?: 'Query' }
-  & { users: Maybe<Array<(
+  & { users: Array<(
     { __typename?: 'User' }
     & UserFragment
-  )>> }
+  )> }
 );
 
 export const RecipeBaseFragmentDoc = gql`
     fragment recipeBase on Recipe {
-  _id
+  id
   slug
   title
   sideDish
@@ -415,7 +420,7 @@ export const RecipeBaseFragmentDoc = gql`
     `;
 export const UserFragmentDoc = gql`
     fragment user on User {
-  _id
+  id
   username
   displayName
   isAdmin
@@ -428,7 +433,7 @@ export const RecipeDetailFragmentDoc = gql`
   directions
   servingCount
   ingredients {
-    _id
+    id
     name
     amount
     amountUnit
@@ -475,7 +480,7 @@ export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePas
 export const MeDocument = gql`
     query Me {
   me {
-    _id
+    id
     username
     displayName
     isAdmin

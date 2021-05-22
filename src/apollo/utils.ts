@@ -5,7 +5,7 @@ import slug from 'slug';
 
 import { getFullImageUrl, getThumbImageUrl } from './images';
 import recipeModel, { Recipe, RecipeDocument } from './models/recipe';
-import { User } from './models/user';
+import { User, UserDocument } from './models/user';
 import { RecipeInput } from './types';
 
 export function mapRecipe(recipeDocument: RecipeDocument | null) {
@@ -13,7 +13,9 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
     return null;
   }
 
-  const recipe = recipeDocument.toObject({ virtuals: true });
+  const recipe = recipeDocument.toObject({ getters: true, versionKey: false });
+
+  recipe.deleted = Boolean(recipe.deleted);
 
   if (recipe.imageName) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,9 +26,11 @@ export function mapRecipe(recipeDocument: RecipeDocument | null) {
     };
   }
 
-  recipe.deleted = Boolean(recipe.deleted);
-
   return recipe;
+}
+
+export function mapUser(userDocument: UserDocument | null) {
+  return userDocument?.toObject({ getters: true, versionKey: false });
 }
 
 export function prepareRecipe(

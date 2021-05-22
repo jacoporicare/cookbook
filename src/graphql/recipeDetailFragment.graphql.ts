@@ -9,7 +9,7 @@ export default gql`
     directions
     servingCount
     ingredients {
-      _id
+      id
       name
       amount
       amountUnit

@@ -17,6 +17,7 @@ import {
   saltHashPassword,
   sha512,
   mapRecipe,
+  mapUser,
 } from './utils';
 
 connect();
@@ -185,7 +186,7 @@ const resolvers: IResolvers = {
           isAdmin: args.user.isAdmin ? true : undefined,
         };
 
-        return await userModel.create(userToSave as UserDocument);
+        return mapUser(await userModel.create(userToSave as UserDocument));
       },
       { requireAdmin: true },
     ),
@@ -208,7 +209,7 @@ const resolvers: IResolvers = {
           throw new Error('User not found or cannot be updated');
         }
 
-        return user;
+        return mapUser(user);
       },
       { requireAdmin: true },
     ),
@@ -220,7 +221,7 @@ const resolvers: IResolvers = {
           throw new Error('User not found or cannot be deleted');
         }
 
-        return user;
+        return user.id;
       },
       { requireAdmin: true },
     ),

@@ -18,7 +18,7 @@ import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
 
 type Props = {
-  ingredients?: Ingredient[];
+  ingredients?: Omit<Ingredient, '_id'>[];
   servingCount?: number;
 };
 
@@ -99,10 +99,10 @@ function IngredientList(props: Props) {
           <Table size="small">
             <TableBody>
               {ingredients.map(ingredient => {
-                const { _id, isGroup, name, amount, amountUnit } = ingredient;
+                const { id, isGroup, name, amount, amountUnit } = ingredient;
 
                 return (
-                  <TableRow key={_id} className={isGroup ? classes.group : undefined}>
+                  <TableRow key={id} className={isGroup ? classes.group : undefined}>
                     <TableCell align="right" width="20%">
                       {!isGroup && getAmount(amount ?? undefined)}
                     </TableCell>

@@ -25,7 +25,7 @@ import { colors } from '../../styles/colors';
 type RemoveHandler = (index: number) => void;
 
 type SortableListProps = {
-  items: Omit<Ingredient, '_id'>[];
+  items: Omit<Ingredient, '_id' | 'id'>[];
   onRemove: RemoveHandler;
 };
 
@@ -37,7 +37,7 @@ const Handle = SortableHandle(() => <Menu />);
 
 type SortableItemProps = {
   itemIndex: number;
-  ingredient: Omit<Ingredient, '_id'>;
+  ingredient: Omit<Ingredient, '_id' | 'id'>;
   onRemove: RemoveHandler;
 };
 

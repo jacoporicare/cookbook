@@ -24,7 +24,7 @@ type Props = {
   directions?: string;
   imageUrl?: string;
   ingredientOptions: string[];
-  ingredients: Omit<Ingredient, '_id'>[];
+  ingredients: Omit<Ingredient, '_id' | 'id'>[];
   isNew: boolean;
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;

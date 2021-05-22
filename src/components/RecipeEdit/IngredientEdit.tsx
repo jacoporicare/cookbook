@@ -17,7 +17,7 @@ export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
 
 type Props = {
-  items: Omit<Ingredient, '_id'>[];
+  items: Omit<Ingredient, '_id' | 'id'>[];
   ingredientOptions: string[];
   onAdd: AddIngredientEventHandler;
   onAddGroup: AddGroupEventHandler;

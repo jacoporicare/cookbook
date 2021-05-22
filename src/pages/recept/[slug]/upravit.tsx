@@ -49,7 +49,7 @@ function RecipeEditPage() {
   const [directions, setDirections] = useState('');
   const [preparationTime, setPreparationTime] = useState<number>();
   const [servingCount, setServingCount] = useState<number>();
-  const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id'>[]>([]);
+  const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id' | 'id'>[]>([]);
   const [tags, setTags] = useState<string[]>();
 
   const slug = router.query.slug?.toString();
@@ -90,8 +90,8 @@ function RecipeEditPage() {
   const isSaving = creating || updating;
   const editedRecipe = data && data.recipe;
 
-  if (editedRecipe && editedRecipe._id !== id) {
-    setId(editedRecipe._id);
+  if (editedRecipe && editedRecipe.id !== id) {
+    setId(editedRecipe.id);
     setTitle(editedRecipe.title);
     setSideDish(editedRecipe.sideDish || '');
     setTags(editedRecipe.tags || []);
@@ -228,7 +228,7 @@ function RecipeEditPage() {
     if (editedRecipe) {
       updateRecipe({
         variables: {
-          id: editedRecipe._id,
+          id: editedRecipe.id,
           recipe: recipeInput,
           image,
         },

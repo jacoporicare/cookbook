@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql`
   fragment user on User {
-    _id
+    id
     username
     displayName
     isAdmin

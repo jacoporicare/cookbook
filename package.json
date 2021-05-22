@@ -47,7 +47,6 @@
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "@graphql-codegen/add": "^2.0.2",
     "@graphql-codegen/cli": "^1.21.3",
     "@graphql-codegen/typescript": "^1.21.1",
     "@graphql-codegen/typescript-operations": "^1.17.15",

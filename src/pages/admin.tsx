@@ -124,10 +124,10 @@ function AdminPage() {
       return;
     }
 
-    setUserIdUpdatingDebounced(user._id);
+    setUserIdUpdatingDebounced(user.id);
     updateUser({
       variables: {
-        id: user._id,
+        id: user.id,
         user: {
           username: value,
           displayName: user.displayName,
@@ -144,10 +144,10 @@ function AdminPage() {
       return;
     }
 
-    setUserIdUpdatingDebounced(user._id);
+    setUserIdUpdatingDebounced(user.id);
     updateUser({
       variables: {
-        id: user._id,
+        id: user.id,
         user: {
           username: user.username,
           displayName: value,
@@ -158,14 +158,14 @@ function AdminPage() {
   }
 
   function handleIsAdminUpdate(user: UserFragment) {
-    if (user._id === meData!.me!._id) {
+    if (user.id === meData!.me!.id) {
       return;
     }
 
-    setUserIdUpdatingDebounced(user._id);
+    setUserIdUpdatingDebounced(user.id);
     updateUser({
       variables: {
-        id: user._id,
+        id: user.id,
         user: {
           username: user.username,
           displayName: user.displayName,
@@ -176,7 +176,7 @@ function AdminPage() {
   }
 
   function handleDelete(user: UserFragment) {
-    if (user._id === meData!.me!._id) {
+    if (user.id === meData!.me!.id) {
       return;
     }
 
@@ -187,7 +187,7 @@ function AdminPage() {
         label: 'Smazat',
         onClick: () => {
           setDialogOpen(false);
-          deleteUser({ variables: { id: user._id } });
+          deleteUser({ variables: { id: user.id } });
         },
       },
     });
@@ -207,7 +207,7 @@ function AdminPage() {
       button: {
         label: 'Resetovat',
         onClick: () => {
-          resetPassword({ variables: { id: user._id } });
+          resetPassword({ variables: { id: user.id } });
         },
       },
     });
@@ -273,28 +273,28 @@ function AdminPage() {
               </TableHead>
               <TableBody>
                 {users.map(user => {
-                  const userUpdating = userIdUpdating === user._id && updating;
+                  const userUpdating = userIdUpdating === user.id && updating;
 
                   return (
-                    <TableRow key={user._id}>
+                    <TableRow key={user.id}>
                       <TableCell>
                         <TextField
                           disabled={userUpdating}
-                          error={usernameId === user._id && !username.trim()}
-                          value={usernameId === user._id ? username : user.username}
+                          error={usernameId === user.id && !username.trim()}
+                          value={usernameId === user.id ? username : user.username}
                           onBlur={() => handleUsernameUpdate(user)}
-                          onChange={e => setUsername([user._id, e.currentTarget.value])}
-                          onFocus={() => setUsername([user._id, user.username])}
+                          onChange={e => setUsername([user.id, e.currentTarget.value])}
+                          onFocus={() => setUsername([user.id, user.username])}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
                           disabled={userUpdating}
-                          error={displayNameId === user._id && !displayName.trim()}
-                          value={displayNameId === user._id ? displayName : user.displayName}
+                          error={displayNameId === user.id && !displayName.trim()}
+                          value={displayNameId === user.id ? displayName : user.displayName}
                           onBlur={() => handleDisplayNameUpdate(user)}
-                          onChange={e => setDisplayName([user._id, e.currentTarget.value])}
-                          onFocus={() => setDisplayName([user._id, user.displayName])}
+                          onChange={e => setDisplayName([user.id, e.currentTarget.value])}
+                          onFocus={() => setDisplayName([user.id, user.displayName])}
                         />
                       </TableCell>
                       <TableCell align="center">
@@ -304,7 +304,7 @@ function AdminPage() {
                           <Switch
                             checked={user.isAdmin || false}
                             color="primary"
-                            disabled={user._id === meData!.me!._id}
+                            disabled={user.id === meData!.me!.id}
                             inputProps={{ 'aria-label': 'Admin' }}
                             onChange={() => handleIsAdminUpdate(user)}
                           />
@@ -316,7 +316,7 @@ function AdminPage() {
                       <TableCell align="left">
                         <IconButton
                           aria-label="Smazat"
-                          disabled={user._id === meData!.me!._id}
+                          disabled={user.id === meData!.me!.id}
                           onClick={() => handleDelete(user)}
                         >
                           <Delete />

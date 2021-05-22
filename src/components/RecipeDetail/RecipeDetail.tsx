@@ -10,7 +10,7 @@ import IngredientList from './IngredientList';
 
 type Props = {
   title: string;
-  ingredients?: Ingredient[];
+  ingredients?: Omit<Ingredient, '_id'>[];
   servingCount?: number;
   directions?: string;
   lastModifiedDate: number;

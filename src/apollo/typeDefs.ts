@@ -5,7 +5,8 @@ const typeDefs = gql`
   scalar Upload
 
   type Recipe {
-    _id: ID!
+    _id: ID! @deprecated(reason: "Use \`id\`.")
+    id: ID!
     title: String!
     slug: String!
     directions: String
@@ -28,7 +29,8 @@ const typeDefs = gql`
   }
 
   type Ingredient {
-    _id: ID!
+    _id: ID! @deprecated(reason: "Use \`id\`.")
+    id: ID!
     amount: Float
     amountUnit: String
     name: String!
@@ -40,7 +42,8 @@ const typeDefs = gql`
   }
 
   type User {
-    _id: ID!
+    _id: ID! @deprecated(reason: "Use \`id\`.")
+    id: ID!
     username: String!
     displayName: String!
     isAdmin: Boolean

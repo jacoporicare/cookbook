@@ -8,6 +8,7 @@ import Cookies from 'universal-cookie';
 import { AUTH_TOKEN_KEY } from '../const';
 
 import userModel, { User, UserDocument } from './models/user';
+import { mapUser } from './utils';
 
 const jwtSecret = process.env.JWT_SECRET!;
 
@@ -50,7 +51,7 @@ export function authenticated<TArgs = Record<string, any>>(
       throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
     }
 
-    return next(root, args, { currentUser: userDocument.toObject() }, info);
+    return next(root, args, { currentUser: mapUser(userDocument) as User }, info);
   };
 
   return fn;

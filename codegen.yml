@@ -7,8 +7,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
-      - add:
-          content: '/* eslint-disable */'
     config:
       withComponent: false
       withHOC: false
