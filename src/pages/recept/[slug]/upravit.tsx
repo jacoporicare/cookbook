@@ -222,7 +222,6 @@ function RecipeEditPage() {
       directions: directions || null,
       ingredients: ingredients.length > 0 ? ingredients : null,
       tags: tags?.length ? tags : null,
-      image: null,
     };
 
     if (editedRecipe) {

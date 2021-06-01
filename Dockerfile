@@ -7,7 +7,7 @@ RUN npm ci --unsafe-perm
 COPY . .
 RUN npm run build
 RUN mkdir build \
-  && mv package.json package-lock.json .next .env public node_modules build/ \
+  && mv package.json package-lock.json next.config.js .next .env public node_modules build/ \
   && cd build \
   && npm prune --production
 

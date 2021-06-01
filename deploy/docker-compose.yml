@@ -1,36 +1,19 @@
 version: '3.2'
 
 services:
-  db:
-    image: mongo:4.4
-    restart: always
-    networks:
-      - cookbook
-    volumes:
-      - type: volume
-        source: dbdata
-        target: /data/db
-
   web:
     image: '${APP_IMAGE}:${APP_TAG}'
     restart: always
     networks:
       - cookbook
       - web
-    depends_on:
-      - db
     environment:
       VIRTUAL_HOST: '${HOST}'
       LETSENCRYPT_HOST: '${HOST}'
       LETSENCRYPT_EMAIL: ***REMOVED***
-      MONGO_URI: mongodb://db/cookbook
-      RECIPE_IMAGES_S3_BUCKET: '${RECIPE_IMAGES_S3_BUCKET}'
-      APOLLO_PLAYGROUND_ENABLED: '${APOLLO_PLAYGROUND_ENABLED}'
+      API_URL: '${API_URL}'
 
 networks:
   cookbook:
   web:
     external: true
-
-volumes:
-  dbdata:

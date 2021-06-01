@@ -4,6 +4,10 @@ import Cookies from 'universal-cookie';
 import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 
+export function getAuthToken(cookie?: string): string | undefined {
+  return new Cookies(cookie).get(AUTH_TOKEN_KEY);
+}
+
 export function setAuthToken(token?: string): void {
   if (typeof window === 'undefined') {
     return;

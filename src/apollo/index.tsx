@@ -9,8 +9,6 @@ import appState from '../graphql/local/appState';
 import { createApolloClient } from './client';
 import { AppStateData } from './types';
 
-// import { getAuthToken } from '../auth';
-
 let globalApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 /**

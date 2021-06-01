@@ -166,7 +166,6 @@ export type RecipeInput = {
   preparationTime: Maybe<Scalars['Int']>;
   servingCount: Maybe<Scalars['Int']>;
   ingredients: Maybe<Array<IngredientInput>>;
-  image: Maybe<Scalars['Upload']>;
   tags: Maybe<Array<Scalars['String']>>;
 };
 

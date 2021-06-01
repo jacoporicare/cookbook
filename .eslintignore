@@ -1,8 +1,6 @@
 *.d.ts
 *.test.ts
 src/generated/graphql.tsx
-src/serviceWorker.ts
 src/types/ext/*
-lambda/*
 scripts/*
 next.config.js

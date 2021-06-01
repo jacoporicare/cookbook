@@ -1,10 +1,13 @@
-/* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-explicit-any  */
 import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
 import { NextPageContext } from 'next';
+import getConfig from 'next/config';
 
-/**
- * Creates and configures the ApolloClient
- */
+import { getAuthToken } from '../auth';
+
+const { publicRuntimeConfig } = getConfig();
+
 export function createApolloClient(
   ctx: Pick<NextPageContext, 'req' | 'res'>,
   initialState: NormalizedCacheObject,
@@ -12,29 +15,28 @@ export function createApolloClient(
   const ssrMode = typeof window === 'undefined';
   const cache = new InMemoryCache().restore(initialState);
 
-  // Check out https://github.com/vercel/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode,
-    link: createIsomorphLink(ctx),
+    link: createAuthLink(ctx).concat(createTerminatingLink()),
     cache,
   });
 }
 
-function createIsomorphLink(ctx: Pick<NextPageContext, 'req' | 'res'>) {
-  if (typeof window === 'undefined') {
-    const { SchemaLink } = require('@apollo/client/link/schema');
-    const schema = require('./schema').default;
+function createAuthLink(ctx: Pick<NextPageContext, 'req' | 'res'>) {
+  const cookie = ctx.req?.headers.cookie;
 
-    return new SchemaLink({ schema, context: ctx });
-  }
+  return setContext((_, { headers }) => {
+    const token = getAuthToken(cookie);
 
-  const { createUploadLink } = require('apollo-upload-client');
+    return {
+      headers: token ? { ...headers, Authorization: `Bearer ${token}` } : {},
+    };
+  });
+}
 
-  // const token = getAuthToken();
-
+function createTerminatingLink() {
   return createUploadLink({
-    uri: '/api/graphql',
-    credentials: 'same-origin',
-    // headers: token ? { Authorization: `Bearer ${token}` } : {},
+    uri: publicRuntimeConfig.apiUrl,
+    credentials: 'include',
   });
 }
