@@ -12,7 +12,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
   Date: any;
   Upload: any;
 };
@@ -26,22 +25,22 @@ export type AuthPayload = {
 };
 
 
-export type Image = {
-  __typename?: 'Image';
-  fullUrl: Scalars['String'];
-  thumbUrl: Scalars['String'];
-  thumbWebPUrl: Scalars['String'];
+export enum ImageFormat {
+  Webp = 'WEBP'
+}
+
+export type ImageSize = {
+  width: Scalars['Int'];
+  height: Scalars['Int'];
 };
 
 export type Ingredient = {
   __typename?: 'Ingredient';
-  /** @deprecated Use `id`. */
-  _id: Scalars['ID'];
   id: Scalars['ID'];
   amount: Maybe<Scalars['Float']>;
   amountUnit: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  isGroup: Maybe<Scalars['Boolean']>;
+  isGroup: Scalars['Boolean'];
 };
 
 export type IngredientInput = {
@@ -141,8 +140,6 @@ export type QueryRecipeArgs = {
 
 export type Recipe = {
   __typename?: 'Recipe';
-  /** @deprecated Use `id`. */
-  _id: Scalars['ID'];
   id: Scalars['ID'];
   title: Scalars['String'];
   slug: Scalars['String'];
@@ -151,12 +148,18 @@ export type Recipe = {
   preparationTime: Maybe<Scalars['Int']>;
   servingCount: Maybe<Scalars['Int']>;
   user: User;
-  image: Maybe<Image>;
+  imageUrl: Maybe<Scalars['String']>;
   creationDate: Scalars['Date'];
   lastModifiedDate: Scalars['Date'];
   ingredients: Maybe<Array<Ingredient>>;
   tags: Maybe<Array<Scalars['String']>>;
   deleted: Scalars['Boolean'];
+};
+
+
+export type RecipeImageUrlArgs = {
+  size: Maybe<ImageSize>;
+  format: Maybe<ImageFormat>;
 };
 
 export type RecipeInput = {
@@ -172,12 +175,10 @@ export type RecipeInput = {
 
 export type User = {
   __typename?: 'User';
-  /** @deprecated Use `id`. */
-  _id: Scalars['ID'];
   id: Scalars['ID'];
   username: Scalars['String'];
   displayName: Scalars['String'];
-  isAdmin: Maybe<Scalars['Boolean']>;
+  isAdmin: Scalars['Boolean'];
   lastActivity: Maybe<Scalars['Date']>;
 };
 
@@ -272,11 +273,8 @@ export type LoginMutation = (
 
 export type RecipeBaseFragment = (
   { __typename?: 'Recipe' }
-  & Pick<Recipe, 'id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'lastModifiedDate'>
-  & { image: Maybe<(
-    { __typename?: 'Image' }
-    & Pick<Image, 'fullUrl' | 'thumbUrl' | 'thumbWebPUrl'>
-  )> }
+  & Pick<Recipe, 'id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'imageUrl' | 'lastModifiedDate'>
+  & { imageWebPUrl: Recipe['imageUrl'], imageThumbUrl: Recipe['imageUrl'], imageThumbWebPUrl: Recipe['imageUrl'] }
 );
 
 export type RecipeDetailQueryVariables = Exact<{
@@ -409,11 +407,10 @@ export const RecipeBaseFragmentDoc = gql`
   sideDish
   tags
   preparationTime
-  image {
-    fullUrl
-    thumbUrl
-    thumbWebPUrl
-  }
+  imageUrl
+  imageWebPUrl: imageUrl(format: WEBP)
+  imageThumbUrl: imageUrl(size: {width: 800, height: 800})
+  imageThumbWebPUrl: imageUrl(size: {width: 800, height: 800}, format: WEBP)
   lastModifiedDate
 }
     `;

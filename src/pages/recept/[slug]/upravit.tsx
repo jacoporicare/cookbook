@@ -277,7 +277,8 @@ function RecipeEditPage() {
           changed={changed}
           directions={directions}
           imageUrl={
-            supportsWebP ? editedRecipe?.image?.thumbWebPUrl : editedRecipe?.image?.thumbUrl
+            (supportsWebP ? editedRecipe?.imageThumbWebPUrl : editedRecipe?.imageThumbUrl) ??
+            undefined
           }
           ingredientOptions={dataOptions?.ingredients ?? []}
           ingredients={ingredients}

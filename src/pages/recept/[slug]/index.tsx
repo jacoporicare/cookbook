@@ -101,7 +101,10 @@ function RecipeDetailPage() {
     slug,
     tags,
     title,
-    image,
+    imageUrl,
+    imageWebPUrl,
+    imageThumbUrl,
+    imageThumbWebPUrl,
     user,
   } = recipe;
 
@@ -122,8 +125,8 @@ function RecipeDetailPage() {
           {loading && <Spinner />}
           <RecipeDetail
             directions={directions ?? undefined}
-            imageFullUrl={image?.fullUrl}
-            imageUrl={supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl}
+            imageFullUrl={(supportsWebP ? imageWebPUrl : imageUrl) ?? undefined}
+            imageUrl={(supportsWebP ? imageThumbWebPUrl : imageThumbUrl) ?? undefined}
             ingredients={ingredients ?? undefined}
             lastModifiedDate={lastModifiedDate}
             servingCount={servingCount ?? undefined}

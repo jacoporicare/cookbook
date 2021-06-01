@@ -170,9 +170,9 @@ function RecipeSearch(props: Props) {
             </ListItem>
           )}
           {suggestions.map((recipe, index) => {
-            const { image, preparationTime, sideDish } = recipe;
+            const { imageThumbUrl, imageThumbWebPUrl, preparationTime, sideDish } = recipe;
 
-            const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
+            const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
             const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
             const imageUrl = thumbUrl || placeholderUrl;
 

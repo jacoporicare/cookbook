@@ -28,8 +28,8 @@ function RecipeListItem({ recipe }: Props) {
   const classes = useStyles();
   const supportsWebP = useSupportsWebP();
 
-  const { slug, image } = recipe;
-  const thumbUrl = supportsWebP ? image?.thumbWebPUrl : image?.thumbUrl;
+  const { slug, imageThumbUrl, imageThumbWebPUrl } = recipe;
+  const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
   const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
   const imageUrl = thumbUrl || placeholderUrl;
 
