@@ -99,12 +99,16 @@ const useStyles = makeStyles({
   },
 });
 
+const MAX_ITEMS = 10;
+
 function RecipeSearch(props: Props) {
   const classes = useStyles();
   const supportsWebP = useSupportsWebP();
 
   const [prevRecipes, setPrevRecipes] = useState(props.recipes);
-  const [suggestions, setSuggestions] = useState<RecipeBaseFragment[]>(props.recipes);
+  const [suggestions, setSuggestions] = useState<RecipeBaseFragment[]>(
+    props.recipes.slice(0, MAX_ITEMS),
+  );
 
   const {
     getComboboxProps,
@@ -124,7 +128,9 @@ function RecipeSearch(props: Props) {
     defaultHighlightedIndex: 0,
     itemToString: () => '', // sneaky way to reset the input without any flash of selected item
     onInputValueChange: ({ inputValue }) => {
-      setSuggestions(matchSorter(props.recipes, inputValue || '', { keys: ['title'] }));
+      setSuggestions(
+        matchSorter(props.recipes, inputValue || '', { keys: ['title'] }).slice(0, MAX_ITEMS),
+      );
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
@@ -135,7 +141,7 @@ function RecipeSearch(props: Props) {
 
   if (props.recipes !== prevRecipes) {
     setPrevRecipes(props.recipes);
-    setSuggestions(matchSorter(props.recipes, inputValue, { keys: ['title'] }));
+    setSuggestions(matchSorter(props.recipes, inputValue, { keys: ['title'] }).slice(0, MAX_ITEMS));
   }
 
   return (
@@ -169,41 +175,42 @@ function RecipeSearch(props: Props) {
               </Alert>
             </ListItem>
           )}
-          {suggestions.map((recipe, index) => {
-            const { imageThumbUrl, imageThumbWebPUrl, preparationTime, sideDish } = recipe;
+          {isOpen &&
+            suggestions.map((recipe, index) => {
+              const { imageThumbUrl, imageThumbWebPUrl, preparationTime, sideDish } = recipe;
 
-            const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
-            const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-            const imageUrl = thumbUrl || placeholderUrl;
+              const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
+              const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
+              const imageUrl = thumbUrl || placeholderUrl;
 
-            return (
-              <ListItem
-                key={recipe.id}
-                className={highlightedIndex === index ? classes.highlighted : undefined}
-                {...getItemProps({ item: recipe, index })}
-              >
-                <ListItemAvatar>
-                  <Avatar alt={recipe.title} src={imageUrl} variant="rounded" />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" noWrap>
-                      {recipe.title}
-                    </Typography>
-                  }
-                  secondary={
-                    <RecipeInfo
-                      placeholder={<>&nbsp;</>}
-                      preparationTime={preparationTime ?? undefined}
-                      sideDish={sideDish ?? undefined}
-                      small
-                    />
-                  }
-                  disableTypography
-                />
-              </ListItem>
-            );
-          })}
+              return (
+                <ListItem
+                  key={recipe.id}
+                  className={highlightedIndex === index ? classes.highlighted : undefined}
+                  {...getItemProps({ item: recipe, index })}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt={recipe.title} src={imageUrl} variant="rounded" />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1" noWrap>
+                        {recipe.title}
+                      </Typography>
+                    }
+                    secondary={
+                      <RecipeInfo
+                        placeholder={<>&nbsp;</>}
+                        preparationTime={preparationTime ?? undefined}
+                        sideDish={sideDish ?? undefined}
+                        small
+                      />
+                    }
+                    disableTypography
+                  />
+                </ListItem>
+              );
+            })}
         </List>
       </Paper>
     </div>
