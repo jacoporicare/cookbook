@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   Paper,
   Snackbar,
   Switch,
@@ -18,11 +17,11 @@ import {
   TableRow,
   TextField,
 } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { Check } from '@material-ui/icons';
 import { Alert, Color } from '@material-ui/lab';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 import { withApollo } from '../apollo';
 import { withAuth } from '../auth';
@@ -31,14 +30,13 @@ import DocumentTitle from '../components/common/DocumentTitle';
 import PageHeading from '../components/common/PageHeading';
 import Spinner from '../components/common/Spinner';
 import {
-  useMeQuery,
-  useUserListQuery,
   useCreateUserMutation,
-  useUpdateUserMutation,
   useDeleteUserMutation,
+  useMeQuery,
   useResetPasswordMutation,
   UserFragment,
-  UserInput,
+  useUpdateUserMutation,
+  useUserListQuery,
 } from '../generated/graphql';
 
 type DialogOptions = {
@@ -52,16 +50,15 @@ type DialogOptions = {
 
 function AdminPage() {
   const router = useRouter();
-  const updatingRefTimer = useRef(-1);
 
   const [snackbar, setSnackbar] = useState<[Color, string]>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialog, setDialog] = useState<DialogOptions>();
 
-  const [[usernameId, username], setUsername] = useState(['', '']);
-  const [[displayNameId, displayName], setDisplayName] = useState(['', '']);
-  const [userIdUpdating, setUserIdUpdating] = useState('');
-
+  const [userIdEditing, setUserIdEditing] = useState('');
+  const [username, setUsername] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [newUsername, setNewUsername] = useState<string>();
   const [newDisplayName, setNewDisplayName] = useState<string>();
   const [newIsAdmin, setNewIsAdmin] = useState(false);
@@ -70,11 +67,9 @@ function AdminPage() {
   const { data, error, loading: usersLoading, refetch: refetchUsers } = useUserListQuery();
   const [createUser, { loading: creating }] = useCreateUserMutation({
     onCompleted: () => {
-      setUserIdUpdating('');
       setNewUsername(undefined);
       setNewDisplayName(undefined);
       setNewIsAdmin(false);
-      clearTimeout(updatingRefTimer.current);
     },
     onError: () => {
       setSnackbar(['error', 'Nastala neočekávaná chyba']);
@@ -85,8 +80,7 @@ function AdminPage() {
   });
   const [updateUser, { loading: updating }] = useUpdateUserMutation({
     onCompleted: () => {
-      setUserIdUpdating('');
-      clearTimeout(updatingRefTimer.current);
+      setUserIdEditing('');
     },
     onError: () => {
       setSnackbar(['error', 'Nastala neočekávaná chyba']);
@@ -113,63 +107,41 @@ function AdminPage() {
     },
   });
 
-  function setUserIdUpdatingDebounced(id: string) {
-    updatingRefTimer.current = window.setTimeout(() => setUserIdUpdating(id), 200);
+  function handleEdit(user: UserFragment) {
+    setUserIdEditing(user.id);
+    setUsername(user.username);
+    setDisplayName(user.displayName);
+    setIsAdmin(user.isAdmin);
   }
 
-  function handleUsernameUpdate(user: UserFragment) {
-    const value = username.trim();
-
-    if (!value || value === user.username) {
+  function handleCreate() {
+    if (!newUsername?.trim() || !newDisplayName?.trim()) {
       return;
     }
 
-    setUserIdUpdatingDebounced(user.id);
-    updateUser({
+    createUser({
       variables: {
-        id: user.id,
         user: {
-          username: value,
-          displayName: user.displayName,
-          isAdmin: user.isAdmin,
+          username: newUsername.trim(),
+          displayName: newDisplayName.trim(),
+          isAdmin: newIsAdmin,
         },
       },
     });
   }
 
-  function handleDisplayNameUpdate(user: UserFragment) {
-    const value = displayName.trim();
-
-    if (!value || value === user.displayName) {
+  function handleUpdate() {
+    if (!username.trim() || !displayName.trim()) {
       return;
     }
 
-    setUserIdUpdatingDebounced(user.id);
     updateUser({
       variables: {
-        id: user.id,
+        id: userIdEditing,
         user: {
-          username: user.username,
-          displayName: value,
-          isAdmin: user.isAdmin,
-        },
-      },
-    });
-  }
-
-  function handleIsAdminUpdate(user: UserFragment) {
-    if (user.id === meData!.me!.id) {
-      return;
-    }
-
-    setUserIdUpdatingDebounced(user.id);
-    updateUser({
-      variables: {
-        id: user.id,
-        user: {
-          username: user.username,
-          displayName: user.displayName,
-          isAdmin: !user.isAdmin,
+          username: username.trim(),
+          displayName: displayName.trim(),
+          isAdmin,
         },
       },
     });
@@ -214,20 +186,6 @@ function AdminPage() {
     setDialogOpen(true);
   }
 
-  function handleCreateNew() {
-    const user: UserInput = {
-      username: newUsername?.trim() || '',
-      displayName: newDisplayName?.trim() || '',
-      isAdmin: newIsAdmin,
-    };
-
-    if (!user.username || !user.displayName) {
-      return;
-    }
-
-    createUser({ variables: { user } });
-  }
-
   if (meLoading || usersLoading) {
     return (
       <Layout>
@@ -266,62 +224,84 @@ function AdminPage() {
                 <TableRow>
                   <TableCell width="200px">Uživatel</TableCell>
                   <TableCell width="200px">Jméno</TableCell>
-                  <TableCell width="70px">Admin</TableCell>
+                  <TableCell align="center" width="70px">
+                    Admin
+                  </TableCell>
                   <TableCell width="250px">Poslední aktivita</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {users.map(user => {
-                  const userUpdating = userIdUpdating === user.id && updating;
-
-                  return (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <TextField
-                          disabled={userUpdating}
-                          error={usernameId === user.id && !username.trim()}
-                          value={usernameId === user.id ? username : user.username}
-                          onBlur={() => handleUsernameUpdate(user)}
-                          onChange={e => setUsername([user.id, e.currentTarget.value])}
-                          onFocus={() => setUsername([user.id, user.username])}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          disabled={userUpdating}
-                          error={displayNameId === user.id && !displayName.trim()}
-                          value={displayNameId === user.id ? displayName : user.displayName}
-                          onBlur={() => handleDisplayNameUpdate(user)}
-                          onChange={e => setDisplayName([user.id, e.currentTarget.value])}
-                          onFocus={() => setDisplayName([user.id, user.displayName])}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        {userUpdating ? (
-                          <CircularProgress size="1.5rem" />
-                        ) : (
+                  if (userIdEditing === user.id) {
+                    return (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <TextField
+                            disabled={updating}
+                            error={!username.trim()}
+                            value={username}
+                            onChange={e => setUsername(e.currentTarget.value)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            disabled={updating}
+                            error={!displayName.trim()}
+                            value={displayName}
+                            onChange={e => setDisplayName(e.currentTarget.value)}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
                           <Switch
-                            checked={user.isAdmin || false}
+                            checked={isAdmin}
                             color="primary"
                             disabled={user.id === meData!.me!.id}
                             inputProps={{ 'aria-label': 'Admin' }}
-                            onChange={() => handleIsAdminUpdate(user)}
+                            onChange={() => setIsAdmin(!isAdmin)}
                           />
-                        )}
-                      </TableCell>
+                        </TableCell>
+                        <TableCell>
+                          {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                        </TableCell>
+                        <TableCell align="left">
+                          {updating ? (
+                            <CircularProgress size="1.5rem" />
+                          ) : (
+                            <>
+                              <Button color="primary" onClick={handleUpdate}>
+                                Uložit
+                              </Button>{' '}
+                              <Button onClick={() => setUserIdEditing('')}>Zrušit</Button>
+                            </>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+
+                  return (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.username}</TableCell>
+                      <TableCell>{user.displayName}</TableCell>
+                      <TableCell align="center">{user.isAdmin && <Check />}</TableCell>
                       <TableCell>
                         {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
                       </TableCell>
                       <TableCell align="left">
-                        <IconButton
-                          aria-label="Smazat"
+                        <Button color="primary" onClick={() => handleEdit(user)}>
+                          Upravit
+                        </Button>{' '}
+                        <Button
+                          color="primary"
                           disabled={user.id === meData!.me!.id}
                           onClick={() => handleDelete(user)}
                         >
-                          <Delete />
-                        </IconButton>{' '}
-                        <Button onClick={() => handleResetPassword(user)}>Reset hesla</Button>
+                          Smazat
+                        </Button>{' '}
+                        <Button color="primary" onClick={() => handleResetPassword(user)}>
+                          Reset hesla
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -364,7 +344,7 @@ function AdminPage() {
                           !newDisplayName ||
                           !newDisplayName.trim()
                         }
-                        onClick={handleCreateNew}
+                        onClick={handleCreate}
                       >
                         Přidat
                       </Button>
