@@ -18,11 +18,11 @@ build:
     - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
 
-deploy-dev:
+deploy-feature:
   stage: deploy
   except:
-    - develop
     - master
+    - production
     - tags
   tags:
     - hukot-web
@@ -32,20 +32,20 @@ deploy-dev:
     - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd "$TARGET_DIR"
-    - envsubst < .env.dev > .env
+    - envsubst < .env.feature > .env
     - docker-compose pull
     - docker-compose down --remove-orphans --rmi local
     - docker-compose up -d
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://$CI_COMMIT_REF_SLUG.zradelnik.eu
-    on_stop: stop-env-dev
+    on_stop: stop-env-feature
 
-stop-env-dev:
+stop-env-feature:
   stage: deploy
   except:
-    - develop
     - master
+    - production
     - tags
   tags:
     - hukot-web
@@ -64,8 +64,8 @@ stop-env-dev:
 deploy:
   stage: deploy
   only:
-    - develop
     - master
+    - production
   tags:
     - hukot-web
   script:
@@ -73,8 +73,7 @@ deploy:
     - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd "$TARGET_DIR"
-    - envsubst < ".env.dev" > ".env"
-    - '[ "$CI_COMMIT_REF_SLUG" = master ] && envsubst < .env.prod > .env || envsubst < .env.dev > .env'
+    - '[ "$CI_COMMIT_REF_SLUG" = production ] && envsubst < .env.production > .env || envsubst < .env.staging > .env'
     - docker-compose pull
     - docker-compose down --remove-orphans
     - docker-compose up -d
