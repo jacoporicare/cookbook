@@ -1,6 +1,5 @@
-import { Button, Fab, Typography, Zoom } from '@material-ui/core';
-import { Add, Close, FilterList } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+import { Add, Close, FilterList } from '@mui/icons-material';
+import { Alert, Button, Fab, Typography, Zoom } from '@mui/material';
 import flow from 'lodash.flow';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

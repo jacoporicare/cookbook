@@ -1,5 +1,4 @@
-import { Box, Snackbar } from '@material-ui/core';
-import { Alert, Color } from '@material-ui/lab';
+import { Alert, AlertColor, Box, Snackbar } from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -30,7 +29,7 @@ function RecipeDetailPage() {
 
   const querySlug = router.query.slug?.toString();
 
-  const [snackbar, setSnackbar] = useState<[Color, string]>();
+  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { data: recipeData, loading: recipeLoading } = useRecipeDetailQuery({

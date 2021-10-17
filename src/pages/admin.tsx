@@ -1,4 +1,7 @@
+import { Check } from '@mui/icons-material';
 import {
+  Alert,
+  AlertColor,
   Button,
   CircularProgress,
   Dialog,
@@ -16,9 +19,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-} from '@material-ui/core';
-import { Check } from '@material-ui/icons';
-import { Alert, Color } from '@material-ui/lab';
+} from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -51,7 +52,7 @@ type DialogOptions = {
 function AdminPage() {
   const router = useRouter();
 
-  const [snackbar, setSnackbar] = useState<[Color, string]>();
+  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialog, setDialog] = useState<DialogOptions>();
 

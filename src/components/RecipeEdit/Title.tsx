@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import React, { useRef, useEffect } from 'react';
 
 export type TitleFields = 'title';
@@ -24,6 +24,7 @@ function Title({ title = '', onChange }: Props) {
       helperText={!title ? 'Název je povinný' : undefined}
       label="Název"
       value={title}
+      variant="filled"
       fullWidth
       onChange={e => onChange('title', e.currentTarget.value)}
     />

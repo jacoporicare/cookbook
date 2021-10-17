@@ -1,5 +1,4 @@
-import { Box, Button, Grid, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, Box, Button, Grid, TextField } from '@mui/material';
 import React, { KeyboardEvent } from 'react';
 
 export type IngredientFields = 'amount' | 'amountUnit' | 'name';
@@ -33,6 +32,7 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
             label="Množství"
             type="number"
             value={amount ?? ''}
+            variant="filled"
             fullWidth
             onChange={e => onChange('amount', e.currentTarget.value)}
             onKeyPress={handleKeyPress}
@@ -42,6 +42,7 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
           <TextField
             label="Jednotka"
             value={amountUnit ?? ''}
+            variant="filled"
             fullWidth
             onChange={e => onChange('amountUnit', e.currentTarget.value)}
             onKeyPress={handleKeyPress}
@@ -57,6 +58,7 @@ function IngredientForm({ name, amount, amountUnit, ingredientOptions, onChange,
                 <TextField
                   {...params}
                   label="Název"
+                  variant="filled"
                   onChange={e => onChange('name', e.currentTarget.value)}
                   onKeyPress={handleKeyPress}
                 />

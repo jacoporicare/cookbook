@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import { DesktopWindows } from '@material-ui/icons';
+import { DesktopWindows } from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
 

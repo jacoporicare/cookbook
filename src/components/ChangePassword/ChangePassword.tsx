@@ -1,5 +1,4 @@
-import { Box, Button, Grid, TextField, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Box, Button, Grid, TextField, Typography } from '@mui/material';
 import React from 'react';
 
 import Spinner from '../common/Spinner';
@@ -34,6 +33,7 @@ function ChangePassword(props: Props) {
                 name="password"
                 type="password"
                 value={props.password || ''}
+                variant="filled"
                 fullWidth
                 required
                 onChange={e => {
@@ -49,6 +49,7 @@ function ChangePassword(props: Props) {
                 name="newPassword"
                 type="password"
                 value={props.newPassword || ''}
+                variant="filled"
                 fullWidth
                 required
                 onChange={e => props.onNewPasswordChange(e.currentTarget.value)}
@@ -61,6 +62,7 @@ function ChangePassword(props: Props) {
                 name="newPasswordConfirm"
                 type="password"
                 value={props.newPasswordConfirm || ''}
+                variant="filled"
                 fullWidth
                 required
                 onChange={e => props.onNewPasswordConfirmChange(e.currentTarget.value)}

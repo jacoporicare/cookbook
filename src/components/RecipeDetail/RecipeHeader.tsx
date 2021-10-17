@@ -1,5 +1,6 @@
-import { Box, Chip, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
-import { Edit, Delete } from '@material-ui/icons';
+import { Edit, Delete } from '@mui/icons-material';
+import { Box, Chip, Grid, IconButton, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import Link from 'next/link';
 import React from 'react';
 import toSlug from 'slug';
@@ -44,11 +45,11 @@ function RecipeHeader({
           isAuthor && (
             <>
               <Link as={`/recept/${slug}/upravit`} href="/recept/[slug]/upravit" passHref>
-                <IconButton aria-label="Upravit" component="a">
+                <IconButton aria-label="Upravit" component="a" size="large">
                   <Edit />
                 </IconButton>
               </Link>{' '}
-              <IconButton aria-label="Smazat" onClick={onDeleteShow}>
+              <IconButton aria-label="Smazat" size="large" onClick={onDeleteShow}>
                 <Delete />
               </IconButton>
             </>
@@ -60,7 +61,7 @@ function RecipeHeader({
 
       {Boolean(preparationTime || sideDish || tags?.length) && (
         <Box mb={2}>
-          <Grid alignItems="center" justify="space-between" spacing={1} container>
+          <Grid alignItems="center" justifyContent="space-between" spacing={1} container>
             <Grid md="auto" xs={12} item>
               {Boolean(preparationTime || sideDish) && (
                 <RecipeInfo preparationTime={preparationTime} sideDish={sideDish} />

@@ -1,7 +1,7 @@
 import {
+  Alert,
   Box,
   InputAdornment,
-  makeStyles,
   Paper,
   Table,
   TableBody,
@@ -10,8 +10,8 @@ import {
   TableRow,
   TextField,
   Typography,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { Ingredient } from '../../generated/graphql';

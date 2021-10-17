@@ -1,5 +1,5 @@
-import { Box, Button, TextField, Typography } from '@material-ui/core';
-import { Help } from '@material-ui/icons';
+import { Help } from '@mui/icons-material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import React from 'react';
 
 export type DirectionsFields = 'directions';
@@ -14,7 +14,9 @@ function Directions({ directions = '', onChange }: Props) {
     <>
       <TextField
         label="Postup"
+        minRows={10}
         value={directions}
+        variant="filled"
         fullWidth
         multiline
         onChange={e => onChange('directions', e.currentTarget.value)}

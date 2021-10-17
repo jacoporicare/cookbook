@@ -1,5 +1,6 @@
-import { CircularProgress, colors, Fab, makeStyles } from '@material-ui/core';
-import { Save } from '@material-ui/icons';
+import { Save } from '@mui/icons-material';
+import { CircularProgress, colors, Fab } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
 import FabContainer from '../common/FabContainer';

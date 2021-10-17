@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Snackbar } from '@material-ui/core';
-import { Alert, Color } from '@material-ui/lab';
+import { Alert, AlertColor, Snackbar } from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -39,7 +38,7 @@ function RecipeEditPage() {
   const router = useRouter();
   const supportsWebP = useSupportsWebP();
 
-  const [snackbar, setSnackbar] = useState<[Color, string]>();
+  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
 
   const [changed, setChanged] = useState(false);
   const [image, setImage] = useState<File>();

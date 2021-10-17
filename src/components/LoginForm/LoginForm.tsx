@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -6,8 +7,7 @@ import {
   Grid,
   TextField,
   Typography,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
 import PageHeading from '../common/PageHeading';
@@ -40,6 +40,7 @@ function LoginForm(props: Props) {
                 label="Uživatel"
                 name="username"
                 value={props.username}
+                variant="filled"
                 fullWidth
                 required
                 onChange={props.onChange}
@@ -51,6 +52,7 @@ function LoginForm(props: Props) {
                 name="password"
                 type="password"
                 value={props.password}
+                variant="filled"
                 fullWidth
                 required
                 onChange={props.onChange}

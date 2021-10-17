@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 function PageHeading({ children, buttons }: Props) {
   return (
     <Box mb={[3, 4]}>
-      <Grid alignItems="center" justify="space-between" wrap="wrap" container>
+      <Grid alignItems="center" justifyContent="space-between" wrap="wrap" container>
         <Grid item>
           <Typography variant="h2">{children}</Typography>
         </Grid>

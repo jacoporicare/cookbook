@@ -1,4 +1,5 @@
-import { Box, makeStyles } from '@material-ui/core';
+import { Box } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';

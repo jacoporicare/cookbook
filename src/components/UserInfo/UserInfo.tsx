@@ -1,5 +1,6 @@
-import { CircularProgress, makeStyles } from '@material-ui/core';
-import { ExitToApp } from '@material-ui/icons';
+import { ExitToApp } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import React from 'react';

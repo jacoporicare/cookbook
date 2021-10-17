@@ -6,11 +6,11 @@ import {
   FormControlLabel,
   Input,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
 type Props = {

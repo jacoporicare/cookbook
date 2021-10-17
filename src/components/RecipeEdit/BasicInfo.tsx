@@ -1,17 +1,17 @@
 import {
+  Autocomplete,
   Box,
   Chip,
   FormControl,
   Input,
   InputAdornment,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   TextField,
   useTheme,
-} from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
 export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
@@ -70,6 +70,7 @@ function BasicInfo({
         label="Doba přípravy"
         type="number"
         value={preparationTime ?? ''}
+        variant="filled"
         fullWidth
         onChange={e => onChange('preparationTime', e.currentTarget.value)}
       />
@@ -80,6 +81,7 @@ function BasicInfo({
           label="Počet porcí"
           type="number"
           value={servingCount ?? ''}
+          variant="filled"
           fullWidth
           onChange={e => onChange('servingCount', e.currentTarget.value)}
         />
@@ -92,6 +94,7 @@ function BasicInfo({
             <TextField
               {...params}
               label="Příloha"
+              variant="filled"
               onChange={e => onChange('sideDish', e.currentTarget.value)}
             />
           )}
@@ -125,6 +128,7 @@ function BasicInfo({
               </div>
             )}
             value={tags ?? []}
+            variant="filled"
             multiple
             onChange={event => onTagsChange(event.target.value as string[])}
           >
