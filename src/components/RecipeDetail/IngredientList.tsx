@@ -88,6 +88,7 @@ function IngredientList(props: Props) {
               inputProps={{ min: 1 }}
               type="number"
               value={!servingCount ? '' : servingCount}
+              variant="standard"
               fullWidth
               onBlur={handleServingCountBlur}
               onChange={handleServingCountChange}
