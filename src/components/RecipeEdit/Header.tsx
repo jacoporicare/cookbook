@@ -28,7 +28,7 @@ function Header({ title, isNew, isSaving, changed }: Props) {
 
   return (
     <>
-      <PageHeading>{title || (isNew ? 'Nový recept' : ' receptu')}</PageHeading>
+      <PageHeading>{title || (isNew ? 'Nový recept' : 'Název chybí')}</PageHeading>
       <FabContainer>
         <Fab
           aria-label="Uložit"
