@@ -1,5 +1,11 @@
 import 'react-image-lightbox/style.css';
-import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from '@mui/material';
+import {
+  CssBaseline,
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+  GlobalStyles,
+} from '@mui/material';
 import * as Sentry from '@sentry/browser';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -120,6 +126,13 @@ function CookbookApp({ Component, pageProps }: AppProps) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <GlobalStyles
+            styles={{
+              body: {
+                backgroundColor: theme.palette.grey[50],
+              },
+            }}
+          />
           <Component {...pageProps} />
         </ThemeProvider>
       </StyledEngineProvider>
