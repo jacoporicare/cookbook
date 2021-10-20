@@ -1,15 +1,22 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
-type Props = {
-  imageUrl?: string;
-  onImageChange: (data: File) => void;
+const PREFIX = 'ImageUpload';
+
+const classes = {
+  text: `${PREFIX}-text`,
+  preview: `${PREFIX}-preview`,
+  dropzone: `${PREFIX}-dropzone`,
+  active: `${PREFIX}-active`,
+  accept: `${PREFIX}-accept`,
+  reject: `${PREFIX}-reject`,
 };
 
-const useStyles = makeStyles({
-  text: {
+const StyledBox = styled(Box)({
+  [`& .${classes.text}`]: {
     position: 'absolute',
     width: '200px',
     height: '200px',
@@ -21,7 +28,7 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
     zIndex: 1,
   },
-  preview: {
+  [`& .${classes.preview}`]: {
     position: 'absolute',
     width: '200px',
     height: '200px',
@@ -30,7 +37,7 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     zIndex: 2,
   },
-  dropzone: {
+  [`& .${classes.dropzone}`]: {
     float: 'right',
     marginLeft: '15px',
     position: 'relative',
@@ -46,24 +53,27 @@ const useStyles = makeStyles({
       zIndex: 3,
     },
   },
-  active: {
+  [`& .${classes.active}`]: {
     '& $text': {
       zIndex: 3,
     },
   },
-  accept: {
+  [`& .${classes.accept}`]: {
     borderStyle: 'solid',
     borderColor: 'rgb(63, 195, 0)',
   },
-  reject: {
+  [`& .${classes.reject}`]: {
     borderStyle: 'solid',
     borderColor: 'rgb(195, 31, 31)',
   },
 });
 
-function ImageUpload(props: Props) {
-  const classes = useStyles();
+type Props = {
+  imageUrl?: string;
+  onImageChange: (data: File) => void;
+};
 
+function ImageUpload(props: Props) {
   const [image, setImage] = useState<string>();
 
   useEffect(
@@ -89,22 +99,24 @@ function ImageUpload(props: Props) {
   const src = image || props.imageUrl;
 
   return (
-    <Dropzone accept="image/*" multiple={false} onDrop={handleDrop}>
-      {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
-        <div
-          {...getRootProps()}
-          className={classNames(classes.dropzone, {
-            [classes.accept]: isDragAccept,
-            [classes.active]: isDragActive,
-            [classes.reject]: isDragReject,
-          })}
-        >
-          <input {...getInputProps()} />
-          {src && <div className={classes.preview} style={{ backgroundImage: `url(${src})` }} />}
-          <div className={classes.text}>Klikni nebo sem přetáhni obrázek</div>
-        </div>
-      )}
-    </Dropzone>
+    <StyledBox>
+      <Dropzone accept="image/*" multiple={false} onDrop={handleDrop}>
+        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
+          <div
+            {...getRootProps()}
+            className={classNames(classes.dropzone, {
+              [classes.accept]: isDragAccept,
+              [classes.active]: isDragActive,
+              [classes.reject]: isDragReject,
+            })}
+          >
+            <input {...getInputProps()} />
+            {src && <div className={classes.preview} style={{ backgroundImage: `url(${src})` }} />}
+            <div className={classes.text}>Klikni nebo sem přetáhni obrázek</div>
+          </div>
+        )}
+      </Dropzone>
+    </StyledBox>
   );
 }
 

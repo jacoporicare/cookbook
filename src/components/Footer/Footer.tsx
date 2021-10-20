@@ -1,31 +1,23 @@
-import { Grid } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, Grid } from '@mui/material';
 import React from 'react';
 
-const useStyles = makeStyles({
-  appLink: {
-    height: '3rem',
-  },
-});
-
 function Footer() {
-  const classes = useStyles();
-
   return (
     <Grid alignItems="center" container>
       <Grid item xs>
         © {new Date().getFullYear()} · Žrádelník
       </Grid>
       <Grid
-        className={classes.appLink}
         component="a"
         href="https://play.google.com/store/apps/details?id=cz.jakubricar.zradelnik&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+        sx={{ height: '3rem' }}
         item
       >
-        <img
+        <Box
           alt="Nyní na Google Play"
-          className={classes.appLink}
+          component="img"
           src="https://play.google.com/intl/en_us/badges/static/images/badges/cs_badge_web_generic.png"
+          sx={{ height: '3rem' }}
         />
       </Grid>
     </Grid>

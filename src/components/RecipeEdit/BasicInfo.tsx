@@ -2,16 +2,11 @@ import {
   Autocomplete,
   Box,
   Chip,
-  FormControl,
-  Input,
   InputAdornment,
-  InputLabel,
   MenuItem,
-  Select,
   TextField,
   useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
 export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
@@ -27,19 +22,6 @@ type Props = {
   onTagsChange: (tags: string[]) => void;
 };
 
-const useStyles = makeStyles({
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-});
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
 function BasicInfo({
   preparationTime,
   servingCount,
@@ -51,7 +33,6 @@ function BasicInfo({
   onTagsChange,
 }: Props) {
   const theme = useTheme();
-  const classes = useStyles();
 
   function getStyles(tag: string, tags: string[]) {
     return {
@@ -106,39 +87,31 @@ function BasicInfo({
       </Box>
 
       <Box mt={3}>
-        <FormControl fullWidth>
-          <InputLabel id="tags-label">Štítky</InputLabel>
-          <Select
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                  width: 250,
-                },
-              },
-            }}
-            id="tags"
-            input={<Input id="tags-input" fullWidth />}
-            labelId="tags-label"
-            renderValue={selected => (
-              <div className={classes.chips}>
+        <TextField
+          SelectProps={{
+            renderValue: selected => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {(selected as string[]).map(value => (
-                  <Chip key={value} className={classes.chip} label={value} />
+                  <Chip key={value} label={value} />
                 ))}
-              </div>
-            )}
-            value={tags ?? []}
-            variant="filled"
-            multiple
-            onChange={event => onTagsChange(event.target.value as string[])}
-          >
-            {tagOptions.map(tag => (
-              <MenuItem key={tag} style={getStyles(tag, tags ?? [])} value={tag}>
-                {tag}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              </Box>
+            ),
+            multiple: true,
+          }}
+          id="tags"
+          label="Štítky"
+          value={tags ?? []}
+          variant="filled"
+          fullWidth
+          select
+          onChange={event => onTagsChange(event.target.value as unknown as string[])}
+        >
+          {tagOptions.map(tag => (
+            <MenuItem key={tag} style={getStyles(tag, tags ?? [])} value={tag}>
+              {tag}
+            </MenuItem>
+          ))}
+        </TextField>
         {/* <label htmlFor="tags">Štítky</label>
         <Creatable
           defaultValue={tags?.map(t => ({ value: t, label: t }))}
