@@ -1,15 +1,15 @@
 import {
+  Alert,
   Avatar,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  makeStyles,
   OutlinedInput,
   Paper,
   Typography,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 import { useCombobox } from 'downshift';
 import { matchSorter } from 'match-sorter';

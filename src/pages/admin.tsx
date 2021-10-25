@@ -1,4 +1,7 @@
+import { Check } from '@mui/icons-material';
 import {
+  Alert,
+  AlertColor,
   Button,
   CircularProgress,
   Dialog,
@@ -16,9 +19,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-} from '@material-ui/core';
-import { Check } from '@material-ui/icons';
-import { Alert, Color } from '@material-ui/lab';
+} from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -51,7 +52,7 @@ type DialogOptions = {
 function AdminPage() {
   const router = useRouter();
 
-  const [snackbar, setSnackbar] = useState<[Color, string]>();
+  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialog, setDialog] = useState<DialogOptions>();
 
@@ -240,7 +241,9 @@ function AdminPage() {
                           <TextField
                             disabled={updating}
                             error={!username.trim()}
+                            label="Uživatel"
                             value={username}
+                            variant="filled"
                             onChange={e => setUsername(e.currentTarget.value)}
                           />
                         </TableCell>
@@ -248,7 +251,9 @@ function AdminPage() {
                           <TextField
                             disabled={updating}
                             error={!displayName.trim()}
+                            label="Jméno"
                             value={displayName}
+                            variant="filled"
                             onChange={e => setDisplayName(e.currentTarget.value)}
                           />
                         </TableCell>
@@ -312,6 +317,7 @@ function AdminPage() {
                       error={newUsername === ''}
                       label="Nový uživatel"
                       value={newUsername || ''}
+                      variant="filled"
                       onChange={e => setNewUsername(e.currentTarget.value)}
                     />
                   </TableCell>
@@ -320,6 +326,7 @@ function AdminPage() {
                       error={newDisplayName === ''}
                       label="Jméno"
                       value={newDisplayName || ''}
+                      variant="filled"
                       onChange={e => setNewDisplayName(e.currentTarget.value)}
                     />
                   </TableCell>

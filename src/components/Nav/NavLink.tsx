@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';

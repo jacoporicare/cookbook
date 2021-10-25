@@ -7,7 +7,6 @@ import { withAuth } from '../auth';
 import ChangePassword from '../components/ChangePassword';
 import Layout from '../components/Layout';
 import DocumentTitle from '../components/common/DocumentTitle';
-import PageHeading from '../components/common/PageHeading';
 
 function SettingsPage() {
   const [token] = useAuth();
@@ -24,7 +23,6 @@ function SettingsPage() {
   return (
     <Layout>
       <DocumentTitle title="Nastavení" />
-      <PageHeading>Nastavení</PageHeading>
       <ChangePassword />
     </Layout>
   );

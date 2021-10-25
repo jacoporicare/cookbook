@@ -1,5 +1,4 @@
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
 
 import { useChangePasswordMutation } from '../../generated/graphql';

@@ -1,4 +1,4 @@
-import { blue, grey, red } from '@material-ui/core/colors';
+import { blue, grey, red } from '@mui/material/colors';
 
 export const colors = {
   white: '#fff',

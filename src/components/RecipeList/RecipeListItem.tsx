@@ -1,11 +1,5 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import Link from 'next/link';
 import React from 'react';
 import { LazyImage } from 'react-lazy-images';

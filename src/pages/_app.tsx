@@ -1,11 +1,22 @@
 import 'react-image-lightbox/style.css';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import {
+  CssBaseline,
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+  GlobalStyles,
+} from '@mui/material';
 import * as Sentry from '@sentry/browser';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
 
 import theme from '../theme';
+
+declare module '@mui/private-theming/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
+  interface DefaultTheme extends Theme {}
+}
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: 'https://3514990518354dc6a910d88a3988846b@o395458.ingest.sentry.io/5247255' });
@@ -104,18 +115,27 @@ function CookbookApp({ Component, pageProps }: AppProps) {
         <script
           dangerouslySetInnerHTML={{
             __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'UA-141291591-1');
-              `,
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'UA-141291591-1');
+            `,
           }}
         />
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <GlobalStyles
+            styles={{
+              body: {
+                backgroundColor: theme.palette.grey[50],
+              },
+            }}
+          />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

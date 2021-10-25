@@ -1,5 +1,5 @@
-import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 

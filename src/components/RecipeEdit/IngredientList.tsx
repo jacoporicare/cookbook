@@ -1,4 +1,6 @@
+import { Delete, Menu } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Grid,
   IconButton,
@@ -7,10 +9,8 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
-} from '@material-ui/core';
-import { Delete, Menu } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 import {
   SortableContainer,
@@ -77,7 +77,7 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
       </ListItemText>
 
       <ListItemSecondaryAction>
-        <IconButton aria-label="Smazat" edge="end" onClick={() => onRemove(itemIndex)}>
+        <IconButton aria-label="Smazat" edge="end" size="large" onClick={() => onRemove(itemIndex)}>
           <Delete />
         </IconButton>
       </ListItemSecondaryAction>

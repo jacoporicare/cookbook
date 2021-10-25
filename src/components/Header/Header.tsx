@@ -1,4 +1,4 @@
-import { Box, makeStyles } from '@material-ui/core';
+import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,25 +15,7 @@ type Props = {
   showUserInfo?: boolean;
 };
 
-const useStyles = makeStyles({
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    fontFamily: "'Amatic SC', cursive",
-    fontSize: '36px',
-    color: 'white',
-    textDecoration: 'none',
-
-    '&:hover': {
-      color: 'white',
-      textDecoration: 'none',
-    },
-  },
-});
-
 function Header(props: Props) {
-  const classes = useStyles();
-
   return (
     <Box
       bgcolor={colors.gray900}
@@ -48,13 +30,28 @@ function Header(props: Props) {
     >
       <Box display="flex" justifyContent="space-between" px={[3, 4]} py={1}>
         <Box alignItems="center" display="flex">
-          <Link href="/">
-            <a className={classes.logo}>
+          <Link href="/" passHref>
+            <Box
+              component="a"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                fontFamily: "'Amatic SC', cursive",
+                fontSize: '36px',
+                color: 'white',
+                textDecoration: 'none',
+
+                '&:hover': {
+                  color: 'white',
+                  textDecoration: 'none',
+                },
+              }}
+            >
               <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
               <Box display={['none', 'inline']} ml={3}>
                 Žrádelník
               </Box>
-            </a>
+            </Box>
           </Link>
         </Box>
         <Box alignItems="center" display="flex">

@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Button, Grid, TextField } from '@mui/material';
 import React, { KeyboardEvent } from 'react';
 
 export type IngredientGroupFields = 'group';
@@ -26,6 +26,7 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
         <TextField
           label="Nová skupina"
           value={group}
+          variant="filled"
           fullWidth
           onChange={e => onChange('group', e.currentTarget.value)}
           onKeyPress={handleKeyPress}
