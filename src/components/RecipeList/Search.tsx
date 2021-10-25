@@ -2,15 +2,11 @@ import {
   Box,
   Checkbox,
   Chip,
-  FormControl,
   FormControlLabel,
-  Input,
-  InputLabel,
   MenuItem,
-  Select,
+  TextField,
   useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
 type Props = {
@@ -21,22 +17,8 @@ type Props = {
   onMatchAllChange: (matchAll: boolean) => void;
 };
 
-const useStyles = makeStyles({
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-});
-
-const ITEM_HEIGHT = 36;
-const ITEM_PADDING_TOP = 8;
-
 function Search(props: Props) {
   const theme = useTheme();
-  const classes = useStyles();
 
   function getStyles(tag: string, tags: string[]) {
     return {
@@ -50,42 +32,35 @@ function Search(props: Props) {
   return (
     <Box display="flex" justifyContent="flex-end" mb={3} mt={[-2, -4]}>
       <Box flex="auto" maxWidth="400px" minWidth="200px">
-        <FormControl fullWidth>
-          <InputLabel id="tags-label">Štítky</InputLabel>
-          <Select
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                  width: 250,
-                },
-              },
-            }}
-            id="tags"
-            input={<Input id="tags-input" fullWidth />}
-            labelId="tags-label"
-            renderValue={selected => (
-              <div className={classes.chips}>
+        <TextField
+          SelectProps={{
+            renderValue: selected => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {(selected as string[]).map(value => (
-                  <Chip key={value} className={classes.chip} label={value} />
+                  <Chip key={value} label={value} />
                 ))}
-              </div>
-            )}
-            value={props.selectedTags ?? []}
-            multiple
-            onChange={event => props.onSearch(event.target.value as string[])}
-          >
-            {props.tagOptions.map(tag => (
-              <MenuItem
-                key={tag.value}
-                style={getStyles(tag.value, props.selectedTags ?? [])}
-                value={tag.value}
-              >
-                {tag.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              </Box>
+            ),
+            multiple: true,
+          }}
+          id="tags"
+          label="Štítky"
+          value={props.selectedTags ?? []}
+          variant="filled"
+          fullWidth
+          select
+          onChange={event => props.onSearch(event.target.value as unknown as string[])}
+        >
+          {props.tagOptions.map(tag => (
+            <MenuItem
+              key={tag.value}
+              style={getStyles(tag.value, props.selectedTags ?? [])}
+              value={tag.value}
+            >
+              {tag.label}
+            </MenuItem>
+          ))}
+        </TextField>
       </Box>
       {props.multipleSelected && (
         <Box alignItems="center" display="flex" ml={2}>
