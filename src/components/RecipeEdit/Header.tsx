@@ -1,9 +1,7 @@
 import { Save } from '@mui/icons-material';
-import { CircularProgress, colors, Fab } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { CircularProgress, IconButton } from '@mui/material';
 import React from 'react';
 
-import FabContainer from '../common/FabContainer';
 import PageHeading from '../common/PageHeading';
 
 type Props = {
@@ -13,34 +11,22 @@ type Props = {
   changed: boolean;
 };
 
-const useStyles = makeStyles({
-  fabProgress: {
-    color: colors.green[500],
-    position: 'absolute',
-    top: -6,
-    left: -6,
-    zIndex: 1,
-  },
-});
-
 function Header({ title, isNew, isSaving, changed }: Props) {
-  const classes = useStyles();
-
   return (
-    <>
-      <PageHeading>{title || (isNew ? 'Nový recept' : 'Název chybí')}</PageHeading>
-      <FabContainer>
-        <Fab
+    <PageHeading
+      buttons={
+        <IconButton
           aria-label="Uložit"
-          color="primary"
           disabled={!title || isSaving || !changed}
+          size="large"
           type="submit"
         >
-          <Save />
-          {isSaving && <CircularProgress className={classes.fabProgress} size={68} />}
-        </Fab>
-      </FabContainer>
-    </>
+          {isSaving ? <CircularProgress size={24} /> : <Save />}
+        </IconButton>
+      }
+    >
+      {title || (isNew ? 'Nový recept' : 'Název chybí')}
+    </PageHeading>
   );
 }
 

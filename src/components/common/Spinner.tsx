@@ -1,23 +1,20 @@
 import { CircularProgress } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { useEffect, useRef, useState } from 'react';
 
-const PREFIX = 'Spinner';
-
-const classes = {
-  container: `${PREFIX}-container`,
-  overlay: `${PREFIX}-overlay`,
+type Props = {
+  overlay?: boolean;
 };
 
-const Root = styled('div')({
-  [`& .${classes.container}`]: {
+const useStyles = makeStyles({
+  container: {
     margin: '100px auto',
     width: '50px',
     height: '20px',
     textAlign: 'center',
     fontSize: '10px',
   },
-  [`& .${classes.overlay}`]: {
+  overlay: {
     position: 'fixed',
     top: 0,
     left: 0,
@@ -35,11 +32,9 @@ const Root = styled('div')({
   },
 });
 
-type Props = {
-  overlay?: boolean;
-};
-
 function Spinner(props: Props) {
+  const classes = useStyles();
+
   const timer = useRef<number>();
   const [visible, setVisible] = useState(false);
 
@@ -58,11 +53,11 @@ function Spinner(props: Props) {
   }
 
   return (
-    <Root className={props.overlay ? classes.overlay : undefined}>
+    <div className={props.overlay ? classes.overlay : undefined}>
       <div className={classes.container}>
         <CircularProgress />
       </div>
-    </Root>
+    </div>
   );
 }
 
