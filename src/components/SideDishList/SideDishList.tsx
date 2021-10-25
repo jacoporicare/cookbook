@@ -21,10 +21,10 @@ type Props = {
 
 function SideDishList({ sideDishes }: Props) {
   return (
-    <>
-      <PageHeading>Přílohy</PageHeading>
+    <Box display="flex" justifyContent="center">
+      <Box maxWidth="600px" width="100%">
+        <PageHeading>Přílohy</PageHeading>
 
-      <Box maxWidth="600px">
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -50,7 +50,7 @@ function SideDishList({ sideDishes }: Props) {
           </Table>
         </TableContainer>
       </Box>
-    </>
+    </Box>
   );
 }
 
