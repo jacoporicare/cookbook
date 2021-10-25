@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import React, { useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
@@ -89,6 +89,7 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
           onChange={handleChange}
         />
       </Box>
+      <Divider sx={{ mt: 3 }} />
       <Box mt={3}>
         <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleChange} />
       </Box>
