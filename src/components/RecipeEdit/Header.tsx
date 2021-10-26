@@ -1,5 +1,4 @@
-import { Save } from '@mui/icons-material';
-import { CircularProgress, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import React from 'react';
 
 import PageHeading from '../common/PageHeading';
@@ -15,14 +14,14 @@ function Header({ title, isNew, isSaving, changed }: Props) {
   return (
     <PageHeading
       buttons={
-        <IconButton
-          aria-label="Uložit"
+        <Button
+          color="primary"
           disabled={!title || isSaving || !changed}
-          size="large"
           type="submit"
+          variant="contained"
         >
-          {isSaving ? <CircularProgress size={24} /> : <Save />}
-        </IconButton>
+          Uložit
+        </Button>
       }
     >
       {title || (isNew ? 'Nový recept' : 'Název chybí')}
