@@ -1,6 +1,9 @@
+import createEmotionServer from '@emotion/server/create-instance';
 import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import React from 'react';
+
+import createEmotionCache from '../styles';
 
 class CookbookDocument extends Document {
   render() {
@@ -45,17 +48,33 @@ CookbookDocument.getInitialProps = async ctx => {
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
+  const cache = createEmotionCache();
+  const { extractCriticalToChunks } = createEmotionServer(cache);
+
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: App => props => sheets.collect(<App {...props} />),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      enhanceApp: (App: any) => props => sheets.collect(<App emotionCache={cache} {...props} />),
     });
 
   const initialProps = await Document.getInitialProps(ctx);
+  const emotionChunks = extractCriticalToChunks(initialProps.html);
+  const emotionStyleTags = emotionChunks.styles.map(style => (
+    <style
+      key={style.key}
+      dangerouslySetInnerHTML={{ __html: style.css }}
+      data-emotion={`${style.key} ${style.ids.join(' ')}`}
+    />
+  ));
 
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      sheets.getStyleElement(),
+      ...emotionStyleTags,
+    ],
   };
 };
 
