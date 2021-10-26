@@ -1,4 +1,4 @@
-import { Check } from '@mui/icons-material';
+import { Check, Edit, Delete, RestartAlt } from '@mui/icons-material';
 import {
   Alert,
   AlertColor,
@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
   Paper,
   Snackbar,
   Switch,
@@ -237,7 +238,7 @@ function AdminPage() {
                   if (userIdEditing === user.id) {
                     return (
                       <TableRow key={user.id}>
-                        <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                        <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
                           <TextField
                             disabled={updating}
                             error={!username.trim()}
@@ -247,18 +248,18 @@ function AdminPage() {
                             onChange={e => setUsername(e.currentTarget.value)}
                           />
                         </TableCell>
-                        <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                        <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
                           <TextField
                             disabled={updating}
                             error={!displayName.trim()}
                             label="Jméno"
-                            sx={{ paddingTop: '3px', paddingBottom: '3px' }}
+                            sx={{ paddingTop: '4px', paddingBottom: '4px' }}
                             value={displayName}
                             variant="filled"
                             onChange={e => setDisplayName(e.currentTarget.value)}
                           />
                         </TableCell>
-                        <TableCell align="center" sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                        <TableCell align="center">
                           <Switch
                             checked={isAdmin}
                             color="primary"
@@ -275,10 +276,12 @@ function AdminPage() {
                             <CircularProgress size="1.5rem" />
                           ) : (
                             <>
-                              <Button color="primary" onClick={handleUpdate}>
+                              <Button color="primary" variant="contained" onClick={handleUpdate}>
                                 Uložit
                               </Button>{' '}
-                              <Button onClick={() => setUserIdEditing('')}>Zrušit</Button>
+                              <Button color="inherit" onClick={() => setUserIdEditing('')}>
+                                Zrušit
+                              </Button>
                             </>
                           )}
                         </TableCell>
@@ -295,25 +298,24 @@ function AdminPage() {
                         {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
                       </TableCell>
                       <TableCell align="left">
-                        <Button color="primary" onClick={() => handleEdit(user)}>
-                          Upravit
-                        </Button>{' '}
-                        <Button
-                          color="primary"
+                        <IconButton onClick={() => handleEdit(user)}>
+                          <Edit />
+                        </IconButton>{' '}
+                        <IconButton
                           disabled={user.id === meData!.me!.id}
                           onClick={() => handleDelete(user)}
                         >
-                          Smazat
-                        </Button>{' '}
-                        <Button color="primary" onClick={() => handleResetPassword(user)}>
-                          Reset hesla
-                        </Button>
+                          <Delete />
+                        </IconButton>{' '}
+                        <IconButton onClick={() => handleResetPassword(user)}>
+                          <RestartAlt />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 <TableRow>
-                  <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                  <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
                     <TextField
                       error={newUsername === ''}
                       label="Nový uživatel"
@@ -322,7 +324,7 @@ function AdminPage() {
                       onChange={e => setNewUsername(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                  <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
                     <TextField
                       error={newDisplayName === ''}
                       label="Jméno"
@@ -331,7 +333,7 @@ function AdminPage() {
                       onChange={e => setNewDisplayName(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell align="center" sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
+                  <TableCell align="center">
                     <Switch
                       checked={newIsAdmin}
                       color="primary"
@@ -352,6 +354,7 @@ function AdminPage() {
                           !newDisplayName ||
                           !newDisplayName.trim()
                         }
+                        variant="contained"
                         onClick={handleCreate}
                       >
                         Přidat
