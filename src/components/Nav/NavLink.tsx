@@ -1,33 +1,28 @@
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
+import { styled } from '@mui/material';
 import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-
-import { colors } from '../../styles/colors';
 
 type Props = LinkProps & {
   activeHref?: string;
   children: React.ReactNode;
 };
 
-const useStyles = makeStyles(theme => ({
-  navItem: {
-    color: colors.gray600,
+const StyledLink = styled('a', { shouldForwardProp: propName => propName !== 'active' })<{
+  active: boolean;
+}>(({ active, theme }) => [
+  {
+    display: 'block',
+    color: 'white',
+    textDecoration: 'none',
     fontSize: '20px',
     fontWeight: 300,
     padding: '4px 8px',
     whiteSpace: 'nowrap',
-  },
-  '@media (min-width: 1024px)': {
-    navItem: {
+
+    '@media (min-width: 1024px)': {
       padding: '8px',
     },
-  },
-  link: {
-    display: 'block',
-    color: 'white',
-    textDecoration: 'none',
 
     '&::after': {
       content: "''",
@@ -48,27 +43,22 @@ const useStyles = makeStyles(theme => ({
         transform: 'scaleX(1)',
       },
     },
-
-    '&$active::after': {
+  },
+  active && {
+    '&::after': {
       transform: 'scaleX(1) !important',
     },
   },
-  active: {},
-}));
+]);
 
 function NavLink({ activeHref, children, ...linkProps }: Props) {
-  const classes = useStyles();
   const router = useRouter();
 
   return (
-    <Link {...linkProps}>
-      <a
-        className={classNames(classes.navItem, classes.link, {
-          [classes.active]: router.pathname === (activeHref || linkProps.href.toString()),
-        })}
-      >
+    <Link {...linkProps} passHref>
+      <StyledLink active={router.pathname === (activeHref || linkProps.href.toString())}>
         {children}
-      </a>
+      </StyledLink>
     </Link>
   );
 }

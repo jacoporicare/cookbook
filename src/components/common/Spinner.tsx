@@ -1,40 +1,11 @@
-import { CircularProgress } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, CircularProgress } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
   overlay?: boolean;
 };
 
-const useStyles = makeStyles({
-  container: {
-    margin: '100px auto',
-    width: '50px',
-    height: '20px',
-    textAlign: 'center',
-    fontSize: '10px',
-  },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    zIndex: 1000,
-
-    '& > $container': {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  },
-});
-
 function Spinner(props: Props) {
-  const classes = useStyles();
-
   const timer = useRef<number>();
   const [visible, setVisible] = useState(false);
 
@@ -53,11 +24,39 @@ function Spinner(props: Props) {
   }
 
   return (
-    <div className={props.overlay ? classes.overlay : undefined}>
-      <div className={classes.container}>
+    <Box
+      sx={
+        props.overlay
+          ? {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              zIndex: 1000,
+            }
+          : undefined
+      }
+    >
+      <Box
+        sx={{
+          margin: '100px auto',
+          width: '50px',
+          height: '20px',
+          textAlign: 'center',
+          fontSize: '10px',
+          ...(props.overlay && {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }),
+        }}
+      >
         <CircularProgress />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

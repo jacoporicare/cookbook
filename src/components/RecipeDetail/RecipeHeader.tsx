@@ -1,6 +1,5 @@
 import { Edit, Delete } from '@mui/icons-material';
 import { Box, Chip, Grid, IconButton, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import Link from 'next/link';
 import React from 'react';
 import toSlug from 'slug';
@@ -18,15 +17,6 @@ type Props = {
   onDeleteShow: () => void;
 };
 
-const useStyles = makeStyles({
-  link: {
-    textDecoration: 'none',
-  },
-  chip: {
-    cursor: 'pointer',
-  },
-});
-
 function RecipeHeader({
   preparationTime,
   sideDish,
@@ -36,8 +26,6 @@ function RecipeHeader({
   isAuthor,
   onDeleteShow,
 }: Props) {
-  const classes = useStyles();
-
   return (
     <>
       <PageHeading
@@ -77,8 +65,8 @@ function RecipeHeader({
                   </Grid>
                   {tags?.map(tag => (
                     <Link key={tag} href={`/?stitky=${toSlug(tag)}`} passHref>
-                      <Grid className={classes.link} component="a" item>
-                        <Chip className={classes.chip} color="primary" label={tag} />
+                      <Grid component="a" sx={{ textDecoration: 'none' }} item>
+                        <Chip color="primary" label={tag} sx={{ cursor: 'pointer' }} />
                       </Grid>
                     </Link>
                   ))}

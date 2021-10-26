@@ -1,5 +1,4 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import Link from 'next/link';
 import React from 'react';
 import { LazyImage } from 'react-lazy-images';
@@ -11,15 +10,7 @@ type Props = {
   recipe: RecipeBaseFragment;
 };
 
-const useStyles = makeStyles({
-  media: {
-    height: 0,
-    paddingTop: '75%', // 4:3
-  },
-});
-
 function RecipeListItem({ recipe }: Props) {
-  const classes = useStyles();
   const supportsWebP = useSupportsWebP();
 
   const { slug, imageThumbUrl, imageThumbWebPUrl } = recipe;
@@ -33,10 +24,14 @@ function RecipeListItem({ recipe }: Props) {
         <CardActionArea>
           <LazyImage
             actual={({ imageProps }) => (
-              <CardMedia className={classes.media} image={imageProps.src} />
+              <CardMedia image={imageProps.src} sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }} />
             )}
             placeholder={({ ref }) => (
-              <CardMedia ref={ref} className={classes.media} image={placeholderUrl} />
+              <CardMedia
+                ref={ref}
+                image={placeholderUrl}
+                sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }}
+              />
             )}
             src={imageUrl}
           />

@@ -1,26 +1,10 @@
 import { DesktopWindows } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
+import { Box } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { colors } from '../../styles/colors';
 
-const useStyles = makeStyles({
-  wakeLock: {
-    cursor: 'pointer',
-    textAlign: 'center',
-    fontSize: '0.8em',
-    color: colors.gray600,
-    marginRight: '1rem',
-  },
-  active: {
-    color: colors.white,
-  },
-});
-
 function WakeLock() {
-  const classes = useStyles();
-
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
   const wakeLock = useRef<WakeLock>();
 
@@ -45,13 +29,20 @@ function WakeLock() {
   }
 
   return (
-    <div
-      className={classNames(classes.wakeLock, { [classes.active]: wakeLockEnabled })}
+    <Box
+      sx={{
+        cursor: 'pointer',
+        textAlign: 'center',
+        fontSize: '0.8em',
+        color: colors.gray600,
+        marginRight: '1rem',
+        ...(wakeLockEnabled && { color: colors.white }),
+      }}
       onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
     >
       <DesktopWindows fontSize="small" />
       <div>Nevypínat</div>
-    </div>
+    </Box>
   );
 }
 

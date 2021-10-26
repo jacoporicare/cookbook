@@ -1,5 +1,4 @@
 import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 
@@ -19,17 +18,6 @@ type Props = {
   userName: string;
 };
 
-const useStyles = makeStyles({
-  imageLink: {
-    display: 'block',
-    lineHeight: 0,
-  },
-  image: {
-    width: '100%',
-    borderRadius: '4px',
-  },
-});
-
 function RecipeDetail({
   title,
   ingredients,
@@ -40,8 +28,6 @@ function RecipeDetail({
   imageFullUrl,
   userName,
 }: Props) {
-  const classes = useStyles();
-
   const [isImageOpen, setIsImageOpen] = useState(false);
 
   function handleImageClick(e: React.MouseEvent) {
@@ -74,9 +60,25 @@ function RecipeDetail({
           <Box pt={{ xs: 0, md: '2.525rem' }}>
             {imageUrl && (
               <Paper>
-                <a className={classes.imageLink} href={imageFullUrl} onClick={handleImageClick}>
-                  <img alt={title} className={classes.image} src={imageUrl} />
-                </a>
+                <Box
+                  component="a"
+                  href={imageFullUrl}
+                  sx={{
+                    display: 'block',
+                    lineHeight: 0,
+                  }}
+                  onClick={handleImageClick}
+                >
+                  <Box
+                    alt={title}
+                    component="img"
+                    src={imageUrl}
+                    sx={{
+                      width: '100%',
+                      borderRadius: '4px',
+                    }}
+                  />
+                </Box>
               </Paper>
             )}
             <Box my={2}>

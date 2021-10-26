@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { colors } from '../../styles/colors';
@@ -11,40 +11,33 @@ type Props = {
   showUserInfo?: boolean;
 };
 
-const useStyles = makeStyles({
-  nav: {},
-
-  '@media (max-width: 1023px)': {
-    nav: {
-      position: 'fixed',
-      top: '57px',
-      right: 0,
-      width: '250px',
-      height: '100%',
-      transform: 'translateX(250px)',
-      transition: 'transform 250ms ease-in-out',
-      background: colors.gray900,
-    },
-  },
-  '@media (min-width: 1024px)': {
-    nav: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  },
-});
-
 function Nav(props: Props) {
-  const classes = useStyles();
-
   return (
     <>
       <Burger />
-      <nav className={classes.nav}>
+      <Box
+        component="nav"
+        sx={{
+          '@media (max-width: 1023px)': {
+            position: 'fixed',
+            top: '57px',
+            right: 0,
+            width: '250px',
+            height: '100%',
+            transform: 'translateX(250px)',
+            transition: 'transform 250ms ease-in-out',
+            background: colors.gray900,
+          },
+          '@media (min-width: 1024px)': {
+            display: 'flex',
+            alignItems: 'center',
+          },
+        }}
+      >
         <NavLink href="/">Recepty</NavLink>
         <NavLink href="/prilohy">Přílohy</NavLink>
         {props.showUserInfo && <UserInfo />}
-      </nav>
+      </Box>
     </>
   );
 }
