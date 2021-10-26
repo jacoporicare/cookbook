@@ -1,17 +1,14 @@
-import 'react-image-lightbox/style.css';
-import {
-  CssBaseline,
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-  GlobalStyles,
-} from '@mui/material';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import { CssBaseline, GlobalStyles, Theme, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/browser';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
 
+import createEmotionCache from '../styles';
 import theme from '../theme';
+
+import 'react-image-lightbox/style.css';
 
 declare module '@mui/private-theming/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
@@ -22,7 +19,17 @@ if (process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: 'https://3514990518354dc6a910d88a3988846b@o395458.ingest.sentry.io/5247255' });
 }
 
-function CookbookApp({ Component, pageProps }: AppProps) {
+type ExtAppProps = {
+  emotionCache: EmotionCache;
+};
+
+const clientSideEmotionCache = createEmotionCache();
+
+function CookbookApp({
+  Component,
+  pageProps,
+  emotionCache = clientSideEmotionCache,
+}: AppProps & ExtAppProps) {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -30,7 +37,7 @@ function CookbookApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <>
+    <CacheProvider value={emotionCache}>
       <Head>
         <meta charSet="utf-8" />
         <meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
@@ -123,20 +130,18 @@ function CookbookApp({ Component, pageProps }: AppProps) {
           }}
         />
       </Head>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <GlobalStyles
-            styles={{
-              body: {
-                backgroundColor: theme.palette.grey[50],
-              },
-            }}
-          />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <GlobalStyles
+          styles={{
+            body: {
+              backgroundColor: theme.palette.grey[50],
+            },
+          }}
+        />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 
