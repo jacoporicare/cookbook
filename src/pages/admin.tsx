@@ -237,7 +237,7 @@ function AdminPage() {
                   if (userIdEditing === user.id) {
                     return (
                       <TableRow key={user.id}>
-                        <TableCell>
+                        <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                           <TextField
                             disabled={updating}
                             error={!username.trim()}
@@ -247,17 +247,18 @@ function AdminPage() {
                             onChange={e => setUsername(e.currentTarget.value)}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                           <TextField
                             disabled={updating}
                             error={!displayName.trim()}
                             label="Jméno"
+                            sx={{ paddingTop: '3px', paddingBottom: '3px' }}
                             value={displayName}
                             variant="filled"
                             onChange={e => setDisplayName(e.currentTarget.value)}
                           />
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="center" sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                           <Switch
                             checked={isAdmin}
                             color="primary"
@@ -312,7 +313,7 @@ function AdminPage() {
                   );
                 })}
                 <TableRow>
-                  <TableCell>
+                  <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                     <TextField
                       error={newUsername === ''}
                       label="Nový uživatel"
@@ -321,7 +322,7 @@ function AdminPage() {
                       onChange={e => setNewUsername(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                     <TextField
                       error={newDisplayName === ''}
                       label="Jméno"
@@ -330,7 +331,7 @@ function AdminPage() {
                       onChange={e => setNewDisplayName(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ paddingTop: '3px', paddingBottom: '3px' }}>
                     <Switch
                       checked={newIsAdmin}
                       color="primary"
