@@ -1,5 +1,4 @@
-import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, styled } from '@mui/material';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';

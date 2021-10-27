@@ -1,7 +1,5 @@
 import { ExitToApp } from '@mui/icons-material';
-import { CircularProgress } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
+import { Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -15,50 +13,33 @@ type Props = {
   isUserAdmin?: boolean;
 };
 
-const useStyles = makeStyles({
-  navItem: {
-    color: colors.gray600,
-    fontSize: '20px',
-    fontWeight: 300,
-    padding: '4px 8px',
-    whiteSpace: 'nowrap',
-  },
-  divider: {
-    paddingLeft: 0,
-    paddingRight: 0,
-  },
-  signOut: {},
-  '@media (max-width: 1023px)': {
-    divider: {
-      borderTop: `1px solid ${colors.gray600}`,
-      height: 0,
-      overflow: 'hidden',
-    },
-  },
-  '@media (min-width: 1024px)': {
-    navItem: {
-      padding: '8px',
-    },
-    divider: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    signOut: {
-      display: 'none',
-    },
-  },
-});
-
 function UserInfo(props: Props) {
-  const classes = useStyles();
-
   const [token] = useAuth();
   const router = useRouter();
 
   return (
     <>
       {props.isUserAdmin && <NavLink href="/admin">Admin</NavLink>}
-      <div className={classNames(classes.navItem, classes.divider)}>·</div>
+      <Box
+        sx={{
+          color: colors.gray600,
+          fontSize: '20px',
+          fontWeight: 300,
+          padding: '4px 0',
+          whiteSpace: 'nowrap',
+          '@media (max-width: 1023px)': {
+            borderTop: `1px solid ${colors.gray600}`,
+            height: 0,
+            overflow: 'hidden',
+          },
+          '@media (min-width: 1024px)': {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+        }}
+      >
+        ·
+      </Box>
       {!token ? (
         <NavLink
           activeHref="/prihlaseni"
@@ -73,14 +54,35 @@ function UserInfo(props: Props) {
       ) : (
         <>
           {props.isUserLoading ? (
-            <div className={classes.navItem}>
+            <Box
+              sx={{
+                color: colors.gray600,
+                fontSize: '20px',
+                fontWeight: 300,
+                padding: '4px 8px',
+                whiteSpace: 'nowrap',
+                '@media (min-width: 1024px)': {
+                  padding: '8px',
+                },
+              }}
+            >
               <CircularProgress size="1.5rem" />
-            </div>
+            </Box>
           ) : (
             <NavLink href="/nastaveni">{props.userName}</NavLink>
           )}
           <NavLink href={`/odhlaseni?u=${router.asPath || ''}`}>
-            <ExitToApp fontSize="inherit" /> <span className={classes.signOut}>Odhlásit</span>
+            <ExitToApp fontSize="inherit" />{' '}
+            <Box
+              component="span"
+              sx={{
+                '@media (min-width: 1024px)': {
+                  display: 'none',
+                },
+              }}
+            >
+              Odhlásit
+            </Box>
           </NavLink>
         </>
       )}

@@ -1,5 +1,4 @@
-import { Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, styled, Typography } from '@mui/material';
 import React from 'react';
 
 type Props = {
@@ -24,28 +23,19 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const useStyles = makeStyles({
-  root: {
-    margin: 0,
-    padding: 0,
-    listStyle: 'none',
+const Item = styled('li')({
+  display: 'inline-block',
+  '& + &': {
+    marginLeft: '4px',
   },
-  item: {
+  '& + &::before': {
     display: 'inline-block',
-    '& + &': {
-      marginLeft: '4px',
-    },
-    '& + &::before': {
-      display: 'inline-block',
-      content: "'·'",
-      marginRight: '4px',
-    },
+    content: "'·'",
+    marginRight: '4px',
   },
 });
 
 function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
-  const classes = useStyles();
-
   if (!preparationTime && !sideDish) {
     return placeholder ? (
       <Typography color="textSecondary" variant="body1">
@@ -55,9 +45,16 @@ function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
   }
 
   return (
-    <ul className={classes.root}>
+    <Box
+      component="ul"
+      sx={{
+        margin: 0,
+        padding: 0,
+        listStyle: 'none',
+      }}
+    >
       {!!preparationTime && preparationTime > 0 && (
-        <li className={classes.item}>
+        <Item>
           {!small && (
             <Typography color="textSecondary" component="span" variant="body1">
               Doba přípravy{' '}
@@ -70,10 +67,10 @@ function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
           >
             {formatTime(preparationTime)}
           </Typography>{' '}
-        </li>
+        </Item>
       )}
       {!!sideDish && (
-        <li className={classes.item}>
+        <Item>
           {!small && (
             <Typography color="textSecondary" component="span" variant="body1">
               Příloha{' '}
@@ -86,9 +83,9 @@ function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
           >
             {sideDish}
           </Typography>
-        </li>
+        </Item>
       )}
-    </ul>
+    </Box>
   );
 }
 

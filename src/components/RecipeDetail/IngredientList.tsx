@@ -10,8 +10,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { Ingredient } from '../../generated/graphql';
@@ -22,17 +22,8 @@ type Props = {
   servingCount?: number;
 };
 
-const useStyles = makeStyles(theme => ({
-  group: {
-    backgroundColor: colors.gray200,
-  },
-  adorment: {
-    paddingLeft: theme.spacing(2),
-  },
-}));
-
 function IngredientList(props: Props) {
-  const classes = useStyles();
+  const theme = useTheme();
 
   const [servingCount, setServingCount] = useState(props.servingCount);
 
@@ -80,7 +71,7 @@ function IngredientList(props: Props) {
             <TextField
               InputProps={{
                 startAdornment: (
-                  <InputAdornment className={classes.adorment} position="start">
+                  <InputAdornment position="start" sx={{ paddingLeft: theme.spacing(2) }}>
                     Počet porcí
                   </InputAdornment>
                 ),
@@ -103,7 +94,7 @@ function IngredientList(props: Props) {
                 const { id, isGroup, name, amount, amountUnit } = ingredient;
 
                 return (
-                  <TableRow key={id} className={isGroup ? classes.group : undefined}>
+                  <TableRow key={id} sx={isGroup ? { backgroundColor: colors.gray200 } : undefined}>
                     <TableCell align="right" width="20%">
                       {!isGroup && getAmount(amount ?? undefined)}
                     </TableCell>
