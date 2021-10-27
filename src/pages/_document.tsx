@@ -1,5 +1,4 @@
 import createEmotionServer from '@emotion/server/create-instance';
-import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import React from 'react';
 
@@ -45,7 +44,6 @@ CookbookDocument.getInitialProps = async ctx => {
   // 4. page.render
 
   // Render app and page and get the context of the page with collected side effects.
-  const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
   const cache = createEmotionCache();
@@ -54,7 +52,7 @@ CookbookDocument.getInitialProps = async ctx => {
   ctx.renderPage = () =>
     originalRenderPage({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      enhanceApp: (App: any) => props => sheets.collect(<App emotionCache={cache} {...props} />),
+      enhanceApp: (App: any) => props => <App emotionCache={cache} {...props} />,
     });
 
   const initialProps = await Document.getInitialProps(ctx);
@@ -70,11 +68,7 @@ CookbookDocument.getInitialProps = async ctx => {
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
-    styles: [
-      ...React.Children.toArray(initialProps.styles),
-      sheets.getStyleElement(),
-      ...emotionStyleTags,
-    ],
+    styles: [...React.Children.toArray(initialProps.styles), ...emotionStyleTags],
   };
 };
 

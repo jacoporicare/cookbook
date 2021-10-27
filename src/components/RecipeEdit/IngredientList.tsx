@@ -10,7 +10,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 import {
   SortableContainer,
@@ -41,23 +40,22 @@ type SortableItemProps = {
   onRemove: RemoveHandler;
 };
 
-const useStyles = makeStyles({
-  item: {
-    listStyle: 'none',
-  },
-  group: {
-    listStyle: 'none',
-    backgroundColor: colors.gray200,
-  },
-});
-
 const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
-  const classes = useStyles();
-
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   return (
-    <ListItem ContainerProps={{ className: isGroup ? classes.group : classes.item }}>
+    <ListItem
+      sx={
+        isGroup
+          ? {
+              listStyle: 'none',
+              backgroundColor: colors.gray200,
+            }
+          : {
+              listStyle: 'none',
+            }
+      }
+    >
       <ListItemIcon>
         <Handle />
       </ListItemIcon>

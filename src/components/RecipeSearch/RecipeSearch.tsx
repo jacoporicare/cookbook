@@ -1,6 +1,7 @@
 import {
   Alert,
   Avatar,
+  Box,
   List,
   ListItem,
   ListItemAvatar,
@@ -9,8 +10,6 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
 import { useCombobox } from 'downshift';
 import { matchSorter } from 'match-sorter';
 import React, { useState } from 'react';
@@ -29,80 +28,9 @@ type Props = {
 const icon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMSIgY3k9IjExIiByPSI4Ii8+PHBhdGggZD0iTTIxIDIxbC00LjM1LTQuMzUiLz48L3N2Zz4=';
 
-const useStyles = makeStyles({
-  root: {
-    position: 'relative',
-    maxWidth: '400px',
-    margin: '0 auto',
-  },
-
-  input: {
-    backgroundImage: `url(${icon})`,
-    backgroundPositionX: '8px',
-    backgroundPositionY: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '16px 16px',
-    borderRadius: '4px',
-    color: colors.white,
-    padding: '8px 8px 8px 32px',
-    transition: 'background-color 200ms ease',
-
-    '&:focus': {
-      backgroundColor: colors.gray800,
-    },
-  },
-
-  inputNotchedOutline: {
-    border: 0,
-  },
-
-  open: {},
-
-  menu: {
-    display: 'none',
-    position: 'fixed',
-    top: 'calc(57px + 0.5rem)',
-    left: '0.5rem',
-    right: '0.5rem',
-    maxHeight: '288px',
-    overflowX: 'hidden',
-    overflowY: 'auto',
-    zIndex: 1001,
-
-    '&$open': {
-      display: 'block',
-    },
-  },
-
-  '@media (min-width: 40em)': {
-    menu: {
-      position: 'absolute',
-      top: 'calc(100% + 0.25rem)',
-      left: 'initial',
-      right: 0,
-      width: '350px',
-    },
-  },
-
-  '@media (min-height: 412px)': {
-    menu: {
-      maxHeight: '352px',
-    },
-  },
-
-  highlighted: {
-    backgroundColor: colors.gray200,
-  },
-
-  alert: {
-    width: '100%',
-  },
-});
-
 const MAX_ITEMS = 10;
 
 function RecipeSearch(props: Props) {
-  const classes = useStyles();
   const supportsWebP = useSupportsWebP();
 
   const [prevRecipes, setPrevRecipes] = useState(props.recipes);
@@ -145,15 +73,34 @@ function RecipeSearch(props: Props) {
   }
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        position: 'relative',
+        maxWidth: '400px',
+        margin: '0 auto',
+      }}
+    >
       <div {...getComboboxProps()}>
         <OutlinedInput
-          classes={{
-            input: classes.input,
-            notchedOutline: classes.inputNotchedOutline,
-          }}
           inputProps={getInputProps()}
           placeholder="Hledat..."
+          sx={{
+            '& .MuiOutlinedInput-input': {
+              backgroundImage: `url(${icon})`,
+              backgroundPositionX: '8px',
+              backgroundPositionY: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '16px 16px',
+              borderRadius: '4px',
+              color: colors.white,
+              padding: '8px 8px 8px 32px',
+              transition: 'background-color 200ms ease',
+
+              '&:focus': {
+                backgroundColor: colors.gray800,
+              },
+            },
+          }}
           fullWidth
           onFocus={() => {
             if (inputValue) {
@@ -163,14 +110,40 @@ function RecipeSearch(props: Props) {
         />
       </div>
       <Paper
-        className={classNames(classes.menu, { [classes.open]: isOpen })}
         elevation={8}
+        sx={{
+          display: 'none',
+          position: 'fixed',
+          top: 'calc(57px + 0.5rem)',
+          left: '0.5rem',
+          right: '0.5rem',
+          maxHeight: '288px',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          zIndex: 1001,
+
+          ...(isOpen && {
+            display: 'block',
+          }),
+
+          '@media (min-width: 40em)': {
+            position: 'absolute',
+            top: 'calc(100% + 0.25rem)',
+            left: 'initial',
+            right: 0,
+            width: '350px',
+          },
+
+          '@media (min-height: 412px)': {
+            maxHeight: '352px',
+          },
+        }}
         {...getMenuProps()}
       >
         <List>
           {inputValue && suggestions.length === 0 && (
             <ListItem>
-              <Alert className={classes.alert} severity="info">
+              <Alert severity="info" sx={{ width: '100%' }}>
                 Žádné výsledky.
               </Alert>
             </ListItem>
@@ -186,7 +159,7 @@ function RecipeSearch(props: Props) {
               return (
                 <ListItem
                   key={recipe.id}
-                  className={highlightedIndex === index ? classes.highlighted : undefined}
+                  sx={highlightedIndex === index ? { backgroundColor: colors.gray200 } : undefined}
                   {...getItemProps({ item: recipe, index })}
                 >
                   <ListItemAvatar>
@@ -213,7 +186,7 @@ function RecipeSearch(props: Props) {
             })}
         </List>
       </Paper>
-    </div>
+    </Box>
   );
 }
 
