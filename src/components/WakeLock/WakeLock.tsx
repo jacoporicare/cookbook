@@ -1,6 +1,6 @@
 import { DesktopWindows } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { colors } from '../../styles/colors';
 

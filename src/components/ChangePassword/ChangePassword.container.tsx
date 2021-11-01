@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from '@mui/material';
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 import { useChangePasswordMutation } from '../../generated/graphql';
 
@@ -25,7 +25,7 @@ function ChangePasswordContainer() {
     },
   });
 
-  function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
     if (!password || !newPassword || newPassword !== newPasswordConfirm) {

@@ -7,7 +7,6 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import React from 'react';
 
 type Props = {
   multipleSelected: boolean;

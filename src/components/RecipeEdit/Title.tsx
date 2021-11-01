@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 export type TitleFields = 'title';
 

@@ -3,7 +3,7 @@ import { CssBaseline, GlobalStyles, Theme, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/browser';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import createEmotionCache from '../styles';
 import theme from '../theme';

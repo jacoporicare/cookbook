@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 const PREFIX = 'ImageUpload';

@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
 import { setAuthToken } from './auth';
 
 type ContextValue = [string | undefined, (token?: string) => void];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const Context = React.createContext<ContextValue>([undefined, () => {}]);
+const Context = createContext<ContextValue>([undefined, () => {}]);
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
   token?: string;
 };
 

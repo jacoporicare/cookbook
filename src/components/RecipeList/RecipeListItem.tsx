@@ -1,6 +1,5 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import Link from 'next/link';
-import React from 'react';
 import { LazyImage } from 'react-lazy-images';
 
 import { RecipeBaseFragment } from '../../generated/graphql';

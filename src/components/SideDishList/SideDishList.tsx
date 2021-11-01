@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import React from 'react';
 
 import { SideDish } from '../../types';
 import PageHeading from '../common/PageHeading';

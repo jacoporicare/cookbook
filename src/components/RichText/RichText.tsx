@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 type Props = {

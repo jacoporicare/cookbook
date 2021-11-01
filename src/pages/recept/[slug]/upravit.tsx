@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { Alert, AlertColor, Snackbar } from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { SortEnd } from 'react-sortable-hoc';
 
 import { withApollo } from '../../../apollo';

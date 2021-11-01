@@ -1,5 +1,5 @@
 import { Box, Divider } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';

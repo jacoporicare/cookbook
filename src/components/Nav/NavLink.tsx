@@ -1,11 +1,11 @@
 import { styled } from '@mui/material';
 import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import { ReactNode } from 'react';
 
 type Props = LinkProps & {
   activeHref?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const StyledLink = styled('a', { shouldForwardProp: propName => propName !== 'active' })<{

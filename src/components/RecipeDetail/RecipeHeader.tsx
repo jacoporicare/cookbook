@@ -1,7 +1,6 @@
 import { Edit, Delete } from '@mui/icons-material';
 import { Box, Chip, Grid, IconButton, Typography } from '@mui/material';
 import Link from 'next/link';
-import React from 'react';
 import toSlug from 'slug';
 
 import RecipeInfo from '../RecipeInfo/RecipeInfo';

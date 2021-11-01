@@ -1,5 +1,5 @@
 import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 
 import { Ingredient } from '../../generated/graphql';
@@ -30,7 +30,7 @@ function RecipeDetail({
 }: Props) {
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  function handleImageClick(e: React.MouseEvent) {
+  function handleImageClick(e: MouseEvent) {
     e.preventDefault();
     setIsImageOpen(true);
   }

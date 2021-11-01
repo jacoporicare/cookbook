@@ -1,5 +1,4 @@
 import { TableRow, TableCell } from '@mui/material';
-import React from 'react';
 
 import { SideDish } from '../../types';
 
