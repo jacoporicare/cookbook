@@ -3,7 +3,7 @@ import { Alert, Button, Fab, Typography, Zoom } from '@mui/material';
 import flow from 'lodash.flow';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import slug from 'slug';
 
 import { useAuth } from '../AuthContext';

@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from '@mui/material';
-import React, { KeyboardEvent } from 'react';
+import { KeyboardEvent } from 'react';
 
 export type IngredientGroupFields = 'group';
 

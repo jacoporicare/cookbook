@@ -1,10 +1,10 @@
 import { Box, styled, Typography } from '@mui/material';
-import React from 'react';
+import { ReactNode } from 'react';
 
 type Props = {
   preparationTime?: number;
   sideDish?: string;
-  placeholder?: React.ReactNode;
+  placeholder?: ReactNode;
   small?: boolean;
 };
 

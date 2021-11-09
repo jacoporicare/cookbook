@@ -1,6 +1,5 @@
 import { Help } from '@mui/icons-material';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import React from 'react';
 
 export type DirectionsFields = 'directions';
 

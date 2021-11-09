@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { withApollo } from '../apollo';
 import { withAuth } from '../auth';
@@ -42,10 +42,10 @@ import {
 } from '../generated/graphql';
 
 type DialogOptions = {
-  title?: React.ReactNode;
-  content?: React.ReactNode;
+  title?: ReactNode;
+  content?: ReactNode;
   button?: {
-    label: React.ReactNode;
+    label: ReactNode;
     onClick: () => void;
   };
 };

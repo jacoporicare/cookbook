@@ -1,9 +1,9 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React from 'react';
+import { ReactNode } from 'react';
 
 type Props = {
-  children: React.ReactNode;
-  buttons?: React.ReactNode;
+  children: ReactNode;
+  buttons?: ReactNode;
 };
 
 function PageHeading({ children, buttons }: Props) {

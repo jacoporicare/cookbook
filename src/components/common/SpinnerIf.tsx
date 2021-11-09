@@ -1,9 +1,9 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 import Spinner from '../common/Spinner';
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
   spinner?: boolean;
 };
 

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useCombobox } from 'downshift';
 import { matchSorter } from 'match-sorter';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
 import useSupportsWebP from '../../hooks/useSupportsWebP';

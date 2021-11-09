@@ -7,7 +7,6 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import React from 'react';
 
 type Props = {
   multipleSelected: boolean;
@@ -37,7 +36,7 @@ function Search(props: Props) {
             renderValue: selected => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {(selected as string[]).map(value => (
-                  <Chip key={value} label={value} />
+                  <Chip key={value} label={props.tagOptions.find(o => o.value === value)?.label} />
                 ))}
               </Box>
             ),

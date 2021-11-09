@@ -10,7 +10,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-import React from 'react';
 import {
   SortableContainer,
   SortableElement,

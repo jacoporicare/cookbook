@@ -1,7 +1,6 @@
 import { ExitToApp } from '@mui/icons-material';
 import { Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 import { useAuth } from '../../AuthContext';
 import { colors } from '../../styles/colors';

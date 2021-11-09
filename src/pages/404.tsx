@@ -1,5 +1,4 @@
 import { Alert } from '@mui/material';
-import React from 'react';
 
 import Layout from '../components/Layout';
 import PageHeading from '../components/common/PageHeading';

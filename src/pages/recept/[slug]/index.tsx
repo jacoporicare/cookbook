@@ -1,7 +1,7 @@
 import { Alert, AlertColor, Box, Snackbar } from '@mui/material';
 import flow from 'lodash.flow';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { useAuth } from '../../../AuthContext';
 import { withApollo } from '../../../apollo';

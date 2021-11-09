@@ -7,7 +7,6 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import React from 'react';
 
 export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
 

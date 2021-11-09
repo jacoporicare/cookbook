@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
-import React from 'react';
+import { FormEvent } from 'react';
 
 import Spinner from '../common/Spinner';
 
@@ -13,7 +13,7 @@ type Props = {
   onNewPasswordChange: (value: string) => void;
   onNewPasswordConfirmChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: FormEvent) => void;
 };
 
 function ChangePassword(props: Props) {

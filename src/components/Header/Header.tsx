@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
 import { colors } from '../../styles/colors';
 import Nav from '../Nav';

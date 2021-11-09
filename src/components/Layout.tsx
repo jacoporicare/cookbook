@@ -1,5 +1,5 @@
 import { Container, Box } from '@mui/material';
-import React from 'react';
+import { ReactNode } from 'react';
 
 import { colors } from '../styles/colors';
 
@@ -9,7 +9,7 @@ import TrackUserActivity from './TrackUserActivity';
 import DocumentTitle from './common/DocumentTitle';
 
 type Props = {
-  children: NonNullable<React.ReactNode>;
+  children: NonNullable<ReactNode>;
   static?: boolean;
 };
 
