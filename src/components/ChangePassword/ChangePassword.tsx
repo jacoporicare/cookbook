@@ -1,6 +1,7 @@
-import { Alert, Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Grid, TextField } from '@mui/material';
 import { FormEvent } from 'react';
 
+import PageHeading from '../common/PageHeading';
 import Spinner from '../common/Spinner';
 
 type Props = {
@@ -20,18 +21,10 @@ function ChangePassword(props: Props) {
   return (
     <>
       {props.submitting && <Spinner overlay />}
-      <Box display="flex" justifyContent="center">
-        <Card
-          sx={{
-            maxWidth: '28rem',
-            width: '100%',
-            my: '2rem',
-          }}
-        >
+      <Box maxWidth="28rem" mx="auto">
+        <PageHeading>Změna hesla</PageHeading>
+        <Card>
           <Box p={3}>
-            <Typography component="h3" variant="h4" gutterBottom>
-              Změna hesla
-            </Typography>
             <form onSubmit={props.onSubmit}>
               <Grid direction="column" spacing={3} container>
                 <Grid item>
