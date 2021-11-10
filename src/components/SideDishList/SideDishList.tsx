@@ -20,35 +20,32 @@ type Props = {
 
 function SideDishList({ sideDishes }: Props) {
   return (
-    <Box display="flex" justifyContent="center">
-      <Box maxWidth="600px" width="100%">
-        <PageHeading>Přílohy</PageHeading>
+    <Box maxWidth="600px" mx="auto">
+      <PageHeading>Přílohy</PageHeading>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell width="40%">Název</TableCell>
+              <TableCell align="right" width="20%">
+                Příloha
+              </TableCell>
+              <TableCell align="right" width="20%">
+                Hlavní
+              </TableCell>
+              <TableCell align="right" width="20%">
+                Po uvaření
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell width="40%">Název</TableCell>
-                <TableCell align="right" width="20%">
-                  Příloha
-                </TableCell>
-                <TableCell align="right" width="20%">
-                  Hlavní
-                </TableCell>
-                <TableCell align="right" width="20%">
-                  Po uvaření
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {sideDishes.map(sideDish => (
-                <SideDishListItem key={sideDish.title} {...sideDish} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+          <TableBody>
+            {sideDishes.map(sideDish => (
+              <SideDishListItem key={sideDish.title} {...sideDish} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 }

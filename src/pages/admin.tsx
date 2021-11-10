@@ -2,6 +2,7 @@ import { Check, Edit, Delete, RestartAlt } from '@mui/icons-material';
 import {
   Alert,
   AlertColor,
+  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -218,7 +219,7 @@ function AdminPage() {
     <>
       <DocumentTitle title="Správa uživatelů" />
       <Layout>
-        <section>
+        <Box maxWidth="930px" mx="auto">
           <PageHeading>Správa uživatelů</PageHeading>
           <TableContainer component={Paper}>
             <Table>
@@ -365,7 +366,7 @@ function AdminPage() {
               </TableBody>
             </Table>
           </TableContainer>
-        </section>
+        </Box>
       </Layout>
       <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
         <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
