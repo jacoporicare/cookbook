@@ -1,6 +1,9 @@
 schema: './schema.json'
 overwrite: true
 documents: './src/**/*.graphql.ts'
+config:
+  scalars:
+    Date: number
 generates:
   src/generated/graphql.tsx:
     plugins:

@@ -6,7 +6,10 @@ variables:
   NGINX_VHOSTD_DIR: /srv/nginx/vhost.d
   TARGET_DIR: /home/gitlab-runner/www/cookbook_$CI_COMMIT_REF_SLUG/
 
-build:
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
+build-api:
   stage: build
   tags:
     - shared
@@ -14,9 +17,21 @@ build:
   services:
     - docker:dind
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - cd api
+    - docker build -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_REF_SLUG"
+
+build-web:
+  stage: build
+  tags:
+    - shared
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - cd web
+    - docker build -t "$CI_REGISTRY_IMAGE/web:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE/web:$CI_COMMIT_REF_SLUG"
 
 deploy-feature:
   stage: deploy
@@ -28,7 +43,6 @@ deploy-feature:
     - hukot-web
   when: manual
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd "$TARGET_DIR"
@@ -54,7 +68,6 @@ stop-env-feature:
     action: stop
   when: manual
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - cd "$TARGET_DIR"
     - docker-compose down --remove-orphans --volumes --rmi local
     - docker-compose rm
@@ -69,7 +82,6 @@ deploy:
   tags:
     - hukot-web
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - rsync -a --delete deploy/ "$TARGET_DIR"
     - rsync -a deploy/vhost.d/ "$NGINX_VHOSTD_DIR"
     - cd "$TARGET_DIR"
