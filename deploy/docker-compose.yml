@@ -1,19 +1,52 @@
 version: '3.2'
 
 services:
-  web:
-    image: '${APP_IMAGE}:${APP_TAG}'
+  db:
+    image: mongo:4.4
     restart: always
     networks:
-      - cookbook
+      - cookbook-api
+    volumes:
+      - type: volume
+        source: dbdata
+        target: /data/db
+
+  api:
+    image: '${APP_IMAGE}/api:${APP_TAG}'
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - cookbook-api
+      - web
+    volumes:
+      - type: volume
+        source: imgcache
+        target: /tmp/zradelnik-img
+    environment:
+      VIRTUAL_HOST: '${API_HOST}'
+      LETSENCRYPT_HOST: '${API_HOST}'
+      LETSENCRYPT_EMAIL: ***REMOVED***
+      MONGO_URI: mongodb://db/cookbook
+
+  web:
+    image: '${APP_IMAGE}/web:${APP_TAG}'
+    restart: always
+    depends_on:
+      - api
+    networks:
       - web
     environment:
-      VIRTUAL_HOST: '${HOST}'
-      LETSENCRYPT_HOST: '${HOST}'
+      VIRTUAL_HOST: '${WEB_HOST}'
+      LETSENCRYPT_HOST: '${WEB_HOST}'
       LETSENCRYPT_EMAIL: ***REMOVED***
-      API_URL: '${API_URL}'
+      API_URL: 'https://${API_HOST}/graphql'
 
 networks:
-  cookbook:
+  cookbook-api:
   web:
     external: true
+
+volumes:
+  dbdata:
+  imgcache:

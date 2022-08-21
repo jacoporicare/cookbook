@@ -12,7 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
+  Date: number;
   Upload: any;
 };
 
