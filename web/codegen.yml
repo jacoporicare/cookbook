@@ -3,7 +3,7 @@ overwrite: true
 documents: './src/**/*.graphql.ts'
 config:
   scalars:
-    Date: number
+    Date: string
 generates:
   src/generated/graphql.tsx:
     plugins:

@@ -12,7 +12,7 @@ type Props = {
   ingredients?: Omit<Ingredient, '_id'>[];
   servingCount?: number;
   directions?: string;
-  lastModifiedDate: number;
+  lastModifiedDate: string;
   imageUrl?: string;
   imageFullUrl?: string;
   userName: string;

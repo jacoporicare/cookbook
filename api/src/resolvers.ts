@@ -259,7 +259,7 @@ const resolvers: Resolvers = {
     name: 'Date',
     description: 'Date custom scalar type',
     parseValue(value) {
-      return new Date(value as number); // value from the client
+      return new Date(value as number | string); // value from the client
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
@@ -267,13 +267,13 @@ const resolvers: Resolvers = {
       }
 
       if (ast.kind === Kind.STRING) {
-        return new Date(ast.kind);
+        return new Date(ast.value);
       }
 
       return null;
     },
     serialize(value) {
-      return (value as Date).valueOf(); // value sent to the client
+      return (value as Date).toISOString(); // value sent to the client
     },
   }),
 };
