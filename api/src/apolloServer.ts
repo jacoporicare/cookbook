@@ -10,6 +10,7 @@ import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
 
+import logger from './logger';
 import { recipeImageMiddleware } from './recipeImage';
 
 export async function startApolloServer(
@@ -44,5 +45,5 @@ export async function startApolloServer(
 
   await new Promise<void>(resolve => httpServer.listen({ port: 4000 }, resolve));
 
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  logger.info(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }

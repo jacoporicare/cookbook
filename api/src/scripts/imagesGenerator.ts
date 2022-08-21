@@ -1,4 +1,5 @@
 import { connectToDb } from '../db';
+import logger from '../logger';
 import recipeModel from '../models/recipe';
 import { resizeAndWriteImage } from '../recipeImage';
 
@@ -15,10 +16,10 @@ async function generateImages(id: string, image: Buffer) {
 }
 
 async function main() {
-  await connectToDb('generateImages');
+  await connectToDb();
   const recipes = await recipeModel.find().populate('image');
 
-  console.log('generateImages: generating images (this can take a while)');
+  logger.info('Generating images (this can take a while)');
 
   for (const recipe of recipes) {
     if (recipe.image) {
@@ -26,7 +27,7 @@ async function main() {
     }
   }
 
-  console.log('generateImages: done');
+  logger.info('Done');
 }
 
-main().catch(console.error);
+main().catch(logger.error);

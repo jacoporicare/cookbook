@@ -17,6 +17,7 @@
     "graphql": "^16.6.0",
     "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.6.1",
     "mongoose": "^6.5.2",
     "sharp": "^0.30.7",
     "slug": "^6.0.0"

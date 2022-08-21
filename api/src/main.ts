@@ -4,17 +4,23 @@ import { fork } from 'child_process';
 
 import { startApolloServer } from './apolloServer';
 import { connectToDb } from './db';
+import logger from './logger';
 import resolvers from './resolvers';
 import typeDefs from './typeDefs';
 
 async function main() {
-  await connectToDb('main');
+  await connectToDb();
   await startApolloServer(typeDefs, resolvers);
 }
 
-main().catch(console.error);
+main().catch(e => {
+  logger.error(e);
+  process.exit(1);
+});
 
 if (process.env.NODE_ENV === 'production') {
-  console.log('main: Forking process - generateImages script');
-  fork(__dirname + '/scripts/generateImages', { env: process.env });
+  logger.info('Forking process - imagesGenerator script');
+  fork(__dirname + '/scripts/imagesGenerator', [], {
+    env: { ...process.env, LOGGER_CATEGORY: 'imagesGenerator' },
+  });
 }

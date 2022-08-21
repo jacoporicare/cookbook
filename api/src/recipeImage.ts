@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 import { FileUpload } from 'graphql-upload';
 import sharp from 'sharp';
 
+import logger from './logger';
 import imageModel from './models/image';
 import { RecipeDbObject } from './models/recipe';
 
@@ -14,7 +15,7 @@ const baseUrl = process.env.VIRTUAL_HOST
   : 'http://localhost:4000';
 
 const cacheDir = '/tmp/zradelnik-img';
-fs.mkdirp(cacheDir).catch(console.error);
+fs.mkdirp(cacheDir).catch(logger.error);
 
 type ImageSize = [number, number];
 
@@ -97,7 +98,7 @@ export async function resizeAndWriteImage(
 
   // No await
   const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
-  fs.writeFile(filePath, buffer).catch(console.error);
+  fs.writeFile(filePath, buffer).catch(logger.error);
 
   return buffer;
 }
