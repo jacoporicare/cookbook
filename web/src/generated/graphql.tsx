@@ -1,10 +1,11 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,80 +13,64 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: number;
+  Date: string;
   Upload: any;
 };
-
-
-
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   token: Scalars['String'];
 };
 
-
 export enum ImageFormat {
   Webp = 'WEBP'
 }
 
 export type ImageSize = {
-  width: Scalars['Int'];
   height: Scalars['Int'];
+  width: Scalars['Int'];
 };
 
 export type Ingredient = {
   __typename?: 'Ingredient';
-  id: Scalars['ID'];
   amount: Maybe<Scalars['Float']>;
   amountUnit: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  id: Scalars['ID'];
   isGroup: Scalars['Boolean'];
+  name: Scalars['String'];
 };
 
 export type IngredientInput = {
-  amount: Maybe<Scalars['Float']>;
-  amountUnit: Maybe<Scalars['String']>;
+  amount: InputMaybe<Scalars['Float']>;
+  amountUnit: InputMaybe<Scalars['String']>;
+  isGroup: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
-  isGroup: Maybe<Scalars['Boolean']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login: AuthPayload;
-  createRecipe: Recipe;
-  updateRecipe: Recipe;
-  deleteRecipe: Scalars['Boolean'];
-  updateUserLastActivity: Scalars['Boolean'];
-  createUser: User;
-  updateUser: User;
-  deleteUser: Scalars['ID'];
-  resetPassword: Scalars['String'];
   changePassword: Scalars['Boolean'];
+  createRecipe: Recipe;
+  createUser: User;
+  deleteRecipe: Scalars['Boolean'];
+  deleteUser: Scalars['ID'];
+  login: AuthPayload;
+  resetPassword: Scalars['String'];
+  updateRecipe: Recipe;
+  updateUser: User;
+  updateUserLastActivity: Scalars['Boolean'];
 };
 
 
-export type MutationLoginArgs = {
-  username: Scalars['String'];
+export type MutationChangePasswordArgs = {
+  newPassword: Scalars['String'];
   password: Scalars['String'];
 };
 
 
 export type MutationCreateRecipeArgs = {
+  image: InputMaybe<Scalars['Upload']>;
   recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
-};
-
-
-export type MutationUpdateRecipeArgs = {
-  id: Scalars['ID'];
-  recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
-};
-
-
-export type MutationDeleteRecipeArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -94,9 +79,8 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
+export type MutationDeleteRecipeArgs = {
   id: Scalars['ID'];
-  user: UserInput;
 };
 
 
@@ -105,87 +89,99 @@ export type MutationDeleteUserArgs = {
 };
 
 
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
 export type MutationResetPasswordArgs = {
   id: Scalars['ID'];
 };
 
 
-export type MutationChangePasswordArgs = {
-  password: Scalars['String'];
-  newPassword: Scalars['String'];
+export type MutationUpdateRecipeArgs = {
+  id: Scalars['ID'];
+  image: InputMaybe<Scalars['Upload']>;
+  recipe: RecipeInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID'];
+  user: UserInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  recipes: Array<Recipe>;
-  recipe: Maybe<Recipe>;
   ingredients: Array<Scalars['String']>;
+  me: User;
+  recipe: Maybe<Recipe>;
+  recipes: Array<Recipe>;
   sideDishes: Array<Scalars['String']>;
   tags: Array<Scalars['String']>;
-  me: User;
   users: Array<User>;
 };
 
 
-export type QueryRecipesArgs = {
-  since: Maybe<Scalars['Date']>;
-  deleted: Maybe<Scalars['Boolean']>;
+export type QueryRecipeArgs = {
+  id: InputMaybe<Scalars['ID']>;
+  slug: InputMaybe<Scalars['String']>;
 };
 
 
-export type QueryRecipeArgs = {
-  id: Maybe<Scalars['ID']>;
-  slug: Maybe<Scalars['String']>;
+export type QueryRecipesArgs = {
+  deleted: InputMaybe<Scalars['Boolean']>;
+  since: InputMaybe<Scalars['Date']>;
 };
 
 export type Recipe = {
   __typename?: 'Recipe';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  slug: Scalars['String'];
+  creationDate: Scalars['Date'];
+  deleted: Scalars['Boolean'];
   directions: Maybe<Scalars['String']>;
-  sideDish: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  imageUrl: Maybe<Scalars['String']>;
+  ingredients: Maybe<Array<Ingredient>>;
+  lastModifiedDate: Scalars['Date'];
   preparationTime: Maybe<Scalars['Int']>;
   servingCount: Maybe<Scalars['Int']>;
-  user: User;
-  imageUrl: Maybe<Scalars['String']>;
-  creationDate: Scalars['Date'];
-  lastModifiedDate: Scalars['Date'];
-  ingredients: Maybe<Array<Ingredient>>;
+  sideDish: Maybe<Scalars['String']>;
+  slug: Scalars['String'];
   tags: Maybe<Array<Scalars['String']>>;
-  deleted: Scalars['Boolean'];
+  title: Scalars['String'];
+  user: User;
 };
 
 
 export type RecipeImageUrlArgs = {
-  size: Maybe<ImageSize>;
-  format: Maybe<ImageFormat>;
+  format: InputMaybe<ImageFormat>;
+  size: InputMaybe<ImageSize>;
 };
 
 export type RecipeInput = {
+  directions: InputMaybe<Scalars['String']>;
+  ingredients: InputMaybe<Array<IngredientInput>>;
+  preparationTime: InputMaybe<Scalars['Int']>;
+  servingCount: InputMaybe<Scalars['Int']>;
+  sideDish: InputMaybe<Scalars['String']>;
+  tags: InputMaybe<Array<Scalars['String']>>;
   title: Scalars['String'];
-  directions: Maybe<Scalars['String']>;
-  sideDish: Maybe<Scalars['String']>;
-  preparationTime: Maybe<Scalars['Int']>;
-  servingCount: Maybe<Scalars['Int']>;
-  ingredients: Maybe<Array<IngredientInput>>;
-  tags: Maybe<Array<Scalars['String']>>;
 };
-
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  username: Scalars['String'];
   displayName: Scalars['String'];
+  id: Scalars['ID'];
   isAdmin: Scalars['Boolean'];
   lastActivity: Maybe<Scalars['Date']>;
+  username: Scalars['String'];
 };
 
 export type UserInput = {
-  username: Scalars['String'];
   displayName: Scalars['String'];
-  isAdmin: Maybe<Scalars['Boolean']>;
+  isAdmin: InputMaybe<Scalars['Boolean']>;
+  username: Scalars['String'];
 };
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -194,68 +190,41 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'changePassword'>
-);
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: boolean };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = (
-  { __typename?: 'Query' }
-  & { me: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'displayName' | 'isAdmin'>
-  ) }
-);
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean } };
 
 export type CreateRecipeMutationVariables = Exact<{
   recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
+  image: InputMaybe<Scalars['Upload']>;
 }>;
 
 
-export type CreateRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & { createRecipe: (
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  ) }
-);
+export type CreateRecipeMutation = { __typename?: 'Mutation', createRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type CreateUserMutationVariables = Exact<{
   user: UserInput;
 }>;
 
 
-export type CreateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { createUser: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
-);
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type DeleteRecipeMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteRecipe'>
-);
+export type DeleteRecipeMutation = { __typename?: 'Mutation', deleteRecipe: boolean };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteUserMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUser'>
-);
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: string };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -263,103 +232,51 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = (
-  { __typename?: 'Mutation' }
-  & { login: (
-    { __typename?: 'AuthPayload' }
-    & Pick<AuthPayload, 'token'>
-  ) }
-);
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: string } };
 
-export type RecipeBaseFragment = (
-  { __typename?: 'Recipe' }
-  & Pick<Recipe, 'id' | 'slug' | 'title' | 'sideDish' | 'tags' | 'preparationTime' | 'imageUrl' | 'lastModifiedDate'>
-  & { imageWebPUrl: Recipe['imageUrl'], imageThumbUrl: Recipe['imageUrl'], imageThumbWebPUrl: Recipe['imageUrl'] }
-);
+export type RecipeBaseFragment = { __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null };
 
 export type RecipeDetailQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type RecipeDetailQuery = (
-  { __typename?: 'Query' }
-  & { recipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )> }
-);
+export type RecipeDetailQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
 
-export type RecipeDetailFragment = (
-  { __typename?: 'Recipe' }
-  & Pick<Recipe, 'directions' | 'servingCount'>
-  & { ingredients: Maybe<Array<(
-    { __typename?: 'Ingredient' }
-    & Pick<Ingredient, 'id' | 'name' | 'amount' | 'amountUnit' | 'isGroup'>
-  )>>, user: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
-  & RecipeBaseFragment
-);
+export type RecipeDetailFragment = { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type RecipeEditQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type RecipeEditQuery = (
-  { __typename?: 'Query' }
-  & { recipe: Maybe<(
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  )> }
-);
+export type RecipeEditQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
 
 export type RecipeEditOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecipeEditOptionsQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'ingredients' | 'sideDishes' | 'tags'>
-);
+export type RecipeEditOptionsQuery = { __typename?: 'Query', ingredients: Array<string>, sideDishes: Array<string>, tags: Array<string> };
 
 export type RecipeListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecipeListQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'tags'>
-  & { recipes: Array<(
-    { __typename?: 'Recipe' }
-    & RecipeBaseFragment
-  )> }
-);
+export type RecipeListQuery = { __typename?: 'Query', tags: Array<string>, recipes: Array<{ __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null }> };
 
 export type ResetPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ResetPasswordMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'resetPassword'>
-);
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: string };
 
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['ID'];
   recipe: RecipeInput;
-  image: Maybe<Scalars['Upload']>;
+  image: InputMaybe<Scalars['Upload']>;
 }>;
 
 
-export type UpdateRecipeMutation = (
-  { __typename?: 'Mutation' }
-  & { updateRecipe: (
-    { __typename?: 'Recipe' }
-    & RecipeDetailFragment
-  ) }
-);
+export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -367,37 +284,19 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { updateUser: (
-    { __typename?: 'User' }
-    & UserFragment
-  ) }
-);
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type UpdateUserLastActivityMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UpdateUserLastActivityMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'updateUserLastActivity'>
-);
+export type UpdateUserLastActivityMutation = { __typename?: 'Mutation', updateUserLastActivity: boolean };
 
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'displayName' | 'isAdmin' | 'lastActivity'>
-);
+export type UserFragment = { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null };
 
 export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserListQuery = (
-  { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & UserFragment
-  )> }
-);
+export type UserListQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null }> };
 
 export const RecipeBaseFragmentDoc = gql`
     fragment recipeBase on Recipe {

@@ -3,6 +3,7 @@ schema: './src/typeDefs.ts'
 documents: null
 config:
   scalars:
+    Date: Date
     Upload: Promise<FileUpload>
 generates:
   src/generated/graphql.ts:
