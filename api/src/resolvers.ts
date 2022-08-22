@@ -3,12 +3,14 @@ import { GraphQLUpload } from 'graphql-upload';
 import mongoose from 'mongoose';
 
 import { authenticated, signToken } from './auth';
-import { Resolvers } from './generated/graphql';
+import { messaging } from './firebase';
+import { ImageFormat, Resolvers } from './generated/graphql';
+import logger from './logger';
 import { mapToRecipeDbObject, mapToRecipeGqlObject, mapToUserGqlObject } from './mapping';
 import imageModel from './models/image';
 import recipeModel, { RecipeDocument } from './models/recipe';
 import userModel, { UserDbObject, UserDocument } from './models/user';
-import { createImage } from './recipeImage';
+import { appendSizeAndFormatToImageUrl, createImage } from './recipeImage';
 import { checkUserRightsAsync, getRandomString, saltHashPassword, sha512 } from './utils';
 
 const resolvers: Resolvers = {
@@ -90,7 +92,31 @@ const resolvers: Resolvers = {
       const recipe = await recipeModel.create(recipeToSave as RecipeDocument);
       const newRecipe = await recipe.populate('user');
 
-      return mapToRecipeGqlObject(newRecipe);
+      const newRecipeGqlModel = mapToRecipeGqlObject(newRecipe);
+
+      messaging
+        .send({
+          topic: process.env.NEW_RECIPES_TOPIC!,
+          data: { recipe_id: newRecipeGqlModel.id },
+          notification: {
+            title: newRecipeGqlModel.title,
+            body: `Nový recept od ${ctx.currentUser.displayName}!`,
+          },
+          android: newRecipeGqlModel.imageUrl
+            ? {
+                notification: {
+                  imageUrl: appendSizeAndFormatToImageUrl(
+                    newRecipeGqlModel.imageUrl,
+                    { width: 1080, height: 1080 },
+                    ImageFormat.Webp,
+                  ),
+                },
+              }
+            : undefined,
+        })
+        .catch(logger.error);
+
+      return newRecipeGqlModel;
     }),
     updateRecipe: authenticated(async (_, args, ctx) => {
       if (!(await checkUserRightsAsync(ctx.currentUser, args.id))) {
@@ -236,23 +262,10 @@ const resolvers: Resolvers = {
     }),
   },
   Recipe: {
-    imageUrl: (recipe, args) => {
-      if (!recipe.imageUrl || (!args.size && !args.format)) {
-        return recipe.imageUrl ?? null;
-      }
-
-      const params: string[] = [];
-
-      if (args.size) {
-        params.push(`size=${args.size.width}x${args.size.height}`);
-      }
-
-      if (args.format) {
-        params.push(`format=${args.format.toLowerCase()}`);
-      }
-
-      return `${recipe.imageUrl}?${params.join('&')}`;
-    },
+    imageUrl: (recipe, args) =>
+      recipe.imageUrl
+        ? appendSizeAndFormatToImageUrl(recipe.imageUrl, args.size, args.format)
+        : null,
   },
   Upload: GraphQLUpload,
   Date: new GraphQLScalarType<Date | null, number | string>({

@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 import { FileUpload } from 'graphql-upload';
 import sharp from 'sharp';
 
+import { ImageFormat, ImageSize, Maybe } from './generated/graphql';
 import logger from './logger';
 import imageModel from './models/image';
 import { RecipeDbObject } from './models/recipe';
@@ -17,7 +18,7 @@ const baseUrl = process.env.VIRTUAL_HOST
 const cacheDir = '/tmp/zradelnik-img';
 fs.mkdirp(cacheDir).catch(logger.error);
 
-type ImageSize = [number, number];
+type ImageSizeTuple = [number, number];
 
 export function getImageUrl(recipe: RecipeDbObject) {
   if (!recipe.imageId) {
@@ -27,7 +28,29 @@ export function getImageUrl(recipe: RecipeDbObject) {
   return `${baseUrl}/image/${recipe.slug}_${recipe.imageId}`;
 }
 
-function getFilePath(id: string, imageSize?: ImageSize | string, format?: string) {
+export function appendSizeAndFormatToImageUrl(
+  imageUrl: string,
+  size?: Maybe<ImageSize>,
+  format?: Maybe<ImageFormat>,
+) {
+  if (!size && !format) {
+    return imageUrl;
+  }
+
+  const params: string[] = [];
+
+  if (size) {
+    params.push(`size=${size.width}x${size.height}`);
+  }
+
+  if (format) {
+    params.push(`format=${format.toLowerCase()}`);
+  }
+
+  return `${imageUrl}?${params.join('&')}`;
+}
+
+function getFilePath(id: string, imageSize?: ImageSizeTuple | string, format?: string) {
   const size = imageSize
     ? typeof imageSize === 'string'
       ? imageSize
@@ -68,7 +91,7 @@ export function recipeImageMiddleware() {
       return res.send(image.data);
     }
 
-    const imageSize = size?.split('x', 2).map(x => parseInt(x, 10)) as ImageSize | undefined;
+    const imageSize = size?.split('x', 2).map(x => parseInt(x, 10)) as ImageSizeTuple | undefined;
     const webp = format === 'webp';
     const buffer = await resizeAndWriteImage(id, image.data, { size: imageSize, webp });
 
@@ -82,7 +105,7 @@ export function recipeImageMiddleware() {
 export async function resizeAndWriteImage(
   id: string,
   image: Buffer,
-  options?: { size?: ImageSize; webp?: boolean },
+  options?: { size?: ImageSizeTuple; webp?: boolean },
 ) {
   let s = sharp(image).rotate();
 
