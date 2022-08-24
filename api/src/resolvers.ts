@@ -131,12 +131,12 @@ const resolvers: Resolvers = {
 
       const image = args.image && (await createImage(args.image));
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, undefined);
-
-      const newRecipe = await recipeModel
+      await recipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
+      const recipe = await recipeModel
         .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
         .populate('user');
 
-      if (!newRecipe) {
+      if (!recipe) {
         throw new Error('Recipe cannot be updated');
       }
 
@@ -144,7 +144,7 @@ const resolvers: Resolvers = {
         await imageModel.findByIdAndDelete(origRecipe.imageId);
       }
 
-      return mapToRecipeGqlObject(newRecipe);
+      return mapToRecipeGqlObject(recipe);
     }),
     deleteRecipe: authenticated(async (_, args, ctx) => {
       if (!(await checkUserRightsAsync(ctx.currentUser, args.id))) {

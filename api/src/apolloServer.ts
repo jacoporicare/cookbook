@@ -29,10 +29,11 @@ export async function startApolloServer(
     cache: 'bounded',
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
-      process.env.NODE_ENV === 'production'
+      process.env.APOLLO_EXPLORER_ENABLED !== 'true'
         ? ApolloServerPluginLandingPageProductionDefault()
         : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
+    introspection: process.env.APOLLO_EXPLORER_ENABLED === 'true',
     context: ctx => ctx,
   });
 
