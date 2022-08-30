@@ -73,7 +73,9 @@ const resolvers: Resolvers = {
       ...ctx.currentUser,
       isAdmin: ctx.currentUser.isAdmin ?? false,
     })),
-    users: authenticated(async () => await userModel.find(), { requireAdmin: true }),
+    users: authenticated(async () => (await userModel.find()).map(mapToUserGqlObject), {
+      requireAdmin: true,
+    }),
   },
   Mutation: {
     login: async (_, args) => {
