@@ -85,11 +85,6 @@ export function recipeImageMiddleware() {
       return res.status(404).end();
     }
 
-    if (!size && !format) {
-      res.contentType(image.contentType);
-      return res.send(image.data);
-    }
-
     const webp = format === 'webp';
     const buffer = await resizeAndWriteImage(id, image.data, { size, webp });
 
@@ -116,9 +111,9 @@ export async function resizeAndWriteImage(
   }
 
   const buffer = await s.toBuffer();
+  const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
 
   // No await
-  const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
   fs.writeFile(filePath, buffer).catch(logger.error);
 
   return buffer;
