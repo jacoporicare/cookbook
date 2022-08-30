@@ -50,12 +50,8 @@ export function appendSizeAndFormatToImageUrl(
   return `${imageUrl}?${params.join('&')}`;
 }
 
-function getFilePath(id: string, imageSize?: ImageSizeTuple | string, format?: string) {
-  const size = imageSize
-    ? typeof imageSize === 'string'
-      ? imageSize
-      : imageSize.join('x')
-    : undefined;
+function getFilePath(id: string, imageSize?: ImageSizeTuple, format?: string) {
+  const size = imageSize?.join('x');
 
   return path.join(cacheDir, `${id}-${size}-${format}`);
 }
@@ -67,7 +63,10 @@ export function recipeImageMiddleware() {
     res.set('Cache-Control', 'max-age=31536000, public');
 
     const id = req.params.slugAndId.substring(req.params.slugAndId.lastIndexOf('_') + 1);
-    const size = req.query['size']?.toString();
+    const size = req.query['size']
+      ?.toString()
+      .split('x', 2)
+      .map(x => parseInt(x, 10)) as ImageSizeTuple | undefined;
     const format = req.query['format']?.toString();
 
     const filePath = getFilePath(id, size, format);
@@ -86,14 +85,8 @@ export function recipeImageMiddleware() {
       return res.status(404).end();
     }
 
-    if (!size && !format) {
-      res.contentType(image.contentType);
-      return res.send(image.data);
-    }
-
-    const imageSize = size?.split('x', 2).map(x => parseInt(x, 10)) as ImageSizeTuple | undefined;
     const webp = format === 'webp';
-    const buffer = await resizeAndWriteImage(id, image.data, { size: imageSize, webp });
+    const buffer = await resizeAndWriteImage(id, image.data, { size, webp });
 
     res.contentType(webp ? 'image/webp' : image.contentType);
     res.send(buffer);
@@ -118,9 +111,9 @@ export async function resizeAndWriteImage(
   }
 
   const buffer = await s.toBuffer();
+  const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
 
   // No await
-  const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
   fs.writeFile(filePath, buffer).catch(logger.error);
 
   return buffer;
