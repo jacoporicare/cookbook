@@ -1,10 +1,12 @@
 import crypto from 'crypto';
 
-import recipeModel from './models/recipe';
+import bcrypt from 'bcrypt';
+
+import RecipeModel from './models/recipe';
 import { UserDbObject } from './models/user';
 
 export async function checkUserRightsAsync(user: UserDbObject, recipeId: string) {
-  const recipe = await recipeModel.findById(recipeId);
+  const recipe = await RecipeModel.findById(recipeId);
 
   return Boolean(recipe && (user.isAdmin || recipe.userId === user.id));
 }
@@ -16,15 +18,21 @@ export function getRandomString(length: number) {
     .slice(0, length);
 }
 
-export function sha512(password: string, salt: string) {
+function sha512(password: string, salt: string) {
   return crypto.createHmac('sha512', salt).update(password).digest('hex');
 }
 
-export function saltHashPassword(password: string) {
-  const salt = getRandomString(16);
+export function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
+}
 
-  return {
-    hash: sha512(password, salt),
-    salt,
-  };
+export async function comparePassword(
+  password: string,
+  user: { password: string; salt?: string },
+): Promise<boolean> {
+  if (user.salt) {
+    return sha512(password, user.salt) === user.password;
+  }
+
+  return await bcrypt.compare(password, user.password);
 }

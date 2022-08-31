@@ -5,7 +5,7 @@ export type UserDbObject = {
   username: string;
   displayName: string;
   password: string;
-  salt: string;
+  salt?: string;
   isAdmin?: boolean;
   lastActivity?: Date;
 };
@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   username: { type: String, required: true },
   displayName: { type: String, required: true },
   password: { type: String, required: true },
-  salt: { type: String, required: true },
+  salt: String,
   isAdmin: Boolean,
   lastActivity: Date,
 });

@@ -8,7 +8,7 @@ import sharp from 'sharp';
 
 import { ImageFormat, ImageSize, Maybe } from './generated/graphql';
 import logger from './logger';
-import imageModel from './models/image';
+import ImageModel from './models/image';
 import { RecipeDbObject } from './models/recipe';
 
 const baseUrl = process.env.VIRTUAL_HOST
@@ -79,7 +79,7 @@ export function recipeImageMiddleware() {
       return res.send(buffer);
     }
 
-    const image = await imageModel.findById(id);
+    const image = await ImageModel.findById(id);
 
     if (!image) {
       return res.status(404).end();
@@ -130,7 +130,7 @@ export async function createImage(imageFileUpload: Promise<FileUpload>) {
 
   const data = Buffer.concat(chunks);
 
-  return await imageModel.create({
+  return await ImageModel.create({
     data,
     contentType: fileUpload.mimetype,
   });

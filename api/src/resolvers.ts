@@ -6,12 +6,17 @@ import { authenticated, signToken } from './auth';
 import { messaging } from './firebase';
 import { ImageFormat, Resolvers } from './generated/graphql';
 import logger from './logger';
-import { mapToRecipeDbObject, mapToRecipeGqlObject, mapToUserGqlObject } from './mapping';
-import imageModel from './models/image';
-import recipeModel, { RecipeDocument } from './models/recipe';
-import userModel, { UserDbObject, UserDocument } from './models/user';
+import {
+  mapToRecipeDbObject,
+  mapToRecipeGqlObject,
+  mapToUserDbObject,
+  mapToUserGqlObject,
+} from './mapping';
+import ImageModel from './models/image';
+import RecipeModel, { RecipeDocument } from './models/recipe';
+import UserModel, { UserDbObject, UserDocument } from './models/user';
 import { appendSizeAndFormatToImageUrl, createImage } from './recipeImage';
-import { checkUserRightsAsync, getRandomString, saltHashPassword, sha512 } from './utils';
+import { checkUserRightsAsync, comparePassword, getRandomString, hashPassword } from './utils';
 
 const resolvers: Resolvers = {
   Query: {
@@ -27,7 +32,7 @@ const resolvers: Resolvers = {
         filter.deleted = { $in: [false, null] as any };
       }
 
-      return (await recipeModel.find(filter).populate('user'))
+      return (await RecipeModel.find(filter).populate('user'))
         .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
         .map(mapToRecipeGqlObject);
     },
@@ -41,13 +46,13 @@ const resolvers: Resolvers = {
           return null;
         }
 
-        const recipe = await recipeModel.findById(args.id).populate('user');
+        const recipe = await RecipeModel.findById(args.id).populate('user');
 
         return recipe && mapToRecipeGqlObject(recipe);
       }
 
       if (args.slug) {
-        const recipe = await recipeModel.findOne({ slug: args.slug }).populate('user');
+        const recipe = await RecipeModel.findOne({ slug: args.slug }).populate('user');
 
         return recipe && mapToRecipeGqlObject(recipe);
       }
@@ -55,17 +60,17 @@ const resolvers: Resolvers = {
       return null;
     },
     ingredients: async () => {
-      const ingredients: string[] = await recipeModel.distinct('ingredients.name');
+      const ingredients: string[] = await RecipeModel.distinct('ingredients.name');
 
       return ingredients.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
     sideDishes: async () => {
-      const sideDishes: string[] = await recipeModel.distinct('sideDish');
+      const sideDishes: string[] = await RecipeModel.distinct('sideDish');
 
       return sideDishes.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
     tags: async () => {
-      const tags: string[] = await recipeModel.distinct('tags');
+      const tags: string[] = await RecipeModel.distinct('tags');
 
       return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
@@ -73,15 +78,15 @@ const resolvers: Resolvers = {
       ...ctx.currentUser,
       isAdmin: ctx.currentUser.isAdmin ?? false,
     })),
-    users: authenticated(async () => (await userModel.find()).map(mapToUserGqlObject), {
+    users: authenticated(async () => (await UserModel.find()).map(mapToUserGqlObject), {
       requireAdmin: true,
     }),
   },
   Mutation: {
     login: async (_, args) => {
-      const user = await userModel.findOne({ username: args.username });
+      const user = await UserModel.findOne({ username: args.username });
 
-      if (!user || sha512(args.password, user.salt) !== user.password) {
+      if (!user || !(await comparePassword(args.password, user))) {
         throw new Error('Invalid credentials');
       }
 
@@ -90,8 +95,8 @@ const resolvers: Resolvers = {
     createRecipe: authenticated(async (_, args, ctx) => {
       const image = args.image && (await createImage(args.image));
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, ctx.currentUser.id);
-      await recipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
-      const recipe = await recipeModel.create(recipeToSave as RecipeDocument);
+      await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
+      const recipe = await RecipeModel.create(recipeToSave as RecipeDocument);
       const newRecipe = await recipe.populate('user');
 
       const newRecipeGqlModel = mapToRecipeGqlObject(newRecipe);
@@ -125,25 +130,20 @@ const resolvers: Resolvers = {
         throw new Error('Unauthorized');
       }
 
-      const origRecipe = await recipeModel.findById(args.id);
+      const recipe = await RecipeModel.findById(args.id).populate('user');
 
-      if (!origRecipe) {
+      if (!recipe) {
         throw new Error('Recipe not found');
       }
 
+      const origImageId = recipe.imageId;
       const image = args.image && (await createImage(args.image));
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, undefined);
-      await recipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
-      const recipe = await recipeModel
-        .findByIdAndUpdate(args.id, { $set: recipeToSave }, { new: true })
-        .populate('user');
+      await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
+      await recipe.set(recipeToSave).save();
 
-      if (!recipe) {
-        throw new Error('Recipe cannot be updated');
-      }
-
-      if (args.image && origRecipe.imageId) {
-        await imageModel.findByIdAndDelete(origRecipe.imageId);
+      if (args.image && origImageId) {
+        await ImageModel.findByIdAndDelete(origImageId);
       }
 
       return mapToRecipeGqlObject(recipe);
@@ -153,7 +153,7 @@ const resolvers: Resolvers = {
         throw new Error('Unauthorized');
       }
 
-      const recipe = await recipeModel.findByIdAndUpdate(args.id, {
+      const recipe = await RecipeModel.findByIdAndUpdate(args.id, {
         deleted: true,
         lastModifiedDate: new Date(),
       });
@@ -165,46 +165,30 @@ const resolvers: Resolvers = {
       return true;
     }),
     updateUserLastActivity: authenticated(async (_, __, ctx) => {
-      await userModel.findByIdAndUpdate(ctx.currentUser.id, { lastActivity: new Date() });
+      await UserModel.findByIdAndUpdate(ctx.currentUser.id, { lastActivity: new Date() });
 
       return true;
     }),
     createUser: authenticated(
       async (_, args) => {
-        const password = getRandomString(10);
-        const { hash, salt } = saltHashPassword(password);
-
         const userToSave: Partial<UserDbObject> = {
-          ...args.user,
-          username: args.user.username.trim(),
-          displayName: args.user.displayName.trim(),
-          password: hash,
-          salt,
-          isAdmin: args.user.isAdmin ? true : undefined,
+          ...mapToUserDbObject(args.user),
+          password: await hashPassword(getRandomString(10)),
         };
 
-        return mapToUserGqlObject(await userModel.create(userToSave as UserDocument));
+        return mapToUserGqlObject(await UserModel.create(userToSave as UserDocument));
       },
       { requireAdmin: true },
     ),
     updateUser: authenticated(
       async (_, args) => {
-        const userToSave = {
-          ...args.user,
-          username: args.user.username.trim(),
-          displayName: args.user.displayName.trim(),
-          isAdmin: args.user.isAdmin ? true : undefined,
-        };
-
-        const user = await userModel.findByIdAndUpdate(
-          args.id,
-          { $set: userToSave },
-          { new: true },
-        );
+        const user = await UserModel.findById(args.id);
 
         if (!user) {
           throw new Error('User not found or cannot be updated');
         }
+
+        await user.set(mapToUserDbObject(args.user)).save();
 
         return mapToUserGqlObject(user);
       },
@@ -212,7 +196,7 @@ const resolvers: Resolvers = {
     ),
     deleteUser: authenticated(
       async (_, args) => {
-        const user = await userModel.findByIdAndRemove(args.id);
+        const user = await UserModel.findByIdAndRemove(args.id);
 
         if (!user) {
           throw new Error('User not found or cannot be deleted');
@@ -224,41 +208,42 @@ const resolvers: Resolvers = {
     ),
     resetPassword: authenticated(
       async (_, args) => {
-        const password = getRandomString(10);
-        const { hash, salt } = saltHashPassword(password);
-
-        const user = await userModel.findByIdAndUpdate(args.id, {
-          $set: {
-            password: hash,
-            salt,
-          },
-        });
+        const user = await UserModel.findById(args.id);
 
         if (!user) {
           throw new Error('User not found or cannot be updated');
         }
+
+        const password = getRandomString(10);
+
+        await user
+          .set({
+            password: await hashPassword(password),
+            salt: undefined,
+          })
+          .save();
 
         return password;
       },
       { requireAdmin: true },
     ),
     changePassword: authenticated(async (_, args, ctx) => {
-      if (sha512(args.password, ctx.currentUser.salt) !== ctx.currentUser.password) {
+      if (!(await comparePassword(args.password, ctx.currentUser))) {
         return false;
       }
 
-      const { hash, salt } = saltHashPassword(args.newPassword);
-
-      const user = await userModel.findByIdAndUpdate(ctx.currentUser.id, {
-        $set: {
-          password: hash,
-          salt,
-        },
-      });
+      const user = await UserModel.findById(ctx.currentUser.id);
 
       if (!user) {
         throw new Error('User not found or cannot be updated');
       }
+
+      await user
+        .set({
+          password: await hashPassword(args.newPassword),
+          salt: undefined,
+        })
+        .save();
 
       return true;
     }),
