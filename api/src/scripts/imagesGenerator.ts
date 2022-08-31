@@ -1,6 +1,6 @@
 import { connectToDb } from '../db';
 import logger from '../logger';
-import recipeModel from '../models/recipe';
+import RecipeModel from '../models/recipe';
 import { resizeAndWriteImage } from '../recipeImage';
 
 async function generateImages(id: string, image: Buffer) {
@@ -17,7 +17,7 @@ async function generateImages(id: string, image: Buffer) {
 
 async function main() {
   await connectToDb();
-  const recipes = await recipeModel.find().populate('image');
+  const recipes = await RecipeModel.find().populate('image');
 
   logger.info('Generating images (this can take a while)');
 

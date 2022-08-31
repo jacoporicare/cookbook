@@ -2,8 +2,7 @@ import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { ResolverFn } from './generated/graphql';
-import { mapToUserDbObject } from './mapping';
-import userModel, { UserDbObject, UserDocument } from './models/user';
+import UserModel, { UserDbObject, UserDocument } from './models/user';
 
 const jwtSecret = process.env.JWT_SECRET!;
 
@@ -40,14 +39,19 @@ export function authenticated<TResult, TParent = unknown, TArgs = unknown>(
 
     if (token) {
       const payload = verifyToken<{ userId: string }>(token);
-      userDocument = payload?.userId ? await userModel.findById(payload.userId) : null;
+      userDocument = payload?.userId ? await UserModel.findById(payload.userId) : null;
     }
 
     if (!userDocument || (options.requireAdmin && !userDocument.isAdmin)) {
       throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
     }
 
-    return next(root, args, { currentUser: mapToUserDbObject(userDocument) }, info);
+    return next(
+      root,
+      args,
+      { currentUser: userDocument.toObject<UserDbObject>({ getters: true, versionKey: false }) },
+      info,
+    );
   };
 
   return fn;
