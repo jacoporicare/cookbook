@@ -73,6 +73,7 @@ jobs:
           KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           SOURCE: ./deploy/
           TARGET: ~/www/cookbook_${{ github.ref_name }}
+          ARGS_MORE: --exclude=/vhost.d/
       - name: rsync nginx/vhost.d
         uses: up9cloud/action-rsync@v1.3
         env:
