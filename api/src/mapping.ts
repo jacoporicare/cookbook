@@ -32,7 +32,7 @@ export function mapToRecipeDbObject(
   const newRecipe: AnyKeys<RecipeDbObject> = {
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
-    sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
+    sideDish: recipe.sideDish?.trim() || undefined,
     preparationTime: recipe.preparationTime || undefined,
     servingCount: recipe.servingCount || undefined,
     directions: recipe.directions?.trim() || undefined,
@@ -45,7 +45,7 @@ export function mapToRecipeDbObject(
         isGroup: ingredient.isGroup || undefined,
       })) ?? undefined,
     lastModifiedDate: new Date(),
-    tags: recipe.tags && recipe.tags.length > 0 ? recipe.tags : undefined,
+    tags: recipe.tags?.length ? recipe.tags : undefined,
   };
 
   if (imageId) {

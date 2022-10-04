@@ -74,7 +74,10 @@ const typeDefs = gql`
   }
 
   type Query {
-    recipes(since: Date, deleted: Boolean): [Recipe!]!
+    recipes(
+      since: Date @deprecated(reason: "The mobile apps don't use it anymore.")
+      deleted: Boolean @deprecated(reason: "The mobile apps don't use it anymore.")
+    ): [Recipe!]!
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!
