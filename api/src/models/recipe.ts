@@ -12,13 +12,13 @@ export type IngredientDbObject = {
 };
 
 export type RecipeCookedDbObject = {
-  user: UserDbObject;
+  user: string | UserDbObject;
   date: Date;
 };
 
 export type RecipeDbObject = {
   id: string;
-  user: UserDbObject;
+  user: string | UserDbObject;
   image?: string | ImageDbObject;
   title: string;
   slug: string;

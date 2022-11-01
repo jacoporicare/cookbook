@@ -12,7 +12,7 @@ export function mapToRecipeGqlObject(recipeDocument: RecipeDocument): Recipe {
   return {
     ...recipe,
     imageUrl: getImageUrl(recipe),
-  };
+  } as Recipe;
 }
 
 export function mapToRecipeDbObject(

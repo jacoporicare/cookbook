@@ -1,5 +1,6 @@
 import { connectToDb } from '../db';
 import logger from '../logger';
+import { ImageDbObject } from '../models/image';
 import RecipeModel from '../models/recipe';
 import { resizeAndWriteImage } from '../recipeImage';
 
@@ -23,7 +24,7 @@ async function main() {
 
   for (const recipe of recipes) {
     if (recipe.image) {
-      await generateImages(recipe.id, recipe.image.data);
+      await generateImages(recipe.id, (recipe.image as ImageDbObject).data);
     }
   }
 
