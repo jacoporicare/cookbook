@@ -55,6 +55,7 @@ export type Mutation = {
   deleteRecipe: Scalars['Boolean'];
   deleteUser: Scalars['ID'];
   login: AuthPayload;
+  recipeCooked: Recipe;
   resetPassword: Scalars['String'];
   updateRecipe: Recipe;
   updateUser: User;
@@ -95,6 +96,13 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationRecipeCookedArgs = {
+  date: Scalars['Date'];
+  delete: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+};
+
+
 export type MutationResetPasswordArgs = {
   id: Scalars['ID'];
 };
@@ -129,26 +137,21 @@ export type QueryRecipeArgs = {
   slug: InputMaybe<Scalars['String']>;
 };
 
-
-export type QueryRecipesArgs = {
-  deleted: InputMaybe<Scalars['Boolean']>;
-  since: InputMaybe<Scalars['Date']>;
-};
-
 export type Recipe = {
   __typename?: 'Recipe';
+  cookedHistory: Array<RecipeCooked>;
   creationDate: Scalars['Date'];
   deleted: Scalars['Boolean'];
   directions: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   imageUrl: Maybe<Scalars['String']>;
-  ingredients: Maybe<Array<Ingredient>>;
+  ingredients: Array<Ingredient>;
   lastModifiedDate: Scalars['Date'];
   preparationTime: Maybe<Scalars['Int']>;
   servingCount: Maybe<Scalars['Int']>;
   sideDish: Maybe<Scalars['String']>;
   slug: Scalars['String'];
-  tags: Maybe<Array<Scalars['String']>>;
+  tags: Array<Scalars['String']>;
   title: Scalars['String'];
   user: User;
 };
@@ -157,6 +160,12 @@ export type Recipe = {
 export type RecipeImageUrlArgs = {
   format: InputMaybe<ImageFormat>;
   size: InputMaybe<ImageSize>;
+};
+
+export type RecipeCooked = {
+  __typename?: 'RecipeCooked';
+  date: Scalars['Date'];
+  user: User;
 };
 
 export type RecipeInput = {
@@ -203,7 +212,7 @@ export type CreateRecipeMutationVariables = Exact<{
 }>;
 
 
-export type CreateRecipeMutation = { __typename?: 'Mutation', createRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
+export type CreateRecipeMutation = { __typename?: 'Mutation', createRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type CreateUserMutationVariables = Exact<{
   user: UserInput;
@@ -234,23 +243,23 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: string } };
 
-export type RecipeBaseFragment = { __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null };
+export type RecipeBaseFragment = { __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null };
 
 export type RecipeDetailQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type RecipeDetailQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
+export type RecipeDetailQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
 
-export type RecipeDetailFragment = { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
+export type RecipeDetailFragment = { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type RecipeEditQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type RecipeEditQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
+export type RecipeEditQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } | null };
 
 export type RecipeEditOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -260,7 +269,7 @@ export type RecipeEditOptionsQuery = { __typename?: 'Query', ingredients: Array<
 export type RecipeListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecipeListQuery = { __typename?: 'Query', tags: Array<string>, recipes: Array<{ __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null }> };
+export type RecipeListQuery = { __typename?: 'Query', tags: Array<string>, recipes: Array<{ __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null }> };
 
 export type ResetPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -276,7 +285,7 @@ export type UpdateRecipeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string> | null, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }> | null, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
+export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];

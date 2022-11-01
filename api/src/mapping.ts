@@ -11,17 +11,8 @@ export function mapToRecipeGqlObject(recipeDocument: RecipeDocument): Recipe {
 
   return {
     ...recipe,
-    deleted: Boolean(recipe.deleted),
     imageUrl: getImageUrl(recipe),
-    ingredients: recipe.ingredients?.map(i => ({
-      ...i,
-      isGroup: i.isGroup ?? false,
-    })),
-    user: {
-      ...recipe.user,
-      isAdmin: recipe.user.isAdmin ?? false,
-    },
-  };
+  } as Recipe;
 }
 
 export function mapToRecipeDbObject(
@@ -32,7 +23,7 @@ export function mapToRecipeDbObject(
   const newRecipe: AnyKeys<RecipeDbObject> = {
     title: recipe.title.trim(),
     slug: toSlug(recipe.title),
-    sideDish: recipe.sideDish ? recipe.sideDish.trim() : undefined,
+    sideDish: recipe.sideDish?.trim() || undefined,
     preparationTime: recipe.preparationTime || undefined,
     servingCount: recipe.servingCount || undefined,
     directions: recipe.directions?.trim() || undefined,
@@ -42,30 +33,25 @@ export function mapToRecipeDbObject(
         name: ingredient.name.trim(),
         amount: ingredient.amount || undefined,
         amountUnit: ingredient.amountUnit?.trim() || undefined,
-        isGroup: ingredient.isGroup || undefined,
-      })) ?? undefined,
+        isGroup: ingredient.isGroup ?? false,
+      })) ?? [],
     lastModifiedDate: new Date(),
-    tags: recipe.tags && recipe.tags.length > 0 ? recipe.tags : undefined,
+    tags: recipe.tags ?? [],
   };
 
   if (imageId) {
-    newRecipe.imageId = imageId;
+    newRecipe.image = imageId;
   }
 
   if (userId) {
-    newRecipe.userId = userId;
+    newRecipe.user = userId;
   }
 
   return newRecipe;
 }
 
 export function mapToUserGqlObject(userDocument: UserDocument): User {
-  const user = userDocument.toObject<UserDbObject>({ getters: true, versionKey: false });
-
-  return {
-    ...user,
-    isAdmin: user.isAdmin ?? false,
-  };
+  return userDocument.toObject<UserDbObject>({ getters: true, versionKey: false });
 }
 
 export function mapToUserDbObject(user: UserInput): AnyKeys<UserDbObject> {
@@ -73,7 +59,7 @@ export function mapToUserDbObject(user: UserInput): AnyKeys<UserDbObject> {
     ...user,
     username: user.username.trim(),
     displayName: user.displayName.trim(),
-    isAdmin: user.isAdmin || undefined,
+    isAdmin: user.isAdmin ?? false,
   };
 }
 

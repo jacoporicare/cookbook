@@ -25,8 +25,9 @@ const typeDefs = gql`
     imageUrl(size: ImageSize, format: ImageFormat): String
     creationDate: Date!
     lastModifiedDate: Date!
-    ingredients: [Ingredient!]
-    tags: [String!]
+    ingredients: [Ingredient!]!
+    tags: [String!]!
+    cookedHistory: [RecipeCooked!]!
     deleted: Boolean!
   }
 
@@ -36,6 +37,11 @@ const typeDefs = gql`
     amountUnit: String
     name: String!
     isGroup: Boolean!
+  }
+
+  type RecipeCooked {
+    user: User!
+    date: Date!
   }
 
   type User {
@@ -74,7 +80,10 @@ const typeDefs = gql`
   }
 
   type Query {
-    recipes(since: Date, deleted: Boolean): [Recipe!]!
+    recipes(
+      since: Date @deprecated(reason: "The mobile apps don't use it anymore.")
+      deleted: Boolean @deprecated(reason: "The mobile apps don't use it anymore.")
+    ): [Recipe!]!
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!
@@ -88,6 +97,7 @@ const typeDefs = gql`
     createRecipe(recipe: RecipeInput!, image: Upload): Recipe!
     updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe!
     deleteRecipe(id: ID!): Boolean!
+    recipeCooked(id: ID!, date: Date!, delete: Boolean): Recipe!
     updateUserLastActivity: Boolean!
     createUser(user: UserInput!): User!
     updateUser(id: ID!, user: UserInput!): User!

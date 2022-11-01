@@ -18,6 +18,8 @@ import UserModel, { UserDbObject, UserDocument } from './models/user';
 import { appendSizeAndFormatToImageUrl, createImage } from './recipeImage';
 import { checkUserRightsAsync, comparePassword, getRandomString, hashPassword } from './utils';
 
+const populateFields = ['user', 'cookedHistory.user'];
+
 const resolvers: Resolvers = {
   Query: {
     recipes: async (_, args) => {
@@ -32,7 +34,7 @@ const resolvers: Resolvers = {
         filter.deleted = { $in: [false, null] as any };
       }
 
-      return (await RecipeModel.find(filter).populate('user'))
+      return (await RecipeModel.find(filter).populate(populateFields))
         .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
         .map(mapToRecipeGqlObject);
     },
@@ -46,15 +48,19 @@ const resolvers: Resolvers = {
           return null;
         }
 
-        const recipe = await RecipeModel.findById(args.id).populate('user');
+        const recipe = await RecipeModel.findById(args.id).populate(populateFields);
 
         return recipe && mapToRecipeGqlObject(recipe);
       }
 
       if (args.slug) {
-        const recipe = await RecipeModel.findOne({ slug: args.slug }).populate('user');
+        const recipe = await RecipeModel.findOne({ slug: args.slug }).populate(populateFields);
 
-        return recipe && mapToRecipeGqlObject(recipe);
+        if (!recipe) {
+          return null;
+        }
+
+        return mapToRecipeGqlObject(recipe);
       }
 
       return null;
@@ -74,10 +80,7 @@ const resolvers: Resolvers = {
 
       return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
     },
-    me: authenticated(async (_, __, ctx) => ({
-      ...ctx.currentUser,
-      isAdmin: ctx.currentUser.isAdmin ?? false,
-    })),
+    me: authenticated(async (_, __, ctx) => ctx.currentUser),
     users: authenticated(async () => (await UserModel.find()).map(mapToUserGqlObject), {
       requireAdmin: true,
     }),
@@ -97,9 +100,9 @@ const resolvers: Resolvers = {
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, ctx.currentUser.id);
       await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
       const recipe = await RecipeModel.create(recipeToSave as RecipeDocument);
-      const newRecipe = await recipe.populate('user');
+      await recipe.populate(populateFields);
 
-      const newRecipeGqlModel = mapToRecipeGqlObject(newRecipe);
+      const newRecipeGqlModel = mapToRecipeGqlObject(recipe);
 
       messaging
         .send({
@@ -130,20 +133,21 @@ const resolvers: Resolvers = {
         throw new Error('Unauthorized');
       }
 
-      const recipe = await RecipeModel.findById(args.id).populate('user');
+      const recipe = await RecipeModel.findById(args.id).populate(populateFields);
 
       if (!recipe) {
         throw new Error('Recipe not found');
       }
 
-      const origImageId = recipe.imageId;
+      const origImage = recipe.image;
       const image = args.image && (await createImage(args.image));
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, undefined);
       await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
       await recipe.set(recipeToSave).save();
+      await recipe.populate(populateFields);
 
-      if (args.image && origImageId) {
-        await ImageModel.findByIdAndDelete(origImageId);
+      if (args.image && origImage) {
+        await ImageModel.findByIdAndDelete(origImage);
       }
 
       return mapToRecipeGqlObject(recipe);
@@ -163,6 +167,35 @@ const resolvers: Resolvers = {
       }
 
       return true;
+    }),
+    recipeCooked: authenticated(async (_, args, ctx) => {
+      if (!(await checkUserRightsAsync(ctx.currentUser, args.id))) {
+        throw new Error('Unauthorized');
+      }
+
+      const recipe = await RecipeModel.findById(args.id);
+
+      if (!recipe) {
+        throw new Error('Recipe not found');
+      }
+
+      recipe.cookedHistory = args.delete
+        ? recipe.cookedHistory.filter(
+            d =>
+              d.date.valueOf() !== args.date.valueOf() &&
+              // user is not populated here so it's an ID
+              (d.user as unknown as string) === ctx.currentUser.id,
+          )
+        : [
+            ...recipe.cookedHistory,
+            // "as UserDbObject" is only to satisfy TS, Mongoose is OK with just an ID when saving
+            { user: ctx.currentUser.id as unknown as UserDbObject, date: args.date },
+          ].sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
+      await recipe.save();
+      await recipe.populate(populateFields);
+
+      return mapToRecipeGqlObject(recipe);
     }),
     updateUserLastActivity: authenticated(async (_, __, ctx) => {
       await UserModel.findByIdAndUpdate(ctx.currentUser.id, { lastActivity: new Date() });
