@@ -11,16 +11,7 @@ export function mapToRecipeGqlObject(recipeDocument: RecipeDocument): Recipe {
 
   return {
     ...recipe,
-    deleted: Boolean(recipe.deleted),
     imageUrl: getImageUrl(recipe),
-    ingredients: recipe.ingredients?.map(i => ({
-      ...i,
-      isGroup: i.isGroup ?? false,
-    })),
-    user: {
-      ...recipe.user,
-      isAdmin: recipe.user.isAdmin ?? false,
-    },
   };
 }
 
@@ -42,30 +33,25 @@ export function mapToRecipeDbObject(
         name: ingredient.name.trim(),
         amount: ingredient.amount || undefined,
         amountUnit: ingredient.amountUnit?.trim() || undefined,
-        isGroup: ingredient.isGroup || undefined,
-      })) ?? undefined,
+        isGroup: ingredient.isGroup ?? false,
+      })) ?? [],
     lastModifiedDate: new Date(),
-    tags: recipe.tags?.length ? recipe.tags : undefined,
+    tags: recipe.tags ?? [],
   };
 
   if (imageId) {
-    newRecipe.imageId = imageId;
+    newRecipe.image = imageId;
   }
 
   if (userId) {
-    newRecipe.userId = userId;
+    newRecipe.user = userId;
   }
 
   return newRecipe;
 }
 
 export function mapToUserGqlObject(userDocument: UserDocument): User {
-  const user = userDocument.toObject<UserDbObject>({ getters: true, versionKey: false });
-
-  return {
-    ...user,
-    isAdmin: user.isAdmin ?? false,
-  };
+  return userDocument.toObject<UserDbObject>({ getters: true, versionKey: false });
 }
 
 export function mapToUserDbObject(user: UserInput): AnyKeys<UserDbObject> {
@@ -73,7 +59,7 @@ export function mapToUserDbObject(user: UserInput): AnyKeys<UserDbObject> {
     ...user,
     username: user.username.trim(),
     displayName: user.displayName.trim(),
-    isAdmin: user.isAdmin || undefined,
+    isAdmin: user.isAdmin ?? false,
   };
 }
 

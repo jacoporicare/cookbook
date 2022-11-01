@@ -21,11 +21,11 @@ fs.mkdirp(cacheDir).catch(logger.error);
 type ImageSizeTuple = [number, number];
 
 export function getImageUrl(recipe: RecipeDbObject) {
-  if (!recipe.imageId) {
+  if (!recipe.image) {
     return null;
   }
 
-  return `${baseUrl}/image/${recipe.slug}_${recipe.imageId}`;
+  return `${baseUrl}/image/${recipe.slug}_${recipe.image}`;
 }
 
 export function appendSizeAndFormatToImageUrl(

@@ -11,12 +11,15 @@ export type IngredientDbObject = {
   isGroup: boolean;
 };
 
+export type RecipeCookedDbObject = {
+  user: UserDbObject;
+  date: Date;
+};
+
 export type RecipeDbObject = {
   id: string;
-  userId: string;
   user: UserDbObject;
-  imageId?: string;
-  image?: ImageDbObject;
+  image?: string | ImageDbObject;
   title: string;
   slug: string;
   directions?: string;
@@ -25,16 +28,17 @@ export type RecipeDbObject = {
   servingCount?: number;
   creationDate: Date;
   lastModifiedDate: Date;
-  ingredients?: IngredientDbObject[];
-  tags?: string[];
-  deleted?: boolean;
+  ingredients: IngredientDbObject[];
+  tags: string[];
+  cookedHistory: RecipeCookedDbObject[];
+  deleted: boolean;
 };
 
 export type RecipeDocument = Document & RecipeDbObject;
 
 const RecipeSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  imageId: { type: Schema.Types.ObjectId, ref: 'Image' },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  image: { type: Schema.Types.ObjectId, ref: 'Image' },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
   directions: String,
@@ -48,33 +52,27 @@ const RecipeSchema = new Schema({
         name: { type: String, required: true },
         amount: Number,
         amountUnit: String,
-        isGroup: Boolean,
+        isGroup: { type: Boolean, default: false },
       },
     ],
-    default: undefined,
+    default: [],
   },
-  imageUrl: String,
-  tags: { type: [String], default: undefined },
-  deleted: Boolean,
+  tags: { type: [String], default: [] },
+  deleted: { type: Boolean, default: false },
+  cookedHistory: {
+    type: [
+      {
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        date: { type: Date, required: true },
+      },
+    ],
+    default: [],
+  },
 });
 
 /**
  * Virtuals
  */
-
-RecipeSchema.virtual('user', {
-  ref: 'User',
-  localField: 'userId',
-  foreignField: '_id',
-  justOne: true,
-});
-
-RecipeSchema.virtual('image', {
-  ref: 'Image',
-  localField: 'imageId',
-  foreignField: '_id',
-  justOne: true,
-});
 
 RecipeSchema.virtual('creationDate').get(function (this: Document) {
   return this._id.getTimestamp();
@@ -84,7 +82,7 @@ RecipeSchema.virtual('creationDate').get(function (this: Document) {
  * Validations
  */
 
-RecipeSchema.path('title').validate((title: string) => title.length, 'Nadpis musí být vyplněný');
+RecipeSchema.paths.title.validate((title: string) => title.length, 'Nadpis musí být vyplněný');
 
 export default (models.Recipe as Model<RecipeDocument>) ||
   model<RecipeDocument>('Recipe', RecipeSchema);

@@ -55,6 +55,7 @@ export type Mutation = {
   deleteRecipe: Scalars['Boolean'];
   deleteUser: Scalars['ID'];
   login: AuthPayload;
+  recipeCooked: Recipe;
   resetPassword: Scalars['String'];
   updateRecipe: Recipe;
   updateUser: User;
@@ -92,6 +93,13 @@ export type MutationDeleteUserArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type MutationRecipeCookedArgs = {
+  date: Scalars['Date'];
+  delete?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
 };
 
 
@@ -137,18 +145,19 @@ export type QueryRecipesArgs = {
 
 export type Recipe = {
   __typename?: 'Recipe';
+  cookedHistory: Array<RecipeCooked>;
   creationDate: Scalars['Date'];
   deleted: Scalars['Boolean'];
   directions?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
-  ingredients?: Maybe<Array<Ingredient>>;
+  ingredients: Array<Ingredient>;
   lastModifiedDate: Scalars['Date'];
   preparationTime?: Maybe<Scalars['Int']>;
   servingCount?: Maybe<Scalars['Int']>;
   sideDish?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags: Array<Scalars['String']>;
   title: Scalars['String'];
   user: User;
 };
@@ -157,6 +166,12 @@ export type Recipe = {
 export type RecipeImageUrlArgs = {
   format?: InputMaybe<ImageFormat>;
   size?: InputMaybe<ImageSize>;
+};
+
+export type RecipeCooked = {
+  __typename?: 'RecipeCooked';
+  date: Scalars['Date'];
+  user: User;
 };
 
 export type RecipeInput = {
@@ -266,6 +281,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Recipe: ResolverTypeWrapper<Recipe>;
+  RecipeCooked: ResolverTypeWrapper<RecipeCooked>;
   RecipeInput: RecipeInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
@@ -287,6 +303,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   Recipe: Recipe;
+  RecipeCooked: RecipeCooked;
   RecipeInput: RecipeInput;
   String: Scalars['String'];
   Upload: Scalars['Upload'];
@@ -319,6 +336,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteRecipe?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteRecipeArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  recipeCooked?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationRecipeCookedArgs, 'date' | 'id'>>;
   resetPassword?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'id'>>;
   updateRecipe?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationUpdateRecipeArgs, 'id' | 'recipe'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'user'>>;
@@ -336,19 +354,26 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type RecipeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Recipe'] = ResolversParentTypes['Recipe']> = {
+  cookedHistory?: Resolver<Array<ResolversTypes['RecipeCooked']>, ParentType, ContextType>;
   creationDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   directions?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<RecipeImageUrlArgs>>;
-  ingredients?: Resolver<Maybe<Array<ResolversTypes['Ingredient']>>, ParentType, ContextType>;
+  ingredients?: Resolver<Array<ResolversTypes['Ingredient']>, ParentType, ContextType>;
   lastModifiedDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   preparationTime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   servingCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sideDish?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tags?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RecipeCookedResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecipeCooked'] = ResolversParentTypes['RecipeCooked']> = {
+  date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -373,6 +398,7 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Recipe?: RecipeResolvers<ContextType>;
+  RecipeCooked?: RecipeCookedResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
