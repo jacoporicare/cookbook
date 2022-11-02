@@ -182,9 +182,11 @@ const resolvers: Resolvers = {
       recipe.cookedHistory = args.delete
         ? recipe.cookedHistory.filter(
             d =>
-              d.date.valueOf() !== args.date.valueOf() &&
-              // user is not populated here so it's an ID
-              (d.user as unknown as string) === ctx.currentUser.id,
+              !(
+                d.date.valueOf() === args.date.valueOf() &&
+                // user is not populated here so it's an ID
+                (d.user as unknown as string) === ctx.currentUser.id
+              ),
           )
         : [
             ...recipe.cookedHistory,
