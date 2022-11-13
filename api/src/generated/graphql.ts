@@ -53,6 +53,7 @@ export type Mutation = {
   createRecipe: Recipe;
   createUser: User;
   deleteRecipe: Scalars['Boolean'];
+  deleteRecipeCooked: Recipe;
   deleteUser: Scalars['ID'];
   login: AuthPayload;
   recipeCooked: Recipe;
@@ -85,6 +86,12 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
+export type MutationDeleteRecipeCookedArgs = {
+  cookedId: Scalars['ID'];
+  recipeId: Scalars['ID'];
+};
+
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
 };
@@ -98,7 +105,6 @@ export type MutationLoginArgs = {
 
 export type MutationRecipeCookedArgs = {
   date: Scalars['Date'];
-  delete?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
 };
 
@@ -171,6 +177,7 @@ export type RecipeImageUrlArgs = {
 export type RecipeCooked = {
   __typename?: 'RecipeCooked';
   date: Scalars['Date'];
+  id: Scalars['ID'];
   user: User;
 };
 
@@ -334,6 +341,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRecipe?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationCreateRecipeArgs, 'recipe'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'user'>>;
   deleteRecipe?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteRecipeArgs, 'id'>>;
+  deleteRecipeCooked?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationDeleteRecipeCookedArgs, 'cookedId' | 'recipeId'>>;
   deleteUser?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   recipeCooked?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationRecipeCookedArgs, 'date' | 'id'>>;
@@ -374,6 +382,7 @@ export type RecipeResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type RecipeCookedResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecipeCooked'] = ResolversParentTypes['RecipeCooked']> = {
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

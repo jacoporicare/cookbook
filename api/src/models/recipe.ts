@@ -12,6 +12,7 @@ export type IngredientDbObject = {
 };
 
 export type RecipeCookedDbObject = {
+  id: string;
   user: string | UserDbObject;
   date: Date;
 };
