@@ -18,7 +18,7 @@ try {
   });
 } catch (e) {
   logger.warn(
-    'Firebase config not found (most probably, see error below).\nFor local development you have to download the Admin SDK JSON config file from Firebase console and place it to `api/src/zradelnik-firebase-adminsdk.json` (Git ignored).',
+    'Firebase config not found (most probably, see error below).\nFor local development you have use `git secret reveal` or download the Admin SDK JSON config file from Firebase console and place it to `api/src/zradelnik-firebase-adminsdk.json` (Git ignored).',
   );
   logger.error(e);
 }
