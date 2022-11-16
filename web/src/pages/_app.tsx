@@ -118,17 +118,6 @@ function CookbookApp({
           media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)"
           rel="apple-touch-startup-image"
         />
-        <script src="https://www.googletagmanager.com/gtag/js?id=UA-141291591-1" async />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'UA-141291591-1');
-            `,
-          }}
-        />
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
