@@ -2,6 +2,7 @@ import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
+import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
 import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
@@ -25,7 +26,6 @@ type Props = {
   imageUrl?: string;
   ingredientOptions: string[];
   ingredients: Omit<Ingredient, '_id' | 'id'>[];
-  isInstantPotNewRecipe: boolean;
   isNew: boolean;
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
@@ -51,7 +51,6 @@ function RecipeEdit({
   imageUrl,
   ingredientOptions,
   ingredients,
-  isInstantPotNewRecipe,
   isNew,
   isSaving,
   onAddGroup,
@@ -76,7 +75,7 @@ function RecipeEdit({
 
       <Header
         changed={changed}
-        isInstantPotNewRecipe={isInstantPotNewRecipe}
+        isInstantPotNewRecipe={!!tags?.includes(INSTANT_POT_TAG)}
         isNew={isNew}
         isSaving={isSaving}
         title={title}

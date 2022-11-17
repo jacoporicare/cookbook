@@ -284,7 +284,6 @@ function RecipeEditPage() {
           }
           ingredientOptions={dataOptions?.ingredients ?? []}
           ingredients={ingredients}
-          isInstantPotNewRecipe={isInstantPotNewRecipe}
           isNew={!slug}
           isSaving={isSaving}
           preparationTime={preparationTime}
