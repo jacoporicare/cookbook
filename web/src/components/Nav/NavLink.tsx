@@ -1,15 +1,14 @@
 import { styled } from '@mui/material';
 import Link, { LinkProps } from 'next/link';
-import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
 type Props = LinkProps & {
-  activeHref?: string;
+  active?: boolean;
   children: ReactNode;
 };
 
 const StyledLink = styled('a', { shouldForwardProp: propName => propName !== 'active' })<{
-  active: boolean;
+  active?: boolean;
 }>(({ active, theme }) => [
   {
     display: 'block',
@@ -51,14 +50,10 @@ const StyledLink = styled('a', { shouldForwardProp: propName => propName !== 'ac
   },
 ]);
 
-function NavLink({ activeHref, children, ...linkProps }: Props) {
-  const router = useRouter();
-
+function NavLink({ active, children, ...linkProps }: Props) {
   return (
     <Link {...linkProps} passHref>
-      <StyledLink active={router.pathname === (activeHref || linkProps.href.toString())}>
-        {children}
-      </StyledLink>
+      <StyledLink active={active}>{children}</StyledLink>
     </Link>
   );
 }

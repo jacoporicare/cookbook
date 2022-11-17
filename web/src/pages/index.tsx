@@ -15,12 +15,14 @@ import Search from '../components/RecipeList/Search';
 import FabContainer from '../components/common/FabContainer';
 import PageHeading from '../components/common/PageHeading';
 import SpinnerIf from '../components/common/SpinnerIf';
+import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '../const';
 import { useRecipeListQuery } from '../generated/graphql';
 import useHideOnScroll from '../hooks/useHideOnScroll';
 
 function RecipeListPage() {
   const router = useRouter();
   const searchTags = router.query.stitky?.toString().split(' ') ?? [];
+  const isInstantPotPage = router.pathname === `/${INSTANT_POT_TAG_SLUG}`;
 
   const [token] = useAuth();
   const [searchVisible, setSearchVisible] = useState(searchTags.length > 0);
@@ -37,7 +39,7 @@ function RecipeListPage() {
   }
 
   function handleSearch(tags: string[]) {
-    router.push(tags.length > 0 ? `/?stitky=${tags.join('+')}` : '/');
+    router.push(tags.length > 0 ? `${router.pathname}?stitky=${tags.join('+')}` : router.pathname);
   }
 
   function handleMatchAllChange(matchAll: boolean) {
@@ -52,15 +54,22 @@ function RecipeListPage() {
     );
   }
 
-  const tagOptions: { value: string; label: string }[] =
-    data?.tags.map(t => ({ value: slug(t), label: t })) ?? [];
-  const allRecipes = data?.recipes ?? [];
+  const tags =
+    (isInstantPotPage ? data?.tags.filter(t => t !== INSTANT_POT_TAG) : data?.tags) ?? [];
+  const tagOptions: { value: string; label: string }[] = tags.map(t => ({
+    value: slug(t),
+    label: t,
+  }));
+  const allRecipes =
+    (isInstantPotPage
+      ? data?.recipes.filter(recipe => recipe.tags.includes(INSTANT_POT_TAG))
+      : data?.recipes) ?? [];
   const recipes =
     searchTags.length > 0
       ? allRecipes.filter(recipe =>
           matchAll
-            ? searchTags.every(t => recipe.tags?.map(t => slug(t)).includes(t))
-            : searchTags.some(t => recipe.tags?.map(t => slug(t)).includes(t)),
+            ? searchTags.every(t => recipe.tags.some(rt => slug(rt) === t))
+            : searchTags.some(t => recipe.tags.some(rt => slug(rt) === t)),
         )
       : allRecipes;
   const isEmpty = recipes.length === 0;
@@ -79,7 +88,7 @@ function RecipeListPage() {
             </Button>
           }
         >
-          Recepty{' '}
+          {isInstantPotPage ? 'Instant Pot recepty' : 'Recepty'}{' '}
           <Typography color="textSecondary" component="span" variant="h5">
             {recipes.length}
           </Typography>
