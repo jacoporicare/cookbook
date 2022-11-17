@@ -25,6 +25,7 @@ type Props = {
   imageUrl?: string;
   ingredientOptions: string[];
   ingredients: Omit<Ingredient, '_id' | 'id'>[];
+  isInstantPotNewRecipe: boolean;
   isNew: boolean;
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
@@ -50,6 +51,7 @@ function RecipeEdit({
   imageUrl,
   ingredientOptions,
   ingredients,
+  isInstantPotNewRecipe,
   isNew,
   isSaving,
   onAddGroup,
@@ -72,7 +74,13 @@ function RecipeEdit({
     <form onSubmit={onSubmit}>
       {isSaving && <Spinner overlay />}
 
-      <Header changed={changed} isNew={isNew} isSaving={isSaving} title={title} />
+      <Header
+        changed={changed}
+        isInstantPotNewRecipe={isInstantPotNewRecipe}
+        isNew={isNew}
+        isSaving={isSaving}
+        title={title}
+      />
 
       <Title title={title} onChange={onChange} />
 

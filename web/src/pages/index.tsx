@@ -114,7 +114,10 @@ function RecipeListPage() {
       </section>
       {token && (
         <FabContainer>
-          <Link href="/novy-recept" passHref>
+          <Link
+            href={isInstantPotPage ? `/novy-recept?${INSTANT_POT_TAG_SLUG}` : '/novy-recept'}
+            passHref
+          >
             <Zoom in={!fabHidden}>
               <Fab aria-label="Nový recept" color="primary" component="a">
                 <Add fontSize="large" />

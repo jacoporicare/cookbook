@@ -11,6 +11,7 @@ import Layout from '../../../components/Layout';
 import RecipeEdit, { RecipeEditFields } from '../../../components/RecipeEdit/RecipeEdit';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import SpinnerIf from '../../../components/common/SpinnerIf';
+import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '../../../const';
 import {
   RecipeListQuery,
   RecipeListDocument,
@@ -38,6 +39,8 @@ function RecipeEditPage() {
   const router = useRouter();
   const supportsWebP = useSupportsWebP();
 
+  const isInstantPotNewRecipe = router.query[INSTANT_POT_TAG_SLUG] === '';
+
   const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
 
   const [changed, setChanged] = useState(false);
@@ -49,7 +52,7 @@ function RecipeEditPage() {
   const [preparationTime, setPreparationTime] = useState<number>();
   const [servingCount, setServingCount] = useState<number>();
   const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id' | 'id'>[]>([]);
-  const [tags, setTags] = useState<string[]>();
+  const [tags, setTags] = useState<string[]>(isInstantPotNewRecipe ? [INSTANT_POT_TAG] : []);
 
   const slug = router.query.slug?.toString();
 
@@ -281,6 +284,7 @@ function RecipeEditPage() {
           }
           ingredientOptions={dataOptions?.ingredients ?? []}
           ingredients={ingredients}
+          isInstantPotNewRecipe={isInstantPotNewRecipe}
           isNew={!slug}
           isSaving={isSaving}
           preparationTime={preparationTime}
