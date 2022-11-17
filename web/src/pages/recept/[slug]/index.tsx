@@ -13,12 +13,13 @@ import RecipeHeader from '../../../components/RecipeDetail/RecipeHeader';
 import DocumentTitle from '../../../components/common/DocumentTitle';
 import Spinner from '../../../components/common/Spinner';
 import SpinnerIf from '../../../components/common/SpinnerIf';
+import { INSTANT_POT_TAG } from '../../../const';
 import {
-  RecipeListQuery,
   RecipeListDocument,
-  useRecipeDetailQuery,
+  RecipeListQuery,
   useDeleteRecipeMutation,
   useMeQuery,
+  useRecipeDetailQuery,
 } from '../../../generated/graphql';
 import useSupportsWebP from '../../../hooks/useSupportsWebP';
 
@@ -127,6 +128,7 @@ function RecipeDetailPage() {
             imageFullUrl={(supportsWebP ? imageWebPUrl : imageUrl) ?? undefined}
             imageUrl={(supportsWebP ? imageThumbWebPUrl : imageThumbUrl) ?? undefined}
             ingredients={ingredients ?? undefined}
+            isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
             lastModifiedDate={lastModifiedDate}
             servingCount={servingCount ?? undefined}
             title={title}

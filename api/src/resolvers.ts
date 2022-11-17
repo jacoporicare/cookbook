@@ -78,7 +78,10 @@ const resolvers: Resolvers = {
     tags: async () => {
       const tags: string[] = await RecipeModel.distinct('tags');
 
-      return tags.filter(Boolean).sort((a, b) => a.localeCompare(b, 'cs'));
+      return [
+        'Instant Pot',
+        ...tags.filter(t => t && t !== 'Instant Pot').sort((a, b) => a.localeCompare(b, 'cs')),
+      ];
     },
     me: authenticated(async (_, __, ctx) => ctx.currentUser),
     users: authenticated(async () => (await UserModel.find()).map(mapToUserGqlObject), {

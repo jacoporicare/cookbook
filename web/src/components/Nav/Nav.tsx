@@ -1,5 +1,7 @@
 import { Box, styled } from '@mui/material';
+import { useRouter } from 'next/router';
 
+import { INSTANT_POT_TAG_SLUG } from '../../const';
 import { colors } from '../../styles/colors';
 import UserInfo from '../UserInfo';
 
@@ -76,6 +78,8 @@ type Props = {
 };
 
 function Nav(props: Props) {
+  const router = useRouter();
+
   return (
     <Root>
       <input className={classes.input} id="openSidebarMenu" type="checkbox" />
@@ -103,8 +107,18 @@ function Nav(props: Props) {
           },
         }}
       >
-        <NavLink href="/">Recepty</NavLink>
-        <NavLink href="/prilohy">Přílohy</NavLink>
+        <NavLink active={router.pathname === '/'} href="/">
+          Recepty
+        </NavLink>
+        <NavLink
+          active={router.pathname === `/${INSTANT_POT_TAG_SLUG}`}
+          href={`/${INSTANT_POT_TAG_SLUG}`}
+        >
+          Instant Pot
+        </NavLink>
+        <NavLink active={router.pathname === '/prilohy'} href="/prilohy">
+          Přílohy
+        </NavLink>
         {props.showUserInfo && <UserInfo />}
       </Box>
     </Root>

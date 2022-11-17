@@ -41,7 +41,7 @@ function UserInfo(props: Props) {
       </Box>
       {!token ? (
         <NavLink
-          activeHref="/prihlaseni"
+          active={router.pathname === '/prihlaseni'}
           href={
             !router.asPath || router.asPath.startsWith('/prihlaseni')
               ? '/prihlaseni'

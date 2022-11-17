@@ -2,11 +2,15 @@ import {
   Autocomplete,
   Box,
   Chip,
+  FormControlLabel,
   InputAdornment,
   MenuItem,
+  Switch,
   TextField,
   useTheme,
 } from '@mui/material';
+
+import { INSTANT_POT_TAG } from '../../const';
 
 export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
 
@@ -99,17 +103,19 @@ function BasicInfo({
           }}
           id="tags"
           label="Štítky"
-          value={tags ?? []}
+          value={tags?.filter(t => t !== INSTANT_POT_TAG) ?? []}
           variant="filled"
           fullWidth
           select
           onChange={event => onTagsChange(event.target.value as unknown as string[])}
         >
-          {tagOptions.map(tag => (
-            <MenuItem key={tag} style={getStyles(tag, tags ?? [])} value={tag}>
-              {tag}
-            </MenuItem>
-          ))}
+          {tagOptions
+            .filter(t => t !== INSTANT_POT_TAG)
+            .map(tag => (
+              <MenuItem key={tag} style={getStyles(tag, tags ?? [])} value={tag}>
+                {tag}
+              </MenuItem>
+            ))}
         </TextField>
         {/* <label htmlFor="tags">Štítky</label>
         <Creatable
@@ -124,6 +130,24 @@ function BasicInfo({
           isMulti
           onChange={values => onTagsChange(values instanceof Array ? values.map(v => v.value) : [])}
         /> */}
+      </Box>
+
+      <Box mt={3}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={tags?.includes(INSTANT_POT_TAG)}
+              onChange={e =>
+                onTagsChange(
+                  e.target.checked
+                    ? [...(tags ?? []), INSTANT_POT_TAG]
+                    : tags?.filter(t => t !== INSTANT_POT_TAG) ?? [],
+                )
+              }
+            />
+          }
+          label="Instant Pot recept"
+        />
       </Box>
     </>
   );

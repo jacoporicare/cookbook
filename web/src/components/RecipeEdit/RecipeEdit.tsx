@@ -2,6 +2,7 @@ import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FormEventHandler } from 'react';
 import { SortEndHandler } from 'react-sortable-hoc';
 
+import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
 import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
@@ -72,7 +73,13 @@ function RecipeEdit({
     <form onSubmit={onSubmit}>
       {isSaving && <Spinner overlay />}
 
-      <Header changed={changed} isNew={isNew} isSaving={isSaving} title={title} />
+      <Header
+        changed={changed}
+        isInstantPotNewRecipe={!!tags?.includes(INSTANT_POT_TAG)}
+        isNew={isNew}
+        isSaving={isSaving}
+        title={title}
+      />
 
       <Title title={title} onChange={onChange} />
 

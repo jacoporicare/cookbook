@@ -15,6 +15,7 @@ type Props = {
   lastModifiedDate: string;
   imageUrl?: string;
   imageFullUrl?: string;
+  isInstantPotRecipe?: boolean;
   userName: string;
 };
 
@@ -26,6 +27,7 @@ function RecipeDetail({
   lastModifiedDate,
   imageUrl,
   imageFullUrl,
+  isInstantPotRecipe,
   userName,
 }: Props) {
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -46,6 +48,18 @@ function RecipeDetail({
           <Typography component="h3" variant="h5" gutterBottom>
             Postup
           </Typography>
+          {isInstantPotRecipe && (
+            <Paper>
+              <Box mb={3}>
+                <Alert severity="info">
+                  <strong>Instant Pot</strong>
+                  <br />
+                  Tento recept je určený pro multifunkční hrnec Instant Pot nebo jeho kopie, např.
+                  česká Tesla EliteCook K70.
+                </Alert>
+              </Box>
+            </Paper>
+          )}
           <Paper>
             {directions ? (
               <Box p={3}>
