@@ -29,6 +29,7 @@ async function main() {
   }
 
   logger.info('Done');
+  process.exit();
 }
 
 main().catch(logger.error);
