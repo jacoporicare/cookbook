@@ -113,8 +113,11 @@ export async function resizeAndWriteImage(
   const buffer = await s.toBuffer();
   const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
 
-  // No await
-  fs.writeFile(filePath, buffer).catch(logger.error);
+  try {
+    await fs.writeFile(filePath, buffer);
+  } catch (e) {
+    logger.error(e);
+  }
 
   return buffer;
 }
