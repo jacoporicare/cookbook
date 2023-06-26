@@ -1,0 +1,18 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["dk.cngroup.zradelnik"],
+        "components": [
+          {
+            "/": "/*",
+            "comment": "Matches any URL."
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["dk.cngroup.zradelnik"]
+  }
+}
