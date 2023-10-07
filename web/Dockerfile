@@ -1,7 +1,7 @@
 FROM node:16-alpine as builder
 
 WORKDIR /srv
-RUN npm i -g npm
+RUN npm i -g npm@^8
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --unsafe-perm
 COPY . .
