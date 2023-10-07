@@ -31,8 +31,17 @@ function LoginPage() {
 
       return [{ query: MeDocument }];
     },
-    onCompleted: () => {
-      router.push(router.query.u?.toString() || '/');
+    onCompleted: data => {
+      if (!router.query.redirect_uri) {
+        router.push(router.query.u?.toString() || '/');
+
+        return;
+      }
+
+      const redirectUri = new URL(router.query.redirect_uri.toString());
+      redirectUri.searchParams.set('access_token', data.login.token);
+
+      window.location.href = redirectUri.toString();
     },
   });
 
@@ -65,6 +74,24 @@ function LoginPage() {
     } catch (e) {
       // To prevent uncaught promise, using error from the tuple
     }
+  }
+
+  if (router.query.redirect_uri) {
+    return (
+      <>
+        <DocumentTitle title="Přihlášení" />
+        <LoginForm
+          error={Boolean(error)}
+          isSubmitting={loading}
+          password={password}
+          rememberMe={rememberMe}
+          username={username}
+          isForWebView
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
+      </>
+    );
   }
 
   return (
