@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM node:16-alpine as builder
 
 WORKDIR /srv
 RUN npm i -g npm
@@ -12,7 +12,7 @@ RUN mkdir build \
   && npm prune --production
 
 
-FROM node:18-alpine
+FROM node:16-alpine
 
 ENV NODE_ENV production
 WORKDIR /srv/app
