@@ -49,10 +49,14 @@ function LoginForm(props: Props) {
         <Grid direction="column" spacing={3} container>
           <Grid item>
             <TextField
+              autoCapitalize="off"
+              autoComplete="username"
+              autoCorrect="off"
               label="Uživatel"
               name="username"
               value={props.username}
               variant="filled"
+              autoFocus
               fullWidth
               required
               onChange={props.onChange}
@@ -60,6 +64,7 @@ function LoginForm(props: Props) {
           </Grid>
           <Grid item>
             <TextField
+              autoComplete="current-password"
               label="Heslo"
               name="password"
               type="password"
