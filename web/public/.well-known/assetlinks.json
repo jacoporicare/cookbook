@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cz.jakubricar.zradelnik",
+      "sha256_cert_fingerprints": [
+        "10:26:80:BC:38:8C:C5:7D:70:5A:0E:B9:F6:B6:B3:5B:F7:ED:A3:16:0B:86:F0:B8:8E:4C:A8:08:B0:59:A2:A9"
+      ]
+    }
+  }
+]
