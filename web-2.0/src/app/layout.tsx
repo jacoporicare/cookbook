@@ -3,6 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import type { Metadata } from 'next';
 
+import ApolloWrapper from '../apollo/ApolloWrapper';
+
 import theme from '@/theme';
 
 export const metadata: Metadata = {
@@ -18,12 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <ApolloWrapper>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              {children}
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

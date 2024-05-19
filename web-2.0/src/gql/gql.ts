@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    sideDish\n    tags\n    preparationTime\n    imageUrl\n    imageWebPUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n  }\n": types.RecipeItemFragmentDoc,
-    "\n  query RecipeList {\n    recipes {\n      ...RecipeItem\n    }\n    tags\n  }\n": types.RecipeListDocument,
+    "\n  fragment RecipeItem on Recipe {\n    id\n    #slug\n    title\n    #sideDish\n    #tags\n    #preparationTime\n    #imageUrl\n    #imageWebPUrl: imageUrl(format: WEBP)\n    #imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    #lastModifiedDate\n  }\n": types.RecipeItemFragmentDoc,
+    "\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n": types.RecipeListDocument,
 };
 
 /**
@@ -34,11 +34,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    sideDish\n    tags\n    preparationTime\n    imageUrl\n    imageWebPUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n  }\n"): (typeof documents)["\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    sideDish\n    tags\n    preparationTime\n    imageUrl\n    imageWebPUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n  }\n"];
+export function graphql(source: "\n  fragment RecipeItem on Recipe {\n    id\n    #slug\n    title\n    #sideDish\n    #tags\n    #preparationTime\n    #imageUrl\n    #imageWebPUrl: imageUrl(format: WEBP)\n    #imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    #lastModifiedDate\n  }\n"): (typeof documents)["\n  fragment RecipeItem on Recipe {\n    id\n    #slug\n    title\n    #sideDish\n    #tags\n    #preparationTime\n    #imageUrl\n    #imageWebPUrl: imageUrl(format: WEBP)\n    #imageThumbUrl: imageUrl(size: { width: 800, height: 800 })\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    #lastModifiedDate\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query RecipeList {\n    recipes {\n      ...RecipeItem\n    }\n    tags\n  }\n"): (typeof documents)["\n  query RecipeList {\n    recipes {\n      ...RecipeItem\n    }\n    tags\n  }\n"];
+export function graphql(source: "\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n"): (typeof documents)["\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
