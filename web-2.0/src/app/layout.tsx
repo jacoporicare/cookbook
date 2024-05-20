@@ -1,10 +1,11 @@
-import { CssBaseline } from '@mui/material';
+import { Box, Container, CssBaseline, GlobalStyles } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import type { Metadata } from 'next';
 
 import ApolloWrapper from '../apollo/ApolloWrapper';
 
+import { colors } from '@/colors';
 import theme from '@/theme';
 
 export const metadata: Metadata = {
@@ -24,7 +25,18 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              {children}
+              <GlobalStyles
+                styles={{
+                  body: {
+                    backgroundColor: colors.gray100,
+                  },
+                }}
+              />
+              <Container maxWidth={false}>
+                <Box component="main" mt="62px" py={[3, 4]}>
+                  {children}
+                </Box>
+              </Container>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </ApolloWrapper>

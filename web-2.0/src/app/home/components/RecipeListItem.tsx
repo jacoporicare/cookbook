@@ -7,18 +7,12 @@ import placeholderImg from './food-placeholder.webp';
 import { FragmentType, graphql, useFragment } from '@/gql';
 
 export const RecipeFragment = graphql(`
+  #graphql
   fragment RecipeItem on Recipe {
     id
     slug
     title
-    #sideDish
-    #tags
-    #preparationTime
-    #imageUrl
-    #imageWebPUrl: imageUrl(format: WEBP)
-    #imageThumbUrl: imageUrl(size: { width: 800, height: 800 })
     imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)
-    #lastModifiedDate
   }
 `);
 
@@ -35,17 +29,17 @@ export default function RecipeListItem(props: Props) {
         <CardActionArea>
           <CardMedia sx={{ height: 0, paddingTop: '75%' /* 4:3 */, position: 'relative' }}>
             <Image
-              src={recipe.imageThumbWebPUrl ?? placeholderImg}
-              priority={!recipe.imageThumbWebPUrl}
               alt={recipe.title}
+              priority={!recipe.imageThumbWebPUrl}
               quality={100}
-              fill
-              style={{ objectFit: 'cover' }}
               sizes="(max-width: 600px) 100vw,
-            (max-width: 900px) 50vw,
-            (max-width: 1200px) 33vw,
-            (max-width: 1536px) 25vw,
-            16vw"
+                (max-width: 900px) 50vw,
+                (max-width: 1200px) 33vw,
+                (max-width: 1536px) 25vw,
+                16vw"
+              src={recipe.imageThumbWebPUrl ?? placeholderImg}
+              style={{ objectFit: 'cover' }}
+              fill
             />
           </CardMedia>
           <CardContent>

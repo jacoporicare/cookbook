@@ -9,6 +9,14 @@
           "order": "asc"
         }
       }
+    ],
+    "react/jsx-sort-props": [
+      "warn",
+      {
+        "callbacksLast": true,
+        "reservedFirst": true,
+        "shorthandLast": true
+      }
     ]
   }
 }

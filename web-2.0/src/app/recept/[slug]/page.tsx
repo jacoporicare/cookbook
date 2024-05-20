@@ -6,6 +6,7 @@ import { getClient } from '@/apollo/client';
 import { graphql } from '@/gql';
 
 const recipeDetailQueryDocument = graphql(`
+  #graphql
   query RecipeDetail($slug: String!) {
     recipe(slug: $slug) {
       ...RecipeDetailItem

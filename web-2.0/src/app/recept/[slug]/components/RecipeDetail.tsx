@@ -1,10 +1,15 @@
 import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 
+import IngredientList from './IngredientList';
+
+import RichText from '@/app/components/RichText';
 import { INSTANT_POT_TAG } from '@/const';
 import { FragmentType, graphql, useFragment } from '@/gql';
 
 export const RecipeDetailFragment = graphql(`
+  #graphql
   fragment RecipeDetailItem on Recipe {
     id
     slug
@@ -13,6 +18,7 @@ export const RecipeDetailFragment = graphql(`
     directions
     imageUrl(format: WEBP)
     sideDish
+    servingCount
     tags
     preparationTime
     imageUrl: imageUrl(format: WEBP)
@@ -20,6 +26,9 @@ export const RecipeDetailFragment = graphql(`
     lastModifiedDate
     user {
       displayName
+    }
+    ingredients {
+      ...RecipeDetailIngredientItem
     }
   }
 `);
@@ -34,7 +43,7 @@ function RecipeDetail(props: Props) {
   return (
     <Grid spacing={4} container>
       <Grid lg={3} md={4} xs={12} item>
-        {/* <IngredientList ingredients={ingredients} servingCount={servingCount} /> */}
+        <IngredientList ingredients={recipe.ingredients} servingCount={recipe.servingCount} />
       </Grid>
 
       <Grid lg={7} md={6} xs={12} item>
@@ -56,7 +65,9 @@ function RecipeDetail(props: Props) {
         <Paper>
           {recipe.directions ? (
             <Box p={3}>
-              <ReactMarkdown>{recipe.directions}</ReactMarkdown>
+              <RichText>
+                <ReactMarkdown>{recipe.directions}</ReactMarkdown>
+              </RichText>
             </Box>
           ) : (
             <Alert severity="info">Žádný postup.</Alert>
@@ -72,18 +83,20 @@ function RecipeDetail(props: Props) {
                 href={recipe.imageUrl}
                 sx={{
                   display: 'block',
-                  lineHeight: 0,
+                  position: 'relative',
+                  paddingTop: '75%',
                 }}
-                // onClick={handleImageClick}
               >
-                <Box
+                <Image
                   alt={recipe.title}
-                  component="img"
+                  quality={100}
+                  sizes="(max-width: 900px) 100vw, 16vw"
                   src={recipe.imageThumbUrl}
-                  sx={{
-                    width: '100%',
+                  style={{
+                    objectFit: 'cover',
                     borderRadius: '4px',
                   }}
+                  fill
                 />
               </Box>
             </Paper>

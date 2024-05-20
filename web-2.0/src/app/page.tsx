@@ -4,6 +4,7 @@ import { getClient } from '@/apollo/client';
 import { graphql } from '@/gql';
 
 const recipeListQueryDocument = graphql(`
+  #graphql
   query RecipeList {
     recipes {
       id

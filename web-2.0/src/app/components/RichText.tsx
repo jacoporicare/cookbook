@@ -1,14 +1,12 @@
-import { styled } from '@mui/material';
-import ReactMarkdown from 'react-markdown';
+'use client';
 
-type Props = {
-  text?: string;
-};
+import { Box, styled } from '@mui/material';
+import { ReactNode } from 'react';
 
 const stepSize = 2;
 const stepLineHeight = 1.5;
 
-const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
+const Wrapper = styled(Box)(({ theme }) => ({
   '& ol': {
     listStyleType: 'none',
     paddingLeft: 0,
@@ -46,8 +44,10 @@ const StyledReactMarkdown = styled(ReactMarkdown)(({ theme }) => ({
   },
 }));
 
-function RichText({ text = '' }: Props) {
-  return <StyledReactMarkdown>{text}</StyledReactMarkdown>;
-}
+type Props = {
+  children: ReactNode;
+};
 
-export default RichText;
+export default function RichText({ children }: Props) {
+  return <Wrapper>{children}</Wrapper>;
+}
