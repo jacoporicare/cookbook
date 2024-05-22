@@ -1,14 +1,12 @@
 {
   "name": "cookbook-web-2.0",
-  "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema:local": "npx apollo client:download-schema --endpoint=http://localhost:4000/graphql schema.json",
-    "schema:dev": "npx apollo client:download-schema --endpoint=https://api-test.zradelnik.eu/graphql schema.json",
+    "schema:local": "yarn dlx -p apollo -p graphql client:download-schema --endpoint=http://localhost:4000/graphql schema.json",
+    "schema:dev": "yarn dlx -p apollo -p graphql client:download-schema --endpoint=https://api-test.zradelnik.eu/graphql schema.json",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
@@ -29,6 +27,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/client-preset": "^4.2.5",
+    "@parcel/watcher": "^2.4.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

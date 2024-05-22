@@ -1,5 +1,5 @@
 {
-  "editor.codeActionsOnSave": [
-    "source.fixAll.eslint"
-  ]
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.prettierPath": "node_modules/prettier"
 }

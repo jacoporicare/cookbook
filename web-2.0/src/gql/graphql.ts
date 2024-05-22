@@ -56,6 +56,7 @@ export type Mutation = {
   createRecipe: Recipe;
   createUser: User;
   deleteRecipe: Scalars['Boolean']['output'];
+  deleteRecipeCooked: Recipe;
   deleteUser: Scalars['ID']['output'];
   login: AuthPayload;
   recipeCooked: Recipe;
@@ -88,6 +89,12 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
+export type MutationDeleteRecipeCookedArgs = {
+  cookedId: Scalars['ID']['input'];
+  recipeId: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -101,7 +108,6 @@ export type MutationLoginArgs = {
 
 export type MutationRecipeCookedArgs = {
   date: Scalars['Date']['input'];
-  delete?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
 };
 
@@ -168,6 +174,7 @@ export type RecipeImageUrlArgs = {
 export type RecipeCooked = {
   __typename?: 'RecipeCooked';
   date: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
   user: User;
 };
 
