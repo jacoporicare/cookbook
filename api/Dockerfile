@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:20-alpine as builder
 
 WORKDIR /srv
 RUN npm i -g npm@^8
@@ -11,7 +11,7 @@ RUN mv package.json package-lock.json .env node_modules build/ \
   && npm prune --production
 
 
-FROM node:16-alpine
+FROM node:20-alpine
 
 ENV NODE_ENV production
 WORKDIR /srv/app
