@@ -18,10 +18,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { colors } from '@/colors';
 import { FragmentType, graphql, useFragment } from '@/gql';
-import { Maybe } from '@/gql/graphql';
 
 export const RecipeDetailIngredientFragment = graphql(`
-  #graphql
   fragment RecipeDetailIngredientItem on Ingredient {
     id
     isGroup
@@ -33,7 +31,7 @@ export const RecipeDetailIngredientFragment = graphql(`
 
 type Props = {
   ingredients?: FragmentType<typeof RecipeDetailIngredientFragment>[];
-  servingCount?: Maybe<number>;
+  servingCount?: number;
 };
 
 function IngredientList(props: Props) {

@@ -89,7 +89,7 @@ const typeDefs = gql`
     ingredients: [String!]!
     sideDishes: [String!]!
     tags: [String!]!
-    me: User!
+    me: User
     users: [User!]!
   }
 

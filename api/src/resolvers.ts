@@ -2,7 +2,7 @@ import { GraphQLScalarType, Kind } from 'graphql';
 import { GraphQLUpload } from 'graphql-upload';
 import mongoose from 'mongoose';
 
-import { authenticated, signToken } from './auth';
+import { requireUser, signToken, withUser } from './auth';
 import { messaging } from './firebase';
 import { ImageFormat, Resolvers } from './generated/graphql';
 import logger from './logger';
@@ -83,8 +83,8 @@ const resolvers: Resolvers = {
         ...tags.filter(t => t && t !== 'Instant Pot').sort((a, b) => a.localeCompare(b, 'cs')),
       ];
     },
-    me: authenticated(async (_, __, ctx) => ctx.currentUser),
-    users: authenticated(async () => (await UserModel.find()).map(mapToUserGqlObject), {
+    me: withUser(async (_, __, ctx) => ctx.currentUser ?? null),
+    users: requireUser(async () => (await UserModel.find()).map(mapToUserGqlObject), {
       requireAdmin: true,
     }),
   },
@@ -98,7 +98,7 @@ const resolvers: Resolvers = {
 
       return { token: signToken(user.id) };
     },
-    createRecipe: authenticated(async (_, args, ctx) => {
+    createRecipe: requireUser(async (_, args, ctx) => {
       const image = args.image && (await createImage(args.image));
       const recipeToSave = mapToRecipeDbObject(args.recipe, image?.id, ctx.currentUser.id);
       await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
@@ -131,7 +131,7 @@ const resolvers: Resolvers = {
 
       return newRecipeGqlModel;
     }),
-    updateRecipe: authenticated(async (_, args, ctx) => {
+    updateRecipe: requireUser(async (_, args, ctx) => {
       if (!(await checkUserRightsAsync(ctx.currentUser, args.id))) {
         throw new Error('Unauthorized');
       }
@@ -155,7 +155,7 @@ const resolvers: Resolvers = {
 
       return mapToRecipeGqlObject(recipe);
     }),
-    deleteRecipe: authenticated(async (_, args, ctx) => {
+    deleteRecipe: requireUser(async (_, args, ctx) => {
       if (!(await checkUserRightsAsync(ctx.currentUser, args.id))) {
         throw new Error('Unauthorized');
       }
@@ -171,7 +171,7 @@ const resolvers: Resolvers = {
 
       return true;
     }),
-    recipeCooked: authenticated(async (_, args, ctx) => {
+    recipeCooked: requireUser(async (_, args, ctx) => {
       const recipe = await RecipeModel.findById(args.id);
 
       if (!recipe) {
@@ -192,7 +192,7 @@ const resolvers: Resolvers = {
 
       return mapToRecipeGqlObject(recipe);
     }),
-    deleteRecipeCooked: authenticated(async (_, args, ctx) => {
+    deleteRecipeCooked: requireUser(async (_, args, ctx) => {
       const recipe = await RecipeModel.findById(args.recipeId);
 
       if (!recipe) {
@@ -213,12 +213,12 @@ const resolvers: Resolvers = {
 
       return mapToRecipeGqlObject(recipe);
     }),
-    updateUserLastActivity: authenticated(async (_, __, ctx) => {
+    updateUserLastActivity: requireUser(async (_, __, ctx) => {
       await UserModel.findByIdAndUpdate(ctx.currentUser.id, { lastActivity: new Date() });
 
       return true;
     }),
-    createUser: authenticated(
+    createUser: requireUser(
       async (_, args) => {
         const userToSave: Partial<UserDbObject> = {
           ...mapToUserDbObject(args.user),
@@ -229,7 +229,7 @@ const resolvers: Resolvers = {
       },
       { requireAdmin: true },
     ),
-    updateUser: authenticated(
+    updateUser: requireUser(
       async (_, args) => {
         const user = await UserModel.findById(args.id);
 
@@ -243,7 +243,7 @@ const resolvers: Resolvers = {
       },
       { requireAdmin: true },
     ),
-    deleteUser: authenticated(
+    deleteUser: requireUser(
       async (_, args) => {
         const user = await UserModel.findByIdAndRemove(args.id);
 
@@ -255,7 +255,7 @@ const resolvers: Resolvers = {
       },
       { requireAdmin: true },
     ),
-    resetPassword: authenticated(
+    resetPassword: requireUser(
       async (_, args) => {
         const user = await UserModel.findById(args.id);
 
@@ -276,7 +276,7 @@ const resolvers: Resolvers = {
       },
       { requireAdmin: true },
     ),
-    changePassword: authenticated(async (_, args, ctx) => {
+    changePassword: requireUser(async (_, args, ctx) => {
       if (!(await comparePassword(args.password, ctx.currentUser))) {
         return false;
       }

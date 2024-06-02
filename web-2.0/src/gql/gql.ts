@@ -13,11 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  #graphql\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n": types.RecipeItemFragmentDoc,
-    "\n  #graphql\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n": types.RecipeListDocument,
-    "\n  #graphql\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n": types.RecipeDetailIngredientItemFragmentDoc,
-    "\n  #graphql\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n": types.RecipeDetailItemFragmentDoc,
-    "\n  #graphql\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n  }\n": types.RecipeDetailDocument,
+    "\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n": types.RecipeItemFragmentDoc,
+    "\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n  }\n": types.RecipeListDocument,
+    "\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n": types.RecipeDetailIngredientItemFragmentDoc,
+    "\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      id\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n": types.RecipeDetailItemFragmentDoc,
+    "\n  fragment RecipeDetailUser on User {\n    id\n    isAdmin\n  }\n": types.RecipeDetailUserFragmentDoc,
+    "\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n    me {\n      ...RecipeDetailUser\n    }\n  }\n": types.RecipeDetailDocument,
 };
 
 /**
@@ -37,23 +38,27 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  #graphql\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n"): (typeof documents)["\n  #graphql\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n"];
+export function graphql(source: "\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n"): (typeof documents)["\n  fragment RecipeItem on Recipe {\n    id\n    slug\n    title\n    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  #graphql\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n"): (typeof documents)["\n  #graphql\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n    tags\n  }\n"];
+export function graphql(source: "\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n  }\n"): (typeof documents)["\n  query RecipeList {\n    recipes {\n      id\n      ...RecipeItem\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  #graphql\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n"): (typeof documents)["\n  #graphql\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n"];
+export function graphql(source: "\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n"): (typeof documents)["\n  fragment RecipeDetailIngredientItem on Ingredient {\n    id\n    isGroup\n    name\n    amount\n    amountUnit\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  #graphql\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n"): (typeof documents)["\n  #graphql\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n"];
+export function graphql(source: "\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      id\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n"): (typeof documents)["\n  fragment RecipeDetailItem on Recipe {\n    id\n    slug\n    title\n    tags\n    directions\n    imageUrl(format: WEBP)\n    sideDish\n    servingCount\n    tags\n    preparationTime\n    imageUrl: imageUrl(format: WEBP)\n    imageThumbUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)\n    lastModifiedDate\n    user {\n      id\n      displayName\n    }\n    ingredients {\n      ...RecipeDetailIngredientItem\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  #graphql\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n  }\n"): (typeof documents)["\n  #graphql\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n  }\n"];
+export function graphql(source: "\n  fragment RecipeDetailUser on User {\n    id\n    isAdmin\n  }\n"): (typeof documents)["\n  fragment RecipeDetailUser on User {\n    id\n    isAdmin\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n    me {\n      ...RecipeDetailUser\n    }\n  }\n"): (typeof documents)["\n  query RecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      ...RecipeDetailItem\n    }\n    me {\n      ...RecipeDetailUser\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

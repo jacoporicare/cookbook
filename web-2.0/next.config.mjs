@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'api-test.zradelnik.eu',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
     ],
   },
 };

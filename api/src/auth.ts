@@ -18,14 +18,13 @@ export function verifyToken<T>(token: string) {
   }
 }
 
-export function authenticated<TResult, TParent = unknown, TArgs = unknown>(
-  next: ResolverFn<TResult, TParent, { currentUser: UserDbObject }, TArgs>,
-  options: { requireAdmin?: boolean } = {},
+export function withUser<TResult, TParent = unknown, TArgs = unknown>(
+  next: ResolverFn<TResult, TParent, { currentUser?: UserDbObject; req: Request }, TArgs>,
 ) {
   const fn: ResolverFn<
     TResult,
     TParent,
-    { currentUser: UserDbObject; req: Request },
+    { currentUser?: UserDbObject; req: Request },
     TArgs
   > = async (root, args, ctx, info) => {
     const { authorization } = ctx.req.headers;
@@ -42,17 +41,36 @@ export function authenticated<TResult, TParent = unknown, TArgs = unknown>(
       userDocument = payload?.userId ? await UserModel.findById(payload.userId) : null;
     }
 
-    if (!userDocument || (options.requireAdmin && !userDocument.isAdmin)) {
-      throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
-    }
-
     return next(
       root,
       args,
-      { currentUser: userDocument.toObject<UserDbObject>({ getters: true, versionKey: false }) },
+      {
+        currentUser: userDocument?.toObject<UserDbObject>({ getters: true, versionKey: false }),
+        req: ctx.req,
+      },
       info,
     );
   };
 
   return fn;
+}
+
+export function requireUser<TResult, TParent = unknown, TArgs = unknown>(
+  next: ResolverFn<TResult, TParent, { currentUser: UserDbObject; req: Request }, TArgs>,
+  options: { requireAdmin?: boolean } = {},
+) {
+  const fn: ResolverFn<
+    TResult,
+    TParent,
+    { currentUser?: UserDbObject; req: Request },
+    TArgs
+  > = async (root, args, ctx, info) => {
+    if (!ctx.currentUser || (options.requireAdmin && !ctx.currentUser.isAdmin)) {
+      throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
+    }
+
+    return next(root, args, { currentUser: ctx.currentUser, req: ctx.req }, info);
+  };
+
+  return withUser(fn);
 }

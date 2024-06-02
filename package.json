@@ -2,6 +2,7 @@
   "name": "cookbook",
   "packageManager": "yarn@4.2.2",
   "workspaces": [
+    "api",
     "web-2.0"
   ],
   "devDependencies": {

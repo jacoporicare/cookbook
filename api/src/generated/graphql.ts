@@ -129,7 +129,7 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   ingredients: Array<Scalars['String']>;
-  me: User;
+  me?: Maybe<User>;
   recipe?: Maybe<Recipe>;
   recipes: Array<Recipe>;
   sideDishes: Array<Scalars['String']>;
@@ -353,7 +353,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   ingredients?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   recipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, Partial<QueryRecipeArgs>>;
   recipes?: Resolver<Array<ResolversTypes['Recipe']>, ParentType, ContextType, Partial<QueryRecipesArgs>>;
   sideDishes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;

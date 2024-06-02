@@ -7,7 +7,6 @@ import placeholderImg from './food-placeholder.webp';
 import { FragmentType, graphql, useFragment } from '@/gql';
 
 export const RecipeFragment = graphql(`
-  #graphql
   fragment RecipeItem on Recipe {
     id
     slug
