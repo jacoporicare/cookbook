@@ -12,7 +12,7 @@ export class RecipeIngredient {
   @Column('float', { nullable: true })
   amount: number | null;
 
-  @Column('text', { nullable: true })
+  @Column('varchar', { length: 255, nullable: true })
   amountUnit: string | null;
 
   @Column()

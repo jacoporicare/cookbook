@@ -16,10 +16,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar', { length: 255 })
   username: string;
 
-  @Column()
+  @Column('varchar', { length: 255 })
   displayName: string;
 
   @Column()

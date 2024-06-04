@@ -21,16 +21,16 @@ export class Recipe {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ length: 255 })
   title: string;
 
-  @Column({ unique: true })
+  @Column({ length: 255, unique: true })
   slug: string;
 
   @Column('text', { nullable: true })
   directions: string | null;
 
-  @Column('text', { nullable: true })
+  @Column('varchar', { length: 255, nullable: true })
   sideDish: string | null;
 
   @Column({ nullable: true })
@@ -39,7 +39,7 @@ export class Recipe {
   @Column('int', { nullable: true })
   servingCount: number | null;
 
-  @Column('text', { array: true })
+  @Column('varchar', { length: 255, array: true })
   tags: string[];
 
   @CreateDateColumn()

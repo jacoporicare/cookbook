@@ -10,7 +10,7 @@ export class RecipeController {
 
   @Post()
   create(@Body() createRecipeDto: CreateRecipeDto) {
-    const mockUserId = '70a4f4e3-5a99-4459-b0af-f505e0ff90eb';
+    const mockUserId = '7234ff6d-afef-49e6-9ec7-0a22e3ef5376';
 
     return this.recipeService.create(mockUserId, createRecipeDto);
   }

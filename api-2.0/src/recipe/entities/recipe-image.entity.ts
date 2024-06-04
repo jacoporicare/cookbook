@@ -10,7 +10,7 @@ export class RecipeImage {
   @Column('bytea')
   data: Buffer;
 
-  @Column()
+  @Column('varchar', { length: 255 })
   contentType: string;
 
   @OneToOne(() => Recipe, recipe => recipe.image, {

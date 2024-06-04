@@ -7,7 +7,7 @@ export class Ingredient {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar', { length: 255 })
   name: string;
 
   @OneToMany(() => RecipeIngredient, recipeIngredient => recipeIngredient.ingredient)
