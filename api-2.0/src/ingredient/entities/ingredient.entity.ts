@@ -11,5 +11,5 @@ export class Ingredient {
   name: string;
 
   @OneToMany(() => RecipeIngredient, recipeIngredient => recipeIngredient.ingredient)
-  recipeIngredients: RecipeIngredient[];
+  recipeIngredients: Promise<RecipeIngredient[]>;
 }

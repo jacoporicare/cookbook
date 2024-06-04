@@ -23,9 +23,10 @@ export class RecipeIngredient {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  recipe: Recipe;
+  recipe: Promise<Recipe>;
 
   @ManyToOne(() => Ingredient, ingredient => ingredient.recipeIngredients, {
+    eager: true,
     nullable: false,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

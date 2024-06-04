@@ -52,14 +52,21 @@ export class Recipe {
   deletedAt: Date;
 
   @OneToOne(() => RecipeImage)
-  image: RecipeImage | null;
+  image: Promise<RecipeImage | null>;
 
-  @ManyToOne(() => User, user => user.recipes, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @ManyToOne(() => User, user => user.recipes, {
+    eager: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   user: User | null;
 
-  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, { cascade: true })
+  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, {
+    eager: true,
+    cascade: true,
+  })
   ingredients: RecipeIngredient[];
 
   @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
-  cookedHistory: RecipeCooked[];
+  cookedHistory: Promise<RecipeCooked[]>;
 }

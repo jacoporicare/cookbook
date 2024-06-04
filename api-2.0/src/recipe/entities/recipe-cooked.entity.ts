@@ -12,7 +12,12 @@ export class RecipeCooked {
   @Column()
   date: Date;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @ManyToOne(() => User, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn()
   user: User;
 
@@ -21,5 +26,5 @@ export class RecipeCooked {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  recipe: Recipe;
+  recipe: Promise<Recipe>;
 }

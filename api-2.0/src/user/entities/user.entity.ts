@@ -38,8 +38,8 @@ export class User {
   deletedAt: Date;
 
   @OneToMany(() => Recipe, recipe => recipe.user)
-  recipes: Recipe[];
+  recipes: Promise<Recipe[]>;
 
   @OneToMany(() => RecipeCooked, cooked => cooked.user)
-  recipeCookedHistory: RecipeCooked[];
+  recipeCookedHistory: Promise<RecipeCooked[]>;
 }

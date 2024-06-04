@@ -19,5 +19,5 @@ export class RecipeImage {
     onUpdate: 'CASCADE',
   })
   @JoinColumn()
-  recipe: Recipe;
+  recipe: Promise<Recipe>;
 }
