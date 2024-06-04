@@ -1,18 +1,19 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Ingredient } from './Ingredient';
-import { Recipe } from './Recipe';
+import { Ingredient } from '../../ingredient/entities/ingredient.entity';
+
+import { Recipe } from './recipe.entity';
 
 @Entity()
 export class RecipeIngredient {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true, type: 'float' })
-  amount: number;
+  @Column('float', { nullable: true })
+  amount: number | null;
 
-  @Column({ nullable: true })
-  amountUnit: string;
+  @Column('text', { nullable: true })
+  amountUnit: string | null;
 
   @Column()
   isGroup: boolean;

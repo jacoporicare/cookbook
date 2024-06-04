@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 
-import { Recipe } from './Recipe';
+import { Recipe } from './recipe.entity';
 
 @Entity()
-export class Image {
+export class RecipeImage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'bytea' })
+  @Column('bytea')
   data: Buffer;
 
   @Column()

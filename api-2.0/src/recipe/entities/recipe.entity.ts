@@ -3,8 +3,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -12,11 +10,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Image } from './Image';
-import { RecipeCooked } from './RecipeCooked';
-import { RecipeIngredient } from './RecipeIngredient';
-import { Tag } from './Tag';
-import { User } from './User';
+import { User } from '../../user/entities/user.entity';
+
+import { RecipeCooked } from './recipe-cooked.entity';
+import { RecipeImage } from './recipe-image.entity';
+import { RecipeIngredient } from './recipe-ingredient.entity';
 
 @Entity()
 export class Recipe {
@@ -26,20 +24,23 @@ export class Recipe {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ unique: true })
   slug: string;
 
-  @Column({ nullable: true })
-  directions: string;
+  @Column('text', { nullable: true })
+  directions: string | null;
 
-  @Column({ nullable: true })
-  sideDish: string;
+  @Column('text', { nullable: true })
+  sideDish: string | null;
 
   @Column({ nullable: true })
   preparationTime: number;
 
-  @Column({ nullable: true })
-  servingCount: number;
+  @Column('int', { nullable: true })
+  servingCount: number | null;
+
+  @Column('text', { array: true })
+  tags: string[];
 
   @CreateDateColumn()
   createdDate: Date;
@@ -50,19 +51,15 @@ export class Recipe {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(() => Image)
-  image: Image;
+  @OneToOne(() => RecipeImage)
+  image: RecipeImage | null;
 
   @ManyToOne(() => User, user => user.recipes, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-  user: User;
+  user: User | null;
 
-  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe)
+  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, { cascade: true })
   ingredients: RecipeIngredient[];
 
   @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
   cookedHistory: RecipeCooked[];
-
-  @ManyToMany(() => Tag)
-  @JoinTable()
-  tags: Tag[];
 }

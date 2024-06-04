@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Recipe } from './Recipe';
-import { RecipeCooked } from './RecipeCooked';
+import { RecipeCooked } from '../../recipe/entities/recipe-cooked.entity';
+import { Recipe } from '../../recipe/entities/recipe.entity';
 
 @Entity()
 export class User {

@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Recipe } from './Recipe';
-import { User } from './User';
+import { User } from '../../user/entities/user.entity';
+
+import { Recipe } from './recipe.entity';
 
 @Entity()
 export class RecipeCooked {
