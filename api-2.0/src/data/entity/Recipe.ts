@@ -1,5 +1,7 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -7,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { Image } from './Image';
@@ -38,14 +41,14 @@ export class Recipe {
   @Column({ nullable: true })
   servingCount: number;
 
-  @Column()
-  creationDate: Date;
+  @CreateDateColumn()
+  createdDate: Date;
 
-  @Column()
-  lastModifiedDate: Date;
+  @UpdateDateColumn()
+  updatedDate: Date;
 
-  @Column()
-  deleted: boolean;
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToOne(() => Image)
   image: Image;
