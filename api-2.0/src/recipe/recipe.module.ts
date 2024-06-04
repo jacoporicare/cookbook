@@ -10,7 +10,7 @@ import { RecipeService } from './recipe.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Recipe, Ingredient, User])],
-  controllers: [RecipeController],
   providers: [RecipeService],
+  controllers: [RecipeController],
 })
 export class RecipeModule {}

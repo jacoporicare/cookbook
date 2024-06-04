@@ -1,4 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+
+import { User } from '../auth/auth.decorator';
+import { AuthGuard } from '../auth/auth.guard';
+import { ReqUser } from '../auth/entities/req-user.entity';
 
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -8,11 +12,10 @@ import { RecipeService } from './recipe.service';
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createRecipeDto: CreateRecipeDto) {
-    const mockUserId = '7234ff6d-afef-49e6-9ec7-0a22e3ef5376';
-
-    return this.recipeService.create(mockUserId, createRecipeDto);
+  create(@User() user: ReqUser, @Body() createRecipeDto: CreateRecipeDto) {
+    return this.recipeService.create(user.sub, createRecipeDto);
   }
 
   @Get()
@@ -25,11 +28,13 @@ export class RecipeController {
     return this.recipeService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
     return this.recipeService.update(id, updateRecipeDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.recipeService.remove(id);

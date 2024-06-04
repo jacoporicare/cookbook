@@ -19,6 +19,9 @@ export class User {
   @Column('varchar', { length: 255 })
   username: string;
 
+  @Column('char', { length: 60 })
+  password: string;
+
   @Column('varchar', { length: 255 })
   displayName: string;
 
