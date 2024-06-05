@@ -65,7 +65,12 @@ export class Recipe {
   })
   ingredients: RecipeIngredient[];
 
-  @ManyToOne(() => SideDish, sideDish => sideDish.recipes, { nullable: true })
+  @ManyToOne(() => SideDish, sideDish => sideDish.recipes, {
+    nullable: true,
+    eager: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   sideDish: SideDish | null;
 
   @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
