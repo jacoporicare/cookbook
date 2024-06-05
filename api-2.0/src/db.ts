@@ -7,6 +7,7 @@ import { RecipeCooked } from './recipe/entities/recipe-cooked.entity';
 import { RecipeImage } from './recipe/entities/recipe-image.entity';
 import { RecipeIngredient } from './recipe/entities/recipe-ingredient.entity';
 import { Recipe } from './recipe/entities/recipe.entity';
+import { SideDish } from './side-dish/entities/side-dish.entity';
 import { User } from './user/entities/user.entity';
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_LOGGING } = process.env;
@@ -28,7 +29,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: DB_DATABASE,
   synchronize: process.env.NODE_ENV !== 'production',
   logging,
-  entities: [Recipe, Ingredient, RecipeIngredient, User, RecipeCooked, RecipeImage],
+  entities: [Ingredient, Recipe, RecipeCooked, RecipeImage, RecipeIngredient, SideDish, User],
   migrations: [],
   subscribers: [],
 };

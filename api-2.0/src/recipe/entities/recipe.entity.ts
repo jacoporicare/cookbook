@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { SideDish } from '../../side-dish/entities/side-dish.entity';
 import { User } from '../../user/entities/user.entity';
 
 import { RecipeCooked } from './recipe-cooked.entity';
@@ -29,9 +30,6 @@ export class Recipe {
 
   @Column('text', { nullable: true })
   directions: string | null;
-
-  @Column('varchar', { length: 255, nullable: true })
-  sideDish: string | null;
 
   @Column({ nullable: true })
   preparationTime: number;
@@ -66,6 +64,9 @@ export class Recipe {
     cascade: true,
   })
   ingredients: RecipeIngredient[];
+
+  @ManyToOne(() => SideDish, sideDish => sideDish.recipes, { nullable: true })
+  sideDish: SideDish | null;
 
   @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
   cookedHistory: Promise<RecipeCooked[]>;

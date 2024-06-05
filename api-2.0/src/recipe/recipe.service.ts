@@ -3,8 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as slug from 'slug';
 import { Repository } from 'typeorm';
 
-import { Ingredient } from '../ingredient/entities/ingredient.entity';
-import { User } from '../user/entities/user.entity';
+import { IngredientService } from '../ingredient/ingredient.service';
+import { SideDishService } from '../side-dish/side-dish.service';
+import { UserService } from '../user/user.service';
 
 import { CreateRecipeDto, CreateRecipeIngredientDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -15,20 +16,26 @@ import { Recipe } from './entities/recipe.entity';
 export class RecipeService {
   constructor(
     @InjectRepository(Recipe)
-    private recipeRepository: Repository<Recipe>,
-    @InjectRepository(Ingredient)
-    private ingredientRepository: Repository<Ingredient>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly recipeRepository: Repository<Recipe>,
+    private readonly userService: UserService,
+    private readonly ingredientService: IngredientService,
+    private readonly sideDishService: SideDishService,
   ) {}
 
   async create(userId: string, createRecipeDto: CreateRecipeDto): Promise<Recipe> {
-    const user = await this.userRepository.findOneByOrFail({ id: userId });
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      throw new Error(`User ${userId} not found`);
+    }
 
     const recipe = this.recipeRepository.create({
       ...createRecipeDto,
       user,
       slug: this.toSlug(createRecipeDto.title),
+      sideDish: createRecipeDto.sideDish
+        ? await this.sideDishService.getOrCreate(createRecipeDto.sideDish)
+        : null,
       ingredients:
         createRecipeDto.ingredients &&
         (await Promise.all(
@@ -52,6 +59,10 @@ export class RecipeService {
     const updatedRecipe = this.recipeRepository.merge(recipe, {
       ...updateRecipeDto,
       slug: updateRecipeDto.title && this.toSlug(updateRecipeDto.title),
+      sideDish:
+        updateRecipeDto.sideDish !== undefined
+          ? await this.sideDishService.getOrCreate(updateRecipeDto.sideDish)
+          : recipe.sideDish,
     });
 
     return this.recipeRepository.save(updatedRecipe);
@@ -64,16 +75,7 @@ export class RecipeService {
   private async mapIngredient(
     createRecipeIngredientDto: CreateRecipeIngredientDto,
   ): Promise<RecipeIngredient> {
-    let ingredient = await this.ingredientRepository.findOneBy({
-      name: createRecipeIngredientDto.name,
-    });
-
-    if (!ingredient) {
-      ingredient = new Ingredient();
-      ingredient.name = createRecipeIngredientDto.name;
-
-      await this.ingredientRepository.save(ingredient);
-    }
+    const ingredient = await this.ingredientService.getOrCreate(createRecipeIngredientDto.name);
 
     const recipeIngredient = new RecipeIngredient();
     recipeIngredient.ingredient = ingredient;
