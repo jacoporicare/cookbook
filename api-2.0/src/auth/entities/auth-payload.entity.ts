@@ -1,4 +1,4 @@
-export class ReqUser {
+export class AuthPayload {
   sub: string;
   username: string;
   displayName: string;

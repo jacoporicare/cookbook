@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 
 import { User } from '../auth/auth.decorator';
 import { AuthGuard } from '../auth/auth.guard';
-import { ReqUser } from '../auth/entities/req-user.entity';
+import { AuthPayload } from '../auth/entities/auth-payload.entity';
 
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -14,7 +14,7 @@ export class RecipeController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@User() user: ReqUser, @Body() createRecipeDto: CreateRecipeDto) {
+  create(@User() user: AuthPayload, @Body() createRecipeDto: CreateRecipeDto) {
     return this.recipeService.create(user.sub, createRecipeDto);
   }
 

@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
 
 import { SignInDto } from './dto/sign-in.dto';
-import { ReqUser } from './entities/req-user.entity';
+import { AuthPayload } from './entities/auth-payload.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload: ReqUser = {
+    const payload: AuthPayload = {
       sub: user.id,
       username: user.username,
       displayName: user.displayName,
