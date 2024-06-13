@@ -64,6 +64,11 @@ export class RecipeService {
         updateRecipeDto.sideDish !== undefined
           ? await this.sideDishService.getOrCreate(updateRecipeDto.sideDish)
           : recipe.sideDish,
+      ingredients:
+        updateRecipeDto.ingredients &&
+        (await Promise.all(
+          updateRecipeDto.ingredients.map(ingredient => this.mapIngredient(ingredient)),
+        )),
     });
 
     return this.recipeRepository.save(updatedRecipe);
