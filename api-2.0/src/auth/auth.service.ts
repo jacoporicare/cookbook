@@ -25,6 +25,7 @@ export class AuthService {
       sub: user.id,
       username: user.username,
       displayName: user.displayName,
+      isAdmin: user.isAdmin,
     };
 
     return {

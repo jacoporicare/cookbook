@@ -23,4 +23,8 @@ export class IngredientService {
 
     return ingredient;
   }
+
+  findAll(): Promise<Ingredient[]> {
+    return this.ingredientRepository.find();
+  }
 }

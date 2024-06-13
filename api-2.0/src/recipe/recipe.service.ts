@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as slug from 'slug';
 import { Repository } from 'typeorm';
 
+import { AuthPayload } from '../auth/entities/auth-payload.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SideDishService } from '../side-dish/side-dish.service';
 import { UserService } from '../user/user.service';
@@ -70,6 +71,16 @@ export class RecipeService {
 
   async remove(id: string): Promise<void> {
     await this.recipeRepository.softDelete({ id });
+  }
+
+  async canUpdate(id: string, user: AuthPayload): Promise<boolean> {
+    if (user.isAdmin) {
+      return true;
+    }
+
+    const recipe = await this.recipeRepository.findOneByOrFail({ id });
+
+    return recipe.user?.id === user.sub;
   }
 
   private async mapIngredient(

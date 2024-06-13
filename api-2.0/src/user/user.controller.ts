@@ -1,6 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 
-import { AuthGuard } from '../auth/auth.guard';
+import { User } from '../auth/auth.decorator';
+import { AdminGuard, AuthGuard } from '../auth/auth.guard';
+import { AuthPayload } from '../auth/entities/auth-payload.entity';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,13 +22,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -24,17 +36,25 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@User() user: AuthPayload, @Param('id') id: string) {
+    if (!this.userService.canReadOrUpdate(id, user)) {
+      throw new UnauthorizedException();
+    }
+
     return this.userService.findOne(id);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@User() user: AuthPayload, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    if (!this.userService.canReadOrUpdate(id, user)) {
+      throw new UnauthorizedException();
+    }
+
     return this.userService.update(id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);

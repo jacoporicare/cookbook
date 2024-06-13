@@ -35,3 +35,18 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
+
+@Injectable()
+export class AdminGuard extends AuthGuard {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isAuthenticated = await super.canActivate(context);
+
+    if (!isAuthenticated) {
+      throw new UnauthorizedException();
+    }
+
+    const { user } = context.switchToHttp().getRequest<Request>();
+
+    return !!user?.isAdmin;
+  }
+}

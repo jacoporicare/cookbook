@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 
 import { User } from '../auth/auth.decorator';
 import { AuthGuard } from '../auth/auth.guard';
@@ -30,13 +40,25 @@ export class RecipeController {
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
+  async update(
+    @User() user: AuthPayload,
+    @Param('id') id: string,
+    @Body() updateRecipeDto: UpdateRecipeDto,
+  ) {
+    if (!(await this.recipeService.canUpdate(id, user))) {
+      throw new UnauthorizedException();
+    }
+
     return this.recipeService.update(id, updateRecipeDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@User() user: AuthPayload, @Param('id') id: string) {
+    if (!(await this.recipeService.canUpdate(id, user))) {
+      throw new UnauthorizedException();
+    }
+
     return this.recipeService.remove(id);
   }
 }

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 
+import { AuthPayload } from '../auth/entities/auth-payload.entity';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -42,6 +44,10 @@ export class UserService {
 
   remove(id: string) {
     return this.userRepository.softDelete({ id });
+  }
+
+  canReadOrUpdate(id: string, user: AuthPayload): boolean {
+    return user.isAdmin || user.sub === id;
   }
 
   private hashPassword(password: string): Promise<string> {

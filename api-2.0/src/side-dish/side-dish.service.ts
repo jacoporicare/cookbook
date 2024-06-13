@@ -23,4 +23,8 @@ export class SideDishService {
 
     return sideDish;
   }
+
+  findAll(): Promise<SideDish[]> {
+    return this.sideDishRepository.find();
+  }
 }
