@@ -37,8 +37,8 @@ export class Recipe {
   @Column('int', { nullable: true })
   servingCount: number | null;
 
-  @Column('varchar', { length: 255, array: true })
-  tags: string[];
+  @Column('varchar', { length: 255, array: true, nullable: true })
+  tags: string[] | null;
 
   @CreateDateColumn()
   createdDate: Date;

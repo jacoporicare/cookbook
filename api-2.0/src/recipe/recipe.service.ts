@@ -48,7 +48,9 @@ export class RecipeService {
   }
 
   findAll(): Promise<Recipe[]> {
-    return this.recipeRepository.find();
+    return this.recipeRepository.find({
+      order: { createdDate: 'DESC' },
+    });
   }
 
   findOne(id: string): Promise<Recipe | null> {
