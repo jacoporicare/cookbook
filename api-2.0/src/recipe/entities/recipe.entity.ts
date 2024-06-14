@@ -61,7 +61,7 @@ export class Recipe {
 
   @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, {
     eager: true,
-    cascade: true,
+    cascade: ['insert', 'remove'],
   })
   ingredients: RecipeIngredient[];
 

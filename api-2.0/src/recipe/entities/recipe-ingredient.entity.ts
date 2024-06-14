@@ -22,6 +22,7 @@ export class RecipeIngredient {
     nullable: false,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
   recipe: Recipe;
 

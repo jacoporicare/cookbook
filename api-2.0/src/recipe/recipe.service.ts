@@ -57,7 +57,14 @@ export class RecipeService {
 
   async update(id: string, updateRecipeDto: UpdateRecipeDto): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneByOrFail({ id });
-    const updatedRecipe = this.recipeRepository.merge(recipe, {
+
+    if (updateRecipeDto.ingredients) {
+      recipe.ingredients = [];
+
+      await this.recipeRepository.save(recipe);
+    }
+
+    this.recipeRepository.merge(recipe, {
       ...updateRecipeDto,
       slug: updateRecipeDto.title && this.toSlug(updateRecipeDto.title),
       sideDish:
@@ -71,7 +78,7 @@ export class RecipeService {
         )),
     });
 
-    return this.recipeRepository.save(updatedRecipe);
+    return this.recipeRepository.save(recipe);
   }
 
   async remove(id: string): Promise<void> {
