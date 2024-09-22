@@ -7,7 +7,8 @@ import { AuthPayload } from '../auth/entities/auth-payload.entity';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+
+import { User } from '@/db/entities';
 
 @Injectable()
 export class UserService {

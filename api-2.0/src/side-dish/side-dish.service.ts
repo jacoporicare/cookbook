@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { SideDish } from './entities/side-dish.entity';
+import { SideDish } from '@/db/entities';
 
 @Injectable()
 export class SideDishService {

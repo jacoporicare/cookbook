@@ -10,8 +10,8 @@ import { UserService } from '../user/user.service';
 
 import { CreateRecipeDto, CreateRecipeIngredientDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { RecipeIngredient } from './entities/recipe-ingredient.entity';
-import { Recipe } from './entities/recipe.entity';
+
+import { Recipe, RecipeIngredient } from '@/db/entities';
 
 @Injectable()
 export class RecipeService {

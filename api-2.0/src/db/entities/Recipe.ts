@@ -10,12 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { SideDish } from '../../side-dish/entities/side-dish.entity';
-import { User } from '../../user/entities/user.entity';
-
-import { RecipeCooked } from './recipe-cooked.entity';
-import { RecipeImage } from './recipe-image.entity';
-import { RecipeIngredient } from './recipe-ingredient.entity';
+import { SideDish, User, RecipeCooked, RecipeImage, RecipeIngredient } from '.';
 
 @Entity()
 export class Recipe {

@@ -2,13 +2,15 @@ import { strict as assert } from 'node:assert';
 
 import { DataSourceOptions, LogLevel } from 'typeorm';
 
-import { Ingredient } from './ingredient/entities/ingredient.entity';
-import { RecipeCooked } from './recipe/entities/recipe-cooked.entity';
-import { RecipeImage } from './recipe/entities/recipe-image.entity';
-import { RecipeIngredient } from './recipe/entities/recipe-ingredient.entity';
-import { Recipe } from './recipe/entities/recipe.entity';
-import { SideDish } from './side-dish/entities/side-dish.entity';
-import { User } from './user/entities/user.entity';
+import {
+  Ingredient,
+  RecipeCooked,
+  RecipeImage,
+  RecipeIngredient,
+  Recipe,
+  SideDish,
+  User,
+} from '@/db/entities';
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_LOGGING } = process.env;
 

@@ -9,8 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { RecipeCooked } from '../../recipe/entities/recipe-cooked.entity';
-import { Recipe } from '../../recipe/entities/recipe.entity';
+import { Recipe, RecipeCooked } from '.';
 
 @Entity()
 export class User {

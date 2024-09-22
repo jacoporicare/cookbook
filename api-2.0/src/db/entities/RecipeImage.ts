@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 
-import { Recipe } from './recipe.entity';
+import { Recipe } from '.';
 
 @Entity()
 export class RecipeImage {

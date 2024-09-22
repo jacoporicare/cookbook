@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Recipe } from '../../recipe/entities/recipe.entity';
+import { Recipe } from '.';
 
 @Entity()
 export class SideDish {
