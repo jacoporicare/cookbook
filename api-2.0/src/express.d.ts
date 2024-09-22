@@ -1,4 +1,4 @@
-import { AuthPayload } from './auth/entities/auth-payload.entity';
+import { AuthPayload } from './modules/auth/entities/auth-payload.entity';
 
 declare module 'express' {
   interface Request {
