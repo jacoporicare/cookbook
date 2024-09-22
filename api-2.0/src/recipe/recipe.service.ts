@@ -33,9 +33,10 @@ export class RecipeService {
     const recipe = this.recipeRepository.create({
       ...createRecipeDto,
       user,
-      slug: this.toSlug(createRecipeDto.title),
+      title: createRecipeDto.title.trim(),
+      slug: this.toSlug(createRecipeDto.title.trim()),
       sideDish: createRecipeDto.sideDish
-        ? await this.sideDishService.getOrCreate(createRecipeDto.sideDish)
+        ? await this.sideDishService.getOrCreate(createRecipeDto.sideDish.trim())
         : null,
       ingredients:
         createRecipeDto.ingredients &&
@@ -68,10 +69,11 @@ export class RecipeService {
 
     this.recipeRepository.merge(recipe, {
       ...updateRecipeDto,
-      slug: updateRecipeDto.title && this.toSlug(updateRecipeDto.title),
+      title: updateRecipeDto.title && updateRecipeDto.title.trim(),
+      slug: updateRecipeDto.title && this.toSlug(updateRecipeDto.title.trim()),
       sideDish:
         updateRecipeDto.sideDish !== undefined
-          ? await this.sideDishService.getOrCreate(updateRecipeDto.sideDish)
+          ? await this.sideDishService.getOrCreate(updateRecipeDto.sideDish.trim())
           : recipe.sideDish,
       ingredients:
         updateRecipeDto.ingredients &&
@@ -100,7 +102,9 @@ export class RecipeService {
   private async mapIngredient(
     createRecipeIngredientDto: CreateRecipeIngredientDto,
   ): Promise<RecipeIngredient> {
-    const ingredient = await this.ingredientService.getOrCreate(createRecipeIngredientDto.name);
+    const ingredient = await this.ingredientService.getOrCreate(
+      createRecipeIngredientDto.name.trim(),
+    );
 
     const recipeIngredient = new RecipeIngredient();
     recipeIngredient.ingredient = ingredient;

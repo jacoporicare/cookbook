@@ -15,8 +15,7 @@ export class IngredientService {
     let ingredient = await this.ingredientRepository.findOneBy({ name });
 
     if (!ingredient) {
-      ingredient = new Ingredient();
-      ingredient.name = name;
+      ingredient = this.ingredientRepository.create({ name });
 
       await this.ingredientRepository.save(ingredient);
     }

@@ -15,8 +15,7 @@ export class SideDishService {
     let sideDish = await this.sideDishRepository.findOneBy({ name });
 
     if (!sideDish) {
-      sideDish = new SideDish();
-      sideDish.name = name;
+      sideDish = this.sideDishRepository.create({ name });
 
       await this.sideDishRepository.save(sideDish);
     }
