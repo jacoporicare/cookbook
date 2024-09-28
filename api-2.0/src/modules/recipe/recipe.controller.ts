@@ -25,7 +25,7 @@ export class RecipeController {
   @UseGuards(AuthGuard)
   @Post()
   create(@User() user: AuthPayload, @Body() createRecipeDto: CreateRecipeDto) {
-    return this.recipeService.create(user.sub, createRecipeDto);
+    return this.recipeService.create(Number(user.sub), createRecipeDto);
   }
 
   @Get()
@@ -34,7 +34,7 @@ export class RecipeController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.recipeService.findOne(id);
   }
 
@@ -42,7 +42,7 @@ export class RecipeController {
   @Patch(':id')
   async update(
     @User() user: AuthPayload,
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateRecipeDto: UpdateRecipeDto,
   ) {
     if (!(await this.recipeService.canUpdate(id, user))) {
@@ -54,7 +54,7 @@ export class RecipeController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(@User() user: AuthPayload, @Param('id') id: string) {
+  async remove(@User() user: AuthPayload, @Param('id') id: number) {
     if (!(await this.recipeService.canUpdate(id, user))) {
       throw new UnauthorizedException();
     }

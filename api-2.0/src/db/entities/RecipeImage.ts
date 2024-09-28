@@ -1,11 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Recipe } from '.';
 
 @Entity()
 export class RecipeImage {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
+
+  @Column('integer')
+  recipeId: number;
 
   @Column('bytea')
   data: Buffer;

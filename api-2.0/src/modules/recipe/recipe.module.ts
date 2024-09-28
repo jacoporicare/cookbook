@@ -8,10 +8,15 @@ import { UserModule } from '../user/user.module';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 
-import { Recipe, User } from '@/db/entities';
+import { Recipe, RecipeIngredient, User } from '@/db/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Recipe, User]), IngredientModule, SideDishModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Recipe, RecipeIngredient, User]),
+    IngredientModule,
+    SideDishModule,
+    UserModule,
+  ],
   providers: [RecipeService],
   controllers: [RecipeController],
 })

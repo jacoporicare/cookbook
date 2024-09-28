@@ -10,12 +10,18 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { SideDish, User, RecipeCooked, RecipeImage, RecipeIngredient } from '.';
+import { RecipeCooked, RecipeImage, RecipeIngredient, SideDish, User } from '.';
 
 @Entity()
 export class Recipe {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
+
+  @Column('integer')
+  userId: number;
+
+  @Column('integer', { nullable: true })
+  sideDishId: number;
 
   @Column({ length: 255 })
   title: string;
@@ -54,12 +60,6 @@ export class Recipe {
   })
   user: User | null;
 
-  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, {
-    eager: true,
-    cascade: ['insert', 'remove'],
-  })
-  ingredients: RecipeIngredient[];
-
   @ManyToOne(() => SideDish, sideDish => sideDish.recipes, {
     nullable: true,
     eager: true,
@@ -67,6 +67,12 @@ export class Recipe {
     onUpdate: 'CASCADE',
   })
   sideDish: SideDish | null;
+
+  @OneToMany(() => RecipeIngredient, ingredient => ingredient.recipe, {
+    eager: true,
+    cascade: ['insert', 'remove'],
+  })
+  ingredients: RecipeIngredient[];
 
   @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
   cookedHistory: Promise<RecipeCooked[]>;

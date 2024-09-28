@@ -36,7 +36,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@User() user: AuthPayload, @Param('id') id: string) {
+  findOne(@User() user: AuthPayload, @Param('id') id: number) {
     if (!this.userService.canReadOrUpdate(id, user)) {
       throw new UnauthorizedException();
     }
@@ -46,7 +46,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@User() user: AuthPayload, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@User() user: AuthPayload, @Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     if (!this.userService.canReadOrUpdate(id, user)) {
       throw new UnauthorizedException();
     }
@@ -56,7 +56,7 @@ export class UserController {
 
   @UseGuards(AdminGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.userService.remove(id);
   }
 }

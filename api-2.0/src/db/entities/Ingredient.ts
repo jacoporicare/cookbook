@@ -4,10 +4,10 @@ import { RecipeIngredient } from '.';
 
 @Entity()
 export class Ingredient {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
 
-  @Column('varchar', { length: 255 })
+  @Column('varchar', { length: 255, unique: true })
   name: string;
 
   @OneToMany(() => RecipeIngredient, recipeIngredient => recipeIngredient.ingredient)

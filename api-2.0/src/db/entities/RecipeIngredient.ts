@@ -4,8 +4,14 @@ import { Ingredient, Recipe } from '.';
 
 @Entity()
 export class RecipeIngredient {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
+
+  @Column('integer')
+  recipeId: number;
+
+  @Column('integer')
+  ingredientId: number;
 
   @Column('float', { nullable: true })
   amount: number | null;

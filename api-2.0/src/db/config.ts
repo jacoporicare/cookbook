@@ -1,16 +1,9 @@
 import { strict as assert } from 'node:assert';
 
 import { DataSourceOptions, LogLevel } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-import {
-  Ingredient,
-  RecipeCooked,
-  RecipeImage,
-  RecipeIngredient,
-  Recipe,
-  SideDish,
-  User,
-} from '@/db/entities';
+import * as entities from './entities';
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_LOGGING } = process.env;
 
@@ -31,7 +24,8 @@ export const dataSourceOptions: DataSourceOptions = {
   database: DB_DATABASE,
   synchronize: process.env.NODE_ENV !== 'production',
   logging,
-  entities: [Ingredient, Recipe, RecipeCooked, RecipeImage, RecipeIngredient, SideDish, User],
+  entities: Object.values(entities),
   migrations: [],
   subscribers: [],
+  namingStrategy: new SnakeNamingStrategy(),
 };

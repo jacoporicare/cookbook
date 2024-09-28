@@ -1,5 +1,16 @@
 {
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.prettierPath": "node_modules/prettier"
+  "prettier.prettierPath": "node_modules/prettier",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "localhost",
+      "database": "cookbook",
+      "username": "cookbook"
+    }
+  ]
 }

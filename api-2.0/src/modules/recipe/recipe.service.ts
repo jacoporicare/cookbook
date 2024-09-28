@@ -18,12 +18,14 @@ export class RecipeService {
   constructor(
     @InjectRepository(Recipe)
     private readonly recipeRepository: Repository<Recipe>,
+    @InjectRepository(RecipeIngredient)
+    private readonly recipeIngredientRepository: Repository<RecipeIngredient>,
     private readonly userService: UserService,
     private readonly ingredientService: IngredientService,
     private readonly sideDishService: SideDishService,
   ) {}
 
-  async create(userId: string, createRecipeDto: CreateRecipeDto): Promise<Recipe> {
+  async create(userId: number, createRecipeDto: CreateRecipeDto): Promise<Recipe> {
     const user = await this.userService.findOne(userId);
 
     if (!user) {
@@ -54,11 +56,11 @@ export class RecipeService {
     });
   }
 
-  findOne(id: string): Promise<Recipe | null> {
+  findOne(id: number): Promise<Recipe | null> {
     return this.recipeRepository.findOneBy({ id });
   }
 
-  async update(id: string, updateRecipeDto: UpdateRecipeDto): Promise<Recipe> {
+  async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneByOrFail({ id });
 
     if (updateRecipeDto.ingredients) {
@@ -85,18 +87,18 @@ export class RecipeService {
     return this.recipeRepository.save(recipe);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.recipeRepository.softDelete({ id });
   }
 
-  async canUpdate(id: string, user: AuthPayload): Promise<boolean> {
+  async canUpdate(id: number, user: AuthPayload): Promise<boolean> {
     if (user.isAdmin) {
       return true;
     }
 
     const recipe = await this.recipeRepository.findOneByOrFail({ id });
 
-    return recipe.user?.id === user.sub;
+    return recipe.user?.id === Number(user.sub);
   }
 
   private async mapIngredient(
@@ -106,13 +108,12 @@ export class RecipeService {
       createRecipeIngredientDto.name.trim(),
     );
 
-    const recipeIngredient = new RecipeIngredient();
-    recipeIngredient.ingredient = ingredient;
-    recipeIngredient.amount = createRecipeIngredientDto.amount ?? null;
-    recipeIngredient.amountUnit = createRecipeIngredientDto.amountUnit?.trim() ?? null;
-    recipeIngredient.isGroup = createRecipeIngredientDto.isGroup ?? false;
-
-    return recipeIngredient;
+    return this.recipeIngredientRepository.create({
+      ingredient: ingredient,
+      amount: createRecipeIngredientDto.amount ?? null,
+      amountUnit: createRecipeIngredientDto.amountUnit?.trim() ?? null,
+      isGroup: createRecipeIngredientDto.isGroup ?? false,
+    });
   }
 
   private toSlug(title: string): string {

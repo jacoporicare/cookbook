@@ -22,7 +22,7 @@ export class AuthService {
     }
 
     const payload: AuthPayload = {
-      sub: user.id,
+      sub: user.id.toString(),
       username: user.username,
       displayName: user.displayName,
       isAdmin: user.isAdmin,

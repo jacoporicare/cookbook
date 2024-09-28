@@ -1,11 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Recipe, User } from '.';
 
 @Entity()
 export class RecipeCooked {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
+
+  @Column('integer')
+  userId: number;
+
+  @Column('integer')
+  recipeId: number;
 
   @Column()
   date: Date;
@@ -16,7 +22,6 @@ export class RecipeCooked {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn()
   user: User;
 
   @ManyToOne(() => Recipe, recipe => recipe.cookedHistory, {

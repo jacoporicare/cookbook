@@ -13,8 +13,8 @@ import { Recipe, RecipeCooked } from '.';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
 
   @Column('varchar', { length: 255 })
   username: string;
