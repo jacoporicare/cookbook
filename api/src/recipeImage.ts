@@ -66,7 +66,7 @@ export function recipeImageMiddleware() {
     const size = req.query['size']
       ?.toString()
       .split('x', 2)
-      .map(x => parseInt(x, 10)) as ImageSizeTuple | undefined;
+      .map(it => parseInt(it, 10)) as ImageSizeTuple | undefined;
     const format = req.query['format']?.toString();
 
     const filePath = getFilePath(id, size, format);

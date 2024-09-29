@@ -5,6 +5,7 @@ import { AuthModule } from '../auth/auth.module';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { RecipeModule } from '../recipe/recipe.module';
 import { SideDishModule } from '../side-dish/side-dish.module';
+import { TagModule } from '../tag/tag.module';
 import { UserModule } from '../user/user.module';
 
 import { AppController } from './app.controller';
@@ -19,6 +20,7 @@ import { dataSourceOptions } from '@/db/config';
     IngredientModule,
     RecipeModule,
     SideDishModule,
+    TagModule,
     UserModule,
   ],
   controllers: [AppController],

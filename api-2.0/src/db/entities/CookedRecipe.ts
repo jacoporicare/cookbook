@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Recipe, User } from '.';
 
-@Entity()
-export class RecipeCooked {
+@Entity('cooked_recipes')
+export class CookedRecipe {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
@@ -24,7 +24,7 @@ export class RecipeCooked {
   })
   user: User;
 
-  @ManyToOne(() => Recipe, recipe => recipe.cookedHistory, {
+  @ManyToOne(() => Recipe, recipe => recipe.cookedRecipes, {
     nullable: false,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

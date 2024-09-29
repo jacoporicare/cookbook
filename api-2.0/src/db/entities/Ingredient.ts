@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { RecipeIngredient } from '.';
 
-@Entity()
+@Entity('ingredients')
 export class Ingredient {
   @PrimaryGeneratedColumn('identity')
   id: number;

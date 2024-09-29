@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'ty
 
 import { Recipe } from '.';
 
-@Entity()
+@Entity('recipe_images')
 export class RecipeImage {
   @PrimaryGeneratedColumn('identity')
   id: number;

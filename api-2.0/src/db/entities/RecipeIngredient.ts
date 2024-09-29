@@ -1,16 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { Ingredient, Recipe } from '.';
 
-@Entity()
+@Entity('recipe_ingredients')
 export class RecipeIngredient {
-  @PrimaryGeneratedColumn('identity')
-  id: number;
-
-  @Column('integer')
+  @PrimaryColumn('integer')
   recipeId: number;
 
-  @Column('integer')
+  @PrimaryColumn('integer')
   ingredientId: number;
 
   @Column('float', { nullable: true })

@@ -10,9 +10,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { RecipeCooked, RecipeImage, RecipeIngredient, SideDish, User } from '.';
+import { CookedRecipe, RecipeImage, RecipeIngredient, RecipeTag, SideDish, User } from '.';
 
-@Entity()
+@Entity('recipes')
 export class Recipe {
   @PrimaryGeneratedColumn('identity')
   id: number;
@@ -37,9 +37,6 @@ export class Recipe {
 
   @Column('int', { nullable: true })
   servingCount: number | null;
-
-  @Column('varchar', { length: 255, array: true, nullable: true })
-  tags: string[] | null;
 
   @CreateDateColumn()
   createdDate: Date;
@@ -74,6 +71,12 @@ export class Recipe {
   })
   ingredients: RecipeIngredient[];
 
-  @OneToMany(() => RecipeCooked, cooked => cooked.recipe)
-  cookedHistory: Promise<RecipeCooked[]>;
+  @OneToMany(() => RecipeTag, tag => tag.recipe, {
+    eager: true,
+    cascade: ['insert', 'remove'],
+  })
+  tags: RecipeTag[];
+
+  @OneToMany(() => CookedRecipe, cooked => cooked.recipe)
+  cookedRecipes: Promise<CookedRecipe[]>;
 }

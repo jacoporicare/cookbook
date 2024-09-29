@@ -1,15 +1,15 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Recipe } from '.';
+import { RecipeTag } from '.';
 
-@Entity('side_dishes')
-export class SideDish {
+@Entity('tags')
+export class Tag {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
   @Column('varchar', { length: 255, unique: true })
   name: string;
 
-  @OneToMany(() => Recipe, recipe => recipe.sideDish)
-  recipes: Promise<Recipe[]>;
+  @OneToMany(() => RecipeTag, recipe => recipe.tag)
+  recipeTags: Promise<RecipeTag[]>;
 }

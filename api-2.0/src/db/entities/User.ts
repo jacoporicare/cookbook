@@ -9,9 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Recipe, RecipeCooked } from '.';
+import { Recipe, CookedRecipe } from '.';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn('identity')
   id: number;
@@ -44,6 +44,6 @@ export class User {
   @OneToMany(() => Recipe, recipe => recipe.user)
   recipes: Promise<Recipe[]>;
 
-  @OneToMany(() => RecipeCooked, cooked => cooked.user)
-  recipeCookedHistory: Promise<RecipeCooked[]>;
+  @OneToMany(() => CookedRecipe, cooked => cooked.user)
+  cookedRecipes: Promise<CookedRecipe[]>;
 }

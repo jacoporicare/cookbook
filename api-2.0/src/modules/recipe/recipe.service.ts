@@ -6,12 +6,13 @@ import { Repository } from 'typeorm';
 import { AuthPayload } from '../auth/entities/auth-payload.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SideDishService } from '../side-dish/side-dish.service';
+import { TagService } from '../tag/tag.service';
 import { UserService } from '../user/user.service';
 
 import { CreateRecipeDto, CreateRecipeIngredientDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 
-import { Recipe, RecipeIngredient } from '@/db/entities';
+import { Recipe, RecipeIngredient, RecipeTag } from '@/db/entities';
 
 @Injectable()
 export class RecipeService {
@@ -20,9 +21,12 @@ export class RecipeService {
     private readonly recipeRepository: Repository<Recipe>,
     @InjectRepository(RecipeIngredient)
     private readonly recipeIngredientRepository: Repository<RecipeIngredient>,
+    @InjectRepository(RecipeTag)
+    private readonly recipeTagRepository: Repository<RecipeTag>,
     private readonly userService: UserService,
     private readonly ingredientService: IngredientService,
     private readonly sideDishService: SideDishService,
+    private readonly tagService: TagService,
   ) {}
 
   async create(userId: number, createRecipeDto: CreateRecipeDto): Promise<Recipe> {
@@ -42,9 +46,10 @@ export class RecipeService {
         : null,
       ingredients:
         createRecipeDto.ingredients &&
-        (await Promise.all(
-          createRecipeDto.ingredients.map(ingredient => this.mapIngredient(ingredient)),
-        )),
+        (await Promise.all(createRecipeDto.ingredients.map(it => this.mapIngredient(it)))),
+      tags:
+        createRecipeDto.tags &&
+        (await Promise.all(createRecipeDto.tags.map(it => this.mapTag(it)))),
     });
 
     return this.recipeRepository.save(recipe);
@@ -63,9 +68,19 @@ export class RecipeService {
   async update(id: number, updateRecipeDto: UpdateRecipeDto): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneByOrFail({ id });
 
+    let intermediateSave = false;
+
     if (updateRecipeDto.ingredients) {
       recipe.ingredients = [];
+      intermediateSave = true;
+    }
 
+    if (updateRecipeDto.tags) {
+      recipe.tags = [];
+      intermediateSave = true;
+    }
+
+    if (intermediateSave) {
       await this.recipeRepository.save(recipe);
     }
 
@@ -79,9 +94,10 @@ export class RecipeService {
           : recipe.sideDish,
       ingredients:
         updateRecipeDto.ingredients &&
-        (await Promise.all(
-          updateRecipeDto.ingredients.map(ingredient => this.mapIngredient(ingredient)),
-        )),
+        (await Promise.all(updateRecipeDto.ingredients.map(it => this.mapIngredient(it)))),
+      tags:
+        updateRecipeDto.tags &&
+        (await Promise.all(updateRecipeDto.tags.map(it => this.mapTag(it)))),
     });
 
     return this.recipeRepository.save(recipe);
@@ -114,6 +130,12 @@ export class RecipeService {
       amountUnit: createRecipeIngredientDto.amountUnit?.trim() ?? null,
       isGroup: createRecipeIngredientDto.isGroup ?? false,
     });
+  }
+
+  private async mapTag(tagString: string): Promise<RecipeTag> {
+    const tag = await this.tagService.getOrCreate(tagString.trim());
+
+    return this.recipeTagRepository.create({ tag });
   }
 
   private toSlug(title: string): string {
