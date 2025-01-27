@@ -1,8 +1,6 @@
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-import * as entities from './entities';
-
 export const dataSource = new DataSource({
   type: 'postgres',
   host: 'localhost',
@@ -12,8 +10,7 @@ export const dataSource = new DataSource({
   database: 'cookbook',
   synchronize: true,
   logging: 'all',
-  entities: Object.values(entities),
-  migrations: [],
-  subscribers: [],
+  entities: [__dirname + '/../modules/**/*.entity.{ts,js}'],
+  migrations: [__dirname + '/../../migrations/*.{ts,js}'],
   namingStrategy: new SnakeNamingStrategy(),
 });
