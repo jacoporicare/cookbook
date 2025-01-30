@@ -1,16 +1,17 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
-  Inject,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 
 import { AuthService } from '../application/auth.service';
+
+import { Config } from '@/config';
 
 @Injectable()
 export class CognitoAuthGuard implements CanActivate {
@@ -19,12 +20,12 @@ export class CognitoAuthGuard implements CanActivate {
 
   constructor(
     private readonly reflector: Reflector,
-    private readonly config: ConfigService,
+    private readonly config: Config,
     @Inject(AuthService) private readonly authService: AuthService,
   ) {
     // Use config values instead of process.env
-    const userPoolId = this.config.get<string>('COGNITO_USERPOOL_ID');
-    const clientId = this.config.get<string>('COGNITO_CLIENT_ID');
+    const userPoolId = this.config.cognitoUserpoolId;
+    const clientId = this.config.cognitoClientId;
 
     // Create the verifier
     this.verifier = CognitoJwtVerifier.create({

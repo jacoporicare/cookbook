@@ -5,13 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "api-2.0 dev",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/api-2.0",
+      "command": "yarn start:dev"
+    },
+    {
       "type": "node",
       "request": "attach",
       "name": "Attach",
       "port": 9229,
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "Docker: Attach to Node",
@@ -22,9 +28,7 @@
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/srv",
       "protocol": "inspector",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

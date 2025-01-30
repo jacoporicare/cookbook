@@ -1,6 +1,5 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -8,30 +7,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import { RecipeModule } from './modules/recipe/recipe.module';
 // import { StorageModule } from './modules/storage/storage.module';
 
+import { CookbookConfigModule } from './config.module';
 import { RecipeModule } from './recipe/recipe.module';
 
+import { Config } from '@/config';
 import { dataSourceOptionsFactory } from '@/db/data-source-options-factory';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    CookbookConfigModule,
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
+      imports: [CookbookConfigModule],
+      useFactory: (config: Config) => ({
         autoSchemaFile: true,
         sortSchema: true,
-        playground: config.get<string>('GRAPHQL_PLAYGROUND') === 'true',
+        playground: config.graphqlPlayground,
         context: ({ req }: any) => ({ headers: req.headers }),
       }),
-      inject: [ConfigService],
+      inject: [Config],
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [CookbookConfigModule],
       useFactory: dataSourceOptionsFactory,
-      inject: [ConfigService],
+      inject: [Config],
     }),
     RecipeModule,
     // StorageModule,
