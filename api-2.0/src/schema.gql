@@ -1,0 +1,72 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthPayload {
+  token: String!
+}
+
+type CookedRecipe {
+  date: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Ingredient {
+  name: String!
+  amount: Float
+  amountUnit: String
+  isGroup: Boolean!
+}
+
+type Recipe {
+  id: ID!
+  title: String!
+  slug: String!
+  directions: String
+  preparationTime: Int
+  servingCount: Int
+  tags: [String!]!
+  sideDish: String
+  creationDate: DateTime!
+  lastModifiedDate: DateTime!
+  ingredients: [Ingredient!]!
+  cookedHistory: [CookedRecipe!]!
+}
+
+type Query {
+  recipes: [Recipe!]!
+  recipe(id: String, slug: String): Recipe
+  ingredients: [String!]!
+  tags: [String!]!
+  sideDishes: [String!]!
+}
+
+type Mutation {
+  login(username: String!, password: String!): AuthPayload!
+  createRecipe(recipe: RecipeInput!): Recipe!
+  updateRecipe(id: String!, recipe: RecipeInput!): Recipe!
+  deleteRecipe(id: String!): Boolean!
+  recipeCooked(id: String!, date: DateTime!): Recipe!
+  deleteRecipeCooked(recipeId: String!, cookedId: String!): Recipe!
+}
+
+input RecipeInput {
+  title: String!
+  directions: String
+  sideDish: String
+  preparationTime: Int
+  servingCount: Int
+  ingredients: [IngredientInput!]
+  tags: [String!]
+}
+
+input IngredientInput {
+  amount: Float
+  amountUnit: String
+  name: String!
+  isGroup: Boolean!
+}

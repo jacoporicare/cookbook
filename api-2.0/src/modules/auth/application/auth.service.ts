@@ -1,14 +1,40 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import jwt from 'jsonwebtoken';
+
+import { Identity } from '../domain/identity';
+import { IAuthRepository, IAuthRepositoryToken } from '../domain/ports/auth.repository';
+
+import { Config } from '@/config';
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+  constructor(
+    private readonly config: Config,
+    @Inject(IAuthRepositoryToken) private readonly repository: IAuthRepository,
+  ) {}
 
-  // Possibly you store user data or integrate with Cognito Admin APIs etc.
-  // This is just a placeholder example.
-  validateUser(tokenPayload: any): boolean {
-    // Implement any extra checks you need.
-    // Return true if valid user.
-    return true;
+  signToken(identity: Identity): string {
+    return jwt.sign({ userId: identity }, this.config.jwtSecret, { expiresIn: '1y' });
+  }
+
+  async verifyToken(token: string): Promise<Identity | null> {
+    try {
+      const decoded = jwt.verify(token, this.config.jwtSecret) as unknown as { userId: string };
+      const user = await this.repository.findById(decoded.userId);
+
+      return user?.toIdentity() ?? null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async verifyCredentials(username: string, password: string): Promise<Identity | null> {
+    const user = await this.repository.findByUsername(username);
+
+    if (!user?.verifyPassword(password)) {
+      return null;
+    }
+
+    return user.toIdentity();
   }
 }

@@ -48,14 +48,14 @@ export class TypeOrmRecipeRepository implements IRecipeRepository {
   }
 
   async save(recipe: Recipe): Promise<Recipe> {
-    if (recipe.sideDish) {
-      await this.sideDishRepository.createIfNotExists(recipe.sideDish);
-    }
+    // if (recipe.sideDish) {
+    //   await this.sideDishRepository.createIfNotExists(recipe.sideDish);
+    // }
 
-    await this.tagRepository.createIfNotExists(recipe.tags);
-    await this.ingredientRepository.createIfNotExists(
-      recipe.ingredients.map(ingredient => ingredient.name),
-    );
+    // await this.tagRepository.createIfNotExists(recipe.tags);
+    // await this.ingredientRepository.createIfNotExists(
+    //   recipe.ingredients.map(ingredient => ingredient.name),
+    // );
 
     const entity = RecipeEntity.fromDomain(recipe);
 

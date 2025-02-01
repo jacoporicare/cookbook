@@ -4,6 +4,5 @@ export class Ingredient {
     public amount: number | null,
     public amountUnit: string | null,
     public isGroup: boolean,
-    public order: number,
   ) {}
 }

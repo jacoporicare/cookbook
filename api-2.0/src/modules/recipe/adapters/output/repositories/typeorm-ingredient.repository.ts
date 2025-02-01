@@ -13,7 +13,7 @@ export class TypeOrmIngredientRepository implements IIngredientRepository {
   ) {}
 
   async findAll(): Promise<string[]> {
-    const entities = await this.repository.find();
+    const entities = await this.repository.find({ order: { name: 'ASC' } });
 
     return entities.map(e => e.name);
   }

@@ -17,11 +17,15 @@ export class Recipe {
     public tags: string[],
     public image: Image | null,
     public sideDish: string | null,
+    public createdDate: Date,
+    public updatedDate: Date,
     public ingredients: Ingredient[],
     public cookedRecipes: CookedRecipe[],
   ) {}
 
-  static createNew(props: Omit<Recipe, 'id' | 'slug'>): Recipe {
+  static createNew(
+    props: Omit<Recipe, 'id' | 'slug' | 'createdDate' | 'updatedDate' | 'cookedRecipes'>,
+  ): Recipe {
     const id = uuidv4();
     const slug = slugify(props.title);
 
@@ -36,8 +40,10 @@ export class Recipe {
       props.tags,
       props.image,
       props.sideDish,
+      new Date(),
+      new Date(),
       props.ingredients,
-      props.cookedRecipes,
+      [],
     );
   }
 }

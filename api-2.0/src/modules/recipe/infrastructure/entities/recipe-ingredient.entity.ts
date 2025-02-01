@@ -32,30 +32,24 @@ export class RecipeIngredientEntity {
   @ManyToOne(() => RecipeEntity, recipe => recipe.ingredients, {
     nullable: false,
     onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
   })
   @JoinColumn()
   recipe?: RecipeEntity;
 
   @ManyToOne(() => IngredientEntity, ingredient => ingredient.recipeIngredient, {
     nullable: false,
+    cascade: true,
+    eager: true,
     onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
   })
   @JoinColumn()
   ingredient!: IngredientEntity;
 
   toDomain(): Ingredient {
-    return new Ingredient(
-      this.ingredientName,
-      this.amount,
-      this.amountUnit,
-      this.isGroup,
-      this.order,
-    );
+    return new Ingredient(this.ingredientName, this.amount, this.amountUnit, this.isGroup);
   }
 
-  static fromDomain(ingredient: Ingredient): RecipeIngredientEntity {
+  static fromDomain(ingredient: Ingredient, order: number): RecipeIngredientEntity {
     const ingredientEntity = new IngredientEntity();
     ingredientEntity.name = ingredient.name;
 
@@ -65,6 +59,7 @@ export class RecipeIngredientEntity {
     recipeIngredientEntity.amount = ingredient.amount;
     recipeIngredientEntity.amountUnit = ingredient.amountUnit;
     recipeIngredientEntity.isGroup = ingredient.isGroup;
+    recipeIngredientEntity.order = order;
 
     return recipeIngredientEntity;
   }

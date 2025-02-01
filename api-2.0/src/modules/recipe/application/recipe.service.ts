@@ -10,4 +10,16 @@ export class RecipeService {
   async getAllRecipes(): Promise<Recipe[]> {
     return this.repository.findAll();
   }
+
+  async getRecipeById(id: string): Promise<Recipe | null> {
+    return this.repository.findById(id);
+  }
+
+  async getRecipeBySlug(slug: string): Promise<Recipe | null> {
+    return this.repository.findBySlug(slug);
+  }
+
+  async save(recipe: Recipe): Promise<Recipe> {
+    return this.repository.save(recipe);
+  }
 }

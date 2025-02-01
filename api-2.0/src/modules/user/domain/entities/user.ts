@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Password } from '../value-objects/password';
 
+import { Identity } from '@/modules/auth/domain/identity';
+
 export class User {
   constructor(
     public readonly id: string,
@@ -35,5 +37,9 @@ export class User {
 
   async verifyPassword(plainPassword: string): Promise<boolean> {
     return this.password.compare(plainPassword);
+  }
+
+  toIdentity(): Identity {
+    return new Identity(this.id, this.username, this.displayName, this.isAdmin);
   }
 }

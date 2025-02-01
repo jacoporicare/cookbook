@@ -68,7 +68,10 @@ export class RecipeEntity {
   tags!: TagEntity[];
 
   @OneToOne(() => RecipeImageEntity, image => image.recipe, {
+    nullable: true,
+    cascade: true,
     eager: true,
+    orphanedRowAction: 'delete',
   })
   image!: RecipeImageEntity | null;
 
@@ -81,6 +84,7 @@ export class RecipeEntity {
   @ManyToOne(() => SideDishEntity, sideDish => sideDish.recipes, {
     nullable: true,
     cascade: true,
+    eager: true,
   })
   @JoinColumn()
   sideDish!: SideDishEntity | null;
@@ -95,6 +99,7 @@ export class RecipeEntity {
   @OneToMany(() => CookedRecipeEntity, cooked => cooked.recipe, {
     cascade: true,
     eager: true,
+    orphanedRowAction: 'delete',
   })
   cookedRecipes!: CookedRecipeEntity[];
 
@@ -107,10 +112,14 @@ export class RecipeEntity {
       this.directions,
       this.preparationTime,
       this.servingCount,
-      this.tags.map(tag => tag.name),
+      this.tags.map(tag => tag.name).sort((a, b) => a.localeCompare(b, 'cs')),
       this.image ? new Image(this.image.data, this.image.contentType) : null,
       this.sideDishName,
-      this.ingredients.map(ingredient => ingredient.toDomain()).sort((a, b) => a.order - b.order),
+      this.createdDate,
+      this.updatedDate,
+      [...this.ingredients]
+        .sort((a, b) => a.order - b.order)
+        .map(ingredient => ingredient.toDomain()),
       this.cookedRecipes
         .map(cooked => cooked.toDomain())
         .sort((a, b) => a.date.getTime() - b.date.getTime()),
@@ -128,7 +137,9 @@ export class RecipeEntity {
     entity.preparationTime = recipe.preparationTime;
     entity.servingCount = recipe.servingCount;
     entity.image = recipe.image ? RecipeImageEntity.fromDomain(recipe.image) : null;
-    entity.ingredients = recipe.ingredients.map(RecipeIngredientEntity.fromDomain);
+    entity.ingredients = recipe.ingredients.map((ingredient, index) =>
+      RecipeIngredientEntity.fromDomain(ingredient, index),
+    );
     entity.tags = recipe.tags.map(TagEntity.fromDomain);
     entity.sideDish = recipe.sideDish ? SideDishEntity.fromDomain(recipe.sideDish) : null;
     entity.cookedRecipes = recipe.cookedRecipes.map(CookedRecipeEntity.fromDomain);
