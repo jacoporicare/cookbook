@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 export class Password {
   private constructor(private readonly hashedPassword: string) {}
 
   static async create(plainPassword: string): Promise<Password> {
-    if (plainPassword.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
+    if (plainPassword.length < 5) {
+      throw new Error('Password must be at least 5 characters long');
     }
 
     const hashed = await bcrypt.hash(plainPassword, 10);
