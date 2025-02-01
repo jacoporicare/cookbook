@@ -8,8 +8,9 @@ export class CookedRecipeType {
   date!: Date;
 
   static fromDomain(cookedRecipe: CookedRecipe): CookedRecipeType {
-    return {
-      date: cookedRecipe.date,
-    };
+    const type = new CookedRecipeType();
+    type.date = cookedRecipe.date;
+
+    return type;
   }
 }

@@ -17,11 +17,12 @@ export class IngredientType {
   isGroup!: boolean;
 
   static fromDomain(ingredient: Ingredient): IngredientType {
-    return {
-      name: ingredient.name,
-      amount: ingredient.amount,
-      amountUnit: ingredient.amountUnit,
-      isGroup: ingredient.isGroup,
-    };
+    const type = new IngredientType();
+    type.name = ingredient.name;
+    type.amount = ingredient.amount;
+    type.amountUnit = ingredient.amountUnit;
+    type.isGroup = ingredient.isGroup;
+
+    return type;
   }
 }

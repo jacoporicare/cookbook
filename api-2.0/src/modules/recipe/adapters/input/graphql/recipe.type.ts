@@ -4,6 +4,7 @@ import { CookedRecipeType } from './cooked-recipe.type';
 import { IngredientType } from './ingredient.type';
 
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
+import { UserType } from '@/modules/user/adapters/input/graphql/user.type';
 
 @ObjectType('Recipe')
 export class RecipeType {
@@ -11,6 +12,10 @@ export class RecipeType {
   id!: string;
 
   userId!: string | null;
+
+  // Resolved field
+  @Field(() => UserType, { nullable: true })
+  user!: UserType | null;
 
   @Field()
   title!: string;
@@ -46,20 +51,21 @@ export class RecipeType {
   cookedHistory!: CookedRecipeType[];
 
   static fromDomain(recipe: Recipe): RecipeType {
-    return {
-      id: recipe.id,
-      userId: recipe.userId,
-      title: recipe.title,
-      slug: recipe.slug,
-      directions: recipe.directions,
-      preparationTime: recipe.preparationTime,
-      servingCount: recipe.servingCount,
-      tags: recipe.tags,
-      sideDish: recipe.sideDish,
-      creationDate: recipe.createdDate,
-      lastModifiedDate: recipe.updatedDate,
-      ingredients: recipe.ingredients.map(ingredient => IngredientType.fromDomain(ingredient)),
-      cookedHistory: recipe.cookedRecipes.map(cooked => CookedRecipeType.fromDomain(cooked)),
-    };
+    const type = new RecipeType();
+    type.id = recipe.id;
+    type.userId = recipe.userId;
+    type.title = recipe.title;
+    type.slug = recipe.slug;
+    type.directions = recipe.directions;
+    type.preparationTime = recipe.preparationTime;
+    type.servingCount = recipe.servingCount;
+    type.tags = recipe.tags;
+    type.sideDish = recipe.sideDish;
+    type.creationDate = recipe.createdDate;
+    type.lastModifiedDate = recipe.updatedDate;
+    type.ingredients = recipe.ingredients.map(ingredient => IngredientType.fromDomain(ingredient));
+    type.cookedHistory = recipe.cookedRecipes.map(cooked => CookedRecipeType.fromDomain(cooked));
+
+    return type;
   }
 }

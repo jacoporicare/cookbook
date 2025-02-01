@@ -22,8 +22,17 @@ type Ingredient {
   isGroup: Boolean!
 }
 
+type User {
+  id: ID!
+  username: String!
+  displayName: String!
+  isAdmin: Boolean!
+  lastActivity: DateTime
+}
+
 type Recipe {
   id: ID!
+  user: User
   title: String!
   slug: String!
   directions: String
@@ -35,15 +44,6 @@ type Recipe {
   lastModifiedDate: DateTime!
   ingredients: [Ingredient!]!
   cookedHistory: [CookedRecipe!]!
-  user: User
-}
-
-type User {
-  id: ID!
-  username: String!
-  displayName: String!
-  isAdmin: Boolean!
-  lastActivity: DateTime
 }
 
 type Query {

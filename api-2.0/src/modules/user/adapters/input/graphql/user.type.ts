@@ -20,12 +20,13 @@ export class UserType {
   lastActivity!: Date | null;
 
   static fromDomain(user: User): UserType {
-    return {
-      id: user.id,
-      username: user.username,
-      displayName: user.displayName,
-      isAdmin: user.isAdmin,
-      lastActivity: user.lastActivity,
-    };
+    const type = new UserType();
+    type.id = user.id;
+    type.username = user.username;
+    type.displayName = user.displayName;
+    type.isAdmin = user.isAdmin;
+    type.lastActivity = user.lastActivity;
+
+    return type;
   }
 }
