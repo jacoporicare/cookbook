@@ -35,6 +35,15 @@ type Recipe {
   lastModifiedDate: DateTime!
   ingredients: [Ingredient!]!
   cookedHistory: [CookedRecipe!]!
+  user: User
+}
+
+type User {
+  id: ID!
+  username: String!
+  displayName: String!
+  isAdmin: Boolean!
+  lastActivity: DateTime
 }
 
 type Query {

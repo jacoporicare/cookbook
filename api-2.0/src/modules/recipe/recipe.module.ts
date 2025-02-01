@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UserModule } from '../user/user.module';
+
 import { IngredientResolver } from './adapters/input/resolvers/ingredient.resolver';
 import { RecipeResolver } from './adapters/input/resolvers/recipe.resolver';
 import { SideDishResolver } from './adapters/input/resolvers/side-dish.resolver';
@@ -36,17 +38,9 @@ import { TagEntity } from './infrastructure/entities/tag.entity';
       SideDishEntity,
       TagEntity,
     ]),
-    // StorageModule,
+    UserModule,
   ],
   providers: [
-    RecipeService,
-    RecipeResolver,
-    IngredientService,
-    IngredientResolver,
-    TagService,
-    TagResolver,
-    SideDishService,
-    SideDishResolver,
     {
       provide: IRecipeRepositoryToken,
       useClass: TypeOrmRecipeRepository,
@@ -63,7 +57,14 @@ import { TagEntity } from './infrastructure/entities/tag.entity';
       provide: ITagRepositoryToken,
       useClass: TypeOrmTagRepository,
     },
-    // IStorageToken,
+    RecipeService,
+    RecipeResolver,
+    IngredientService,
+    IngredientResolver,
+    TagService,
+    TagResolver,
+    SideDishService,
+    SideDishResolver,
   ],
 })
 export class RecipeModule {}

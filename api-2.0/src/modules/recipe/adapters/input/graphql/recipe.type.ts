@@ -10,6 +10,8 @@ export class RecipeType {
   @Field(() => ID)
   id!: string;
 
+  userId!: string | null;
+
   @Field()
   title!: string;
 
@@ -46,6 +48,7 @@ export class RecipeType {
   static fromDomain(recipe: Recipe): RecipeType {
     return {
       id: recipe.id,
+      userId: recipe.userId,
       title: recipe.title,
       slug: recipe.slug,
       directions: recipe.directions,

@@ -1,5 +1,5 @@
 import { NotImplementedException, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { RecipeInputType } from '../graphql/recipe-input.type';
 import { RecipeType } from '../graphql/recipe.type';
@@ -10,10 +10,15 @@ import { AuthGuard } from '@/modules/auth/guards/auth.guard';
 import { RecipeService } from '@/modules/recipe/application/recipe.service';
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { Ingredient } from '@/modules/recipe/domain/value-objects/ingredient';
+import { UserType } from '@/modules/user/adapters/input/graphql/user.type';
+import { UserService } from '@/modules/user/application/user.service';
 
 @Resolver(() => RecipeType)
 export class RecipeResolver {
-  constructor(private readonly recipeService: RecipeService) {}
+  constructor(
+    private readonly recipeService: RecipeService,
+    private readonly userService: UserService,
+  ) {}
 
   @Query(() => [RecipeType])
   async recipes(): Promise<RecipeType[]> {
@@ -94,5 +99,20 @@ export class RecipeResolver {
     @Args('cookedId') cookedId: string,
   ): Promise<RecipeType> {
     throw new NotImplementedException();
+  }
+
+  @ResolveField('user', () => UserType, { nullable: true })
+  async user(@Parent() recipe: RecipeType): Promise<UserType | null> {
+    if (!recipe.userId) {
+      return null;
+    }
+
+    const user = await this.userService.findById(recipe.userId);
+
+    if (!user) {
+      return null;
+    }
+
+    return UserType.fromDomain(user);
   }
 }
