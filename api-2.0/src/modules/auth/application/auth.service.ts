@@ -14,7 +14,7 @@ export class AuthService {
   ) {}
 
   signToken(identity: Identity): string {
-    return jwt.sign({ userId: identity }, this.config.jwtSecret, { expiresIn: '1y' });
+    return jwt.sign({ userId: identity.userId }, this.config.jwtSecret, { expiresIn: '1y' });
   }
 
   async verifyToken(token: string): Promise<Identity | null> {

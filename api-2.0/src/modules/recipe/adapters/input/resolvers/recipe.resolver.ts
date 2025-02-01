@@ -1,9 +1,12 @@
-import { NotImplementedException } from '@nestjs/common';
+import { NotImplementedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { RecipeInputType } from '../graphql/recipe-input.type';
 import { RecipeType } from '../graphql/recipe.type';
 
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
+import { Identity } from '@/modules/auth/domain/identity';
+import { AuthGuard } from '@/modules/auth/guards/auth.guard';
 import { RecipeService } from '@/modules/recipe/application/recipe.service';
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { Ingredient } from '@/modules/recipe/domain/value-objects/ingredient';
@@ -35,10 +38,14 @@ export class RecipeResolver {
     return recipe ? RecipeType.fromDomain(recipe) : null;
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => RecipeType)
-  async createRecipe(@Args('recipe') recipe: RecipeInputType): Promise<RecipeType> {
+  async createRecipe(
+    @CurrentUser() identity: Identity,
+    @Args('recipe') recipe: RecipeInputType,
+  ): Promise<RecipeType> {
     const newRecipe = Recipe.createNew({
-      userId: '1',
+      userId: identity.userId,
       title: recipe.title,
       directions: recipe.directions,
       preparationTime: recipe.preparationTime,
