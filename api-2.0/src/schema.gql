@@ -6,8 +6,12 @@ type AuthPayload {
   token: String!
 }
 
-type CookedRecipe {
-  date: DateTime!
+type User {
+  id: ID!
+  username: String!
+  displayName: String!
+  isAdmin: Boolean!
+  lastActivity: DateTime
 }
 
 """
@@ -15,19 +19,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type CookedRecipe {
+  date: DateTime!
+}
+
 type Ingredient {
   name: String!
   amount: Float
   amountUnit: String
   isGroup: Boolean!
-}
-
-type User {
-  id: ID!
-  username: String!
-  displayName: String!
-  isAdmin: Boolean!
-  lastActivity: DateTime
 }
 
 type Recipe {
@@ -47,6 +47,7 @@ type Recipe {
 }
 
 type Query {
+  me: User
   recipes: [Recipe!]!
   recipe(id: String, slug: String): Recipe
   ingredients: [String!]!

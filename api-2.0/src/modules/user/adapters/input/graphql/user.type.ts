@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { Identity } from '@/modules/auth/domain/identity';
 import { User } from '@/modules/user/domain/entities/user';
 
 @ObjectType('User')
@@ -26,6 +27,17 @@ export class UserType {
     type.displayName = user.displayName;
     type.isAdmin = user.isAdmin;
     type.lastActivity = user.lastActivity;
+
+    return type;
+  }
+
+  static fromIdentity(identity: Identity): UserType {
+    const type = new UserType();
+    type.id = identity.userId;
+    type.username = identity.username;
+    type.displayName = identity.displayName;
+    type.isAdmin = identity.isAdmin;
+    type.lastActivity = identity.lastActivity;
 
     return type;
   }

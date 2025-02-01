@@ -31,7 +31,7 @@ export class AuthService {
   async verifyCredentials(username: string, password: string): Promise<Identity | null> {
     const user = await this.repository.findByUsername(username);
 
-    if (!user?.verifyPassword(password)) {
+    if (!user || !(await user.verifyPassword(password))) {
       return null;
     }
 

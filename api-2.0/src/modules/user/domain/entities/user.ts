@@ -40,6 +40,6 @@ export class User {
   }
 
   toIdentity(): Identity {
-    return new Identity(this.id, this.username, this.displayName, this.isAdmin);
+    return new Identity(this.id, this.username, this.displayName, this.isAdmin, this.lastActivity);
   }
 }
