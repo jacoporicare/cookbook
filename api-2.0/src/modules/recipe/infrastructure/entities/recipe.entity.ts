@@ -127,10 +127,17 @@ export class RecipeEntity {
   }
 
   static fromDomain(recipe: Recipe): RecipeEntity {
+    let user: UserEntity | null = null;
+
+    if (recipe.userId) {
+      user = new UserEntity();
+      user.id = recipe.userId;
+    }
+
     const entity = new RecipeEntity();
 
     entity.id = recipe.id;
-    entity.userId = recipe.userId;
+    entity.user = user;
     entity.title = recipe.title;
     entity.slug = recipe.slug;
     entity.directions = recipe.directions;

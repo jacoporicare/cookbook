@@ -68,5 +68,5 @@ input IngredientInput {
   amount: Float
   amountUnit: String
   name: String!
-  isGroup: Boolean!
+  isGroup: Boolean
 }

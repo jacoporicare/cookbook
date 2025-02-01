@@ -11,6 +11,6 @@ export class IngredientInputType {
   @Field()
   name!: string;
 
-  @Field()
-  isGroup!: boolean;
+  @Field(() => Boolean, { nullable: true })
+  isGroup!: boolean | null;
 }

@@ -59,7 +59,7 @@ export class RecipeResolver {
               ingredient.name,
               ingredient.amount,
               ingredient.amountUnit,
-              ingredient.isGroup,
+              !!ingredient.isGroup,
             ),
         ) ?? [],
       image: null,
