@@ -135,7 +135,6 @@ export class RecipeEntity {
     }
 
     const entity = new RecipeEntity();
-
     entity.id = recipe.id;
     entity.user = user;
     entity.title = recipe.title;

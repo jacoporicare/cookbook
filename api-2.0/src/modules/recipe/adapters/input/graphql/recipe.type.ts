@@ -63,8 +63,8 @@ export class RecipeType {
     type.sideDish = recipe.sideDish;
     type.creationDate = recipe.createdDate;
     type.lastModifiedDate = recipe.updatedDate;
-    type.ingredients = recipe.ingredients.map(ingredient => IngredientType.fromDomain(ingredient));
-    type.cookedHistory = recipe.cookedRecipes.map(cooked => CookedRecipeType.fromDomain(cooked));
+    type.ingredients = recipe.ingredients.map(IngredientType.fromDomain);
+    type.cookedHistory = recipe.cookedRecipes.map(CookedRecipeType.fromDomain);
 
     return type;
   }

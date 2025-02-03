@@ -24,7 +24,7 @@ export class RecipeResolver {
   async recipes(): Promise<RecipeType[]> {
     const recipes = await this.recipeService.getAllRecipes();
 
-    return recipes.map(recipe => RecipeType.fromDomain(recipe));
+    return recipes.map(RecipeType.fromDomain);
   }
 
   @Query(() => RecipeType, { nullable: true })
