@@ -22,4 +22,8 @@ export class RecipeService {
   async save(recipe: Recipe): Promise<Recipe> {
     return this.repository.save(recipe);
   }
+
+  async delete(id: string): Promise<boolean> {
+    return this.repository.delete(id);
+  }
 }

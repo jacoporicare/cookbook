@@ -49,26 +49,25 @@ export class RecipeResolver {
     @CurrentUser() identity: Identity,
     @Args('recipe') recipe: RecipeInputType,
   ): Promise<RecipeType> {
-    const newRecipe = Recipe.createNew({
-      userId: identity.userId,
-      title: recipe.title,
-      directions: recipe.directions,
-      preparationTime: recipe.preparationTime,
-      servingCount: recipe.servingCount,
-      tags: recipe.tags ?? [],
-      sideDish: recipe.sideDish,
-      ingredients:
-        recipe.ingredients?.map(
-          ingredient =>
-            new Ingredient(
-              ingredient.name,
-              ingredient.amount,
-              ingredient.amountUnit,
-              !!ingredient.isGroup,
-            ),
-        ) ?? [],
-      image: null,
-    });
+    const newRecipe = Recipe.createNew(
+      identity.userId,
+      recipe.title,
+      recipe.directions,
+      recipe.preparationTime,
+      recipe.servingCount,
+      recipe.sideDish,
+      recipe.ingredients?.map(
+        ingredient =>
+          new Ingredient(
+            ingredient.name,
+            ingredient.amount,
+            ingredient.amountUnit,
+            !!ingredient.isGroup,
+          ),
+      ) ?? [],
+      recipe.tags ?? [],
+      null,
+    );
 
     const savedRecipe = await this.recipeService.save(newRecipe);
 
@@ -80,12 +79,39 @@ export class RecipeResolver {
     @Args('id') id: string,
     @Args('recipe') recipe: RecipeInputType,
   ): Promise<RecipeType> {
-    throw new NotImplementedException();
+    const existingRecipe = await this.recipeService.getRecipeById(id);
+
+    if (!existingRecipe) {
+      throw new Error('Recipe not found');
+    }
+
+    existingRecipe.update(
+      recipe.title,
+      recipe.directions,
+      recipe.preparationTime,
+      recipe.servingCount,
+      recipe.sideDish,
+      recipe.ingredients?.map(
+        ingredient =>
+          new Ingredient(
+            ingredient.name,
+            ingredient.amount,
+            ingredient.amountUnit,
+            !!ingredient.isGroup,
+          ),
+      ) ?? [],
+      recipe.tags ?? [],
+      null,
+    );
+
+    const savedRecipe = await this.recipeService.save(existingRecipe);
+
+    return RecipeType.fromDomain(savedRecipe);
   }
 
   @Mutation(() => Boolean)
   async deleteRecipe(@Args('id') id: string): Promise<boolean> {
-    throw new NotImplementedException();
+    return this.recipeService.delete(id);
   }
 
   @Mutation(() => RecipeType)

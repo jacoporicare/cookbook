@@ -33,4 +33,15 @@ export class TypeOrmIngredientRepository implements IIngredientRepository {
         .execute();
     }
   }
+
+  async deleteOrphans(): Promise<void> {
+    await this.repository.query(
+      `DELETE FROM "ingredients"
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM "recipe_ingredients" ri
+        WHERE ri."ingredient_name" = "ingredients"."name"
+      )`,
+    );
+  }
 }

@@ -25,4 +25,15 @@ export class TypeOrmSideDishRepository implements ISideDishRepository {
       await this.repository.save({ name });
     }
   }
+
+  async deleteOrphans(): Promise<void> {
+    await this.repository.query(
+      `DELETE FROM "side_dishes"
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM "recipes" r
+        WHERE r."side_dish_name" = "side_dishes"."name"
+      )`,
+    );
+  }
 }

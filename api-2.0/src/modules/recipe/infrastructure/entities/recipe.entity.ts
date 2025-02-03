@@ -112,17 +112,17 @@ export class RecipeEntity {
       this.directions,
       this.preparationTime,
       this.servingCount,
-      this.tags.map(tag => tag.name).sort((a, b) => a.localeCompare(b, 'cs')),
-      this.image ? new Image(this.image.data, this.image.contentType) : null,
       this.sideDishName,
-      this.createdDate,
-      this.updatedDate,
       [...this.ingredients]
         .sort((a, b) => a.order - b.order)
         .map(ingredient => ingredient.toDomain()),
+      this.tags.map(tag => tag.name).sort((a, b) => a.localeCompare(b, 'cs')),
+      this.image ? new Image(this.image.data, this.image.contentType) : null,
       this.cookedRecipes
         .map(cooked => cooked.toDomain())
         .sort((a, b) => a.date.getTime() - b.date.getTime()),
+      this.createdDate,
+      this.updatedDate,
     );
   }
 

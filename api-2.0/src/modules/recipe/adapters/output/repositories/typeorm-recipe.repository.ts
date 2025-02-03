@@ -15,12 +15,15 @@ import {
   ISideDishRepositoryToken,
 } from '@/modules/recipe/domain/ports/side-dish.repository';
 import { ITagRepository, ITagRepositoryToken } from '@/modules/recipe/domain/ports/tag.repository';
+import { RecipeIngredientEntity } from '@/modules/recipe/infrastructure/entities/recipe-ingredient.entity';
 
 @Injectable()
 export class TypeOrmRecipeRepository implements IRecipeRepository {
   constructor(
     @InjectRepository(RecipeEntity)
     private readonly repository: Repository<RecipeEntity>,
+    @InjectRepository(RecipeIngredientEntity)
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
     @Inject(IIngredientRepositoryToken)
     private readonly ingredientRepository: IIngredientRepository,
     @Inject(ISideDishRepositoryToken)
@@ -57,11 +60,17 @@ export class TypeOrmRecipeRepository implements IRecipeRepository {
       recipe.ingredients.map(ingredient => ingredient.name),
     );
 
-    const entity = RecipeEntity.fromDomain(recipe);
+    await this.recipeIngredientRepository.delete({ recipe: { id: recipe.id } });
 
-    const updatedEntity = await this.repository.save(entity);
+    let entity = RecipeEntity.fromDomain(recipe);
+    await this.repository.save(entity);
+    entity = await this.repository.findOneByOrFail({ id: recipe.id });
 
-    return updatedEntity.toDomain();
+    await this.sideDishRepository.deleteOrphans();
+    await this.tagRepository.deleteOrphans();
+    await this.ingredientRepository.deleteOrphans();
+
+    return entity.toDomain();
   }
 
   async delete(id: string): Promise<boolean> {

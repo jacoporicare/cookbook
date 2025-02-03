@@ -14,36 +14,67 @@ export class Recipe {
     public directions: string | null,
     public preparationTime: number | null,
     public servingCount: number | null,
+    public sideDish: string | null,
+    public ingredients: Ingredient[],
     public tags: string[],
     public image: Image | null,
-    public sideDish: string | null,
+    public cookedRecipes: CookedRecipe[],
     public createdDate: Date,
     public updatedDate: Date,
-    public ingredients: Ingredient[],
-    public cookedRecipes: CookedRecipe[],
   ) {}
 
   static createNew(
-    props: Omit<Recipe, 'id' | 'slug' | 'createdDate' | 'updatedDate' | 'cookedRecipes'>,
+    userId: string | null,
+    title: string,
+    directions: string | null,
+    preparationTime: number | null,
+    servingCount: number | null,
+    sideDish: string | null,
+    ingredients: Ingredient[],
+    tags: string[],
+    image: Image | null,
   ): Recipe {
     const id = uuidv4();
-    const slug = slugify(props.title);
+    const slug = slugify(title);
 
     return new Recipe(
       id,
-      props.userId,
-      props.title,
+      userId,
+      title,
       slug,
-      props.directions,
-      props.preparationTime,
-      props.servingCount,
-      props.tags,
-      props.image,
-      props.sideDish,
-      new Date(),
-      new Date(),
-      props.ingredients,
+      directions,
+      preparationTime,
+      servingCount,
+      sideDish,
+      ingredients,
+      tags,
+      image,
       [],
+      new Date(),
+      new Date(),
     );
+  }
+
+  update(
+    title: string,
+    directions: string | null,
+    preparationTime: number | null,
+    servingCount: number | null,
+    sideDish: string | null,
+    ingredients: Ingredient[],
+    tags: string[],
+    image: Image | null,
+  ): Recipe {
+    this.title = title;
+    this.slug = slugify(title);
+    this.directions = directions;
+    this.preparationTime = preparationTime;
+    this.servingCount = servingCount;
+    this.sideDish = sideDish;
+    this.ingredients = ingredients;
+    this.tags = tags;
+    this.image = image;
+
+    return this;
   }
 }

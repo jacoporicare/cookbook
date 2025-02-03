@@ -28,4 +28,15 @@ export class TypeOrmTagRepository implements ITagRepository {
       await this.repository.createQueryBuilder().insert().into(TagEntity).values(missing).execute();
     }
   }
+
+  async deleteOrphans(): Promise<void> {
+    await this.repository.query(
+      `DELETE FROM "tags"
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM "recipes_tags_tags" rt
+        WHERE rt."tags_name" = "tags"."name"
+      )`,
+    );
+  }
 }
