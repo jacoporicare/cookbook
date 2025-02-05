@@ -1,6 +1,7 @@
 import { NotImplementedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
+import { ImageType } from '../graphql/image.type';
 import { RecipeInputType } from '../graphql/recipe-input.type';
 import { RecipeType } from '../graphql/recipe.type';
 
@@ -129,16 +130,32 @@ export class RecipeResolver {
 
   @ResolveField('user', () => UserType, { nullable: true })
   async user(@Parent() recipe: RecipeType): Promise<UserType | null> {
-    if (!recipe.userId) {
+    if (!recipe._domainRecipe.userId) {
       return null;
     }
 
-    const user = await this.userService.findById(recipe.userId);
+    const user = await this.userService.findById(recipe._domainRecipe.userId);
 
     if (!user) {
       return null;
     }
 
     return UserType.fromDomain(user);
+  }
+
+  @ResolveField('image', () => ImageType, { nullable: true })
+  async image(@Parent() recipe: RecipeType): Promise<ImageType | null> {
+    if (!recipe._domainRecipe.image) {
+      return null;
+    }
+
+    const { storageKey, thumbnail } = recipe._domainRecipe.image;
+
+    const url = await this.recipeService.generatePresignedDownloadUrl(storageKey);
+
+    return {
+      url,
+      thumbnailUrl: thumbnail,
+    };
   }
 }

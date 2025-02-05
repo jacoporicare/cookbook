@@ -17,10 +17,10 @@ export class S3StorageAdapter implements IStorage {
   }
 
   async generatePresignedUploadUrl(
-    folder: string,
+    prefix: string,
     mimeType: string,
   ): Promise<{ url: string; method: string }> {
-    const key = `${folder}/${Date.now()}`;
+    const key = `${prefix}-${Date.now()}`;
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,

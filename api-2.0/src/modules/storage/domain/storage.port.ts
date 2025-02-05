@@ -1,6 +1,6 @@
 export interface IStorage {
   generatePresignedUploadUrl(
-    folder: string,
+    prefix: string,
     mimeType: string,
   ): Promise<{ url: string; method: string }>;
 

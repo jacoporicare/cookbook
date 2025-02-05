@@ -1,6 +1,9 @@
 export class Image {
   constructor(
-    public data: Buffer,
-    public contentType: string,
+    public fileName: string,
+    public storageKey: string,
+    public mimeType: string,
+    public size: number,
+    public thumbnail: string,
   ) {}
 }

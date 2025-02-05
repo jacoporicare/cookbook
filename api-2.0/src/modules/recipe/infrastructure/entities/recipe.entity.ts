@@ -15,7 +15,6 @@ import {
 } from 'typeorm';
 
 import { Recipe } from '../../domain/entities/recipe';
-import { Image } from '../../domain/value-objects/image';
 
 import { CookedRecipeEntity } from './cooked-recipe.entity';
 import { RecipeImageEntity } from './recipe-image.entity';
@@ -117,7 +116,7 @@ export class RecipeEntity {
         .sort((a, b) => a.order - b.order)
         .map(ingredient => ingredient.toDomain()),
       this.tags.map(tag => tag.name).sort((a, b) => a.localeCompare(b, 'cs')),
-      this.image ? new Image(this.image.data, this.image.contentType) : null,
+      this.image?.toDomain() ?? null,
       this.cookedRecipes
         .map(cooked => cooked.toDomain())
         .sort((a, b) => a.date.getTime() - b.date.getTime()),

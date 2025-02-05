@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 import { CookedRecipeType } from './cooked-recipe.type';
+import { ImageType } from './image.type';
 import { IngredientType } from './ingredient.type';
 
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
@@ -10,12 +11,6 @@ import { UserType } from '@/modules/user/adapters/input/graphql/user.type';
 export class RecipeType {
   @Field(() => ID)
   id!: string;
-
-  userId!: string | null;
-
-  // Resolved field
-  @Field(() => UserType, { nullable: true })
-  user!: UserType | null;
 
   @Field()
   title!: string;
@@ -50,10 +45,20 @@ export class RecipeType {
   @Field(() => [CookedRecipeType])
   cookedHistory!: CookedRecipeType[];
 
+  // Resolved field
+  @Field(() => UserType, { nullable: true })
+  user!: UserType | null;
+
+  // Resolved field
+  @Field(() => ImageType, { nullable: true })
+  image!: ImageType | null;
+
+  _domainRecipe!: Recipe;
+
   static fromDomain(recipe: Recipe): RecipeType {
     const type = new RecipeType();
+    type._domainRecipe = recipe;
     type.id = recipe.id;
-    type.userId = recipe.userId;
     type.title = recipe.title;
     type.slug = recipe.slug;
     type.directions = recipe.directions;
