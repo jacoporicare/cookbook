@@ -1,11 +1,8 @@
 import { Env } from '@applifting-io/nestjs-decorated-config';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class Config {
-  constructor(private readonly configService: ConfigService) {}
-
   @Env('DB_HOST', { expose: true })
   readonly dbHost!: string;
 
@@ -30,8 +27,11 @@ export class Config {
   @Env('GRAPHQL_PLAYGROUND', { expose: true })
   readonly graphqlPlayground!: boolean;
 
-  @Env('JWT_SECRET')
-  readonly jwtSecret!: string;
+  @Env('ACCESS_TOKEN_SECRET')
+  readonly accessTokenSecret!: string;
+
+  @Env('REFRESH_TOKEN_SECRET')
+  readonly refreshTokenSecret!: string;
 
   @Env('AWS_REGION', { expose: true })
   readonly awsRegion!: string;

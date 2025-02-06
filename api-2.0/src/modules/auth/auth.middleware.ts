@@ -1,5 +1,3 @@
-// auth.middleware.ts
-
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
@@ -20,8 +18,8 @@ export class AuthMiddleware implements NestMiddleware {
       const authorization = req.headers.authorization;
 
       if (authorization?.toLowerCase().startsWith('bearer ')) {
-        const token = authorization.slice(7);
-        const identity = await this.authService.verifyToken(token);
+        const accessToken = authorization.slice(7);
+        const identity = await this.authService.verifyAccessToken(accessToken);
 
         this.requestIdentity.set(identity);
       }

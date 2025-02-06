@@ -9,11 +9,11 @@ import { UserEntity } from './infrastructure/orm/user.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   providers: [
+    UserService,
     {
       provide: IUserRepositoryToken,
       useClass: TypeOrmUserRepository,
     },
-    UserService,
   ],
   exports: [UserService],
 })

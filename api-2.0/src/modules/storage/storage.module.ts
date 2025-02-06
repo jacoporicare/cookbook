@@ -1,5 +1,5 @@
+import { ConfigModule } from '@applifting-io/nestjs-decorated-config';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 
 import { IStorageToken } from './domain/storage.port';
 import { S3StorageAdapter } from './infrastructure/s3-storage.adapter';

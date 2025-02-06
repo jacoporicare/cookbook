@@ -1,13 +1,13 @@
 import { NotImplementedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { ImageType } from '../graphql/image.type';
 import { RecipeInputType } from '../graphql/recipe-input.type';
 import { RecipeType } from '../graphql/recipe.type';
 
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import { Identity } from '@/modules/auth/domain/identity';
 import { AuthGuard } from '@/modules/auth/guards/auth.guard';
+import { ImageService } from '@/modules/recipe/application/image.service';
 import { RecipeService } from '@/modules/recipe/application/recipe.service';
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { Ingredient } from '@/modules/recipe/domain/value-objects/ingredient';
@@ -18,6 +18,7 @@ import { UserService } from '@/modules/user/application/user.service';
 export class RecipeResolver {
   constructor(
     private readonly recipeService: RecipeService,
+    private readonly imageService: ImageService,
     private readonly userService: UserService,
   ) {}
 
@@ -50,76 +51,35 @@ export class RecipeResolver {
     @CurrentUser() identity: Identity,
     @Args('recipe') recipe: RecipeInputType,
   ): Promise<RecipeType> {
-    const newRecipe = Recipe.createNew(
-      identity.userId,
-      recipe.title,
-      recipe.directions,
-      recipe.preparationTime,
-      recipe.servingCount,
-      recipe.sideDish,
-      recipe.ingredients?.map(
-        ingredient =>
-          new Ingredient(
-            ingredient.name,
-            ingredient.amount,
-            ingredient.amountUnit,
-            !!ingredient.isGroup,
-          ),
-      ) ?? [],
-      recipe.tags ?? [],
-      null,
-    );
+    const newRecipe = await this.recipeService.create(identity, recipe);
 
-    const savedRecipe = await this.recipeService.save(newRecipe);
-
-    return RecipeType.fromDomain(savedRecipe);
+    return RecipeType.fromDomain(newRecipe);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => RecipeType)
   async updateRecipe(
     @Args('id') id: string,
     @Args('recipe') recipe: RecipeInputType,
   ): Promise<RecipeType> {
-    const existingRecipe = await this.recipeService.getRecipeById(id);
+    const updatedRecipe = await this.recipeService.update(id, recipe);
 
-    if (!existingRecipe) {
-      throw new Error('Recipe not found');
-    }
-
-    existingRecipe.update(
-      recipe.title,
-      recipe.directions,
-      recipe.preparationTime,
-      recipe.servingCount,
-      recipe.sideDish,
-      recipe.ingredients?.map(
-        ingredient =>
-          new Ingredient(
-            ingredient.name,
-            ingredient.amount,
-            ingredient.amountUnit,
-            !!ingredient.isGroup,
-          ),
-      ) ?? [],
-      recipe.tags ?? [],
-      null,
-    );
-
-    const savedRecipe = await this.recipeService.save(existingRecipe);
-
-    return RecipeType.fromDomain(savedRecipe);
+    return RecipeType.fromDomain(updatedRecipe);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async deleteRecipe(@Args('id') id: string): Promise<boolean> {
     return this.recipeService.delete(id);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => RecipeType)
   async recipeCooked(@Args('id') id: string, @Args('date') date: Date): Promise<RecipeType> {
     throw new NotImplementedException();
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => RecipeType)
   async deleteRecipeCooked(
     @Args('recipeId') recipeId: string,
@@ -143,19 +103,14 @@ export class RecipeResolver {
     return UserType.fromDomain(user);
   }
 
-  @ResolveField('image', () => ImageType, { nullable: true })
-  async image(@Parent() recipe: RecipeType): Promise<ImageType | null> {
+  @ResolveField('imageUrl', () => String, { nullable: true })
+  async imageUrl(@Parent() recipe: RecipeType): Promise<string | null> {
     if (!recipe._domainRecipe.image) {
       return null;
     }
 
-    const { storageKey, thumbnail } = recipe._domainRecipe.image;
+    const { storageKey } = recipe._domainRecipe.image;
 
-    const url = await this.recipeService.generatePresignedDownloadUrl(storageKey);
-
-    return {
-      url,
-      thumbnailUrl: thumbnail,
-    };
+    return this.imageService.generatePresignedDownloadUrl(storageKey);
   }
 }

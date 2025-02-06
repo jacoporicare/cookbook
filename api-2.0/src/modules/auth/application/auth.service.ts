@@ -1,26 +1,39 @@
-import { Inject, Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { Identity } from '../domain/identity';
 import { IAuthRepository, IAuthRepositoryToken } from '../domain/ports/auth.repository';
 
 import { Config } from '@/config';
 
+export type Tokens = { accessToken: string; refreshToken: string };
+
+export type TokenPayload = { userId: string };
+
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly jwtService: JwtService,
     private readonly config: Config,
     @Inject(IAuthRepositoryToken) private readonly repository: IAuthRepository,
   ) {}
 
-  signToken(identity: Identity): string {
-    return jwt.sign({ userId: identity.userId }, this.config.jwtSecret, { expiresIn: '1y' });
+  async login(username: string, password: string): Promise<Tokens> {
+    const user = await this.repository.findByUsername(username);
+
+    if (!user || !(await user.verifyPassword(password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return this.generateTokens(user.id);
   }
 
-  async verifyToken(token: string): Promise<Identity | null> {
+  async verifyAccessToken(accessToken: string): Promise<Identity | null> {
     try {
-      const decoded = jwt.verify(token, this.config.jwtSecret) as unknown as { userId: string };
-      const user = await this.repository.findById(decoded.userId);
+      const payload = this.jwtService.verify<TokenPayload>(accessToken, {
+        secret: this.config.accessTokenSecret,
+      });
+      const user = await this.repository.findById(payload.userId);
 
       return user?.toIdentity() ?? null;
     } catch (err) {
@@ -28,13 +41,29 @@ export class AuthService {
     }
   }
 
-  async verifyCredentials(username: string, password: string): Promise<Identity | null> {
-    const user = await this.repository.findByUsername(username);
+  async refreshAccessToken(refreshToken: string): Promise<Tokens> {
+    try {
+      const payload = this.jwtService.verify<TokenPayload>(refreshToken, {
+        secret: process.env.REFRESH_TOKEN_SECRET,
+      });
 
-    if (!user || !(await user.verifyPassword(password))) {
-      return null;
+      return this.generateTokens(payload.userId);
+    } catch (err) {
+      throw new UnauthorizedException('Invalid refresh token');
     }
+  }
 
-    return user.toIdentity();
+  private generateTokens(userId: string): Tokens {
+    const accessToken = this.jwtService.sign(
+      { userId },
+      { secret: this.config.accessTokenSecret, expiresIn: '1h' },
+    );
+
+    const refreshToken = this.jwtService.sign(
+      { userId },
+      { secret: this.config.refreshTokenSecret, expiresIn: '30d' },
+    );
+
+    return { accessToken, refreshToken };
   }
 }

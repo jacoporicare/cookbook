@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { StorageModule } from '../storage/storage.module';
 import { UserModule } from '../user/user.module';
 
+import { ImageResolver } from './adapters/input/resolvers/image.resolver';
 import { IngredientResolver } from './adapters/input/resolvers/ingredient.resolver';
 import { RecipeResolver } from './adapters/input/resolvers/recipe.resolver';
 import { SideDishResolver } from './adapters/input/resolvers/side-dish.resolver';
@@ -11,6 +13,7 @@ import { TypeOrmIngredientRepository } from './adapters/output/repositories/type
 import { TypeOrmRecipeRepository } from './adapters/output/repositories/typeorm-recipe.repository';
 import { TypeOrmSideDishRepository } from './adapters/output/repositories/typeorm-side-dish.repository';
 import { TypeOrmTagRepository } from './adapters/output/repositories/typeorm-tag.repository';
+import { ImageService } from './application/image.service';
 import { IngredientService } from './application/ingredient.service';
 import { RecipeService } from './application/recipe.service';
 import { SideDishService } from './application/side-dish.service';
@@ -38,9 +41,20 @@ import { TagEntity } from './infrastructure/entities/tag.entity';
       SideDishEntity,
       TagEntity,
     ]),
+    StorageModule,
     UserModule,
   ],
   providers: [
+    RecipeService,
+    RecipeResolver,
+    ImageService,
+    ImageResolver,
+    IngredientService,
+    IngredientResolver,
+    TagService,
+    TagResolver,
+    SideDishService,
+    SideDishResolver,
     {
       provide: IRecipeRepositoryToken,
       useClass: TypeOrmRecipeRepository,
@@ -57,14 +71,6 @@ import { TagEntity } from './infrastructure/entities/tag.entity';
       provide: ITagRepositoryToken,
       useClass: TypeOrmTagRepository,
     },
-    RecipeService,
-    RecipeResolver,
-    IngredientService,
-    IngredientResolver,
-    TagService,
-    TagResolver,
-    SideDishService,
-    SideDishResolver,
   ],
 })
 export class RecipeModule {}

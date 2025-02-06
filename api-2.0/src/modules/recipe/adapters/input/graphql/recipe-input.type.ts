@@ -24,4 +24,7 @@ export class RecipeInputType {
 
   @Field(() => [String], { nullable: true })
   tags!: string[] | null;
+
+  @Field(() => String, { nullable: true })
+  imageStorageKey!: string | null;
 }

@@ -1,7 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 import { CookedRecipeType } from './cooked-recipe.type';
-import { ImageType } from './image.type';
 import { IngredientType } from './ingredient.type';
 
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
@@ -33,6 +32,9 @@ export class RecipeType {
   @Field(() => String, { nullable: true })
   sideDish!: string | null;
 
+  @Field(() => String, { nullable: true })
+  imageThumbnailUrl!: string | null;
+
   @Field()
   creationDate!: Date;
 
@@ -50,8 +52,8 @@ export class RecipeType {
   user!: UserType | null;
 
   // Resolved field
-  @Field(() => ImageType, { nullable: true })
-  image!: ImageType | null;
+  @Field(() => String, { nullable: true })
+  imageUrl!: string | null;
 
   _domainRecipe!: Recipe;
 
@@ -66,6 +68,7 @@ export class RecipeType {
     type.servingCount = recipe.servingCount;
     type.tags = recipe.tags;
     type.sideDish = recipe.sideDish;
+    type.imageThumbnailUrl = recipe.image?.thumbnail ?? null;
     type.creationDate = recipe.createdDate;
     type.lastModifiedDate = recipe.updatedDate;
     type.ingredients = recipe.ingredients.map(IngredientType.fromDomain);

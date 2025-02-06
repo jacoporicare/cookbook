@@ -2,10 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AuthPayload {
-  token: String!
-}
-
 type User {
   id: ID!
   username: String!
@@ -32,7 +28,6 @@ type Ingredient {
 
 type Recipe {
   id: ID!
-  user: User
   title: String!
   slug: String!
   directions: String
@@ -40,10 +35,13 @@ type Recipe {
   servingCount: Int
   tags: [String!]!
   sideDish: String
+  imageThumbnailUrl: String
   creationDate: DateTime!
   lastModifiedDate: DateTime!
   ingredients: [Ingredient!]!
   cookedHistory: [CookedRecipe!]!
+  user: User
+  imageUrl: String
 }
 
 type Query {
@@ -56,12 +54,12 @@ type Query {
 }
 
 type Mutation {
-  login(username: String!, password: String!): AuthPayload!
   createRecipe(recipe: RecipeInput!): Recipe!
   updateRecipe(id: String!, recipe: RecipeInput!): Recipe!
   deleteRecipe(id: String!): Boolean!
   recipeCooked(id: String!, date: DateTime!): Recipe!
   deleteRecipeCooked(recipeId: String!, cookedId: String!): Recipe!
+  generatePresignedUploadUrl(fileName: String!, mimeType: String!): String!
 }
 
 input RecipeInput {
@@ -72,6 +70,7 @@ input RecipeInput {
   servingCount: Int
   ingredients: [IngredientInput!]
   tags: [String!]
+  imageStorageKey: String
 }
 
 input IngredientInput {

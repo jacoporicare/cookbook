@@ -1,9 +1,11 @@
+import { ConfigModule } from '@applifting-io/nestjs-decorated-config';
 import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CookbookConfigModule } from '../config.module';
 import { UserEntity } from '../user/infrastructure/orm/user.entity';
 
+import { AuthController } from './adapters/input/controllers/auth.controller';
 import { AuthResolver } from './adapters/input/resolvers/auth.resolver';
 import { TypeOrmAuthRepository } from './adapters/output/repositories/typeorm-auth.repository';
 import { AuthService } from './application/auth.service';
@@ -14,20 +16,21 @@ import { requestIdentity } from './request-identity';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), CookbookConfigModule],
+  imports: [TypeOrmModule.forFeature([UserEntity]), ConfigModule, JwtModule],
   providers: [
+    AuthService,
+    AuthMiddleware,
+    AuthResolver,
     {
       provide: IAuthRepositoryToken,
       useClass: TypeOrmAuthRepository,
     },
-    AuthService,
-    AuthMiddleware,
     {
       provide: RequestIdentityToken,
       useValue: requestIdentity,
     },
-    AuthResolver,
   ],
+  controllers: [AuthController],
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer): void {

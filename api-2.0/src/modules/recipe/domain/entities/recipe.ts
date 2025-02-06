@@ -30,9 +30,9 @@ export class Recipe {
     preparationTime: number | null,
     servingCount: number | null,
     sideDish: string | null,
+    image: Image | null,
     ingredients: Ingredient[],
     tags: string[],
-    image: Image | null,
   ): Recipe {
     const id = uuidv4();
     const slug = slugify(title);
@@ -63,7 +63,6 @@ export class Recipe {
     sideDish: string | null,
     ingredients: Ingredient[],
     tags: string[],
-    image: Image | null,
   ): Recipe {
     this.title = title;
     this.slug = slugify(title);
@@ -73,6 +72,11 @@ export class Recipe {
     this.sideDish = sideDish;
     this.ingredients = ingredients;
     this.tags = tags;
+
+    return this;
+  }
+
+  updateImage(image: Image): Recipe {
     this.image = image;
 
     return this;
