@@ -112,4 +112,15 @@ export class RecipeResolver {
 
     return this.imageService.generatePresignedDownloadUrl(storageKey);
   }
+
+  @ResolveField('imageThumbnailUrl', () => String, { nullable: true })
+  async imageThumbnailUrl(@Parent() recipe: RecipeType): Promise<string | null> {
+    if (!recipe._domainRecipe.image) {
+      return null;
+    }
+
+    const { thumbnailStorageKey } = recipe._domainRecipe.image;
+
+    return this.imageService.generatePresignedDownloadUrl(thumbnailStorageKey);
+  }
 }

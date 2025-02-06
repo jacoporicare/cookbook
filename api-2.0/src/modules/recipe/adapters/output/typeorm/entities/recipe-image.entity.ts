@@ -11,19 +11,16 @@ export class RecipeImageEntity {
   recipeId!: string;
 
   @Column('varchar', { length: 255 })
-  fileName!: string;
-
-  @Column('varchar', { length: 255 })
   storageKey!: string;
 
   @Column('varchar', { length: 255 })
   mimeType!: string;
 
-  @Column('int')
-  size!: number;
+  @Column('varchar', { length: 255 })
+  thumbnailStorageKey!: string;
 
-  @Column('text')
-  thumbnail!: string;
+  @Column('varchar', { length: 255 })
+  thumbnailMimeType!: string;
 
   @OneToOne(() => RecipeEntity, recipe => recipe.image, {
     nullable: false,
@@ -33,16 +30,20 @@ export class RecipeImageEntity {
   recipe?: RecipeEntity;
 
   toDomain(): Image {
-    return new Image(this.fileName, this.storageKey, this.mimeType, this.size, this.thumbnail);
+    return new Image(
+      this.storageKey,
+      this.mimeType,
+      this.thumbnailStorageKey,
+      this.thumbnailMimeType,
+    );
   }
 
   static fromDomain(image: Image): RecipeImageEntity {
     const entity = new RecipeImageEntity();
-    entity.fileName = image.fileName;
     entity.storageKey = image.storageKey;
     entity.mimeType = image.mimeType;
-    entity.size = image.size;
-    entity.thumbnail = image.thumbnail;
+    entity.thumbnailStorageKey = image.thumbnailStorageKey;
+    entity.thumbnailMimeType = image.thumbnailMimeType;
 
     return entity;
   }

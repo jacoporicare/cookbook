@@ -12,8 +12,8 @@ import {
 import { User } from '../../domain/entities/user';
 import { Password } from '../../domain/value-objects/password';
 
-import { CookedRecipeEntity } from '@/modules/recipe/infrastructure/entities/cooked-recipe.entity';
-import { RecipeEntity } from '@/modules/recipe/infrastructure/entities/recipe.entity';
+import { CookedRecipeEntity } from '@/modules/recipe/adapters/output/typeorm/entities/cooked-recipe.entity';
+import { RecipeEntity } from '@/modules/recipe/adapters/output/typeorm/entities/recipe.entity';
 
 @Entity('users')
 export class UserEntity {

@@ -1,5 +1,5 @@
 export interface IStorage {
-  generatePresignedUploadUrl(fileName: string, mimeType: string): Promise<string>;
+  generatePresignedUploadUrl(mimeType: string): Promise<FileUpload>;
 
   generatePresignedDownloadUrl(key: string): Promise<string>;
 
@@ -7,13 +7,18 @@ export interface IStorage {
 
   getObject(key: string): Promise<Uint8Array>;
 
+  putObject(mimeType: string, data: Buffer): Promise<string>;
+
   deleteObject(key: string): Promise<void>;
 }
 
 export const IStorageToken = Symbol('IStorage');
 
 export type ObjectInfo = {
-  size: number;
-  fileName: string | null;
   contentType: string | null;
+};
+
+export type FileUpload = {
+  key: string;
+  url: string;
 };

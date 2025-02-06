@@ -8,9 +8,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable } from '@nestjs/common';
+import { extension } from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
 
-import { IStorage, ObjectInfo } from '../domain/storage.port';
+import { FileUpload, IStorage, ObjectInfo } from '../domain/storage.port';
 
 import { Config } from '@/config';
 
@@ -22,20 +23,19 @@ export class S3StorageAdapter implements IStorage {
     this.s3Client = new S3Client({ region: config.awsRegion });
   }
 
-  async generatePresignedUploadUrl(fileName: string, mimeType: string): Promise<string> {
-    const ext = fileName.split('.').pop();
+  async generatePresignedUploadUrl(mimeType: string): Promise<FileUpload> {
+    const ext = extension(mimeType);
     const key = `${uuidv4()}.${ext}`;
 
     const command = new PutObjectCommand({
       Bucket: this.config.awsS3Bucket,
       Key: key,
       ContentType: mimeType,
-      Metadata: {
-        filename: fileName,
-      },
     });
 
-    return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+    const url = await getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+
+    return { key, url };
   }
 
   async generatePresignedDownloadUrl(key: string): Promise<string> {
@@ -57,8 +57,6 @@ export class S3StorageAdapter implements IStorage {
       const output = await this.s3Client.send(command);
 
       return {
-        size: output.ContentLength ?? 0,
-        fileName: output.Metadata?.filename ?? null,
         contentType: output.ContentType ?? null,
       };
     } catch (err) {
@@ -83,6 +81,22 @@ export class S3StorageAdapter implements IStorage {
     }
 
     return response.Body?.transformToByteArray();
+  }
+
+  async putObject(mimeType: string, data: Buffer): Promise<string> {
+    const ext = extension(mimeType);
+    const key = `${uuidv4()}.${ext}`;
+
+    const command = new PutObjectCommand({
+      Bucket: this.config.awsS3Bucket,
+      Key: key,
+      ContentType: mimeType,
+      Body: data,
+    });
+
+    await this.s3Client.send(command);
+
+    return key;
   }
 
   async deleteObject(key: string): Promise<void> {

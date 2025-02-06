@@ -32,9 +32,6 @@ export class RecipeType {
   @Field(() => String, { nullable: true })
   sideDish!: string | null;
 
-  @Field(() => String, { nullable: true })
-  imageThumbnailUrl!: string | null;
-
   @Field()
   creationDate!: Date;
 
@@ -55,6 +52,10 @@ export class RecipeType {
   @Field(() => String, { nullable: true })
   imageUrl!: string | null;
 
+  // Resolved field
+  @Field(() => String, { nullable: true })
+  imageThumbnailUrl!: string | null;
+
   _domainRecipe!: Recipe;
 
   static fromDomain(recipe: Recipe): RecipeType {
@@ -68,7 +69,6 @@ export class RecipeType {
     type.servingCount = recipe.servingCount;
     type.tags = recipe.tags;
     type.sideDish = recipe.sideDish;
-    type.imageThumbnailUrl = recipe.image?.thumbnail ?? null;
     type.creationDate = recipe.createdDate;
     type.lastModifiedDate = recipe.updatedDate;
     type.ingredients = recipe.ingredients.map(IngredientType.fromDomain);

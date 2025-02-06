@@ -3,7 +3,7 @@ import * as sharp from 'sharp';
 
 import { Image } from '../domain/value-objects/image';
 
-import { IStorage, IStorageToken } from '@/modules/storage/domain/storage.port';
+import { IStorage, IStorageToken, FileUpload } from '@/modules/storage/domain/storage.port';
 
 @Injectable()
 export class ImageService {
@@ -13,8 +13,8 @@ export class ImageService {
     return this.storage.generatePresignedDownloadUrl(key);
   }
 
-  async generatePresignedUploadUrl(fileName: string, mimeType: string): Promise<string> {
-    return this.storage.generatePresignedUploadUrl(fileName, mimeType);
+  async generatePresignedUploadUrl(mimeType: string): Promise<FileUpload> {
+    return this.storage.generatePresignedUploadUrl(mimeType);
   }
 
   async create(storageKey: string): Promise<Image> {
@@ -25,25 +25,23 @@ export class ImageService {
     }
 
     const mimeType = info.contentType ?? 'image/jpeg';
-    const thumbnail = await this.generateThumbnail(storageKey);
 
-    return new Image(info.fileName ?? storageKey, storageKey, mimeType, info.size, thumbnail);
-  }
-
-  async delete(storageKey: string): Promise<void> {
-    await this.storage.deleteObject(storageKey);
-  }
-
-  async generateThumbnail(storageKey: string): Promise<string> {
-    const data = await this.storage.getObject(storageKey);
-    const resizedBuffer = await sharp(data)
+    const obj = await this.storage.getObject(storageKey);
+    const thumbnail = await sharp(obj)
       .rotate()
+      .webp()
       .resize({
         width: 800,
         height: 800,
       })
       .toBuffer();
 
-    return resizedBuffer.toString('base64');
+    const thumbStorageKey = await this.storage.putObject('image/webp', thumbnail);
+
+    return new Image(storageKey, mimeType, thumbStorageKey, 'image/webp');
+  }
+
+  async delete(storageKey: string): Promise<void> {
+    await this.storage.deleteObject(storageKey);
   }
 }

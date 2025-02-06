@@ -15,6 +15,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FileUpload {
+  key: String!
+  url: String!
+}
+
 type CookedRecipe {
   date: DateTime!
 }
@@ -35,13 +40,13 @@ type Recipe {
   servingCount: Int
   tags: [String!]!
   sideDish: String
-  imageThumbnailUrl: String
   creationDate: DateTime!
   lastModifiedDate: DateTime!
   ingredients: [Ingredient!]!
   cookedHistory: [CookedRecipe!]!
   user: User
   imageUrl: String
+  imageThumbnailUrl: String
 }
 
 type Query {
@@ -59,7 +64,7 @@ type Mutation {
   deleteRecipe(id: String!): Boolean!
   recipeCooked(id: String!, date: DateTime!): Recipe!
   deleteRecipeCooked(recipeId: String!, cookedId: String!): Recipe!
-  generatePresignedUploadUrl(fileName: String!, mimeType: String!): String!
+  generatePresignedUploadUrl(mimeType: String!): FileUpload!
 }
 
 input RecipeInput {

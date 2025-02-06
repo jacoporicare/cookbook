@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { RecipeInputType } from '../adapters/input/graphql/types/recipe-input.type';
 import { Recipe } from '../domain/entities/recipe';
+import { Image } from '../domain/value-objects/image';
 import { Ingredient } from '../domain/value-objects/ingredient';
 import { IRecipeRepository, IRecipeRepositoryToken } from '../ports/output/recipe.repository';
 
@@ -83,18 +84,19 @@ export class RecipeService {
       .updateIngredients(ingredients ?? [])
       .updateTags(recipe.tags ?? []);
 
-    let existingImageStorageKey: string | undefined;
+    let existingImage: Image | null = null;
 
     if (recipe.imageStorageKey) {
-      existingImageStorageKey = existingRecipe.image?.storageKey;
+      existingImage = existingRecipe.image;
       const image = await this.imageService.create(recipe.imageStorageKey);
       existingRecipe.updateImage(image);
     }
 
     const updatedRecipe = await this.repository.save(existingRecipe);
 
-    if (existingImageStorageKey) {
-      await this.imageService.delete(existingImageStorageKey);
+    if (existingImage) {
+      await this.imageService.delete(existingImage.storageKey);
+      await this.imageService.delete(existingImage.thumbnailStorageKey);
     }
 
     return updatedRecipe;
