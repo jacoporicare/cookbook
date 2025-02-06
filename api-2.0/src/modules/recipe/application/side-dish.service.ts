@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  ISideDishRepository,
   ISideDishRepositoryToken,
-} from '../domain/ports/side-dish.repository';
+  ISideDishRepository,
+} from '../ports/output/side-dish.repository';
 
 @Injectable()
 export class SideDishService {

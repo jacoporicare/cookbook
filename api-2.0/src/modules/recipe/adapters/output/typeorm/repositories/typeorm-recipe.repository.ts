@@ -2,20 +2,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { RecipeEntity } from '../../../infrastructure/entities/recipe.entity';
+import { RecipeIngredientEntity } from '../entities/recipe-ingredient.entity';
+import { RecipeEntity } from '../entities/recipe.entity';
 
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import {
-  IIngredientRepository,
   IIngredientRepositoryToken,
-} from '@/modules/recipe/domain/ports/ingredient.repository';
-import { IRecipeRepository } from '@/modules/recipe/domain/ports/recipe.repository';
+  IIngredientRepository,
+} from '@/modules/recipe/ports/output/ingredient.repository';
+import { IRecipeRepository } from '@/modules/recipe/ports/output/recipe.repository';
 import {
-  ISideDishRepository,
   ISideDishRepositoryToken,
-} from '@/modules/recipe/domain/ports/side-dish.repository';
-import { ITagRepository, ITagRepositoryToken } from '@/modules/recipe/domain/ports/tag.repository';
-import { RecipeIngredientEntity } from '@/modules/recipe/infrastructure/entities/recipe-ingredient.entity';
+  ISideDishRepository,
+} from '@/modules/recipe/ports/output/side-dish.repository';
+import { ITagRepositoryToken, ITagRepository } from '@/modules/recipe/ports/output/tag.repository';
 
 @Injectable()
 export class TypeOrmRecipeRepository implements IRecipeRepository {

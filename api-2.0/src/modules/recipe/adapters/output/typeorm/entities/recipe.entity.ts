@@ -14,14 +14,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Recipe } from '../../domain/entities/recipe';
-
 import { CookedRecipeEntity } from './cooked-recipe.entity';
 import { RecipeImageEntity } from './recipe-image.entity';
 import { RecipeIngredientEntity } from './recipe-ingredient.entity';
 import { SideDishEntity } from './side-dish.entity';
 import { TagEntity } from './tag.entity';
 
+import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { UserEntity } from '@/modules/user/infrastructure/orm/user.entity';
 
 @Entity('recipes')

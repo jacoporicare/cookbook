@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ITagRepository, ITagRepositoryToken } from '../domain/ports/tag.repository';
+import { ITagRepositoryToken, ITagRepository } from '../ports/output/tag.repository';
 
 @Injectable()
 export class TagService {

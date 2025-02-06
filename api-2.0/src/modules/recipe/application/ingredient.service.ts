@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   IIngredientRepository,
   IIngredientRepositoryToken,
-} from '../domain/ports/ingredient.repository';
+} from '../ports/output/ingredient.repository';
 
 @Injectable()
 export class IngredientService {

@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ISideDishRepository } from '@/modules/recipe/domain/ports/side-dish.repository';
-import { SideDishEntity } from '@/modules/recipe/infrastructure/entities/side-dish.entity';
+import { SideDishEntity } from '../entities/side-dish.entity';
+
+import { ISideDishRepository } from '@/modules/recipe/ports/output/side-dish.repository';
 
 @Injectable()
 export class TypeOrmSideDishRepository implements ISideDishRepository {

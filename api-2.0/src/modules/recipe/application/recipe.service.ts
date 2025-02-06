@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { RecipeInputType } from '../adapters/input/graphql/recipe-input.type';
+import { RecipeInputType } from '../adapters/input/graphql/types/recipe-input.type';
 import { Recipe } from '../domain/entities/recipe';
-import { IRecipeRepository, IRecipeRepositoryToken } from '../domain/ports/recipe.repository';
 import { Ingredient } from '../domain/value-objects/ingredient';
+import { IRecipeRepository, IRecipeRepositoryToken } from '../ports/output/recipe.repository';
 
 import { ImageService } from './image.service';
 

@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Ingredient } from '../../domain/value-objects/ingredient';
-
 import { IngredientEntity } from './ingredient.entity';
 import { RecipeEntity } from './recipe.entity';
+
+import { Ingredient } from '@/modules/recipe/domain/value-objects/ingredient';
 
 @Entity('recipe_ingredients')
 export class RecipeIngredientEntity {

@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, RelationId } from 'typeorm';
 
-import { Image } from '../../domain/value-objects/image';
-
 import { RecipeEntity } from './recipe.entity';
+
+import { Image } from '@/modules/recipe/domain/value-objects/image';
 
 @Entity('recipe_images')
 export class RecipeImageEntity {

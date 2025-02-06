@@ -1,8 +1,8 @@
 import { NotImplementedException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { RecipeInputType } from '../graphql/recipe-input.type';
-import { RecipeType } from '../graphql/recipe.type';
+import { RecipeInputType } from '../types/recipe-input.type';
+import { RecipeType } from '../types/recipe.type';
 
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import { Identity } from '@/modules/auth/domain/identity';
@@ -10,7 +10,6 @@ import { AuthGuard } from '@/modules/auth/guards/auth.guard';
 import { ImageService } from '@/modules/recipe/application/image.service';
 import { RecipeService } from '@/modules/recipe/application/recipe.service';
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
-import { Ingredient } from '@/modules/recipe/domain/value-objects/ingredient';
 import { UserType } from '@/modules/user/adapters/input/graphql/user.type';
 import { UserService } from '@/modules/user/application/user.service';
 

@@ -1,9 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 
-import { CookedRecipe } from '../../domain/value-objects/cooked-recipe';
-
 import { RecipeEntity } from './recipe.entity';
 
+import { CookedRecipe } from '@/modules/recipe/domain/value-objects/cooked-recipe';
 import { UserEntity } from '@/modules/user/infrastructure/orm/user.entity';
 
 @Entity('cooked_recipes')
