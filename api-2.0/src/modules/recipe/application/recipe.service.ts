@@ -51,6 +51,7 @@ export class RecipeService {
           ),
       ) ?? [],
       recipe.tags ?? [],
+      [],
     );
 
     return this.repository.save(newRecipe);
@@ -63,23 +64,24 @@ export class RecipeService {
       throw new NotFoundException('Recipe not found');
     }
 
-    existingRecipe.update(
-      recipe.title,
-      recipe.directions,
-      recipe.preparationTime,
-      recipe.servingCount,
-      recipe.sideDish,
-      recipe.ingredients?.map(
-        ingredient =>
-          new Ingredient(
-            ingredient.name,
-            ingredient.amount,
-            ingredient.amountUnit,
-            !!ingredient.isGroup,
-          ),
-      ) ?? [],
-      recipe.tags ?? [],
+    const ingredients = recipe.ingredients?.map(
+      ingredient =>
+        new Ingredient(
+          ingredient.name,
+          ingredient.amount,
+          ingredient.amountUnit,
+          !!ingredient.isGroup,
+        ),
     );
+
+    existingRecipe
+      .updateTitle(recipe.title)
+      .updateDirections(recipe.directions)
+      .updatePreparationTime(recipe.preparationTime)
+      .updateServingCount(recipe.servingCount)
+      .updateSideDish(recipe.sideDish)
+      .updateIngredients(ingredients ?? [])
+      .updateTags(recipe.tags ?? []);
 
     let existingImageStorageKey: string | undefined;
 

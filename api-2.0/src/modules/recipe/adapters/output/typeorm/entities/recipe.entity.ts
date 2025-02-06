@@ -111,11 +111,11 @@ export class RecipeEntity {
       this.preparationTime,
       this.servingCount,
       this.sideDishName,
+      this.image?.toDomain() ?? null,
       [...this.ingredients]
         .sort((a, b) => a.order - b.order)
         .map(ingredient => ingredient.toDomain()),
       this.tags.map(tag => tag.name).sort((a, b) => a.localeCompare(b, 'cs')),
-      this.image?.toDomain() ?? null,
       this.cookedRecipes
         .map(cooked => cooked.toDomain())
         .sort((a, b) => a.date.getTime() - b.date.getTime()),
@@ -140,12 +140,12 @@ export class RecipeEntity {
     entity.directions = recipe.directions;
     entity.preparationTime = recipe.preparationTime;
     entity.servingCount = recipe.servingCount;
+    entity.sideDish = recipe.sideDish ? SideDishEntity.fromDomain(recipe.sideDish) : null;
     entity.image = recipe.image ? RecipeImageEntity.fromDomain(recipe.image) : null;
     entity.ingredients = recipe.ingredients.map((ingredient, index) =>
       RecipeIngredientEntity.fromDomain(ingredient, index),
     );
     entity.tags = recipe.tags.map(TagEntity.fromDomain);
-    entity.sideDish = recipe.sideDish ? SideDishEntity.fromDomain(recipe.sideDish) : null;
     entity.cookedRecipes = recipe.cookedRecipes.map(CookedRecipeEntity.fromDomain);
 
     return entity;
