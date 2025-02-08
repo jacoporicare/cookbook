@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as sharp from 'sharp';
 
-import { Image } from '../domain/value-objects/image';
-
-import { IStorage, IStorageToken, FileUpload } from '@/modules/storage/domain/storage.port';
+import { Image } from '@/modules/image/domain/image';
+import { IStorage, IStorageToken, FileUpload } from '@/modules/storage/ports/output/storage.port';
 
 @Injectable()
 export class ImageService {

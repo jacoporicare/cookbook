@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 
-import { IngredientService } from '@/modules/recipe/application/ingredient.service';
+import { IngredientService } from '@/modules/ingredient/application/ingredient.service';
 
 @Resolver()
 export class IngredientResolver {

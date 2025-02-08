@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 import { extension } from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
 
-import { FileUpload, IStorage, ObjectInfo } from '../domain/storage.port';
+import { FileUpload, IStorage, ObjectInfo } from '../../ports/output/storage.port';
 
 import { Config } from '@/config';
 

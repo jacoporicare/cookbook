@@ -1,6 +1,6 @@
 import { Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 
-import { RecipeEntity } from './recipe.entity';
+import { RecipeEntity } from '@/modules/recipe/adapters/output/typeorm/entities/recipe.entity';
 
 @Entity('tags')
 export class TagEntity {

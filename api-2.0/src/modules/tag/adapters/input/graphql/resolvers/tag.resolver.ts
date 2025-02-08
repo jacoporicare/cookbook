@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 
-import { TagService } from '@/modules/recipe/application/tag.service';
+import { TagService } from '@/modules/tag/application/tag.service';
 
 @Resolver()
 export class TagResolver {

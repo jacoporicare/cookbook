@@ -1,14 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
+import { Image } from '../../image/domain/image';
 import { RecipeInputType } from '../adapters/input/graphql/types/recipe-input.type';
 import { Recipe } from '../domain/entities/recipe';
-import { Image } from '../domain/value-objects/image';
 import { Ingredient } from '../domain/value-objects/ingredient';
 import { IRecipeRepository, IRecipeRepositoryToken } from '../ports/output/recipe.repository';
 
-import { ImageService } from './image.service';
-
 import { Identity } from '@/modules/auth/domain/identity';
+import { ImageService } from '@/modules/image/application/image.service';
 
 @Injectable()
 export class RecipeService {

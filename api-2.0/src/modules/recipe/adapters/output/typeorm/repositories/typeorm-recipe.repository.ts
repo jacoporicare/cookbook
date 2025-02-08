@@ -5,17 +5,17 @@ import { Repository } from 'typeorm';
 import { RecipeIngredientEntity } from '../entities/recipe-ingredient.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
 
-import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import {
   IIngredientRepositoryToken,
   IIngredientRepository,
-} from '@/modules/recipe/ports/output/ingredient.repository';
+} from '@/modules/ingredient/ports/output/ingredient.repository';
+import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { IRecipeRepository } from '@/modules/recipe/ports/output/recipe.repository';
 import {
   ISideDishRepositoryToken,
   ISideDishRepository,
-} from '@/modules/recipe/ports/output/side-dish.repository';
-import { ITagRepositoryToken, ITagRepository } from '@/modules/recipe/ports/output/tag.repository';
+} from '@/modules/side-dish/ports/output/side-dish.repository';
+import { ITagRepositoryToken, ITagRepository } from '@/modules/tag/ports/output/tag.repository';
 
 @Injectable()
 export class TypeOrmRecipeRepository implements IRecipeRepository {

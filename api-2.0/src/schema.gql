@@ -54,8 +54,8 @@ type Query {
   recipes: [Recipe!]!
   recipe(id: String, slug: String): Recipe
   ingredients: [String!]!
-  tags: [String!]!
   sideDishes: [String!]!
+  tags: [String!]!
 }
 
 type Mutation {

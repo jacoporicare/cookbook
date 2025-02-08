@@ -17,10 +17,10 @@ import {
 import { CookedRecipeEntity } from './cooked-recipe.entity';
 import { RecipeImageEntity } from './recipe-image.entity';
 import { RecipeIngredientEntity } from './recipe-ingredient.entity';
-import { SideDishEntity } from './side-dish.entity';
-import { TagEntity } from './tag.entity';
 
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
+import { SideDishEntity } from '@/modules/side-dish/adapters/output/typeorm/entities/side-dish.entity';
+import { TagEntity } from '@/modules/tag/adapters/output/typeorm/entities/tag.entity';
 import { UserEntity } from '@/modules/user/infrastructure/orm/user.entity';
 
 @Entity('recipes')

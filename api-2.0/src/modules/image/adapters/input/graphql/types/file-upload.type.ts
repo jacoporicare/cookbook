@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { FileUpload } from '@/modules/storage/domain/storage.port';
+import { FileUpload } from '@/modules/storage/ports/output/storage.port';
 
 @ObjectType('FileUpload')
 export class FileUploadType {

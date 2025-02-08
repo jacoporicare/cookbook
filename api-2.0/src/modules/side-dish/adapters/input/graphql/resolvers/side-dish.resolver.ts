@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 
-import { SideDishService } from '@/modules/recipe/application/side-dish.service';
+import { SideDishService } from '@/modules/side-dish/application/side-dish.service';
 
 @Resolver()
 export class SideDishResolver {

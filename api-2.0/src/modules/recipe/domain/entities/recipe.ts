@@ -1,8 +1,8 @@
 import * as slugify from 'slug';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Image } from '../../../image/domain/image';
 import { CookedRecipe } from '../value-objects/cooked-recipe';
-import { Image } from '../value-objects/image';
 import { Ingredient } from '../value-objects/ingredient';
 
 export class Recipe {

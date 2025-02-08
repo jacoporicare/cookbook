@@ -7,7 +7,7 @@ import { RecipeType } from '../types/recipe.type';
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import { Identity } from '@/modules/auth/domain/identity';
 import { AuthGuard } from '@/modules/auth/guards/auth.guard';
-import { ImageService } from '@/modules/recipe/application/image.service';
+import { ImageService } from '@/modules/image/application/image.service';
 import { RecipeService } from '@/modules/recipe/application/recipe.service';
 import { Recipe } from '@/modules/recipe/domain/entities/recipe';
 import { UserType } from '@/modules/user/adapters/input/graphql/user.type';

@@ -4,7 +4,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { FileUploadType } from '../types/file-upload.type';
 
 import { AuthGuard } from '@/modules/auth/guards/auth.guard';
-import { ImageService } from '@/modules/recipe/application/image.service';
+import { ImageService } from '@/modules/image/application/image.service';
 
 @Resolver()
 export class ImageResolver {

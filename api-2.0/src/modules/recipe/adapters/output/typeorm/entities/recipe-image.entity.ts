@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, RelationId } from 
 
 import { RecipeEntity } from './recipe.entity';
 
-import { Image } from '@/modules/recipe/domain/value-objects/image';
+import { Image } from '@/modules/image/domain/image';
 
 @Entity('recipe_images')
 export class RecipeImageEntity {

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { SideDishEntity } from '../entities/side-dish.entity';
 
-import { ISideDishRepository } from '@/modules/recipe/ports/output/side-dish.repository';
+import { ISideDishRepository } from '@/modules/side-dish/ports/output/side-dish.repository';
 
 @Injectable()
 export class TypeOrmSideDishRepository implements ISideDishRepository {

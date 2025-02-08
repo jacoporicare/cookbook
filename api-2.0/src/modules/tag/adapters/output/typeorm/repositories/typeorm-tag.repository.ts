@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
-import { IngredientEntity } from '../entities/ingredient.entity';
+import { TagEntity } from '../entities/tag.entity';
 
-import { IIngredientRepository } from '@/modules/recipe/ports/output/ingredient.repository';
+import { ITagRepository } from '@/modules/tag/ports/output/tag.repository';
 
 @Injectable()
-export class TypeOrmIngredientRepository implements IIngredientRepository {
+export class TypeOrmTagRepository implements ITagRepository {
   constructor(
-    @InjectRepository(IngredientEntity)
-    private readonly repository: Repository<IngredientEntity>,
+    @InjectRepository(TagEntity)
+    private readonly repository: Repository<TagEntity>,
   ) {}
 
   async findAll(): Promise<string[]> {
@@ -26,22 +26,17 @@ export class TypeOrmIngredientRepository implements IIngredientRepository {
       .map(name => ({ name }));
 
     if (missing.length > 0) {
-      await this.repository
-        .createQueryBuilder()
-        .insert()
-        .into(IngredientEntity)
-        .values(missing)
-        .execute();
+      await this.repository.createQueryBuilder().insert().into(TagEntity).values(missing).execute();
     }
   }
 
   async deleteOrphans(): Promise<void> {
     await this.repository.query(
-      `DELETE FROM "ingredients"
+      `DELETE FROM "tags"
         WHERE NOT EXISTS (
         SELECT 1
-        FROM "recipe_ingredients" ri
-        WHERE ri."ingredient_name" = "ingredients"."name"
+        FROM "recipes_tags_tags" rt
+        WHERE rt."tags_name" = "tags"."name"
       )`,
     );
   }
