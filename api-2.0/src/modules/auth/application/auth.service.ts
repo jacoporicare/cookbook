@@ -2,7 +2,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { Identity } from '../domain/identity';
-import { IAuthRepository, IAuthRepositoryToken } from '../domain/ports/auth.repository';
+import { IAuthRepository, IAuthRepositoryToken } from '../ports/output/auth.repository';
 
 import { Config } from '@/config';
 

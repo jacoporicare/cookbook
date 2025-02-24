@@ -32,8 +32,6 @@ import { dataSourceOptionsFactory } from '@/db/data-source-options-factory';
       inject: [Config],
     }),
     RecipeModule,
-    // StorageModule,
-    // AuthModule,
   ],
 })
 export class AppModule {}

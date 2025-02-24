@@ -16,12 +16,7 @@ export class AuthController {
       body.password,
     );
 
-    res.cookie(this.refreshTokenCookieName, refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/auth/refresh',
-    });
+    this.setRefreshTokenCookie(res, refreshToken);
 
     return res.json({ access_token: accessToken });
   }
@@ -37,12 +32,7 @@ export class AuthController {
     const { accessToken, refreshToken: newRefreshToken } =
       await this.authService.refreshAccessToken(refreshToken);
 
-    res.cookie(this.refreshTokenCookieName, newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/auth/refresh',
-    });
+    this.setRefreshTokenCookie(res, newRefreshToken);
 
     return res.json({ access_token: accessToken });
   }
@@ -52,5 +42,14 @@ export class AuthController {
     res.clearCookie(this.refreshTokenCookieName, { path: '/auth/refresh' });
 
     return res.status(204).end();
+  }
+
+  private setRefreshTokenCookie(res: Response, refreshToken: string) {
+    res.cookie(this.refreshTokenCookieName, refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/auth/refresh',
+    });
   }
 }

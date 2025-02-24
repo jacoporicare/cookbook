@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { Image } from '../../image/domain/image';
-import { RecipeInputType } from '../adapters/input/graphql/types/recipe-input.type';
-import { Recipe } from '../domain/entities/recipe';
-import { Ingredient } from '../domain/value-objects/ingredient';
+import { RecipeInputType } from '../adapters/input/graphql/recipe-input.type';
+import { Ingredient } from '../domain/ingredient';
+import { Recipe } from '../domain/recipe';
 import { IRecipeRepository, IRecipeRepositoryToken } from '../ports/output/recipe.repository';
 
 import { Identity } from '@/modules/auth/domain/identity';
@@ -54,7 +54,15 @@ export class RecipeService {
       [],
     );
 
-    return this.repository.save(newRecipe);
+    try {
+      return await this.repository.save(newRecipe);
+    } catch (error) {
+      if (recipe.imageStorageKey) {
+        await this.imageService.delete(recipe.imageStorageKey);
+      }
+
+      throw error;
+    }
   }
 
   async update(id: string, recipe: RecipeInputType): Promise<Recipe> {
@@ -91,17 +99,36 @@ export class RecipeService {
       existingRecipe.updateImage(image);
     }
 
-    const updatedRecipe = await this.repository.save(existingRecipe);
+    try {
+      const updatedRecipe = await this.repository.save(existingRecipe);
 
-    if (existingImage) {
-      await this.imageService.delete(existingImage.storageKey);
-      await this.imageService.delete(existingImage.thumbnailStorageKey);
+      if (existingImage) {
+        await this.imageService.delete(existingImage.storageKey);
+        await this.imageService.delete(existingImage.thumbnailStorageKey);
+      }
+
+      return updatedRecipe;
+    } catch (error) {
+      if (recipe.imageStorageKey) {
+        await this.imageService.delete(recipe.imageStorageKey);
+      }
+
+      throw error;
     }
-
-    return updatedRecipe;
   }
 
   async delete(id: string): Promise<boolean> {
+    const recipe = await this.getRecipeById(id);
+
+    if (!recipe) {
+      return false;
+    }
+
+    if (recipe.image) {
+      await this.imageService.delete(recipe.image.storageKey);
+      await this.imageService.delete(recipe.image.thumbnailStorageKey);
+    }
+
     return this.repository.delete(id);
   }
 }

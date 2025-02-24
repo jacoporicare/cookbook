@@ -40,7 +40,12 @@ export class ImageService {
     return new Image(storageKey, mimeType, thumbStorageKey, 'image/webp');
   }
 
-  async delete(storageKey: string): Promise<void> {
-    await this.storage.deleteObject(storageKey);
+  async delete(storageKey: string): Promise<boolean> {
+    try {
+      await this.storage.deleteObject(storageKey);
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

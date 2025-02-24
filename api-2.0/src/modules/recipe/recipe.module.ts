@@ -7,12 +7,12 @@ import { SideDishModule } from '../side-dish/side-dish.module';
 import { TagModule } from '../tag/tag.module';
 import { UserModule } from '../user/user.module';
 
-import { RecipeResolver } from './adapters/input/graphql/resolvers/recipe.resolver';
-import { CookedRecipeEntity } from './adapters/output/typeorm/entities/cooked-recipe.entity';
-import { RecipeImageEntity } from './adapters/output/typeorm/entities/recipe-image.entity';
-import { RecipeIngredientEntity } from './adapters/output/typeorm/entities/recipe-ingredient.entity';
-import { RecipeEntity } from './adapters/output/typeorm/entities/recipe.entity';
-import { TypeOrmRecipeRepository } from './adapters/output/typeorm/repositories/typeorm-recipe.repository';
+import { RecipeResolver } from './adapters/input/graphql/recipe.resolver';
+import { CookedRecipeEntity } from './adapters/output/typeorm/cooked-recipe.entity';
+import { RecipeImageEntity } from './adapters/output/typeorm/recipe-image.entity';
+import { RecipeIngredientEntity } from './adapters/output/typeorm/recipe-ingredient.entity';
+import { RecipeEntity } from './adapters/output/typeorm/recipe.entity';
+import { TypeOrmRecipeRepository } from './adapters/output/typeorm/typeorm-recipe.repository';
 import { RecipeService } from './application/recipe.service';
 import { IRecipeRepositoryToken } from './ports/output/recipe.repository';
 

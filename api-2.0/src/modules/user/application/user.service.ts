@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { IUserRepository, IUserRepositoryToken } from '../domain/ports/user.repository';
+import { IUserRepository, IUserRepositoryToken } from '../ports/output/user.repository';
 
 @Injectable()
 export class UserService {

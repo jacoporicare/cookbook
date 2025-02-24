@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { TagResolver } from './adapters/input/graphql/resolvers/tag.resolver';
-import { TagEntity } from './adapters/output/typeorm/entities/tag.entity';
-import { TypeOrmTagRepository } from './adapters/output/typeorm/repositories/typeorm-tag.repository';
+import { TagResolver } from './adapters/input/graphql/tag.resolver';
+import { TagEntity } from './adapters/output/typeorm/tag.entity';
+import { TypeOrmTagRepository } from './adapters/output/typeorm/typeorm-tag.repository';
 import { TagService } from './application/tag.service';
 import { ITagRepositoryToken } from './ports/output/tag.repository';
 

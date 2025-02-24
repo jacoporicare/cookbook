@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { StorageModule } from '../storage/storage.module';
 
-import { ImageResolver } from './adapters/input/graphql/resolvers/image.resolver';
+import { ImageResolver } from './adapters/input/graphql/image.resolver';
 import { ImageService } from './application/image.service';
 
 @Module({

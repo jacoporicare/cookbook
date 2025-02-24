@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { TypeOrmUserRepository } from './adapters/output/repositories/typeorm-user.repository';
+import { TypeOrmUserRepository } from './adapters/output/typeorm/typeorm-user.repository';
+import { UserEntity } from './adapters/output/typeorm/user.entity';
 import { UserService } from './application/user.service';
-import { IUserRepositoryToken } from './domain/ports/user.repository';
-import { UserEntity } from './infrastructure/orm/user.entity';
+import { IUserRepositoryToken } from './ports/output/user.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
