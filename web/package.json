@@ -2,7 +2,7 @@
   "name": "cookbook-web",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://www.zradelnik.cz/",
+  "homepage": "https://zradelnik.cz/",
   "scripts": {
     "dev": "next",
     "dev:inspect": "NODE_OPTIONS='--inspect' next",
