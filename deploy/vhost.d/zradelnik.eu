@@ -1,4 +1,4 @@
 if ($request_uri !~ "^/.well-known/acme-challenge")
 {
-  return 301 https://www.zradelnik.eu$request_uri;
+  return 301 https://www.zradelnik.cz$request_uri;
 }
