@@ -3,8 +3,7 @@ name: Build & Deploy
 on:
   push:
     branches:
-      - master
-      - production
+      - main
 
 env:
   API_IMAGE: ghcr.io/${{ github.repository_owner }}/cookbook-api:${{ github.ref_name }}
@@ -25,7 +24,7 @@ jobs:
       - name: Build and push API
         uses: docker/build-push-action@v6
         with:
-          context: '{{defaultContext}}:api'
+          context: "{{defaultContext}}:api"
           push: true
           tags: ${{ env.API_IMAGE }}
 
@@ -43,7 +42,7 @@ jobs:
       - name: Build and push web
         uses: docker/build-push-action@v6
         with:
-          context: '{{defaultContext}}:web'
+          context: "{{defaultContext}}:web"
           push: true
           tags: ${{ env.WEB_IMAGE }}
 
@@ -62,9 +61,8 @@ jobs:
         working-directory: ./deploy
         run: |
           printenv FIREBASE_ADMIN_SDK > zradelnik-firebase-adminsdk.json
-          [ "$GITHUB_REF_NAME" = master ] && envsubst < .env.staging > .env || true
-          [ "$GITHUB_REF_NAME" = production ] && envsubst < .env.production > .env || true
-          [ "$GITHUB_REF_NAME" != master -a "$GITHUB_REF_NAME" != production ] && envsubst < .env.feature > .env || true
+          [ "$GITHUB_REF_NAME" = main ] && envsubst < .env.production > .env || true
+          [ "$GITHUB_REF_NAME" != main ] && envsubst < .env.feature > .env || true
       - name: rsync deploy folder
         uses: up9cloud/action-rsync@v1.4
         env:
