@@ -55,6 +55,7 @@ export type Mutation = {
   deleteRecipe: Scalars['Boolean'];
   deleteRecipeCooked: Recipe;
   deleteUser: Scalars['ID'];
+  importRecipe: Recipe;
   login: AuthPayload;
   recipeCooked: Recipe;
   resetPassword: Scalars['String'];
@@ -94,6 +95,11 @@ export type MutationDeleteRecipeCookedArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationImportRecipeArgs = {
+  url: Scalars['String'];
 };
 
 
@@ -343,6 +349,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteRecipe?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteRecipeArgs, 'id'>>;
   deleteRecipeCooked?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationDeleteRecipeCookedArgs, 'cookedId' | 'recipeId'>>;
   deleteUser?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  importRecipe?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationImportRecipeArgs, 'url'>>;
   login?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   recipeCooked?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationRecipeCookedArgs, 'date' | 'id'>>;
   resetPassword?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'id'>>;

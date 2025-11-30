@@ -1,7 +1,7 @@
-import { Add, Close, FilterList } from '@mui/icons-material';
-import { Alert, Button, Fab, Typography, Zoom } from '@mui/material';
+import { Add, AutoAwesome, Close, FilterList } from '@mui/icons-material';
+import { Alert, Button, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import flow from 'lodash.flow';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import slug from 'slug';
@@ -10,6 +10,7 @@ import { useAuth } from '../AuthContext';
 import { withApollo } from '../apollo';
 import { withAuth } from '../auth';
 import Layout from '../components/Layout';
+import RecipeImportModal from '../components/RecipeImport/RecipeImportModal';
 import RecipeList from '../components/RecipeList/RecipeList';
 import Search from '../components/RecipeList/Search';
 import FabContainer from '../components/common/FabContainer';
@@ -27,6 +28,7 @@ function RecipeListPage() {
   const [token] = useAuth();
   const [searchVisible, setSearchVisible] = useState(searchTags.length > 0);
   const [matchAll, setMatchAll] = useState(false);
+  const [importModalVisible, setImportModalVisible] = useState(false);
   const { data, error, loading } = useRecipeListQuery();
   const fabHidden = useHideOnScroll();
 
@@ -114,18 +116,36 @@ function RecipeListPage() {
       </section>
       {token && (
         <FabContainer>
-          <Link
-            href={isInstantPotPage ? `/novy-recept?${INSTANT_POT_TAG_SLUG}` : '/novy-recept'}
-            passHref
+          <SpeedDial
+            ariaLabel="Vytvořit recept"
+            hidden={fabHidden}
+            icon={<SpeedDialIcon />}
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+            }}
           >
-            <Zoom in={!fabHidden}>
-              <Fab aria-label="Nový recept" color="primary" component="a">
-                <Add fontSize="large" />
-              </Fab>
-            </Zoom>
-          </Link>
+            <SpeedDialAction
+              icon={<Add />}
+              tooltipTitle="Vytvořit nový"
+              onClick={() => {
+                router.push(
+                  isInstantPotPage ? `/novy-recept?${INSTANT_POT_TAG_SLUG}` : '/novy-recept',
+                );
+              }}
+            />
+            <SpeedDialAction
+              icon={<AutoAwesome />}
+              tooltipTitle="Vytvořit pomocí AI"
+              onClick={() => {
+                setImportModalVisible(true);
+              }}
+            />
+          </SpeedDial>
         </FabContainer>
       )}
+      <RecipeImportModal show={importModalVisible} onClose={() => setImportModalVisible(false)} />
     </Layout>
   );
 }

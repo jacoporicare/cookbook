@@ -16,6 +16,7 @@ import ImageModel from './models/image';
 import RecipeModel, { RecipeCookedDbObject, RecipeDocument } from './models/recipe';
 import UserModel, { UserDbObject, UserDocument } from './models/user';
 import { appendSizeAndFormatToImageUrl, createImage } from './recipeImage';
+import { importRecipeFromUrl } from './services/recipeImport';
 import { checkUserRightsAsync, comparePassword, getRandomString, hashPassword } from './utils';
 
 const populateFields = ['user', 'cookedHistory.user'];
@@ -170,6 +171,40 @@ const resolvers: Resolvers = {
       }
 
       return true;
+    }),
+    importRecipe: authenticated(async (_, args, ctx) => {
+      const recipeInput = await importRecipeFromUrl(args.url);
+
+      const recipeToSave = mapToRecipeDbObject(recipeInput, undefined, ctx.currentUser.id);
+      await RecipeModel.findOneAndDelete({ slug: recipeToSave.slug, deleted: true });
+      const recipe = await RecipeModel.create(recipeToSave as RecipeDocument);
+      await recipe.populate(populateFields);
+
+      const newRecipeGqlModel = mapToRecipeGqlObject(recipe);
+
+      messaging
+        .send({
+          topic: process.env.NEW_RECIPES_TOPIC!,
+          data: { recipe_id: newRecipeGqlModel.id },
+          notification: {
+            title: newRecipeGqlModel.title,
+            body: `Nový recept od ${ctx.currentUser.displayName}!`,
+          },
+          android: newRecipeGqlModel.imageUrl
+            ? {
+                notification: {
+                  imageUrl: appendSizeAndFormatToImageUrl(
+                    newRecipeGqlModel.imageUrl,
+                    { width: 1080, height: 1080 },
+                    ImageFormat.Webp,
+                  ),
+                },
+              }
+            : undefined,
+        })
+        .catch(logger.error);
+
+      return newRecipeGqlModel;
     }),
     recipeCooked: authenticated(async (_, args, ctx) => {
       const recipe = await RecipeModel.findById(args.id);

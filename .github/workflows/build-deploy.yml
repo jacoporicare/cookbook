@@ -54,6 +54,7 @@ jobs:
     env:
       LETSENCRYPT_EMAIL: ${{ secrets.LETSENCRYPT_EMAIL }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       FIREBASE_ADMIN_SDK: ${{ secrets.FIREBASE_ADMIN_SDK }}
     steps:
       - uses: actions/checkout@v4

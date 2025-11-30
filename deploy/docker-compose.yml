@@ -32,6 +32,7 @@ services:
       LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
       MONGO_URI: mongodb://db/cookbook
       JWT_SECRET: '${JWT_SECRET}'
+      OPENAI_API_KEY: '${OPENAI_API_KEY}'
       APOLLO_EXPLORER_ENABLED: '${APOLLO_EXPLORER_ENABLED}'
       NEW_RECIPES_TOPIC: '${NEW_RECIPES_TOPIC}'
       FIREBASE_ADMIN_SDK_PATH: /srv/zradelnik-firebase-adminsdk.json
