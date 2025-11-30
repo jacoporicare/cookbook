@@ -1,0 +1,16 @@
+name: cookbook-mongo
+
+services:
+  db:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+
+  admin:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      ME_CONFIG_MONGODB_SERVER: db
