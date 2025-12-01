@@ -53,7 +53,9 @@ export type Mutation = {
   createRecipe: Recipe;
   createUser: User;
   deleteRecipe: Scalars['Boolean'];
+  deleteRecipeCooked: Recipe;
   deleteUser: Scalars['ID'];
+  importRecipe: Recipe;
   login: AuthPayload;
   recipeCooked: Recipe;
   resetPassword: Scalars['String'];
@@ -85,8 +87,19 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
+export type MutationDeleteRecipeCookedArgs = {
+  cookedId: Scalars['ID'];
+  recipeId: Scalars['ID'];
+};
+
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationImportRecipeArgs = {
+  url: Scalars['String'];
 };
 
 
@@ -98,7 +111,6 @@ export type MutationLoginArgs = {
 
 export type MutationRecipeCookedArgs = {
   date: Scalars['Date'];
-  delete: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
 };
 
@@ -165,6 +177,7 @@ export type RecipeImageUrlArgs = {
 export type RecipeCooked = {
   __typename?: 'RecipeCooked';
   date: Scalars['Date'];
+  id: Scalars['ID'];
   user: User;
 };
 
@@ -234,6 +247,13 @@ export type DeleteUserMutationVariables = Exact<{
 
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: string };
+
+export type ImportRecipeMutationVariables = Exact<{
+  url: Scalars['String'];
+}>;
+
+
+export type ImportRecipeMutation = { __typename?: 'Mutation', importRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -547,6 +567,39 @@ export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const ImportRecipeDocument = gql`
+    mutation ImportRecipe($url: String!) {
+  importRecipe(url: $url) {
+    ...recipeDetail
+  }
+}
+    ${RecipeDetailFragmentDoc}`;
+export type ImportRecipeMutationFn = Apollo.MutationFunction<ImportRecipeMutation, ImportRecipeMutationVariables>;
+
+/**
+ * __useImportRecipeMutation__
+ *
+ * To run a mutation, you first call `useImportRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useImportRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [importRecipeMutation, { data, loading, error }] = useImportRecipeMutation({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useImportRecipeMutation(baseOptions?: Apollo.MutationHookOptions<ImportRecipeMutation, ImportRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ImportRecipeMutation, ImportRecipeMutationVariables>(ImportRecipeDocument, options);
+      }
+export type ImportRecipeMutationHookResult = ReturnType<typeof useImportRecipeMutation>;
+export type ImportRecipeMutationResult = Apollo.MutationResult<ImportRecipeMutation>;
+export type ImportRecipeMutationOptions = Apollo.BaseMutationOptions<ImportRecipeMutation, ImportRecipeMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

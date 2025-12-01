@@ -10,6 +10,10 @@ This is a monorepo cookbook/recipe management application with:
 
 The application is deployed at https://www.zradelnik.cz/ and allows users to create, edit, and manage recipes.
 
+## AI Assistant Guidelines
+
+**Context7 Integration**: Always use Context7 MCP tools when code generation, setup or configuration steps, or library/API documentation is needed. This means automatically using the Context7 MCP tools to resolve library IDs and get library documentation without requiring explicit requests.
+
 ## Development Commands
 
 ### Root Level

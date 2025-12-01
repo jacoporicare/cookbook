@@ -98,6 +98,7 @@ const typeDefs = gql`
     createRecipe(recipe: RecipeInput!, image: Upload): Recipe!
     updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe!
     deleteRecipe(id: ID!): Boolean!
+    importRecipe(url: String!): Recipe!
     recipeCooked(id: ID!, date: Date!): Recipe!
     deleteRecipeCooked(recipeId: ID!, cookedId: ID!): Recipe!
     updateUserLastActivity: Boolean!
