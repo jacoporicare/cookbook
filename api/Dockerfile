@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 RUN apk add --no-cache python3 make g++
 
@@ -12,7 +12,7 @@ RUN mv package.json package-lock.json node_modules build/ \
   && npm prune --production
 
 
-FROM node:22-alpine
+FROM node:24-alpine
 
 ENV NODE_ENV=production
 WORKDIR /srv/app
