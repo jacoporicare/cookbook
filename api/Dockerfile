@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:22 AS builder
 
 WORKDIR /srv
 RUN npm i -g npm@^8
@@ -6,14 +6,14 @@ COPY package.json package-lock.json ./
 RUN npm ci --unsafe-perm
 COPY . .
 RUN npm run build
-RUN mv package.json package-lock.json .env node_modules build/ \
+RUN mv package.json package-lock.json node_modules build/ \
   && cd build \
   && npm prune --production
 
 
-FROM node:16-alpine
+FROM node:22-alpine
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 WORKDIR /srv/app
 
 COPY --from=builder /srv/build .

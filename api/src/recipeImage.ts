@@ -125,13 +125,13 @@ export async function resizeAndWriteImage(
 export async function createImage(imageFileUpload: Promise<FileUpload>) {
   const fileUpload = await imageFileUpload;
 
-  const chunks = [];
+  const chunks: Buffer[] = [];
 
   for await (const chunk of fileUpload.createReadStream()) {
     chunks.push(Buffer.from(chunk));
   }
 
-  const data = Buffer.concat(chunks);
+  const data = Buffer.concat(chunks as unknown as Uint8Array[]);
 
   return await ImageModel.create({
     data,

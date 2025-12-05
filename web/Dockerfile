@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:16-alpine AS builder
 
 WORKDIR /srv
 RUN npm i -g npm@^8
@@ -7,14 +7,14 @@ RUN npm ci --unsafe-perm
 COPY . .
 RUN npm run build
 RUN mkdir build \
-  && mv package.json package-lock.json next.config.js .next .env .npmrc public node_modules build/ \
+  && mv package.json package-lock.json next.config.js .next .npmrc public node_modules build/ \
   && cd build \
   && npm prune --production
 
 
 FROM node:16-alpine
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 WORKDIR /srv/app
 
 COPY --from=builder /srv/build .
