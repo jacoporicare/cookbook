@@ -1,9 +1,10 @@
-FROM node:22 AS builder
+FROM node:22-alpine AS builder
+
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /srv
-RUN npm i -g npm@^8
 COPY package.json package-lock.json ./
-RUN npm ci --unsafe-perm
+RUN npm ci
 COPY . .
 RUN npm run build
 RUN mv package.json package-lock.json node_modules build/ \
