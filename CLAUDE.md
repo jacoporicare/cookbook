@@ -191,3 +191,4 @@ Recipe images are stored in MongoDB GridFS (via the Image model). The API serves
 - Middleware route: `/recipe/:recipeId/image`
 
 In production, a background worker pre-generates common image sizes to improve performance.
+- Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.

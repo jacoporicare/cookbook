@@ -1,6 +1,5 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FormEventHandler } from 'react';
-import { SortEndHandler } from 'react-sortable-hoc';
 
 import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
@@ -15,6 +14,7 @@ import IngredientEdit, {
   AddGroupEventHandler,
   AddIngredientEventHandler,
   RemoveEventHandler,
+  SortHandler,
 } from './IngredientEdit';
 import Title, { TitleFields } from './Title';
 
@@ -33,7 +33,7 @@ type Props = {
   onChange: (name: RecipeEditFields, value: string) => void;
   onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
-  onSortIngredient: SortEndHandler;
+  onSortIngredient: SortHandler;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onTagsChange: (tags: string[]) => void;
   preparationTime?: number;

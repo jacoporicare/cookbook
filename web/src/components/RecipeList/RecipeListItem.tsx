@@ -1,38 +1,26 @@
+'use client';
+
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import Link from 'next/link';
-import { LazyImage } from 'react-lazy-images';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
-import useSupportsWebP from '../../hooks/useSupportsWebP';
 
 type Props = {
   recipe: RecipeBaseFragment;
 };
 
 function RecipeListItem({ recipe }: Props) {
-  const supportsWebP = useSupportsWebP();
-
-  const { slug, imageThumbUrl, imageThumbWebPUrl } = recipe;
-  const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
-  const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-  const imageUrl = thumbUrl || placeholderUrl;
+  const { slug, imageThumbWebPUrl } = recipe;
+  const imageUrl = imageThumbWebPUrl || '/assets/food-placeholder.webp';
 
   return (
     <Card>
-      <Link as={`/recept/${slug}`} href="/recept/[slug]" passHref>
+      <Link href={`/recept/${slug}`}>
         <CardActionArea>
-          <LazyImage
-            actual={({ imageProps }) => (
-              <CardMedia image={imageProps.src} sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }} />
-            )}
-            placeholder={({ ref }) => (
-              <CardMedia
-                ref={ref}
-                image={placeholderUrl}
-                sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }}
-              />
-            )}
-            src={imageUrl}
+          <CardMedia
+            image={imageUrl}
+            sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }}
+            component="div"
           />
           <CardContent>
             <Typography component="h2" variant="h5" noWrap>

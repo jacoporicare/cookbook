@@ -1,6 +1,7 @@
-import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
+'use client';
+
+import { Alert, Box, Dialog, Grid, Paper, Typography } from '@mui/material';
 import { MouseEvent, useState } from 'react';
-import Lightbox from 'react-image-lightbox';
 
 import { Ingredient } from '../../generated/graphql';
 import RichText from '../RichText/RichText';
@@ -80,6 +81,7 @@ function RecipeDetail({
                   sx={{
                     display: 'block',
                     lineHeight: 0,
+                    cursor: 'pointer',
                   }}
                   onClick={handleImageClick}
                 >
@@ -110,9 +112,22 @@ function RecipeDetail({
           </Box>
         </Grid>
       </Grid>
-      {isImageOpen && (
-        <Lightbox mainSrc={imageFullUrl!} onCloseRequest={() => setIsImageOpen(false)} />
-      )}
+      <Dialog
+        maxWidth="lg"
+        open={isImageOpen}
+        onClose={() => setIsImageOpen(false)}
+        onClick={() => setIsImageOpen(false)}
+      >
+        <Box
+          alt={title}
+          component="img"
+          src={imageFullUrl}
+          sx={{
+            maxWidth: '100%',
+            maxHeight: '90vh',
+          }}
+        />
+      </Dialog>
     </>
   );
 }

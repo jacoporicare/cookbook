@@ -1,4 +1,6 @@
-import { useAuth } from '../../AuthContext';
+'use client';
+
+import { useAuth } from '../../app/AuthProvider';
 import { useMeQuery } from '../../generated/graphql';
 
 import UserInfo from './UserInfo';

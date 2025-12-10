@@ -1,54 +1,27 @@
-import { NextPage } from 'next';
-import Cookies from 'universal-cookie';
-
-import { AuthProvider } from './AuthContext';
 import { AUTH_TOKEN_KEY } from './const';
 
+function getCookie(name: string, cookie?: string): string | undefined {
+  const cookieStr = cookie || (typeof document !== 'undefined' ? document.cookie : '');
+  const value = `; ${cookieStr}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return undefined;
+}
+
 export function getAuthToken(cookie?: string): string | undefined {
-  return new Cookies(cookie).get(AUTH_TOKEN_KEY);
+  return getCookie(AUTH_TOKEN_KEY, cookie);
 }
 
 export function setAuthToken(token?: string): void {
-  if (typeof window === 'undefined') {
+  if (typeof document === 'undefined') {
     return;
   }
 
   if (!token) {
-    new Cookies().remove(AUTH_TOKEN_KEY, { path: '/' });
-
+    document.cookie = `${AUTH_TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
     return;
   }
 
-  return new Cookies().set(AUTH_TOKEN_KEY, token, {
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    path: '/',
-  });
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${AUTH_TOKEN_KEY}=${token}; expires=${expires}; path=/`;
 }
-
-export const withAuth = () => (PageComponent: NextPage) => {
-  const WithAuth: NextPage<{ authToken?: string }, { authToken?: string }> = ({
-    authToken,
-    ...pageProps
-  }) => (
-    <AuthProvider token={authToken}>
-      <PageComponent {...pageProps} />
-    </AuthProvider>
-  );
-
-  // Set the correct displayName in development
-  if (process.env.NODE_ENV !== 'production') {
-    const displayName = PageComponent.displayName || PageComponent.name || 'Component';
-    WithAuth.displayName = `withAuth(${displayName})`;
-  }
-
-  WithAuth.getInitialProps = async ctx => {
-    const pageProps = PageComponent.getInitialProps ? await PageComponent.getInitialProps(ctx) : {};
-
-    return {
-      ...pageProps,
-      authToken: new Cookies(ctx.req?.headers.cookie).get(AUTH_TOKEN_KEY),
-    };
-  };
-
-  return WithAuth;
-};

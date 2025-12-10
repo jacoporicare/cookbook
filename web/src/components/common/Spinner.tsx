@@ -6,7 +6,7 @@ type Props = {
 };
 
 function Spinner(props: Props) {
-  const timer = useRef<number>();
+  const timer = useRef<number | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

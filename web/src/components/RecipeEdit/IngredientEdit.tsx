@@ -1,6 +1,5 @@
 import { Box, Divider } from '@mui/material';
 import { useState } from 'react';
-import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Ingredient } from '../../generated/graphql';
 
@@ -15,6 +14,7 @@ export type AddIngredientEventHandler = (
 ) => void;
 export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
+export type SortHandler = (args: { oldIndex: number; newIndex: number }) => void;
 
 type Props = {
   items: Omit<Ingredient, '_id' | 'id'>[];
@@ -22,7 +22,7 @@ type Props = {
   onAdd: AddIngredientEventHandler;
   onAddGroup: AddGroupEventHandler;
   onRemove: RemoveEventHandler;
-  onSort: SortEndHandler;
+  onSort: SortHandler;
 };
 
 function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {

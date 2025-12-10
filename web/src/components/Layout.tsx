@@ -1,3 +1,5 @@
+'use client';
+
 import { Container, Box } from '@mui/material';
 import { ReactNode } from 'react';
 
@@ -6,7 +8,6 @@ import { colors } from '../styles/colors';
 import Footer from './Footer';
 import Header from './Header';
 import TrackUserActivity from './TrackUserActivity';
-import DocumentTitle from './common/DocumentTitle';
 
 type Props = {
   children: NonNullable<ReactNode>;
@@ -16,7 +17,6 @@ type Props = {
 function Layout(props: Props) {
   return (
     <>
-      <DocumentTitle />
       {props.static ? (
         <Header />
       ) : (

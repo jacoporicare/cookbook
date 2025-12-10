@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, styled } from '@mui/material';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -99,7 +101,7 @@ function ImageUpload(props: Props) {
 
   return (
     <StyledBox>
-      <Dropzone accept="image/*" multiple={false} onDrop={handleDrop}>
+      <Dropzone accept={{ 'image/*': [] }} multiple={false} onDrop={handleDrop}>
         {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
           <div
             {...getRootProps()}

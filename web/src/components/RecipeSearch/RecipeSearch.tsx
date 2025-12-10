@@ -15,7 +15,6 @@ import { matchSorter } from 'match-sorter';
 import { useState } from 'react';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
-import useSupportsWebP from '../../hooks/useSupportsWebP';
 import { colors } from '../../styles/colors';
 import RecipeInfo from '../RecipeInfo/RecipeInfo';
 
@@ -31,15 +30,12 @@ const icon =
 const MAX_ITEMS = 10;
 
 function RecipeSearch(props: Props) {
-  const supportsWebP = useSupportsWebP();
-
   const [prevRecipes, setPrevRecipes] = useState(props.recipes);
   const [suggestions, setSuggestions] = useState<RecipeBaseFragment[]>(
     props.recipes.slice(0, MAX_ITEMS),
   );
 
   const {
-    getComboboxProps,
     getInputProps,
     getItemProps,
     getMenuProps,
@@ -80,35 +76,33 @@ function RecipeSearch(props: Props) {
         margin: '0 auto',
       }}
     >
-      <div {...getComboboxProps()}>
-        <OutlinedInput
-          inputProps={getInputProps()}
-          placeholder="Hledat..."
-          sx={{
-            '& .MuiOutlinedInput-input': {
-              backgroundImage: `url(${icon})`,
-              backgroundPositionX: '8px',
-              backgroundPositionY: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '16px 16px',
-              borderRadius: '4px',
-              color: colors.white,
-              padding: '8px 8px 8px 32px',
-              transition: 'background-color 200ms ease',
+      <OutlinedInput
+        inputProps={getInputProps()}
+        placeholder="Hledat..."
+        sx={{
+          '& .MuiOutlinedInput-input': {
+            backgroundImage: `url(${icon})`,
+            backgroundPositionX: '8px',
+            backgroundPositionY: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '16px 16px',
+            borderRadius: '4px',
+            color: colors.white,
+            padding: '8px 8px 8px 32px',
+            transition: 'background-color 200ms ease',
 
-              '&:focus': {
-                backgroundColor: colors.gray800,
-              },
+            '&:focus': {
+              backgroundColor: colors.gray800,
             },
-          }}
-          fullWidth
-          onFocus={() => {
-            if (inputValue) {
-              openMenu();
-            }
-          }}
-        />
-      </div>
+          },
+        }}
+        fullWidth
+        onFocus={() => {
+          if (inputValue) {
+            openMenu();
+          }
+        }}
+      />
       <Paper
         elevation={8}
         sx={{
@@ -150,11 +144,9 @@ function RecipeSearch(props: Props) {
           )}
           {isOpen &&
             suggestions.map((recipe, index) => {
-              const { imageThumbUrl, imageThumbWebPUrl, preparationTime, sideDish } = recipe;
+              const { imageThumbWebPUrl, preparationTime, sideDish } = recipe;
 
-              const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
-              const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-              const imageUrl = thumbUrl || placeholderUrl;
+              const imageUrl = imageThumbWebPUrl || '/assets/food-placeholder.webp';
 
               return (
                 <ListItem

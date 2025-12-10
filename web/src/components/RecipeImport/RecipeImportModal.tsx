@@ -9,7 +9,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useImportRecipeMutation } from '../../generated/graphql';
@@ -27,7 +27,7 @@ function RecipeImportModal({ show, onClose }: Props) {
   const [importRecipe, { loading }] = useImportRecipeMutation({
     onCompleted: data => {
       onClose();
-      router.push('/recept/[slug]/upravit', `/recept/${data.importRecipe.slug}/upravit`);
+      router.push(`/recept/${data.importRecipe.slug}/upravit`);
     },
     onError: err => {
       setError(err.message || 'Nastala neočekávaná chyba při importu receptu.');

@@ -3,7 +3,7 @@ extends:
   - eslint:recommended
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:@typescript-eslint/recommended
-  - react-app
+  - next/core-web-vitals
   - prettier
 plugins:
   - '@typescript-eslint'
@@ -30,13 +30,6 @@ rules:
       classes: false
       variables: true
   arrow-body-style: warn
-  import/no-extraneous-dependencies: warn
-  import/order:
-    - warn
-    - newlines-between: always
-      alphabetize:
-        order: 'asc'
-  jsx-a11y/anchor-is-valid: 'off'
   no-case-declarations: warn
   no-console: warn
   no-debugger: warn
@@ -88,7 +81,6 @@ rules:
       shorthandLast: true
   react/no-array-index-key: warn
   react/prefer-stateless-function: warn
-  react/react-in-jsx-scope: 'off'
   react/self-closing-comp: warn
   react-hooks/rules-of-hooks: error
   yoda: warn

@@ -1,5 +1,7 @@
+'use client';
+
 import { Box, styled } from '@mui/material';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 import { INSTANT_POT_TAG_SLUG } from '../../const';
 import { colors } from '../../styles/colors';
@@ -78,7 +80,7 @@ type Props = {
 };
 
 function Nav(props: Props) {
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Root>
@@ -107,16 +109,16 @@ function Nav(props: Props) {
           },
         }}
       >
-        <NavLink active={router.pathname === '/'} href="/">
+        <NavLink active={pathname === '/'} href="/">
           Recepty
         </NavLink>
         <NavLink
-          active={router.pathname === `/${INSTANT_POT_TAG_SLUG}`}
+          active={pathname === `/${INSTANT_POT_TAG_SLUG}`}
           href={`/${INSTANT_POT_TAG_SLUG}`}
         >
           Instant Pot
         </NavLink>
-        <NavLink active={router.pathname === '/prilohy'} href="/prilohy">
+        <NavLink active={pathname === '/prilohy'} href="/prilohy">
           Přílohy
         </NavLink>
         {props.showUserInfo && <UserInfo />}

@@ -1,4 +1,6 @@
-import { Delete, Menu } from '@mui/icons-material';
+'use client';
+
+import { Delete, DragIndicator } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -11,39 +13,55 @@ import {
   ListItemText,
 } from '@mui/material';
 import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  SortEndHandler,
-} from 'react-sortable-hoc';
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import { Ingredient } from '../../generated/graphql';
 import { colors } from '../../styles/colors';
 
 type RemoveHandler = (index: number) => void;
+type SortHandler = (args: { oldIndex: number; newIndex: number }) => void;
 
-type SortableListProps = {
+type Props = {
   items: Omit<Ingredient, '_id' | 'id'>[];
   onRemove: RemoveHandler;
+  onSort: SortHandler;
 };
-
-type Props = SortableListProps & {
-  onSort: SortEndHandler;
-};
-
-const Handle = SortableHandle(() => <Menu />);
 
 type SortableItemProps = {
+  id: string;
   itemIndex: number;
   ingredient: Omit<Ingredient, '_id' | 'id'>;
   onRemove: RemoveHandler;
 };
 
-const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
+function SortableItem({ id, itemIndex, ingredient, onRemove }: SortableItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   return (
     <ListItem
+      ref={setNodeRef}
+      style={style}
       sx={
         isGroup
           ? {
@@ -55,8 +73,8 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
             }
       }
     >
-      <ListItemIcon>
-        <Handle />
+      <ListItemIcon {...attributes} {...listeners} sx={{ cursor: 'grab' }}>
+        <DragIndicator />
       </ListItemIcon>
 
       <ListItemText>
@@ -80,29 +98,49 @@ const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: Sorta
       </ListItemSecondaryAction>
     </ListItem>
   );
-});
-
-const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <List>
-    {items.map((ingredient, index) => (
-      <SortableItem
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-        index={index}
-        ingredient={ingredient}
-        itemIndex={index}
-        onRemove={onRemove}
-      />
-    ))}
-  </List>
-));
+}
 
 function IngredientList({ items, onRemove, onSort }: Props) {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const ids = items.map((_, index) => `item-${index}`);
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = ids.indexOf(active.id as string);
+      const newIndex = ids.indexOf(over.id as string);
+      onSort({ oldIndex, newIndex });
+    }
+  }
+
   if (items.length === 0) {
     return <Alert severity="info">Zatím žádné ingredience.</Alert>;
   }
 
-  return <SortableList items={items} useDragHandle onRemove={onRemove} onSortEnd={onSort} />;
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        <List>
+          {items.map((ingredient, index) => (
+            <SortableItem
+              key={`item-${index}`}
+              id={`item-${index}`}
+              ingredient={ingredient}
+              itemIndex={index}
+              onRemove={onRemove}
+            />
+          ))}
+        </List>
+      </SortableContext>
+    </DndContext>
+  );
 }
 
 export default IngredientList;

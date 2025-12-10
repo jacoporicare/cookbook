@@ -1,7 +1,6 @@
-FROM node:16-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /srv
-RUN npm i -g npm@^8
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --unsafe-perm
 COPY . .
@@ -12,7 +11,7 @@ RUN mkdir build \
   && npm prune --production
 
 
-FROM node:16-alpine
+FROM node:24-alpine
 
 ENV NODE_ENV=production
 WORKDIR /srv/app

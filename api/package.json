@@ -1,8 +1,8 @@
 {
   "name": "cookbook-api",
   "scripts": {
-    "start": "ts-node-dev --respawn -- src/main.ts",
-    "start:inspect": "ts-node-dev --respawn --inspect=0.0.0.0 -- src/main.ts",
+    "start": "tsx watch src/main.ts",
+    "start:inspect": "tsx watch --inspect=0.0.0.0 src/main.ts",
     "build": "run-s clean compile",
     "compile": "tsc",
     "clean": "rimraf build",
@@ -35,7 +35,7 @@
     "@graphql-codegen/typescript": "2.7.3",
     "@graphql-codegen/typescript-mongodb": "2.4.3",
     "@graphql-codegen/typescript-resolvers": "2.7.3",
-    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/node24": "^24.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cheerio": "^0.22.35",
     "@types/fs-extra": "^9.0.13",
@@ -51,7 +51,7 @@
     "eslint-plugin-import": "^2.26.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.2"
   }
 }

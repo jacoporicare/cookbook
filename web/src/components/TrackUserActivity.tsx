@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect } from 'react';
 
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../app/AuthProvider';
 import { useUpdateUserLastActivityMutation } from '../generated/graphql';
 
 function TrackUserActivity() {
@@ -12,11 +14,13 @@ function TrackUserActivity() {
 
     if (token) {
       updateUserLastActivity();
-      int = token ? window.setInterval(updateUserLastActivity, 60 * 1000) : undefined;
+      int = window.setInterval(updateUserLastActivity, 60 * 1000);
     }
 
     return () => {
-      int && window.clearInterval(int);
+      if (int) {
+        window.clearInterval(int);
+      }
     };
   }, [updateUserLastActivity, token]);
 

@@ -1,8 +1,10 @@
+'use client';
+
 import { ExitToApp } from '@mui/icons-material';
 import { Box, CircularProgress } from '@mui/material';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../app/AuthProvider';
 import { colors } from '../../styles/colors';
 import NavLink from '../Nav/NavLink';
 
@@ -14,7 +16,7 @@ type Props = {
 
 function UserInfo(props: Props) {
   const [token] = useAuth();
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <>
@@ -41,11 +43,11 @@ function UserInfo(props: Props) {
       </Box>
       {!token ? (
         <NavLink
-          active={router.pathname === '/prihlaseni'}
+          active={pathname === '/prihlaseni'}
           href={
-            !router.asPath || router.asPath.startsWith('/prihlaseni')
+            !pathname || pathname.startsWith('/prihlaseni')
               ? '/prihlaseni'
-              : `/prihlaseni?u=${router.asPath || ''}`
+              : `/prihlaseni?u=${pathname || ''}`
           }
         >
           Přihlásit
@@ -70,7 +72,7 @@ function UserInfo(props: Props) {
           ) : (
             <NavLink href="/nastaveni">{props.userName}</NavLink>
           )}
-          <NavLink href={`/odhlaseni?u=${router.asPath || ''}`}>
+          <NavLink href={`/odhlaseni?u=${pathname || ''}`}>
             <ExitToApp fontSize="inherit" />{' '}
             <Box
               component="span"

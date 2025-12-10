@@ -6,7 +6,7 @@ import { colors } from '../../styles/colors';
 
 function WakeLock() {
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
-  const wakeLock = useRef<WakeLock>();
+  const wakeLock = useRef<WakeLockSentinel | undefined>(undefined);
 
   const wakeLockSupported = 'wakeLock' in navigator;
 

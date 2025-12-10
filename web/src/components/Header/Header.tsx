@@ -1,3 +1,5 @@
+'use client';
+
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -29,27 +31,20 @@ function Header(props: Props) {
     >
       <Box display="flex" justifyContent="space-between" px={[3, 4]} py={1}>
         <Box alignItems="center" display="flex">
-          <Link href="/" passHref>
-            <Box
-              component="a"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                fontFamily: "'Amatic SC', cursive",
-                fontSize: '36px',
-                color: 'white',
-                textDecoration: 'none',
-
-                '&:hover': {
-                  color: 'white',
-                  textDecoration: 'none',
-                },
-              }}
-            >
-              <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
-              <Box display={['none', 'inline']} ml={3}>
-                Žrádelník
-              </Box>
+          <Link
+            href="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              fontFamily: "'Amatic SC', cursive",
+              fontSize: '36px',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
+            <Box display={['none', 'inline']} ml={3}>
+              Žrádelník
             </Box>
           </Link>
         </Box>
