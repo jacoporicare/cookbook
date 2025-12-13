@@ -7,30 +7,32 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import slug from 'slug';
 
-import { useAuth } from './AuthProvider';
 import Layout from '@/components/Layout';
 import RecipeImportModal from '@/components/RecipeImport/RecipeImportModal';
 import RecipeList from '@/components/RecipeList/RecipeList';
 import Search from '@/components/RecipeList/Search';
 import FabContainer from '@/components/common/FabContainer';
 import PageHeading from '@/components/common/PageHeading';
-import SpinnerIf from '@/components/common/SpinnerIf';
 import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
-import { useRecipeListQuery } from '@/generated/graphql';
+import { RecipeListQuery } from '@/generated/graphql';
 import useHideOnScroll from '@/hooks/useHideOnScroll';
 
-export default function RecipeListPage() {
+type Props = {
+  recipes: RecipeListQuery['recipes'];
+  tags: RecipeListQuery['tags'];
+  isLoggedIn: boolean;
+};
+
+export default function RecipeListPage({ recipes: allRecipesRaw, tags: allTags, isLoggedIn }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchTags = searchParams.get('stitky')?.split(' ') ?? [];
   const isInstantPotPage = pathname === `/${INSTANT_POT_TAG_SLUG}`;
 
-  const [token] = useAuth();
   const [searchVisible, setSearchVisible] = useState(searchTags.length > 0);
   const [matchAll, setMatchAll] = useState(false);
   const [importModalVisible, setImportModalVisible] = useState(false);
-  const { data, error, loading } = useRecipeListQuery();
   const fabHidden = useHideOnScroll();
 
   function handleSearchVisibilityToggle() {
@@ -49,24 +51,14 @@ export default function RecipeListPage() {
     setMatchAll(matchAll);
   }
 
-  if (error) {
-    return (
-      <Layout>
-        <Alert severity="error">Nastala neočekávná chyba.</Alert>
-      </Layout>
-    );
-  }
-
-  const tags =
-    (isInstantPotPage ? data?.tags.filter(t => t !== INSTANT_POT_TAG) : data?.tags) ?? [];
+  const tags = isInstantPotPage ? allTags.filter(t => t !== INSTANT_POT_TAG) : allTags;
   const tagOptions: { value: string; label: string }[] = tags.map(t => ({
     value: slug(t),
     label: t,
   }));
-  const allRecipes =
-    (isInstantPotPage
-      ? data?.recipes.filter(recipe => recipe.tags.includes(INSTANT_POT_TAG))
-      : data?.recipes) ?? [];
+  const allRecipes = isInstantPotPage
+    ? allRecipesRaw.filter(recipe => recipe.tags.includes(INSTANT_POT_TAG))
+    : allRecipesRaw;
   const recipes =
     searchTags.length > 0
       ? allRecipes.filter(recipe =>
@@ -106,16 +98,14 @@ export default function RecipeListPage() {
           />
         )}
         {isEmpty ? (
-          <SpinnerIf spinner={loading}>
-            <Alert elevation={1} severity="info">
-              Žádné recepty.
-            </Alert>
-          </SpinnerIf>
+          <Alert elevation={1} severity="info">
+            Žádné recepty.
+          </Alert>
         ) : (
           <RecipeList recipes={recipes} />
         )}
       </section>
-      {token && (
+      {isLoggedIn && (
         <FabContainer>
           <SpeedDial
             ariaLabel="Vytvořit recept"

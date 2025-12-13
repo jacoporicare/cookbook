@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+
+import { getClient } from '@/lib/apollo-client';
+import { getCurrentUser } from '@/lib/auth-server';
+import { RecipeEditOptionsDocument } from '@/generated/graphql';
 
 import RecipeEditPage from './RecipeEditPage';
 
@@ -7,10 +11,22 @@ export const metadata: Metadata = {
   title: 'Nový recept',
 };
 
-export default function Page() {
+export default async function Page() {
+  const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
+
+  if (!user) {
+    redirect('/prihlaseni');
+  }
+
+  const { data } = await client.query({ query: RecipeEditOptionsDocument });
+
   return (
-    <Suspense fallback={null}>
-      <RecipeEditPage />
-    </Suspense>
+    <RecipeEditPage
+      options={{
+        ingredients: data.ingredients,
+        sideDishes: data.sideDishes,
+        tags: data.tags,
+      }}
+    />
   );
 }

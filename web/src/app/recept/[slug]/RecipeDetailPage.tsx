@@ -2,92 +2,30 @@
 
 import { Alert, AlertColor, Box, Snackbar } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
-import { useAuth } from '../../AuthProvider';
+import { deleteRecipeAction } from '@/app/actions/recipe';
 import Layout from '@/components/Layout';
 import RecipeDeleteModal from '@/components/RecipeDeleteModal/RecipeDeleteModal';
 import RecipeDetail from '@/components/RecipeDetail/RecipeDetail';
 import RecipeHeader from '@/components/RecipeDetail/RecipeHeader';
 import Spinner from '@/components/common/Spinner';
-import SpinnerIf from '@/components/common/SpinnerIf';
 import { INSTANT_POT_TAG } from '@/const';
-import {
-  RecipeListDocument,
-  RecipeListQuery,
-  useDeleteRecipeMutation,
-  useMeQuery,
-  useRecipeDetailQuery,
-} from '@/generated/graphql';
+import { RecipeDetailQuery } from '@/generated/graphql';
+
 type Props = {
-  slug: string;
+  recipe: NonNullable<RecipeDetailQuery['recipe']>;
+  isAuthor: boolean;
 };
 
-export default function RecipeDetailPage({ slug: querySlug }: Props) {
-  const [token] = useAuth();
+export default function RecipeDetailPage({ recipe, isAuthor }: Props) {
   const router = useRouter();
-
+  const [isPending, startTransition] = useTransition();
   const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
-
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const { data: recipeData, loading: recipeLoading } = useRecipeDetailQuery({
-    variables: { slug: querySlug },
-  });
-  const { data: meData, loading: meLoading } = useMeQuery({
-    skip: !token,
-  });
-  const [deleteRecipe] = useDeleteRecipeMutation({
-    onCompleted: () => {
-      router.push('/');
-    },
-    onError: () => {
-      setSnackbar(['error', 'Nastala neočekávaná chyba']);
-    },
-    update: (store, result) => {
-      if (!result.data || !result.data) {
-        return;
-      }
-
-      const cacheData = store.readQuery<RecipeListQuery>({ query: RecipeListDocument });
-
-      if (!cacheData) {
-        return;
-      }
-
-      const data = {
-        ...cacheData,
-        recipes: cacheData.recipes.filter(r => r.slug !== querySlug),
-      };
-
-      store.writeQuery({ query: RecipeListDocument, data });
-    },
-  });
-
-  const recipe = recipeData?.recipe;
-  const me = meData?.me;
-  const loading = recipeLoading || meLoading;
-
-  function handleDeleteConfirm() {
-    if (!recipe) {
-      return;
-    }
-
-    deleteRecipe({ variables: { id: recipe.id } });
-  }
-
-  if (!recipe) {
-    return (
-      <Layout>
-        <SpinnerIf spinner={loading}>
-          <Alert elevation={1} severity="error">
-            Recept nenalezen.
-          </Alert>
-        </SpinnerIf>
-      </Layout>
-    );
-  }
 
   const {
+    id,
     directions,
     ingredients,
     lastModifiedDate,
@@ -102,12 +40,24 @@ export default function RecipeDetailPage({ slug: querySlug }: Props) {
     user,
   } = recipe;
 
+  function handleDeleteConfirm() {
+    startTransition(async () => {
+      const result = await deleteRecipeAction(id);
+      if (result.error) {
+        setSnackbar(['error', result.error]);
+        setDeleteModalVisible(false);
+      } else {
+        router.push('/');
+      }
+    });
+  }
+
   return (
     <>
       <Layout>
         <Box component="article">
           <RecipeHeader
-            isAuthor={Boolean(me && (me.username === user.username || me.isAdmin))}
+            isAuthor={isAuthor}
             preparationTime={preparationTime ?? undefined}
             sideDish={sideDish ?? undefined}
             slug={slug}
@@ -115,7 +65,7 @@ export default function RecipeDetailPage({ slug: querySlug }: Props) {
             title={title}
             onDeleteShow={() => setDeleteModalVisible(true)}
           />
-          {loading && <Spinner />}
+          {isPending && <Spinner />}
           <RecipeDetail
             directions={directions ?? undefined}
             imageFullUrl={imageWebPUrl ?? undefined}

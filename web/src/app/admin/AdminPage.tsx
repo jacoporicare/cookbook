@@ -29,11 +29,9 @@ import { ReactNode, useState } from 'react';
 
 import Layout from '@/components/Layout';
 import PageHeading from '@/components/common/PageHeading';
-import Spinner from '@/components/common/Spinner';
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
-  useMeQuery,
   useResetPasswordMutation,
   UserFragment,
   useUpdateUserMutation,
@@ -49,7 +47,12 @@ type DialogOptions = {
   };
 };
 
-export default function AdminPage() {
+type Props = {
+  users: UserFragment[];
+  currentUserId: string;
+};
+
+export default function AdminPage({ users: initialUsers, currentUserId }: Props) {
   const router = useRouter();
 
   const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
@@ -64,8 +67,10 @@ export default function AdminPage() {
   const [newDisplayName, setNewDisplayName] = useState<string>();
   const [newIsAdmin, setNewIsAdmin] = useState(false);
 
-  const { data: meData, loading: meLoading } = useMeQuery();
-  const { data, error, loading: usersLoading, refetch: refetchUsers } = useUserListQuery();
+  // Keep query for refetching after mutations
+  const { data, refetch: refetchUsers } = useUserListQuery();
+  const users = data?.users ?? initialUsers;
+
   const [createUser, { loading: creating }] = useCreateUserMutation({
     onCompleted: () => {
       setNewUsername(undefined);
@@ -82,6 +87,7 @@ export default function AdminPage() {
   const [updateUser, { loading: updating }] = useUpdateUserMutation({
     onCompleted: () => {
       setUserIdEditing('');
+      refetchUsers();
     },
     onError: () => {
       setSnackbar(['error', 'Nastala neočekávaná chyba']);
@@ -149,7 +155,7 @@ export default function AdminPage() {
   }
 
   function handleDelete(user: UserFragment) {
-    if (user.id === meData!.me!.id) {
+    if (user.id === currentUserId) {
       return;
     }
 
@@ -186,31 +192,6 @@ export default function AdminPage() {
     });
     setDialogOpen(true);
   }
-
-  if (meLoading || usersLoading) {
-    return (
-      <Layout>
-        <Spinner />
-      </Layout>
-    );
-  }
-
-  if (!meData?.me?.isAdmin) {
-    router.push('/');
-    return null;
-  }
-
-  if (error) {
-    return (
-      <Layout>
-        <Alert elevation={1} severity="error">
-          Nastala neočekávná chyba.
-        </Alert>
-      </Layout>
-    );
-  }
-
-  const users = (data && data.users) || [];
 
   return (
     <>
@@ -260,7 +241,7 @@ export default function AdminPage() {
                           <Switch
                             checked={isAdmin}
                             color="primary"
-                            disabled={user.id === meData!.me!.id}
+                            disabled={user.id === currentUserId}
                             inputProps={{ 'aria-label': 'Admin' }}
                             onChange={() => setIsAdmin(!isAdmin)}
                           />
@@ -299,7 +280,7 @@ export default function AdminPage() {
                           <Edit />
                         </IconButton>{' '}
                         <IconButton
-                          disabled={user.id === meData!.me!.id}
+                          disabled={user.id === currentUserId}
                           onClick={() => handleDelete(user)}
                         >
                           <Delete />

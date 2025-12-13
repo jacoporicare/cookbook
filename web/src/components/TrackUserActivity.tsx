@@ -2,27 +2,24 @@
 
 import { useEffect } from 'react';
 
-import { useAuth } from '../app/AuthProvider';
-import { useUpdateUserLastActivityMutation } from '../generated/graphql';
+import { useAuth } from '@/app/AuthProvider';
+import { trackUserActivityAction } from '@/app/actions/user';
 
 function TrackUserActivity() {
   const [token] = useAuth();
-  const [updateUserLastActivity] = useUpdateUserLastActivityMutation();
 
   useEffect(() => {
-    let int: number | undefined = undefined;
-
-    if (token) {
-      updateUserLastActivity();
-      int = window.setInterval(updateUserLastActivity, 60 * 1000);
+    if (!token) {
+      return;
     }
 
+    trackUserActivityAction();
+    const interval = window.setInterval(trackUserActivityAction, 60 * 1000);
+
     return () => {
-      if (int) {
-        window.clearInterval(int);
-      }
+      window.clearInterval(interval);
     };
-  }, [updateUserLastActivity, token]);
+  }, [token]);
 
   return null;
 }

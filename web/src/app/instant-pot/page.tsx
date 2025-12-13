@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+
+import { getClient } from '@/lib/apollo-client';
+import { getCurrentUser } from '@/lib/auth-server';
+import { RecipeListDocument } from '@/generated/graphql';
 
 import RecipeListPage from '../RecipeListPage';
 
@@ -7,10 +10,15 @@ export const metadata: Metadata = {
   title: 'Instant Pot recepty',
 };
 
-export default function Page() {
+export default async function Page() {
+  const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
+  const { data } = await client.query({ query: RecipeListDocument });
+
   return (
-    <Suspense fallback={null}>
-      <RecipeListPage />
-    </Suspense>
+    <RecipeListPage
+      recipes={data.recipes}
+      tags={data.tags}
+      isLoggedIn={!!user}
+    />
   );
 }

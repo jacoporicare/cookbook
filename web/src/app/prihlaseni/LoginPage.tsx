@@ -1,106 +1,151 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  FormControlLabel,
+  GlobalStyles,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { useActionState, useEffect } from 'react';
 
-import { useAuth } from '../AuthProvider';
+import { loginAction, LoginState } from '@/app/actions/auth';
 import Layout from '@/components/Layout';
-import LoginForm from '@/components/LoginForm/LoginForm';
-import { MeDocument, useLoginMutation } from '@/generated/graphql';
+import PageHeading from '@/components/common/PageHeading';
+import Spinner from '@/components/common/Spinner';
+
+const initialState: LoginState = {};
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [, setToken] = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(true);
-
   const redirectUri = searchParams.get('redirect_uri');
   const returnUrl = searchParams.get('u');
 
-  const [login, { loading, error }] = useLoginMutation({
-    refetchQueries: result => {
-      const token = result.data && result.data.login.token;
+  const [state, formAction, pending] = useActionState(loginAction, initialState);
 
-      if (!token) {
-        return [];
-      }
-
-      setToken(token);
-
-      return [{ query: MeDocument }];
-    },
-    onCompleted: data => {
-      if (!redirectUri) {
-        router.push(returnUrl || '/');
-        return;
-      }
-
-      const redirectUrl = new URL(redirectUri);
-      redirectUrl.searchParams.set('access_token', data.login.token);
-
-      window.location.href = redirectUrl.toString();
-    },
-  });
-
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value, checked } = event.target;
-
-    switch (name) {
-      case 'username':
-        setUsername(value);
-        break;
-
-      case 'password':
-        setPassword(value);
-        break;
-
-      case 'rememberMe':
-        setRememberMe(checked);
-        break;
-
-      default:
-        break;
+  // Handle WebView redirect (needs client-side window.location)
+  useEffect(() => {
+    if (state.redirectUrl) {
+      window.location.href = state.redirectUrl;
     }
-  }
+  }, [state.redirectUrl]);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const isForWebView = !!redirectUri;
 
-    try {
-      await login({ variables: { username, password } });
-    } catch (e) {
-      // To prevent uncaught promise, using error from the tuple
-    }
-  }
+  const content = (
+    <Box p={isForWebView ? 5 : 3}>
+      {isForWebView && (
+        <Box alignItems="center" component="header" display="flex" flexDirection="column" mb={3}>
+          <Box alignItems="center" display="flex">
+            <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
+            <Typography fontSize="1.5rem" fontWeight={400} ml={1} variant="h1">
+              Žrádelník
+            </Typography>
+          </Box>
+        </Box>
+      )}
+      {state.error && (
+        <Box mb={3}>
+          <Alert severity="error">{state.error}</Alert>
+        </Box>
+      )}
+      <form action={formAction}>
+        {/* Hidden fields for redirect handling */}
+        {redirectUri && <input type="hidden" name="redirect_uri" value={redirectUri} />}
+        {returnUrl && <input type="hidden" name="return_url" value={returnUrl} />}
 
-  if (redirectUri) {
-    return (
-      <LoginForm
-        error={Boolean(error)}
-        isSubmitting={loading}
-        password={password}
-        rememberMe={rememberMe}
-        username={username}
-        isForWebView
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-      />
-    );
-  }
-
-  return (
-    <Layout static>
-      <LoginForm
-        error={Boolean(error)}
-        isSubmitting={loading}
-        password={password}
-        rememberMe={rememberMe}
-        username={username}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-      />
-    </Layout>
+        <Grid direction="column" spacing={3} container>
+          <Grid item>
+            <TextField
+              inputProps={{
+                autoCapitalize: 'off',
+                autoComplete: 'username',
+                autoCorrect: 'off',
+              }}
+              label="Uživatel"
+              name="username"
+              variant="filled"
+              fullWidth
+              required
+              error={!!state.fieldErrors?.username}
+              helperText={state.fieldErrors?.username?.[0]}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              inputProps={{
+                autoComplete: 'current-password',
+              }}
+              label="Heslo"
+              name="password"
+              type="password"
+              variant="filled"
+              fullWidth
+              required
+              error={!!state.fieldErrors?.password}
+              helperText={state.fieldErrors?.password?.[0]}
+            />
+          </Grid>
+          <Grid item>
+            <Box alignItems="center" display="flex" justifyContent="space-between">
+              {!isForWebView && (
+                <FormControlLabel
+                  control={<Checkbox color="primary" name="rememberMe" defaultChecked />}
+                  label="Neodhlašovat"
+                />
+              )}
+              <Button
+                color="primary"
+                disabled={pending}
+                fullWidth={isForWebView}
+                size={isForWebView ? 'large' : 'medium'}
+                type="submit"
+                variant="contained"
+              >
+                Přihlásit
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </form>
+    </Box>
   );
+
+  const formContent = (
+    <>
+      {pending && <Spinner overlay />}
+      <Box maxWidth="28rem" mx="auto" px={isForWebView ? 0 : 3}>
+        {isForWebView ? (
+          content
+        ) : (
+          <>
+            <PageHeading>Přihlášení</PageHeading>
+            <Card>{content}</Card>
+          </>
+        )}
+      </Box>
+      {isForWebView && (
+        <GlobalStyles
+          styles={{
+            body: {
+              backgroundColor: 'white',
+            },
+          }}
+        />
+      )}
+    </>
+  );
+
+  if (isForWebView) {
+    return formContent;
+  }
+
+  return <Layout static>{formContent}</Layout>;
 }

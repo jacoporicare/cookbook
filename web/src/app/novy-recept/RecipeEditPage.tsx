@@ -7,7 +7,6 @@ import { FormEvent, useEffect, useState } from 'react';
 
 import Layout from '@/components/Layout';
 import RecipeEdit, { RecipeEditFields } from '@/components/RecipeEdit/RecipeEdit';
-import SpinnerIf from '@/components/common/SpinnerIf';
 import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
 import {
   RecipeListQuery,
@@ -15,12 +14,12 @@ import {
   CreateRecipeMutation,
   UpdateRecipeMutation,
   Ingredient,
-  useRecipeEditQuery,
-  useRecipeEditOptionsQuery,
+  RecipeEditQuery,
   useCreateRecipeMutation,
   useUpdateRecipeMutation,
   RecipeInput,
 } from '@/generated/graphql';
+
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
 function isCreateMutation(
@@ -30,35 +29,48 @@ function isCreateMutation(
 }
 
 type Props = {
-  slug?: string;
+  recipe?: NonNullable<RecipeEditQuery['recipe']>;
+  options: {
+    ingredients: string[];
+    sideDishes: string[];
+    tags: string[];
+  };
 };
 
-export default function RecipeEditPage({ slug }: Props) {
+export default function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const isInstantPotNewRecipe = searchParams.has(INSTANT_POT_TAG_SLUG);
+  const isNew = !initialRecipe;
 
   const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
-
   const [changed, setChanged] = useState(false);
   const [image, setImage] = useState<File>();
-  const [id, setId] = useState('');
-  const [title, setTitle] = useState('');
-  const [sideDish, setSideDish] = useState('');
-  const [directions, setDirections] = useState('');
-  const [preparationTime, setPreparationTime] = useState<number>();
-  const [servingCount, setServingCount] = useState<number>();
-  const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id' | 'id'>[]>([]);
-  const [tags, setTags] = useState<string[]>(isInstantPotNewRecipe ? [INSTANT_POT_TAG] : []);
 
-  const { data, loading } = useRecipeEditQuery({
-    variables: { slug: slug! },
-    skip: !slug,
-  });
-  const { data: dataOptions } = useRecipeEditOptionsQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  // Initialize state from props
+  const [title, setTitle] = useState(initialRecipe?.title ?? '');
+  const [sideDish, setSideDish] = useState(initialRecipe?.sideDish ?? '');
+  const [directions, setDirections] = useState(initialRecipe?.directions ?? '');
+  const [preparationTime, setPreparationTime] = useState<number | undefined>(
+    initialRecipe?.preparationTime ?? undefined,
+  );
+  const [servingCount, setServingCount] = useState<number | undefined>(
+    initialRecipe?.servingCount ?? undefined,
+  );
+  const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id' | 'id'>[]>(
+    initialRecipe?.ingredients?.map(i => ({
+      name: i.name,
+      amount: i.amount,
+      amountUnit: i.amountUnit,
+      isGroup: i.isGroup,
+    })) ?? [],
+  );
+  const [tags, setTags] = useState<string[]>(
+    initialRecipe?.tags ?? (isInstantPotNewRecipe ? [INSTANT_POT_TAG] : []),
+  );
+
+  // Keep mutations for file upload support
   const [createRecipe, { loading: creating }] = useCreateRecipeMutation({
     onCompleted: handleSave,
     onError: handleError,
@@ -86,25 +98,6 @@ export default function RecipeEditPage({ slug }: Props) {
     onError: handleError,
   });
   const isSaving = creating || updating;
-  const editedRecipe = data && data.recipe;
-
-  if (editedRecipe && editedRecipe.id !== id) {
-    setId(editedRecipe.id);
-    setTitle(editedRecipe.title);
-    setSideDish(editedRecipe.sideDish || '');
-    setTags(editedRecipe.tags || []);
-    setDirections(editedRecipe.directions || '');
-    setPreparationTime(editedRecipe.preparationTime ?? undefined);
-    setServingCount(editedRecipe.servingCount ?? undefined);
-    setIngredients(
-      (editedRecipe.ingredients || []).map(i => ({
-        name: i.name,
-        amount: i.amount,
-        amountUnit: i.amountUnit,
-        isGroup: i.isGroup,
-      })),
-    );
-  }
 
   useEffect(() => {
     if (changed) {
@@ -218,10 +211,10 @@ export default function RecipeEditPage({ slug }: Props) {
       tags: tags?.length ? tags : null,
     };
 
-    if (editedRecipe) {
+    if (initialRecipe) {
       updateRecipe({
         variables: {
-          id: editedRecipe.id,
+          id: initialRecipe.id,
           recipe: recipeInput,
           image,
         },
@@ -251,34 +244,22 @@ export default function RecipeEditPage({ slug }: Props) {
     }
   }
 
-  if (slug && !editedRecipe) {
-    return (
-      <Layout>
-        <SpinnerIf spinner={loading}>
-          <Alert elevation={1} severity="error">
-            Recept nenalezen.
-          </Alert>
-        </SpinnerIf>
-      </Layout>
-    );
-  }
-
   return (
     <>
       <Layout>
         <RecipeEdit
           changed={changed}
           directions={directions}
-          imageUrl={editedRecipe?.imageThumbWebPUrl ?? undefined}
-          ingredientOptions={dataOptions?.ingredients ?? []}
+          imageUrl={initialRecipe?.imageThumbWebPUrl ?? undefined}
+          ingredientOptions={options.ingredients}
           ingredients={ingredients}
-          isNew={!slug}
+          isNew={isNew}
           isSaving={isSaving}
           preparationTime={preparationTime}
           servingCount={servingCount}
           sideDish={sideDish}
-          sideDishOptions={dataOptions?.sideDishes ?? []}
-          tagOptions={dataOptions?.tags ?? []}
+          sideDishOptions={options.sideDishes}
+          tagOptions={options.tags}
           tags={tags}
           title={title}
           onAddGroup={handleAddGroup}
