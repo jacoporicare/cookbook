@@ -82,7 +82,7 @@ export async function deleteRecipeAction(recipeId: string): Promise<DeleteRecipe
 
 export async function importRecipeAction(
   prevState: ImportRecipeState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ImportRecipeState> {
   const user = await getCurrentUser();
   if (!user) {
@@ -121,7 +121,7 @@ export async function importRecipeAction(
 
 export async function createRecipeAction(
   prevState: RecipeFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<RecipeFormState> {
   const user = await getCurrentUser();
   if (!user) {
@@ -170,7 +170,7 @@ export async function createRecipeAction(
 export async function updateRecipeAction(
   recipeId: string,
   prevState: RecipeFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<RecipeFormState> {
   const user = await getCurrentUser();
   if (!user) {

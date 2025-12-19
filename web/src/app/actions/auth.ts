@@ -6,10 +6,7 @@ import { z } from 'zod';
 
 import { getClient } from '@/lib/apollo-client';
 import { AUTH_TOKEN_KEY } from '@/const';
-import {
-  LoginDocument,
-  ChangePasswordDocument,
-} from '@/generated/graphql';
+import { LoginDocument, ChangePasswordDocument } from '@/generated/graphql';
 
 // Schemas
 const loginSchema = z.object({
@@ -41,10 +38,7 @@ export type ChangePasswordState = {
 };
 
 // Actions
-export async function loginAction(
-  prevState: LoginState,
-  formData: FormData
-): Promise<LoginState> {
+export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
   const rawData = {
     username: formData.get('username') as string,
     password: formData.get('password') as string,
@@ -107,7 +101,7 @@ export async function logoutAction(): Promise<void> {
 
 export async function changePasswordAction(
   prevState: ChangePasswordState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ChangePasswordState> {
   const rawData = {
     password: formData.get('password') as string,

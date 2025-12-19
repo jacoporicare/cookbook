@@ -14,11 +14,5 @@ export default async function Page() {
   const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
   const { data } = await client.query({ query: RecipeListDocument });
 
-  return (
-    <RecipeListPage
-      recipes={data.recipes}
-      tags={data.tags}
-      isLoggedIn={!!user}
-    />
-  );
+  return <RecipeListPage recipes={data.recipes} tags={data.tags} isLoggedIn={!!user} />;
 }

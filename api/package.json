@@ -1,5 +1,7 @@
 {
   "name": "cookbook-api",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
     "start": "tsx watch src/main.ts",
     "start:inspect": "tsx watch --inspect=0.0.0.0 src/main.ts",

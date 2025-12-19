@@ -19,8 +19,8 @@ export default function PrivacyPolicyPage() {
         disclosure of Personal Information if anyone decided to use the Service.
       </p>
       <p>
-        If you choose to use the Service, then you agree to the collection and use of information
-        in relation to this policy. The Personal Information collected is used for providing and
+        If you choose to use the Service, then you agree to the collection and use of information in
+        relation to this policy. The Personal Information collected is used for providing and
         improving the Service.
       </p>
       <p>

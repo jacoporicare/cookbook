@@ -23,7 +23,11 @@ type Props = {
   isLoggedIn: boolean;
 };
 
-export default function RecipeListPage({ recipes: allRecipesRaw, tags: allTags, isLoggedIn }: Props) {
+export default function RecipeListPage({
+  recipes: allRecipesRaw,
+  tags: allTags,
+  isLoggedIn,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

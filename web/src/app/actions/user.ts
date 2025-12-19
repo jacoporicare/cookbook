@@ -48,7 +48,7 @@ async function requireAdmin() {
 // Actions
 export async function createUserAction(
   prevState: UserFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<UserFormState> {
   try {
     await requireAdmin();
@@ -84,7 +84,7 @@ export async function createUserAction(
 export async function updateUserAction(
   userId: string,
   prevState: UserFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<UserFormState> {
   try {
     await requireAdmin();

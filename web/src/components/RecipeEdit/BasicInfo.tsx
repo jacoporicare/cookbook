@@ -141,7 +141,7 @@ function BasicInfo({
                 onTagsChange(
                   e.target.checked
                     ? [...(tags ?? []), INSTANT_POT_TAG]
-                    : tags?.filter(t => t !== INSTANT_POT_TAG) ?? [],
+                    : (tags?.filter(t => t !== INSTANT_POT_TAG) ?? []),
                 )
               }
             />

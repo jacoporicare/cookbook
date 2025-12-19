@@ -112,10 +112,7 @@ function Nav(props: Props) {
         <NavLink active={pathname === '/'} href="/">
           Recepty
         </NavLink>
-        <NavLink
-          active={pathname === `/${INSTANT_POT_TAG_SLUG}`}
-          href={`/${INSTANT_POT_TAG_SLUG}`}
-        >
+        <NavLink active={pathname === `/${INSTANT_POT_TAG_SLUG}`} href={`/${INSTANT_POT_TAG_SLUG}`}>
           Instant Pot
         </NavLink>
         <NavLink active={pathname === '/prilohy'} href="/prilohy">

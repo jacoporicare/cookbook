@@ -1,0 +1,5 @@
+package.json
+.next/
+generated/
+schema.json
+yarn.lock

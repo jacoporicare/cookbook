@@ -8,7 +8,6 @@
     "dev:inspect": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "prettier": "prettier --write './src/**/*.{ts,tsx}'",
     "lint": "next lint",
     "schema:local": "npx apollo client:download-schema --endpoint=http://localhost:4000/graphql schema.json",
     "schema:dev": "npx apollo client:download-schema --endpoint=https://api-test.zradelnik.cz/graphql schema.json",
