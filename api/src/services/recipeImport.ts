@@ -24,7 +24,8 @@ async function fetchUrlContent(url: string): Promise<string> {
       headers: {
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        Accept:
+          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'Accept-Language': 'cs,en-US;q=0.9,en;q=0.8',
       },
       signal: controller.signal,
@@ -38,7 +39,9 @@ async function fetchUrlContent(url: string): Promise<string> {
 
     return await response.text();
   } catch (error) {
-    throw new Error('Nepodařilo se načíst recept z této URL. Zkontrolujte připojení k internetu.');
+    throw new Error(
+      'Nepodařilo se načíst recept z této URL. Zkontrolujte připojení k internetu.',
+    );
   }
 }
 
@@ -49,7 +52,9 @@ function cleanHtml(html: string): string {
   const $ = cheerio.load(html);
 
   // Remove unwanted elements
-  $('script, style, nav, header, footer, iframe, .ad, .advertisement, .cookie').remove();
+  $(
+    'script, style, nav, header, footer, iframe, .ad, .advertisement, .cookie',
+  ).remove();
 
   return $('body').html() || '';
 }
@@ -58,12 +63,18 @@ function cleanHtml(html: string): string {
 const IngredientSchema = z.object({
   name: z.string().describe('Název ingredience v nominativu'),
   amount: z.number().nullable().optional().describe('Množství (číslo)'),
-  amountUnit: z.string().nullable().optional().describe('Jednotka (g, ml, lžíce, ks, atd.)'),
+  amountUnit: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('Jednotka (g, ml, lžíce, ks, atd.)'),
   isGroup: z
     .boolean()
     .optional()
     .default(false)
-    .describe('True pokud je to nadpis skupiny (Těsto, Náplň, atd.), false pro běžnou ingredienci'),
+    .describe(
+      'True pokud je to nadpis skupiny (Těsto, Náplň, atd.), false pro běžnou ingredienci',
+    ),
 });
 
 const RecipeSchema = z.object({
@@ -72,7 +83,9 @@ const RecipeSchema = z.object({
     .string()
     .nullable()
     .optional()
-    .describe('Postup přípravy s číslovanými kroky oddělený \\n, formátovaný pomocí Markdown'),
+    .describe(
+      'Postup přípravy s číslovanými kroky oddělený \\n, formátovaný pomocí Markdown',
+    ),
   sideDish: z.string().nullable().optional().describe('Doporučená příloha'),
   preparationTime: z
     .number()
@@ -81,8 +94,16 @@ const RecipeSchema = z.object({
     .optional()
     .describe('Celková doba přípravy v minutách'),
   servingCount: z.number().int().nullable().optional().describe('Počet porcí'),
-  ingredients: z.array(IngredientSchema).nullable().optional().describe('Seznam ingrediencí'),
-  tags: z.array(z.string()).nullable().optional().describe('Tagy/kategorie receptu'),
+  ingredients: z
+    .array(IngredientSchema)
+    .nullable()
+    .optional()
+    .describe('Seznam ingrediencí'),
+  tags: z
+    .array(z.string())
+    .nullable()
+    .optional()
+    .describe('Tagy/kategorie receptu'),
 });
 
 // Type inference from Zod schema
@@ -131,21 +152,22 @@ Když vidíš sekce jako "Na těsto:", "Náplň:", "Poleva:", vytvoř nejdřív 
 {name: "mouka", amount: 250, amountUnit: "g"}`;
 
   try {
-    const completion: ParsedChatCompletion<ParsedRecipe> = await openai.chat.completions.parse({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: `Extrahuj recept z tohoto HTML:\n\n${cleanedHtml.substring(0, 50000)}`,
-        },
-      ],
-      response_format: zodResponseFormat(RecipeSchema, 'recipe'),
-      temperature: 0.2,
-    });
+    const completion: ParsedChatCompletion<ParsedRecipe> =
+      await openai.chat.completions.parse({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt,
+          },
+          {
+            role: 'user',
+            content: `Extrahuj recept z tohoto HTML:\n\n${cleanedHtml.substring(0, 50000)}`,
+          },
+        ],
+        response_format: zodResponseFormat(RecipeSchema, 'recipe'),
+        temperature: 0.2,
+      });
 
     const parsed = completion.choices[0]?.message?.parsed;
 
@@ -159,7 +181,7 @@ Když vidíš sekce jako "Na těsto:", "Náplň:", "Poleva:", vytvoř nejdřív 
       sideDish: parsed.sideDish ?? undefined,
       preparationTime: parsed.preparationTime ?? undefined,
       servingCount: parsed.servingCount ?? undefined,
-      ingredients: parsed.ingredients?.map(ing => ({
+      ingredients: parsed.ingredients?.map((ing) => ({
         name: ing.name,
         amount: ing.amount ?? undefined,
         amountUnit: ing.amountUnit ?? undefined,

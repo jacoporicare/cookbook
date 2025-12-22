@@ -4,15 +4,15 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
 import {
+  CreateRecipeDocument,
   DeleteRecipeDocument,
   ImportRecipeDocument,
-  CreateRecipeDocument,
-  UpdateRecipeDocument,
   RecipeInput,
+  UpdateRecipeDocument,
 } from '@/generated/graphql';
+import { getClient } from '@/lib/apollo-client';
+import { getCurrentUser } from '@/lib/auth-server';
 
 // Schemas
 const ingredientSchema = z.object({
@@ -57,7 +57,9 @@ export type RecipeFormState = {
 };
 
 // Actions
-export async function deleteRecipeAction(recipeId: string): Promise<DeleteRecipeState> {
+export async function deleteRecipeAction(
+  recipeId: string,
+): Promise<DeleteRecipeState> {
   const user = await getCurrentUser();
   if (!user) {
     return { error: 'Nejste přihlášen' };
@@ -130,6 +132,7 @@ export async function createRecipeAction(
 
   // Parse recipe data from FormData
   const recipeDataJson = formData.get('recipeData') as string;
+  const imageId = formData.get('imageId') as string | null;
   let recipeData: RecipeInput;
 
   try {
@@ -149,7 +152,7 @@ export async function createRecipeAction(
       mutation: CreateRecipeDocument,
       variables: {
         recipe: validated.data as RecipeInput,
-        image: null, // File upload handled separately
+        imageId: imageId || null,
       },
     });
 
@@ -162,7 +165,10 @@ export async function createRecipeAction(
       success: true,
       recipeSlug: data.createRecipe.slug,
     };
-  } catch {
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('EEXIST')) {
+      return { error: 'Recept s tímto názvem již existuje' };
+    }
     return { error: 'Nepodařilo se vytvořit recept' };
   }
 }
@@ -179,6 +185,7 @@ export async function updateRecipeAction(
 
   // Parse recipe data from FormData
   const recipeDataJson = formData.get('recipeData') as string;
+  const imageId = formData.get('imageId') as string | null;
   let recipeData: RecipeInput;
 
   try {
@@ -199,7 +206,7 @@ export async function updateRecipeAction(
       variables: {
         id: recipeId,
         recipe: validated.data as RecipeInput,
-        image: null, // File upload handled separately
+        imageId: imageId || null,
       },
     });
 
@@ -213,7 +220,10 @@ export async function updateRecipeAction(
       success: true,
       recipeSlug: data.updateRecipe.slug,
     };
-  } catch {
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('EEXIST')) {
+      return { error: 'Recept s tímto názvem již existuje' };
+    }
     return { error: 'Nepodařilo se aktualizovat recept' };
   }
 }

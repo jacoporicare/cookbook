@@ -10,7 +10,12 @@ export const metadata: Metadata = {
 
 const sideDishes: SideDish[] = [
   { title: 'Brambory', sideWeight: '180 g' },
-  { title: 'Těstoviny', sideWeight: '70 g', mainWeight: '85 g', multiplicator: 2.4 },
+  {
+    title: 'Těstoviny',
+    sideWeight: '70 g',
+    mainWeight: '85 g',
+    multiplicator: 2.4,
+  },
   { title: 'Rýže', sideWeight: '70 g', mainWeight: '75 g', multiplicator: 3.1 },
   { title: 'Čočka', sideWeight: '60 g', mainWeight: '75 g' },
   { title: 'Fazole', multiplicator: 2.35 },

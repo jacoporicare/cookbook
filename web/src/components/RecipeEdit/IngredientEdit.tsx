@@ -1,10 +1,14 @@
-import { Box, Divider } from '@mui/material';
+'use client';
+
 import { useState } from 'react';
 
-import { Ingredient } from '../../generated/graphql';
+import { Separator } from '@/components/ui/separator';
 
+import { Ingredient } from '../../generated/graphql';
 import IngredientForm, { IngredientFields } from './IngredientForm';
-import IngredientGroupForm, { IngredientGroupFields } from './IngredientGroupForm';
+import IngredientGroupForm, {
+  IngredientGroupFields,
+} from './IngredientGroupForm';
 import IngredientList from './IngredientList';
 
 export type AddIngredientEventHandler = (
@@ -14,7 +18,10 @@ export type AddIngredientEventHandler = (
 ) => void;
 export type AddGroupEventHandler = (group: string) => void;
 export type RemoveEventHandler = (index: number) => void;
-export type SortHandler = (args: { oldIndex: number; newIndex: number }) => void;
+export type SortHandler = (args: {
+  oldIndex: number;
+  newIndex: number;
+}) => void;
 
 type Props = {
   items: Omit<Ingredient, '_id' | 'id'>[];
@@ -25,14 +32,24 @@ type Props = {
   onSort: SortHandler;
 };
 
-function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onAddGroup }: Props) {
+function IngredientEdit({
+  items,
+  ingredientOptions,
+  onRemove,
+  onSort,
+  onAdd,
+  onAddGroup,
+}: Props) {
   const [name, setName] = useState<string>();
   const [amount, setAmount] = useState<number>();
   const [amountUnit, setAmountUnit] = useState<string>();
   const [group, setGroup] = useState<string>();
 
-  function handleChange(name: IngredientFields | IngredientGroupFields, value: string) {
-    switch (name) {
+  function handleChange(
+    fieldName: IngredientFields | IngredientGroupFields,
+    value: string,
+  ) {
+    switch (fieldName) {
       case 'name':
         setName(value);
         break;
@@ -77,23 +94,23 @@ function IngredientEdit({ items, ingredientOptions, onRemove, onSort, onAdd, onA
   }
 
   return (
-    <>
+    <div className="space-y-6">
       <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
-      <Box mt={3}>
-        <IngredientForm
-          amount={amount}
-          amountUnit={amountUnit}
-          ingredientOptions={ingredientOptions}
-          name={name}
-          onAdd={handleAddIngredient}
-          onChange={handleChange}
-        />
-      </Box>
-      <Divider sx={{ mt: 3 }} />
-      <Box mt={3}>
-        <IngredientGroupForm group={group} onAdd={handleAddGroup} onChange={handleChange} />
-      </Box>
-    </>
+      <IngredientForm
+        amount={amount}
+        amountUnit={amountUnit}
+        ingredientOptions={ingredientOptions}
+        name={name}
+        onAdd={handleAddIngredient}
+        onChange={handleChange}
+      />
+      <Separator />
+      <IngredientGroupForm
+        group={group}
+        onAdd={handleAddGroup}
+        onChange={handleChange}
+      />
+    </div>
   );
 }
 

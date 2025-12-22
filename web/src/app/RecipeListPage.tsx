@@ -1,9 +1,7 @@
 'use client';
 
-import { Add, AutoAwesome, Close, FilterList } from '@mui/icons-material';
-import { Alert, Button, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { Filter, Plus, Sparkles, X } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import slug from 'slug';
 
@@ -13,6 +11,14 @@ import RecipeList from '@/components/RecipeList/RecipeList';
 import Search from '@/components/RecipeList/Search';
 import FabContainer from '@/components/common/FabContainer';
 import PageHeading from '@/components/common/PageHeading';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
 import { RecipeListQuery } from '@/generated/graphql';
 import useHideOnScroll from '@/hooks/useHideOnScroll';
@@ -48,27 +54,31 @@ export default function RecipeListPage({
   }
 
   function handleSearch(tags: string[]) {
-    router.push(tags.length > 0 ? `${pathname}?stitky=${tags.join('+')}` : pathname);
+    router.push(
+      tags.length > 0 ? `${pathname}?stitky=${tags.join('+')}` : pathname,
+    );
   }
 
   function handleMatchAllChange(matchAll: boolean) {
     setMatchAll(matchAll);
   }
 
-  const tags = isInstantPotPage ? allTags.filter(t => t !== INSTANT_POT_TAG) : allTags;
-  const tagOptions: { value: string; label: string }[] = tags.map(t => ({
+  const tags = isInstantPotPage
+    ? allTags.filter((t) => t !== INSTANT_POT_TAG)
+    : allTags;
+  const tagOptions: { value: string; label: string }[] = tags.map((t) => ({
     value: slug(t),
     label: t,
   }));
   const allRecipes = isInstantPotPage
-    ? allRecipesRaw.filter(recipe => recipe.tags.includes(INSTANT_POT_TAG))
+    ? allRecipesRaw.filter((recipe) => recipe.tags.includes(INSTANT_POT_TAG))
     : allRecipesRaw;
   const recipes =
     searchTags.length > 0
-      ? allRecipes.filter(recipe =>
+      ? allRecipes.filter((recipe) =>
           matchAll
-            ? searchTags.every(t => recipe.tags.some(rt => slug(rt) === t))
-            : searchTags.some(t => recipe.tags.some(rt => slug(rt) === t)),
+            ? searchTags.every((t) => recipe.tags.some((rt) => slug(rt) === t))
+            : searchTags.some((t) => recipe.tags.some((rt) => slug(rt) === t)),
         )
       : allRecipes;
   const isEmpty = recipes.length === 0;
@@ -78,19 +88,18 @@ export default function RecipeListPage({
       <section>
         <PageHeading
           buttons={
-            <Button
-              startIcon={searchVisible ? <Close /> : <FilterList />}
-              variant="outlined"
-              onClick={handleSearchVisibilityToggle}
-            >
+            <Button variant="outline" onClick={handleSearchVisibilityToggle}>
+              {searchVisible ? (
+                <X className="mr-2 size-4" />
+              ) : (
+                <Filter className="mr-2 size-4" />
+              )}
               {searchVisible ? 'Zrušit' : 'Filtr'}
             </Button>
           }
         >
           {isInstantPotPage ? 'Instant Pot recepty' : 'Recepty'}{' '}
-          <Typography color="textSecondary" component="span" variant="h5">
-            {recipes.length}
-          </Typography>
+          <span className="text-muted-foreground">{recipes.length}</span>
         </PageHeading>
         {searchVisible && (
           <Search
@@ -102,45 +111,46 @@ export default function RecipeListPage({
           />
         )}
         {isEmpty ? (
-          <Alert elevation={1} severity="info">
-            Žádné recepty.
+          <Alert>
+            <AlertDescription>Žádné recepty.</AlertDescription>
           </Alert>
         ) : (
           <RecipeList recipes={recipes} />
         )}
       </section>
-      {isLoggedIn && (
+      {isLoggedIn && !fabHidden && (
         <FabContainer>
-          <SpeedDial
-            ariaLabel="Vytvořit recept"
-            hidden={fabHidden}
-            icon={<SpeedDialIcon />}
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-            }}
-          >
-            <SpeedDialAction
-              icon={<Add />}
-              tooltipTitle="Vytvořit nový"
-              onClick={() => {
-                router.push(
-                  isInstantPotPage ? `/novy-recept?${INSTANT_POT_TAG_SLUG}` : '/novy-recept',
-                );
-              }}
-            />
-            <SpeedDialAction
-              icon={<AutoAwesome />}
-              tooltipTitle="Vytvořit pomocí AI"
-              onClick={() => {
-                setImportModalVisible(true);
-              }}
-            />
-          </SpeedDial>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="lg" className="size-14 rounded-full shadow-lg">
+                <Plus className="size-6" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="top" className="mb-2">
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(
+                    isInstantPotPage
+                      ? `/novy-recept?${INSTANT_POT_TAG_SLUG}`
+                      : '/novy-recept',
+                  );
+                }}
+              >
+                <Plus className="mr-2 size-4" />
+                Vytvořit nový
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setImportModalVisible(true)}>
+                <Sparkles className="mr-2 size-4" />
+                Vytvořit pomocí AI
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </FabContainer>
       )}
-      <RecipeImportModal show={importModalVisible} onClose={() => setImportModalVisible(false)} />
+      <RecipeImportModal
+        show={importModalVisible}
+        onClose={() => setImportModalVisible(false)}
+      />
     </Layout>
   );
 }

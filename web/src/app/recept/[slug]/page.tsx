@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 
+import { RecipeDetailDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
 import { getCurrentUser } from '@/lib/auth-server';
-import { RecipeDetailDocument } from '@/generated/graphql';
 
 import RecipeDetailPage from './RecipeDetailPage';
 
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props) {
   });
 
   return {
-    title: data.recipe?.title ?? slug,
+    title: data?.recipe?.title ?? slug,
   };
 }
 
@@ -32,11 +32,12 @@ export default async function Page({ params }: Props) {
     variables: { slug },
   });
 
-  if (!data.recipe) {
+  if (!data?.recipe) {
     notFound();
   }
 
-  const isAuthor = !!user && (user.isAdmin || user.username === data.recipe.user.username);
+  const isAuthor =
+    !!user && (user.isAdmin || user.username === data.recipe.user.username);
 
   return <RecipeDetailPage recipe={data.recipe} isAuthor={isAuthor} />;
 }

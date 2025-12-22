@@ -1,42 +1,42 @@
 'use client';
 
-import { Check, Edit, Delete, RestartAlt } from '@mui/icons-material';
+import { Check, Pencil, RotateCcw, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useState, useTransition } from 'react';
+import { toast } from 'sonner';
+
 import {
-  Alert,
-  AlertColor,
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Paper,
-  Snackbar,
-  Switch,
+  createUserAction,
+  deleteUserAction,
+  resetPasswordAction,
+  updateUserAction,
+} from '@/app/actions/user';
+import Layout from '@/components/Layout';
+import PageHeading from '@/components/common/PageHeading';
+import Spinner from '@/components/common/Spinner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
+  TableHeader,
   TableRow,
-  TextField,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { ReactNode, useState } from 'react';
-
-import Layout from '@/components/Layout';
-import PageHeading from '@/components/common/PageHeading';
-import {
-  useCreateUserMutation,
-  useDeleteUserMutation,
-  useResetPasswordMutation,
-  UserFragment,
-  useUpdateUserMutation,
-  useUserListQuery,
-} from '@/generated/graphql';
+} from '@/components/ui/table';
+import { UserFragment } from '@/generated/graphql';
 
 type DialogOptions = {
   title?: ReactNode;
@@ -52,10 +52,10 @@ type Props = {
   currentUserId: string;
 };
 
-export default function AdminPage({ users: initialUsers, currentUserId }: Props) {
+export default function AdminPage({ users, currentUserId }: Props) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialog, setDialog] = useState<DialogOptions>();
 
@@ -66,53 +66,6 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
   const [newUsername, setNewUsername] = useState<string>();
   const [newDisplayName, setNewDisplayName] = useState<string>();
   const [newIsAdmin, setNewIsAdmin] = useState(false);
-
-  // Keep query for refetching after mutations
-  const { data, refetch: refetchUsers } = useUserListQuery();
-  const users = data?.users ?? initialUsers;
-
-  const [createUser, { loading: creating }] = useCreateUserMutation({
-    onCompleted: () => {
-      setNewUsername(undefined);
-      setNewDisplayName(undefined);
-      setNewIsAdmin(false);
-    },
-    onError: () => {
-      setSnackbar(['error', 'Nastala neočekávaná chyba']);
-    },
-    update: () => {
-      refetchUsers();
-    },
-  });
-  const [updateUser, { loading: updating }] = useUpdateUserMutation({
-    onCompleted: () => {
-      setUserIdEditing('');
-      refetchUsers();
-    },
-    onError: () => {
-      setSnackbar(['error', 'Nastala neočekávaná chyba']);
-    },
-  });
-  const [deleteUser] = useDeleteUserMutation({
-    onError: () => {
-      setSnackbar(['error', 'Nastala neočekávaná chyba']);
-    },
-    update: () => {
-      refetchUsers();
-    },
-  });
-  const [resetPassword] = useResetPasswordMutation({
-    onCompleted: data => {
-      setDialog({
-        title: 'Nové heslo',
-        content: data.resetPassword,
-      });
-      setDialogOpen(true);
-    },
-    onError: () => {
-      setSnackbar(['error', 'Nastala neočekávaná chyba']);
-    },
-  });
 
   function handleEdit(user: UserFragment) {
     setUserIdEditing(user.id);
@@ -126,14 +79,22 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
       return;
     }
 
-    createUser({
-      variables: {
-        user: {
-          username: newUsername.trim(),
-          displayName: newDisplayName.trim(),
-          isAdmin: newIsAdmin,
-        },
-      },
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.set('username', newUsername.trim());
+      formData.set('displayName', newDisplayName.trim());
+      formData.set('isAdmin', String(newIsAdmin));
+
+      const result = await createUserAction({}, formData);
+
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        setNewUsername(undefined);
+        setNewDisplayName(undefined);
+        setNewIsAdmin(false);
+        router.refresh();
+      }
     });
   }
 
@@ -142,15 +103,20 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
       return;
     }
 
-    updateUser({
-      variables: {
-        id: userIdEditing,
-        user: {
-          username: username.trim(),
-          displayName: displayName.trim(),
-          isAdmin,
-        },
-      },
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.set('username', username.trim());
+      formData.set('displayName', displayName.trim());
+      formData.set('isAdmin', String(isAdmin));
+
+      const result = await updateUserAction(userIdEditing, {}, formData);
+
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        setUserIdEditing('');
+        router.refresh();
+      }
     });
   }
 
@@ -166,7 +132,13 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
         label: 'Smazat',
         onClick: () => {
           setDialogOpen(false);
-          deleteUser({ variables: { id: user.id } });
+          startTransition(async () => {
+            const result = await deleteUserAction(user.id);
+            if (result.error) {
+              toast.error(result.error);
+            }
+            router.refresh();
+          });
         },
       },
     });
@@ -186,7 +158,18 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
       button: {
         label: 'Resetovat',
         onClick: () => {
-          resetPassword({ variables: { id: user.id } });
+          startTransition(async () => {
+            const result = await resetPasswordAction(user.id);
+            if (result.error) {
+              toast.error(result.error);
+              setDialogOpen(false);
+            } else if (result.newPassword) {
+              setDialog({
+                title: 'Nové heslo',
+                content: result.newPassword,
+              });
+            }
+          });
         },
       },
     });
@@ -196,72 +179,74 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
   return (
     <>
       <Layout>
-        <Box maxWidth="930px" mx="auto">
+        {isPending && <Spinner overlay />}
+        <div className="mx-auto max-w-4xl">
           <PageHeading>Správa uživatelů</PageHeading>
-          <TableContainer component={Paper}>
+          <Card>
             <Table>
-              <TableHead>
+              <TableHeader>
                 <TableRow>
-                  <TableCell width="200px">Uživatel</TableCell>
-                  <TableCell width="200px">Jméno</TableCell>
-                  <TableCell align="center" width="70px">
-                    Admin
-                  </TableCell>
-                  <TableCell width="250px">Poslední aktivita</TableCell>
-                  <TableCell />
+                  <TableHead className="w-48">Uživatel</TableHead>
+                  <TableHead className="w-48">Jméno</TableHead>
+                  <TableHead className="w-20 text-center">Admin</TableHead>
+                  <TableHead className="w-60">Poslední aktivita</TableHead>
+                  <TableHead />
                 </TableRow>
-              </TableHead>
+              </TableHeader>
               <TableBody>
-                {users.map(user => {
+                {users.map((user) => {
                   if (userIdEditing === user.id) {
                     return (
                       <TableRow key={user.id}>
-                        <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
-                          <TextField
-                            disabled={updating}
-                            error={!username.trim()}
-                            label="Uživatel"
+                        <TableCell className="py-1">
+                          <Input
+                            disabled={isPending}
+                            placeholder="Uživatel"
                             value={username}
-                            variant="filled"
-                            onChange={e => setUsername(e.currentTarget.value)}
+                            className={
+                              !username.trim() ? 'border-destructive' : ''
+                            }
+                            onChange={(e) => setUsername(e.currentTarget.value)}
                           />
                         </TableCell>
-                        <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
-                          <TextField
-                            disabled={updating}
-                            error={!displayName.trim()}
-                            label="Jméno"
-                            sx={{ paddingTop: '4px', paddingBottom: '4px' }}
+                        <TableCell className="py-1">
+                          <Input
+                            disabled={isPending}
+                            placeholder="Jméno"
                             value={displayName}
-                            variant="filled"
-                            onChange={e => setDisplayName(e.currentTarget.value)}
+                            className={
+                              !displayName.trim() ? 'border-destructive' : ''
+                            }
+                            onChange={(e) =>
+                              setDisplayName(e.currentTarget.value)
+                            }
                           />
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell className="text-center">
                           <Switch
                             checked={isAdmin}
-                            color="primary"
                             disabled={user.id === currentUserId}
-                            inputProps={{ 'aria-label': 'Admin' }}
-                            onChange={() => setIsAdmin(!isAdmin)}
+                            aria-label="Admin"
+                            onCheckedChange={setIsAdmin}
                           />
                         </TableCell>
                         <TableCell>
-                          {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                          {user.lastActivity &&
+                            new Date(user.lastActivity).toLocaleString('cs')}
                         </TableCell>
-                        <TableCell align="left">
-                          {updating ? (
-                            <CircularProgress size="1.5rem" />
-                          ) : (
-                            <>
-                              <Button color="primary" variant="contained" onClick={handleUpdate}>
-                                Uložit
-                              </Button>{' '}
-                              <Button color="inherit" onClick={() => setUserIdEditing('')}>
-                                Zrušit
-                              </Button>
-                            </>
-                          )}
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={handleUpdate}>
+                              Uložit
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setUserIdEditing('')}
+                            >
+                              Zrušit
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
@@ -271,106 +256,108 @@ export default function AdminPage({ users: initialUsers, currentUserId }: Props)
                     <TableRow key={user.id}>
                       <TableCell>{user.username}</TableCell>
                       <TableCell>{user.displayName}</TableCell>
-                      <TableCell align="center">{user.isAdmin && <Check />}</TableCell>
-                      <TableCell>
-                        {user.lastActivity && new Date(user.lastActivity).toLocaleString('cs')}
+                      <TableCell className="text-center">
+                        {user.isAdmin && <Check className="mx-auto size-5" />}
                       </TableCell>
-                      <TableCell align="left">
-                        <IconButton onClick={() => handleEdit(user)}>
-                          <Edit />
-                        </IconButton>{' '}
-                        <IconButton
-                          disabled={user.id === currentUserId}
-                          onClick={() => handleDelete(user)}
-                        >
-                          <Delete />
-                        </IconButton>{' '}
-                        <IconButton onClick={() => handleResetPassword(user)}>
-                          <RestartAlt />
-                        </IconButton>
+                      <TableCell>
+                        {user.lastActivity &&
+                          new Date(user.lastActivity).toLocaleString('cs')}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEdit(user)}
+                          >
+                            <Pencil className="size-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={user.id === currentUserId}
+                            onClick={() => handleDelete(user)}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleResetPassword(user)}
+                          >
+                            <RotateCcw className="size-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 <TableRow>
-                  <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
-                    <TextField
-                      error={newUsername === ''}
-                      label="Nový uživatel"
+                  <TableCell className="py-1">
+                    <Input
+                      placeholder="Nový uživatel"
                       value={newUsername || ''}
-                      variant="filled"
-                      onChange={e => setNewUsername(e.currentTarget.value)}
+                      className={newUsername === '' ? 'border-destructive' : ''}
+                      onChange={(e) => setNewUsername(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell sx={{ paddingTop: '4px', paddingBottom: '4px' }}>
-                    <TextField
-                      error={newDisplayName === ''}
-                      label="Jméno"
+                  <TableCell className="py-1">
+                    <Input
+                      placeholder="Jméno"
                       value={newDisplayName || ''}
-                      variant="filled"
-                      onChange={e => setNewDisplayName(e.currentTarget.value)}
+                      className={
+                        newDisplayName === '' ? 'border-destructive' : ''
+                      }
+                      onChange={(e) => setNewDisplayName(e.currentTarget.value)}
                     />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell className="text-center">
                     <Switch
                       checked={newIsAdmin}
-                      color="primary"
-                      inputProps={{ 'aria-label': 'Admin' }}
-                      onChange={() => setNewIsAdmin(!newIsAdmin)}
+                      aria-label="Admin"
+                      onCheckedChange={setNewIsAdmin}
                     />
                   </TableCell>
                   <TableCell />
-                  <TableCell align="left">
-                    {creating ? (
-                      <CircularProgress size="1.5rem" />
-                    ) : (
-                      <Button
-                        color="primary"
-                        disabled={
-                          !newUsername ||
-                          !newUsername.trim() ||
-                          !newDisplayName ||
-                          !newDisplayName.trim()
-                        }
-                        variant="contained"
-                        onClick={handleCreate}
-                      >
-                        Přidat
-                      </Button>
-                    )}
+                  <TableCell>
+                    <Button
+                      size="sm"
+                      disabled={
+                        !newUsername ||
+                        !newUsername.trim() ||
+                        !newDisplayName ||
+                        !newDisplayName.trim()
+                      }
+                      onClick={handleCreate}
+                    >
+                      Přidat
+                    </Button>
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-          </TableContainer>
-        </Box>
+          </Card>
+        </div>
       </Layout>
-      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
-        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
-          {snackbar?.[1]}
-        </Alert>
-      </Snackbar>
-      <Dialog
-        aria-describedby="alert-dialog-description"
-        aria-labelledby="alert-dialog-title"
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      >
-        <DialogTitle id="alert-dialog-title">{dialog?.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">{dialog?.content}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus={!dialog?.button} color="primary" onClick={() => setDialogOpen(false)}>
-            {dialog?.button ? 'Zrušit' : 'Zavřít'}
-          </Button>
-          {dialog?.button && (
-            <Button color="primary" autoFocus onClick={dialog.button?.onClick}>
-              {dialog.button?.label}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
+
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{dialog?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{dialog?.content}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {dialog?.button ? 'Zrušit' : 'Zavřít'}
+            </AlertDialogCancel>
+            {dialog?.button && (
+              <AlertDialogAction onClick={dialog.button.onClick}>
+                {dialog.button.label}
+              </AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -6,7 +6,9 @@ import logger from './logger';
 
 try {
   const serviceAccount = process.env.FIREBASE_ADMIN_SDK_PATH
-    ? JSON.parse(fs.readFileSync(process.env.FIREBASE_ADMIN_SDK_PATH).toString())
+    ? JSON.parse(
+        fs.readFileSync(process.env.FIREBASE_ADMIN_SDK_PATH).toString(),
+      )
     : require('./zradelnik-firebase-adminsdk.json');
 
   initializeApp({

@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers';
 
-import { getClient } from './apollo-client';
 import { AUTH_TOKEN_KEY } from '@/const';
 import { MeDocument, MeQuery } from '@/generated/graphql';
+
+import { getClient } from './apollo-client';
 
 export async function getCurrentUser(): Promise<MeQuery['me'] | null> {
   const cookieStore = await cookies();
@@ -15,7 +16,7 @@ export async function getCurrentUser(): Promise<MeQuery['me'] | null> {
   try {
     const client = await getClient();
     const { data } = await client.query({ query: MeDocument });
-    return data.me;
+    return data?.me ?? null;
   } catch {
     return null;
   }

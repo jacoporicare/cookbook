@@ -2,7 +2,6 @@ import { gql } from 'apollo-server-core';
 
 const typeDefs = gql`
   scalar Date
-  scalar Upload
 
   input ImageSize {
     width: Int!
@@ -81,10 +80,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    recipes(
-      since: Date @deprecated(reason: "The mobile apps don't use it anymore.")
-      deleted: Boolean @deprecated(reason: "The mobile apps don't use it anymore.")
-    ): [Recipe!]!
+    recipes: [Recipe!]!
     recipe(id: ID, slug: String): Recipe
     ingredients: [String!]!
     sideDishes: [String!]!
@@ -95,8 +91,8 @@ const typeDefs = gql`
 
   type Mutation {
     login(username: String!, password: String!): AuthPayload!
-    createRecipe(recipe: RecipeInput!, image: Upload): Recipe!
-    updateRecipe(id: ID!, recipe: RecipeInput!, image: Upload): Recipe!
+    createRecipe(recipe: RecipeInput!, imageId: ID): Recipe!
+    updateRecipe(id: ID!, recipe: RecipeInput!, imageId: ID): Recipe!
     deleteRecipe(id: ID!): Boolean!
     importRecipe(url: String!): Recipe!
     recipeCooked(id: ID!, date: Date!): Recipe!

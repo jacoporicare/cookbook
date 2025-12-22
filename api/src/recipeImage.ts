@@ -1,9 +1,9 @@
+import os from 'os';
 import path from 'path';
 
 import { Router } from 'express';
 import { fromBuffer } from 'file-type';
 import fs from 'fs-extra';
-import { FileUpload } from 'graphql-upload';
 import sharp from 'sharp';
 
 import { ImageFormat, ImageSize, Maybe } from './generated/graphql';
@@ -15,8 +15,9 @@ const baseUrl = process.env.VIRTUAL_HOST
   ? `https://${process.env.VIRTUAL_HOST}`
   : 'http://localhost:4000';
 
-const cacheDir = '/tmp/zradelnik-img';
-fs.mkdirp(cacheDir).catch(logger.error);
+const tmpDir = os.tmpdir();
+const cacheDir = fs.mkdtempSync(path.join(tmpDir, 'recipe-image-cache-'));
+console.log('Image cache dir:', cacheDir);
 
 type ImageSizeTuple = [number, number];
 
@@ -62,11 +63,14 @@ export function recipeImageMiddleware() {
   router.get('/image/:slugAndId', async (req, res) => {
     res.set('Cache-Control', 'max-age=31536000, public');
 
-    const id = req.params.slugAndId.substring(req.params.slugAndId.lastIndexOf('_') + 1);
+    const id = req.params.slugAndId.substring(
+      req.params.slugAndId.lastIndexOf('_') + 1,
+    );
+
     const size = req.query['size']
       ?.toString()
       .split('x', 2)
-      .map(x => parseInt(x, 10)) as ImageSizeTuple | undefined;
+      .map((x) => parseInt(x, 10)) as ImageSizeTuple | undefined;
     const format = req.query['format']?.toString();
 
     const filePath = getFilePath(id, size, format);
@@ -81,13 +85,14 @@ export function recipeImageMiddleware() {
 
     const image = await ImageModel.findById(id);
 
+    console.log(ImageModel.collection.name);
+
     if (!image) {
       return res.status(404).end();
     }
 
     const webp = format === 'webp';
     const buffer = await resizeAndWriteImage(id, image.data, { size, webp });
-
     res.contentType(webp ? 'image/webp' : image.contentType);
     res.send(buffer);
   });
@@ -111,7 +116,11 @@ export async function resizeAndWriteImage(
   }
 
   const buffer = await s.toBuffer();
-  const filePath = getFilePath(id, options?.size, options?.webp ? 'webp' : undefined);
+  const filePath = getFilePath(
+    id,
+    options?.size,
+    options?.webp ? 'webp' : undefined,
+  );
 
   try {
     await fs.writeFile(filePath, buffer);
@@ -120,21 +129,4 @@ export async function resizeAndWriteImage(
   }
 
   return buffer;
-}
-
-export async function createImage(imageFileUpload: Promise<FileUpload>) {
-  const fileUpload = await imageFileUpload;
-
-  const chunks: Buffer[] = [];
-
-  for await (const chunk of fileUpload.createReadStream()) {
-    chunks.push(Buffer.from(chunk));
-  }
-
-  const data = Buffer.concat(chunks as unknown as Uint8Array[]);
-
-  return await ImageModel.create({
-    data,
-    contentType: fileUpload.mimetype,
-  });
 }

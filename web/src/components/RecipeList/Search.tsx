@@ -1,12 +1,16 @@
+'use client';
+
+import { useState } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import {
-  Box,
-  Checkbox,
-  Chip,
-  FormControlLabel,
-  MenuItem,
-  TextField,
-  useTheme,
-} from '@mui/material';
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type Props = {
   multipleSelected: boolean;
@@ -17,64 +21,98 @@ type Props = {
 };
 
 function Search(props: Props) {
-  const theme = useTheme();
+  const [open, setOpen] = useState(false);
 
-  function getStyles(tag: string, tags: string[]) {
-    return {
-      fontWeight:
-        tags.indexOf(tag) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
+  const toggleTag = (tagValue: string) => {
+    const newTags = props.selectedTags.includes(tagValue)
+      ? props.selectedTags.filter((t) => t !== tagValue)
+      : [...props.selectedTags, tagValue];
+    props.onSearch(newTags);
+  };
+
+  const removeTag = (tagValue: string) => {
+    props.onSearch(props.selectedTags.filter((t) => t !== tagValue));
+  };
 
   return (
-    <Box display="flex" justifyContent="flex-end" mb={3} mt={[-2, -4]}>
-      <Box flex="auto" maxWidth="400px" minWidth="200px">
-        <TextField
-          SelectProps={{
-            renderValue: selected => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {(selected as string[]).map(value => (
-                  <Chip key={value} label={props.tagOptions.find(o => o.value === value)?.label} />
-                ))}
-              </Box>
-            ),
-            multiple: true,
-          }}
-          id="tags"
-          label="Štítky"
-          value={props.selectedTags ?? []}
-          variant="filled"
-          fullWidth
-          select
-          onChange={event => props.onSearch(event.target.value as unknown as string[])}
+    <div className={`
+      -mt-4 mb-6 flex justify-end
+      sm:-mt-8
+    `}>
+      <div className="max-w-100 min-w-50 flex-auto">
+        <Label
+          htmlFor="tags"
+          className="mb-1 block text-sm text-muted-foreground"
         >
-          {props.tagOptions.map(tag => (
-            <MenuItem
-              key={tag.value}
-              style={getStyles(tag.value, props.selectedTags ?? [])}
-              value={tag.value}
-            >
-              {tag.label}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Box>
+          Štítky
+        </Label>
+        <Select open={open} onOpenChange={setOpen}>
+          <SelectTrigger id="tags" className="h-auto min-h-10.5 w-full">
+            {props.selectedTags.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {props.selectedTags.map((value) => (
+                  <Badge
+                    key={value}
+                    variant="secondary"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeTag(value);
+                    }}
+                  >
+                    {props.tagOptions.find((o) => o.value === value)?.label}
+                    <span className="ml-1">×</span>
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <SelectValue placeholder="Vyberte štítky..." />
+            )}
+          </SelectTrigger>
+          <SelectContent>
+            {props.tagOptions.map((tag) => (
+              <div
+                key={tag.value}
+                className={`
+                  flex cursor-pointer items-center rounded-sm px-2 py-1.5
+                  hover:bg-accent
+                `}
+                onClick={() => toggleTag(tag.value)}
+              >
+                <Checkbox
+                  checked={props.selectedTags.includes(tag.value)}
+                  className="mr-2"
+                />
+                <span
+                  className={
+                    props.selectedTags.includes(tag.value)
+                      ? 'font-medium'
+                      : 'font-normal'
+                  }
+                >
+                  {tag.label}
+                </span>
+              </div>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       {props.multipleSelected && (
-        <Box alignItems="center" display="flex" ml={2}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                onChange={event => props.onMatchAllChange(event.target.checked)}
-              />
-            }
-            label="Pouze všechny"
-          />
-        </Box>
+        <div className="ml-4 flex items-center">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="matchAll"
+              onCheckedChange={(checked) =>
+                props.onMatchAllChange(checked === true)
+              }
+            />
+            <Label htmlFor="matchAll" className="cursor-pointer">
+              Pouze všechny
+            </Label>
+          </div>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }
 

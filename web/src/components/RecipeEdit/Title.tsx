@@ -1,5 +1,9 @@
-import { TextField } from '@mui/material';
-import { useRef, useEffect } from 'react';
+'use client';
+
+import { useEffect, useRef } from 'react';
+
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export type TitleFields = 'title';
 
@@ -18,16 +22,17 @@ function Title({ title = '', onChange }: Props) {
   }, []);
 
   return (
-    <TextField
-      ref={ref}
-      error={!title}
-      helperText={!title ? 'Název je povinný' : undefined}
-      label="Název"
-      value={title}
-      variant="filled"
-      fullWidth
-      onChange={e => onChange('title', e.currentTarget.value)}
-    />
+    <div className="space-y-2">
+      <Label htmlFor="title">Název</Label>
+      <Input
+        ref={ref}
+        id="title"
+        value={title}
+        className={!title ? 'border-destructive' : ''}
+        onChange={(e) => onChange('title', e.currentTarget.value)}
+      />
+      {!title && <p className="text-sm text-destructive">Název je povinný</p>}
+    </div>
   );
 }
 

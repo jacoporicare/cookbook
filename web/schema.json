@@ -21,17 +21,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "SCALAR",
-        "name": "Upload",
-        "description": "The `Upload` scalar type represents a file upload.",
-        "specifiedByUrl": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "INPUT_OBJECT",
         "name": "ImageSize",
         "description": null,
@@ -1186,11 +1175,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "image",
+                "name": "imageId",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Upload",
+                  "name": "ID",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -1247,11 +1236,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "image",
+                "name": "imageId",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Upload",
+                  "name": "ID",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -2571,6 +2560,15 @@
       }
     ],
     "directives": [
+      {
+        "name": "oneOf",
+        "description": "Indicates exactly one field must be supplied and this field must not be `null`.",
+        "isRepeatable": false,
+        "locations": [
+          "INPUT_OBJECT"
+        ],
+        "args": []
+      },
       {
         "name": "include",
         "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",

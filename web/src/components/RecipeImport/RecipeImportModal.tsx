@@ -1,110 +1,108 @@
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+'use client';
 
-import { useImportRecipeMutation } from '../../generated/graphql';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
+
+import { ImportRecipeState, importRecipeAction } from '@/app/actions/recipe';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 type Props = {
   show: boolean;
   onClose: () => void;
 };
 
+const initialState: ImportRecipeState = {};
+
 function RecipeImportModal({ show, onClose }: Props) {
   const router = useRouter();
   const [url, setUrl] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [state, formAction, isPending] = useActionState(
+    importRecipeAction,
+    initialState,
+  );
 
-  const [importRecipe, { loading }] = useImportRecipeMutation({
-    onCompleted: data => {
+  // Handle success - redirect to edit page
+  useEffect(() => {
+    if (state.success && state.recipeSlug) {
       onClose();
-      router.push(`/recept/${data.importRecipe.slug}/upravit`);
-    },
-    onError: err => {
-      setError(err.message || 'Nastala neočekávaná chyba při importu receptu.');
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!url.trim()) {
-      setError('Zadejte prosím platný odkaz.');
-
-      return;
+      router.push(`/recept/${state.recipeSlug}/upravit`);
     }
-
-    importRecipe({ variables: { url: url.trim() } });
-  };
+  }, [state.success, state.recipeSlug, onClose, router]);
 
   const handleClose = () => {
-    if (!loading) {
+    if (!isPending) {
       setUrl('');
-      setError(null);
       onClose();
     }
   };
 
+  const error = state.error || state.fieldErrors?.url?.[0];
+
   return (
-    <Dialog
-      aria-describedby="import-dialog-description"
-      aria-labelledby="import-dialog-title"
-      open={show}
-      onClose={handleClose}
-    >
-      <DialogTitle id="import-dialog-title">Import receptu z webu</DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <DialogContentText id="import-dialog-description" sx={{ mb: 4 }}>
+    <Dialog open={show} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Import receptu z webu</DialogTitle>
+          <DialogDescription>
             Vložte odkaz na recept z libovolné webové stránky.
             <br />
-            Umělá inteligence se pokusí extrahovat recept a vytvořit z něj nový recept.
-          </DialogContentText>
+            Umělá inteligence se pokusí extrahovat recept a vytvořit z něj nový
+            recept.
+          </DialogDescription>
+        </DialogHeader>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+        <form action={formAction}>
+          <div className="space-y-4 py-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
-          <TextField
-            disabled={loading}
-            label="Odkaz na recept"
-            placeholder="https://www.priklad.cz/recept/babovka"
-            type="url"
-            value={url}
-            variant="outlined"
-            autoFocus
-            fullWidth
-            required
-            onChange={e => setUrl(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" disabled={loading} onClick={handleClose}>
-            Zrušit
-          </Button>
-          <Button
-            color="primary"
-            disabled={loading || !url}
-            startIcon={loading ? <CircularProgress size={20} /> : null}
-            type="submit"
-            variant="contained"
-          >
-            {loading ? 'Importuji...' : 'Vytvořit pomocí AI'}
-          </Button>
-        </DialogActions>
-      </form>
+            <div className="space-y-2">
+              <Label htmlFor="url">Odkaz na recept</Label>
+              <Input
+                id="url"
+                name="url"
+                type="url"
+                placeholder="https://www.priklad.cz/recept/babovka"
+                value={url}
+                disabled={isPending}
+                autoFocus
+                required
+                onChange={(e) => setUrl(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={handleClose}
+            >
+              Zrušit
+            </Button>
+            <Button type="submit" disabled={isPending || !url}>
+              {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
+              {isPending ? 'Importuji...' : 'Vytvořit pomocí AI'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model, models } from 'mongoose';
+import { Document, Model, model, models, Schema } from 'mongoose';
 
 export type ImageDbObject = {
   id: string;
@@ -13,4 +13,5 @@ const ImageSchema = new Schema({
   contentType: { type: String, required: true },
 });
 
-export default (models.User as Model<ImageDocument>) || model<ImageDocument>('Image', ImageSchema);
+export default (models.Image as Model<ImageDocument>) ||
+  model<ImageDocument>('Image', ImageSchema);

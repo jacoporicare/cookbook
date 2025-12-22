@@ -1,7 +1,8 @@
 import { AUTH_TOKEN_KEY } from './const';
 
 function getCookie(name: string, cookie?: string): string | undefined {
-  const cookieStr = cookie || (typeof document !== 'undefined' ? document.cookie : '');
+  const cookieStr =
+    cookie || (typeof document !== 'undefined' ? document.cookie : '');
   const value = `; ${cookieStr}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop()?.split(';').shift();

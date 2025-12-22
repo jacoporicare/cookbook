@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button } from '@/components/ui/button';
 
 import PageHeading from '../common/PageHeading';
 
@@ -10,22 +10,27 @@ type Props = {
   changed: boolean;
 };
 
-function Header({ title, isInstantPotNewRecipe, isNew, isSaving, changed }: Props) {
+function Header({
+  title,
+  isInstantPotNewRecipe,
+  isNew,
+  isSaving,
+  changed,
+}: Props) {
   return (
     <PageHeading
       buttons={
-        <Button
-          color="primary"
-          disabled={!title || isSaving || !changed}
-          type="submit"
-          variant="contained"
-        >
+        <Button disabled={!title || isSaving || !changed} type="submit">
           Uložit
         </Button>
       }
     >
       {title ||
-        (isInstantPotNewRecipe ? 'Nový Instant Pot recept' : isNew ? 'Nový recept' : 'Název chybí')}
+        (isInstantPotNewRecipe
+          ? 'Nový Instant Pot recept'
+          : isNew
+            ? 'Nový recept'
+            : 'Název chybí')}
     </PageHeading>
   );
 }

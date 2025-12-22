@@ -1,11 +1,14 @@
 'use client';
 
-import { Alert, Box, Dialog, Grid, Paper, Typography } from '@mui/material';
+import Image from 'next/image';
 import { MouseEvent, useState } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 import { Ingredient } from '../../generated/graphql';
 import RichText from '../RichText/RichText';
-
 import IngredientList from './IngredientList';
 
 type Props = {
@@ -40,93 +43,101 @@ function RecipeDetail({
 
   return (
     <>
-      <Grid spacing={4} container>
-        <Grid lg={3} md={4} xs={12} item>
-          <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        </Grid>
+      <div
+        className={`
+          grid grid-cols-1 gap-8
+          md:grid-cols-12
+        `}
+      >
+        <div
+          className={`
+            md:col-span-4
+            lg:col-span-3
+          `}
+        >
+          <IngredientList
+            ingredients={ingredients}
+            servingCount={servingCount}
+          />
+        </div>
 
-        <Grid lg={7} md={6} xs={12} item>
-          <Typography component="h3" variant="h5" gutterBottom>
-            Postup
-          </Typography>
+        <div
+          className={`
+            md:col-span-6
+            lg:col-span-7
+          `}
+        >
+          <h3 className="mb-2 text-xl font-medium">Postup</h3>
           {isInstantPotRecipe && (
-            <Paper>
-              <Box mb={3}>
-                <Alert severity="info">
+            <Card className="mb-6">
+              <Alert>
+                <AlertDescription>
                   <strong>Instant Pot</strong>
                   <br />
-                  Tento recept je určený pro multifunkční hrnec Instant Pot nebo jeho kopie, např.
-                  česká Tesla EliteCook K70.
-                </Alert>
-              </Box>
-            </Paper>
+                  Tento recept je určený pro multifunkční hrnec Instant Pot nebo
+                  jeho kopie, např. česká Tesla EliteCook K70.
+                </AlertDescription>
+              </Alert>
+            </Card>
           )}
-          <Paper>
+          <Card>
             {directions ? (
-              <Box p={3}>
+              <div className="p-6">
                 <RichText text={directions} />
-              </Box>
+              </div>
             ) : (
-              <Alert severity="info">Žádný postup.</Alert>
+              <Alert>
+                <AlertDescription>Žádný postup.</AlertDescription>
+              </Alert>
             )}
-          </Paper>
-        </Grid>
-        <Grid md={2} xs={12} item>
-          <Box pt={{ xs: 0, md: '2.525rem' }}>
+          </Card>
+        </div>
+
+        <div className="md:col-span-2">
+          <div className="md:pt-10">
             {imageUrl && (
-              <Paper>
-                <Box
-                  component="a"
+              <Card className="overflow-hidden p-0">
+                <a
                   href={imageFullUrl}
-                  sx={{
-                    display: 'block',
-                    lineHeight: 0,
-                    cursor: 'pointer',
-                  }}
+                  className="block cursor-pointer leading-none"
                   onClick={handleImageClick}
                 >
-                  <Box
+                  <Image
                     alt={title}
-                    component="img"
                     src={imageUrl}
-                    sx={{
-                      width: '100%',
-                      borderRadius: '4px',
-                    }}
+                    className="w-full rounded"
+                    width={800}
+                    height={800}
                   />
-                </Box>
-              </Paper>
+                </a>
+              </Card>
             )}
-            <Box my={2}>
-              <Typography color="textSecondary" variant="subtitle1">
-                Autor:
-              </Typography>
-              <Typography variant="body1">{userName}</Typography>
-              <Typography color="textSecondary" variant="subtitle1">
+            <div className="my-4">
+              <p className="text-sm text-muted-foreground">Autor:</p>
+              <p>{userName}</p>
+              <p className="mt-2 text-sm text-muted-foreground">
                 Naposledy upraveno:
-              </Typography>
-              <Typography variant="body1">
-                {new Date(lastModifiedDate).toLocaleDateString('cs')}
-              </Typography>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-      <Dialog
-        maxWidth="lg"
-        open={isImageOpen}
-        onClose={() => setIsImageOpen(false)}
-        onClick={() => setIsImageOpen(false)}
-      >
-        <Box
-          alt={title}
-          component="img"
-          src={imageFullUrl}
-          sx={{
-            maxWidth: '100%',
-            maxHeight: '90vh',
-          }}
-        />
+              </p>
+              <p>{new Date(lastModifiedDate).toLocaleDateString('cs')}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Dialog open={isImageOpen} onOpenChange={setIsImageOpen}>
+        <DialogContent className="max-w-4xl overflow-hidden p-0">
+          <DialogTitle className="hidden">{title}</DialogTitle>
+          {imageFullUrl && (
+            <Image
+              alt={title}
+              src={imageFullUrl}
+              width={1200}
+              height={1200}
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="h-auto w-full"
+            />
+          )}
+        </DialogContent>
       </Dialog>
     </>
   );

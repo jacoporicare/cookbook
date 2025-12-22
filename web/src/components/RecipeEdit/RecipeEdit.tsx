@@ -1,12 +1,12 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FormEventHandler } from 'react';
+
+import { Card } from '@/components/ui/card';
 
 import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
 import ImageUpload from '../ImageUpload/ImageUpload';
 import RichText from '../RichText/RichText';
 import Spinner from '../common/Spinner';
-
 import BasicInfo, { BasicInfoFields } from './BasicInfo';
 import Directions, { DirectionsFields } from './Directions';
 import Header from './Header';
@@ -83,66 +83,59 @@ function RecipeEdit({
 
       <Title title={title} onChange={onChange} />
 
-      <Box mt={4}>
-        <Grid spacing={4} container>
-          <Grid md={3} xl={2} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Základní údaje
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <BasicInfo
-                  preparationTime={preparationTime}
-                  servingCount={servingCount}
-                  sideDish={sideDish}
-                  sideDishOptions={sideDishOptions}
-                  tagOptions={tagOptions}
-                  tags={tags}
-                  onChange={onChange}
-                  onTagsChange={onTagsChange}
-                />
-              </Box>
-            </Paper>
-          </Grid>
+      <div className={`
+        mt-8 grid grid-cols-1 gap-8
+        md:grid-cols-12
+      `}>
+        <div className={`
+          md:col-span-3
+          xl:col-span-2
+        `}>
+          <h3 className="mb-4 text-xl font-medium">Základní údaje</h3>
+          <Card className="p-6">
+            <BasicInfo
+              preparationTime={preparationTime}
+              servingCount={servingCount}
+              sideDish={sideDish}
+              sideDishOptions={sideDishOptions}
+              tagOptions={tagOptions}
+              tags={tags}
+              onChange={onChange}
+              onTagsChange={onTagsChange}
+            />
+          </Card>
+        </div>
 
-          <Grid md={4} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Ingredience
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <IngredientEdit
-                  ingredientOptions={ingredientOptions}
-                  items={ingredients}
-                  onAdd={onAddIngredient}
-                  onAddGroup={onAddGroup}
-                  onRemove={onRemoveIngredient}
-                  onSort={onSortIngredient}
-                />
-              </Box>
-            </Paper>
-          </Grid>
+        <div className="md:col-span-4">
+          <h3 className="mb-4 text-xl font-medium">Ingredience</h3>
+          <Card className="p-6">
+            <IngredientEdit
+              ingredientOptions={ingredientOptions}
+              items={ingredients}
+              onAdd={onAddIngredient}
+              onAddGroup={onAddGroup}
+              onRemove={onRemoveIngredient}
+              onSort={onSortIngredient}
+            />
+          </Card>
+        </div>
 
-          <Grid md={5} xl={6} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Postup
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <Directions directions={directions} onChange={onChange} />
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
+        <div className={`
+          md:col-span-5
+          xl:col-span-6
+        `}>
+          <h3 className="mb-4 text-xl font-medium">Postup</h3>
+          <Card className="p-6">
+            <Directions directions={directions} onChange={onChange} />
+          </Card>
+        </div>
+      </div>
 
-      <Box mt={4}>
-        <Typography component="h3" variant="h5" gutterBottom>
-          Náhled postupu
-        </Typography>
+      <div className="mt-8">
+        <h3 className="mb-4 text-xl font-medium">Náhled postupu</h3>
         <ImageUpload imageUrl={imageUrl} onImageChange={onImageChange} />
         <RichText text={directions} />
-      </Box>
+      </div>
     </form>
   );
 }

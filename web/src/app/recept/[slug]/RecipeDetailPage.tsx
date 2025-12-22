@@ -1,8 +1,8 @@
 'use client';
 
-import { Alert, AlertColor, Box, Snackbar } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
 import { deleteRecipeAction } from '@/app/actions/recipe';
 import Layout from '@/components/Layout';
@@ -21,7 +21,6 @@ type Props = {
 export default function RecipeDetailPage({ recipe, isAuthor }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const {
@@ -44,7 +43,7 @@ export default function RecipeDetailPage({ recipe, isAuthor }: Props) {
     startTransition(async () => {
       const result = await deleteRecipeAction(id);
       if (result.error) {
-        setSnackbar(['error', result.error]);
+        toast.error(result.error);
         setDeleteModalVisible(false);
       } else {
         router.push('/');
@@ -53,43 +52,36 @@ export default function RecipeDetailPage({ recipe, isAuthor }: Props) {
   }
 
   return (
-    <>
-      <Layout>
-        <Box component="article">
-          <RecipeHeader
-            isAuthor={isAuthor}
-            preparationTime={preparationTime ?? undefined}
-            sideDish={sideDish ?? undefined}
-            slug={slug}
-            tags={tags ?? undefined}
-            title={title}
-            onDeleteShow={() => setDeleteModalVisible(true)}
-          />
-          {isPending && <Spinner />}
-          <RecipeDetail
-            directions={directions ?? undefined}
-            imageFullUrl={imageWebPUrl ?? undefined}
-            imageUrl={imageThumbWebPUrl ?? undefined}
-            ingredients={ingredients ?? undefined}
-            isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
-            lastModifiedDate={lastModifiedDate}
-            servingCount={servingCount ?? undefined}
-            title={title}
-            userName={user.displayName}
-          />
-          <RecipeDeleteModal
-            recipeTitle={title}
-            show={deleteModalVisible}
-            onClose={() => setDeleteModalVisible(false)}
-            onConfirm={handleDeleteConfirm}
-          />
-        </Box>
-      </Layout>
-      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
-        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
-          {snackbar?.[1]}
-        </Alert>
-      </Snackbar>
-    </>
+    <Layout>
+      <article>
+        <RecipeHeader
+          isAuthor={isAuthor}
+          preparationTime={preparationTime ?? undefined}
+          sideDish={sideDish ?? undefined}
+          slug={slug}
+          tags={tags ?? undefined}
+          title={title}
+          onDeleteShow={() => setDeleteModalVisible(true)}
+        />
+        {isPending && <Spinner />}
+        <RecipeDetail
+          directions={directions ?? undefined}
+          imageFullUrl={imageWebPUrl ?? undefined}
+          imageUrl={imageThumbWebPUrl ?? undefined}
+          ingredients={ingredients ?? undefined}
+          isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
+          lastModifiedDate={lastModifiedDate}
+          servingCount={servingCount ?? undefined}
+          title={title}
+          userName={user.displayName}
+        />
+        <RecipeDeleteModal
+          recipeTitle={title}
+          show={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          onConfirm={handleDeleteConfirm}
+        />
+      </article>
+    </Layout>
   );
 }

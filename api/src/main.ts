@@ -13,7 +13,7 @@ async function main() {
   await startApolloServer(typeDefs, resolvers);
 }
 
-main().catch(e => {
+main().catch((e) => {
   logger.error(e);
   process.exit(1);
 });

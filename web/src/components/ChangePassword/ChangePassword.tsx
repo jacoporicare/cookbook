@@ -1,107 +1,138 @@
-import { Alert, Box, Button, Card, Grid, TextField } from '@mui/material';
-import { FormEvent } from 'react';
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+import { ChangePasswordState } from '@/app/actions/auth';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 import PageHeading from '../common/PageHeading';
 import Spinner from '../common/Spinner';
 
 type Props = {
-  invalidPassword?: boolean;
-  newPassword?: string;
-  newPasswordConfirm?: string;
-  password?: string;
-  submitting: boolean;
-  onInvalidPasswordChange: (value: boolean) => void;
-  onNewPasswordChange: (value: string) => void;
-  onNewPasswordConfirmChange: (value: string) => void;
-  onPasswordChange: (value: string) => void;
-  onSubmit: (event: FormEvent) => void;
+  state: ChangePasswordState;
+  isPending: boolean;
 };
 
-function ChangePassword(props: Props) {
+function ChangePassword({ state, isPending }: Props) {
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const passwordsMatch = newPassword === newPasswordConfirm;
+
+  // Reset form on success
+  useEffect(() => {
+    if (state.success && formRef.current) {
+      formRef.current.reset();
+      setPassword('');
+      setNewPassword('');
+      setNewPasswordConfirm('');
+    }
+  }, [state.success]);
+
   return (
     <>
-      {props.submitting && <Spinner overlay />}
-      <Box maxWidth="28rem" mx="auto">
+      {isPending && <Spinner overlay />}
+      <div className="mx-auto max-w-md">
         <PageHeading>Změna hesla</PageHeading>
-        <Card>
-          <Box p={3}>
-            <form onSubmit={props.onSubmit}>
-              <Grid direction="column" spacing={3} container>
-                <Grid item>
-                  <TextField
-                    error={props.password === ''}
-                    label="Současné heslo"
-                    name="password"
-                    type="password"
-                    value={props.password || ''}
-                    variant="filled"
-                    fullWidth
-                    required
-                    onChange={e => {
-                      props.onPasswordChange(e.currentTarget.value);
-                      props.onInvalidPasswordChange(false);
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    error={props.newPassword === ''}
-                    label="Nové heslo"
-                    name="newPassword"
-                    type="password"
-                    value={props.newPassword || ''}
-                    variant="filled"
-                    fullWidth
-                    required
-                    onChange={e => props.onNewPasswordChange(e.currentTarget.value)}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    error={props.newPasswordConfirm === ''}
-                    label="Potvrďte nové heslo"
-                    name="newPasswordConfirm"
-                    type="password"
-                    value={props.newPasswordConfirm || ''}
-                    variant="filled"
-                    fullWidth
-                    required
-                    onChange={e => props.onNewPasswordConfirmChange(e.currentTarget.value)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Box display="flex" justifyContent="flex-end">
-                    <Button
-                      color="primary"
-                      disabled={
-                        props.submitting ||
-                        !props.password ||
-                        !props.newPassword ||
-                        !props.newPasswordConfirm ||
-                        props.newPassword !== props.newPasswordConfirm
-                      }
-                      type="submit"
-                      variant="contained"
-                    >
-                      Změnit heslo
-                    </Button>
-                  </Box>
-                </Grid>
-                {props.invalidPassword && (
-                  <Grid item>
-                    <Alert severity="error">Neplatné současné heslo.</Alert>
-                  </Grid>
-                )}
-                {(props.newPassword || '') !== (props.newPasswordConfirm || '') && (
-                  <Grid item>
-                    <Alert severity="error">Nová hesla se neshodují.</Alert>
-                  </Grid>
-                )}
-              </Grid>
-            </form>
-          </Box>
+        <Card className="p-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">Současné heslo</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={password}
+                required
+                className={
+                  state.fieldErrors?.password ? 'border-destructive' : ''
+                }
+                onChange={(e) => setPassword(e.currentTarget.value)}
+              />
+              {state.fieldErrors?.password?.[0] && (
+                <p className="text-sm text-destructive">
+                  {state.fieldErrors.password[0]}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">Nové heslo</Label>
+              <Input
+                id="newPassword"
+                name="newPassword"
+                type="password"
+                value={newPassword}
+                required
+                className={
+                  state.fieldErrors?.newPassword ? 'border-destructive' : ''
+                }
+                onChange={(e) => setNewPassword(e.currentTarget.value)}
+              />
+              {state.fieldErrors?.newPassword?.[0] && (
+                <p className="text-sm text-destructive">
+                  {state.fieldErrors.newPassword[0]}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPasswordConfirm">Potvrďte nové heslo</Label>
+              <Input
+                id="newPasswordConfirm"
+                name="newPasswordConfirm"
+                type="password"
+                value={newPasswordConfirm}
+                required
+                className={
+                  state.fieldErrors?.newPasswordConfirm
+                    ? 'border-destructive'
+                    : ''
+                }
+                onChange={(e) => setNewPasswordConfirm(e.currentTarget.value)}
+              />
+              {state.fieldErrors?.newPasswordConfirm?.[0] && (
+                <p className="text-sm text-destructive">
+                  {state.fieldErrors.newPasswordConfirm[0]}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={
+                  isPending ||
+                  !password ||
+                  !newPassword ||
+                  !newPasswordConfirm ||
+                  !passwordsMatch
+                }
+              >
+                Změnit heslo
+              </Button>
+            </div>
+
+            {state.error && (
+              <Alert variant="destructive">
+                <AlertDescription>{state.error}</AlertDescription>
+              </Alert>
+            )}
+
+            {!passwordsMatch && newPasswordConfirm && (
+              <Alert variant="destructive">
+                <AlertDescription>Nová hesla se neshodují.</AlertDescription>
+              </Alert>
+            )}
+          </div>
         </Card>
-      </Box>
+      </div>
     </>
   );
 }

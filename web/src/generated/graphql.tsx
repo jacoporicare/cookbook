@@ -1,25 +1,24 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions = {} as const;
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: string;
-  Upload: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Date: { input: string; output: string; }
 };
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
-  token: Scalars['String'];
+  token: Scalars['String']['output'];
 };
 
 export enum ImageFormat {
@@ -27,52 +26,52 @@ export enum ImageFormat {
 }
 
 export type ImageSize = {
-  height: Scalars['Int'];
-  width: Scalars['Int'];
+  height: Scalars['Int']['input'];
+  width: Scalars['Int']['input'];
 };
 
 export type Ingredient = {
   __typename?: 'Ingredient';
-  amount: Maybe<Scalars['Float']>;
-  amountUnit: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  isGroup: Scalars['Boolean'];
-  name: Scalars['String'];
+  amount: Maybe<Scalars['Float']['output']>;
+  amountUnit: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  isGroup: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type IngredientInput = {
-  amount: InputMaybe<Scalars['Float']>;
-  amountUnit: InputMaybe<Scalars['String']>;
-  isGroup: InputMaybe<Scalars['Boolean']>;
-  name: Scalars['String'];
+  amount: InputMaybe<Scalars['Float']['input']>;
+  amountUnit: InputMaybe<Scalars['String']['input']>;
+  isGroup: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  changePassword: Scalars['Boolean'];
+  changePassword: Scalars['Boolean']['output'];
   createRecipe: Recipe;
   createUser: User;
-  deleteRecipe: Scalars['Boolean'];
+  deleteRecipe: Scalars['Boolean']['output'];
   deleteRecipeCooked: Recipe;
-  deleteUser: Scalars['ID'];
+  deleteUser: Scalars['ID']['output'];
   importRecipe: Recipe;
   login: AuthPayload;
   recipeCooked: Recipe;
-  resetPassword: Scalars['String'];
+  resetPassword: Scalars['String']['output'];
   updateRecipe: Recipe;
   updateUser: User;
-  updateUserLastActivity: Scalars['Boolean'];
+  updateUserLastActivity: Scalars['Boolean']['output'];
 };
 
 
 export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  password: Scalars['String'];
+  newPassword: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationCreateRecipeArgs = {
-  image: InputMaybe<Scalars['Upload']>;
+  imageId: InputMaybe<Scalars['ID']['input']>;
   recipe: RecipeInput;
 };
 
@@ -83,88 +82,88 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteRecipeArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteRecipeCookedArgs = {
-  cookedId: Scalars['ID'];
-  recipeId: Scalars['ID'];
+  cookedId: Scalars['ID']['input'];
+  recipeId: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationImportRecipeArgs = {
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 };
 
 
 export type MutationLoginArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
 export type MutationRecipeCookedArgs = {
-  date: Scalars['Date'];
-  id: Scalars['ID'];
+  date: Scalars['Date']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationResetPasswordArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationUpdateRecipeArgs = {
-  id: Scalars['ID'];
-  image: InputMaybe<Scalars['Upload']>;
+  id: Scalars['ID']['input'];
+  imageId: InputMaybe<Scalars['ID']['input']>;
   recipe: RecipeInput;
 };
 
 
 export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
   user: UserInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  ingredients: Array<Scalars['String']>;
+  ingredients: Array<Scalars['String']['output']>;
   me: User;
   recipe: Maybe<Recipe>;
   recipes: Array<Recipe>;
-  sideDishes: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  sideDishes: Array<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
   users: Array<User>;
 };
 
 
 export type QueryRecipeArgs = {
-  id: InputMaybe<Scalars['ID']>;
-  slug: InputMaybe<Scalars['String']>;
+  id: InputMaybe<Scalars['ID']['input']>;
+  slug: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Recipe = {
   __typename?: 'Recipe';
   cookedHistory: Array<RecipeCooked>;
-  creationDate: Scalars['Date'];
-  deleted: Scalars['Boolean'];
-  directions: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  imageUrl: Maybe<Scalars['String']>;
+  creationDate: Scalars['Date']['output'];
+  deleted: Scalars['Boolean']['output'];
+  directions: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  imageUrl: Maybe<Scalars['String']['output']>;
   ingredients: Array<Ingredient>;
-  lastModifiedDate: Scalars['Date'];
-  preparationTime: Maybe<Scalars['Int']>;
-  servingCount: Maybe<Scalars['Int']>;
-  sideDish: Maybe<Scalars['String']>;
-  slug: Scalars['String'];
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
+  lastModifiedDate: Scalars['Date']['output'];
+  preparationTime: Maybe<Scalars['Int']['output']>;
+  servingCount: Maybe<Scalars['Int']['output']>;
+  sideDish: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
+  tags: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
   user: User;
 };
 
@@ -176,39 +175,39 @@ export type RecipeImageUrlArgs = {
 
 export type RecipeCooked = {
   __typename?: 'RecipeCooked';
-  date: Scalars['Date'];
-  id: Scalars['ID'];
+  date: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
   user: User;
 };
 
 export type RecipeInput = {
-  directions: InputMaybe<Scalars['String']>;
+  directions: InputMaybe<Scalars['String']['input']>;
   ingredients: InputMaybe<Array<IngredientInput>>;
-  preparationTime: InputMaybe<Scalars['Int']>;
-  servingCount: InputMaybe<Scalars['Int']>;
-  sideDish: InputMaybe<Scalars['String']>;
-  tags: InputMaybe<Array<Scalars['String']>>;
-  title: Scalars['String'];
+  preparationTime: InputMaybe<Scalars['Int']['input']>;
+  servingCount: InputMaybe<Scalars['Int']['input']>;
+  sideDish: InputMaybe<Scalars['String']['input']>;
+  tags: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
 };
 
 export type User = {
   __typename?: 'User';
-  displayName: Scalars['String'];
-  id: Scalars['ID'];
-  isAdmin: Scalars['Boolean'];
-  lastActivity: Maybe<Scalars['Date']>;
-  username: Scalars['String'];
+  displayName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isAdmin: Scalars['Boolean']['output'];
+  lastActivity: Maybe<Scalars['Date']['output']>;
+  username: Scalars['String']['output'];
 };
 
 export type UserInput = {
-  displayName: Scalars['String'];
-  isAdmin: InputMaybe<Scalars['Boolean']>;
-  username: Scalars['String'];
+  displayName: Scalars['String']['input'];
+  isAdmin: InputMaybe<Scalars['Boolean']['input']>;
+  username: Scalars['String']['input'];
 };
 
 export type ChangePasswordMutationVariables = Exact<{
-  password: Scalars['String'];
-  newPassword: Scalars['String'];
+  password: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 }>;
 
 
@@ -221,7 +220,7 @@ export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: str
 
 export type CreateRecipeMutationVariables = Exact<{
   recipe: RecipeInput;
-  image: InputMaybe<Scalars['Upload']>;
+  imageId: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -235,29 +234,29 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type DeleteRecipeMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 }>;
 
 
 export type DeleteRecipeMutation = { __typename?: 'Mutation', deleteRecipe: boolean };
 
 export type DeleteUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 }>;
 
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: string };
 
 export type ImportRecipeMutationVariables = Exact<{
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 }>;
 
 
 export type ImportRecipeMutation = { __typename?: 'Mutation', importRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 }>;
 
 
@@ -266,7 +265,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Au
 export type RecipeBaseFragment = { __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null };
 
 export type RecipeDetailQueryVariables = Exact<{
-  slug: Scalars['String'];
+  slug: Scalars['String']['input'];
 }>;
 
 
@@ -275,7 +274,7 @@ export type RecipeDetailQuery = { __typename?: 'Query', recipe: { __typename?: '
 export type RecipeDetailFragment = { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } };
 
 export type RecipeEditQueryVariables = Exact<{
-  slug: Scalars['String'];
+  slug: Scalars['String']['input'];
 }>;
 
 
@@ -292,23 +291,23 @@ export type RecipeListQueryVariables = Exact<{ [key: string]: never; }>;
 export type RecipeListQuery = { __typename?: 'Query', tags: Array<string>, recipes: Array<{ __typename?: 'Recipe', id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null }> };
 
 export type ResetPasswordMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 }>;
 
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: string };
 
 export type UpdateRecipeMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
   recipe: RecipeInput;
-  image: InputMaybe<Scalars['Upload']>;
+  imageId: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
 export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: { __typename?: 'Recipe', directions: string | null, servingCount: number | null, id: string, slug: string, title: string, sideDish: string | null, tags: Array<string>, preparationTime: number | null, imageUrl: string | null, lastModifiedDate: string, imageWebPUrl: string | null, imageThumbUrl: string | null, imageThumbWebPUrl: string | null, ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string, amount: number | null, amountUnit: string | null, isGroup: boolean }>, user: { __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
   user: UserInput;
 }>;
 
@@ -327,613 +326,23 @@ export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UserListQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, username: string, displayName: string, isAdmin: boolean, lastActivity: string | null }> };
 
-export const RecipeBaseFragmentDoc = gql`
-    fragment recipeBase on Recipe {
-  id
-  slug
-  title
-  sideDish
-  tags
-  preparationTime
-  imageUrl
-  imageWebPUrl: imageUrl(format: WEBP)
-  imageThumbUrl: imageUrl(size: {width: 800, height: 800})
-  imageThumbWebPUrl: imageUrl(size: {width: 800, height: 800}, format: WEBP)
-  lastModifiedDate
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment user on User {
-  id
-  username
-  displayName
-  isAdmin
-  lastActivity
-}
-    `;
-export const RecipeDetailFragmentDoc = gql`
-    fragment recipeDetail on Recipe {
-  ...recipeBase
-  directions
-  servingCount
-  ingredients {
-    id
-    name
-    amount
-    amountUnit
-    isGroup
-  }
-  user {
-    ...user
-  }
-}
-    ${RecipeBaseFragmentDoc}
-${UserFragmentDoc}`;
-export const ChangePasswordDocument = gql`
-    mutation ChangePassword($password: String!, $newPassword: String!) {
-  changePassword(password: $password, newPassword: $newPassword)
-}
-    `;
-export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
-
-/**
- * __useChangePasswordMutation__
- *
- * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
- *   variables: {
- *      password: // value for 'password'
- *      newPassword: // value for 'newPassword'
- *   },
- * });
- */
-export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
-      }
-export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
-export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
-export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
-export const MeDocument = gql`
-    query Me {
-  me {
-    id
-    username
-    displayName
-    isAdmin
-  }
-}
-    `;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const CreateRecipeDocument = gql`
-    mutation CreateRecipe($recipe: RecipeInput!, $image: Upload) {
-  createRecipe(recipe: $recipe, image: $image) {
-    ...recipeDetail
-  }
-}
-    ${RecipeDetailFragmentDoc}`;
-export type CreateRecipeMutationFn = Apollo.MutationFunction<CreateRecipeMutation, CreateRecipeMutationVariables>;
-
-/**
- * __useCreateRecipeMutation__
- *
- * To run a mutation, you first call `useCreateRecipeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateRecipeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createRecipeMutation, { data, loading, error }] = useCreateRecipeMutation({
- *   variables: {
- *      recipe: // value for 'recipe'
- *      image: // value for 'image'
- *   },
- * });
- */
-export function useCreateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<CreateRecipeMutation, CreateRecipeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateRecipeMutation, CreateRecipeMutationVariables>(CreateRecipeDocument, options);
-      }
-export type CreateRecipeMutationHookResult = ReturnType<typeof useCreateRecipeMutation>;
-export type CreateRecipeMutationResult = Apollo.MutationResult<CreateRecipeMutation>;
-export type CreateRecipeMutationOptions = Apollo.BaseMutationOptions<CreateRecipeMutation, CreateRecipeMutationVariables>;
-export const CreateUserDocument = gql`
-    mutation CreateUser($user: UserInput!) {
-  createUser(user: $user) {
-    ...user
-  }
-}
-    ${UserFragmentDoc}`;
-export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
-
-/**
- * __useCreateUserMutation__
- *
- * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
- *   variables: {
- *      user: // value for 'user'
- *   },
- * });
- */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
-      }
-export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
-export const DeleteRecipeDocument = gql`
-    mutation DeleteRecipe($id: ID!) {
-  deleteRecipe(id: $id)
-}
-    `;
-export type DeleteRecipeMutationFn = Apollo.MutationFunction<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
-
-/**
- * __useDeleteRecipeMutation__
- *
- * To run a mutation, you first call `useDeleteRecipeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteRecipeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteRecipeMutation, { data, loading, error }] = useDeleteRecipeMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteRecipeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(DeleteRecipeDocument, options);
-      }
-export type DeleteRecipeMutationHookResult = ReturnType<typeof useDeleteRecipeMutation>;
-export type DeleteRecipeMutationResult = Apollo.MutationResult<DeleteRecipeMutation>;
-export type DeleteRecipeMutationOptions = Apollo.BaseMutationOptions<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
-export const DeleteUserDocument = gql`
-    mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
-}
-    `;
-export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
-
-/**
- * __useDeleteUserMutation__
- *
- * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
-      }
-export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
-export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
-export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
-export const ImportRecipeDocument = gql`
-    mutation ImportRecipe($url: String!) {
-  importRecipe(url: $url) {
-    ...recipeDetail
-  }
-}
-    ${RecipeDetailFragmentDoc}`;
-export type ImportRecipeMutationFn = Apollo.MutationFunction<ImportRecipeMutation, ImportRecipeMutationVariables>;
-
-/**
- * __useImportRecipeMutation__
- *
- * To run a mutation, you first call `useImportRecipeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useImportRecipeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [importRecipeMutation, { data, loading, error }] = useImportRecipeMutation({
- *   variables: {
- *      url: // value for 'url'
- *   },
- * });
- */
-export function useImportRecipeMutation(baseOptions?: Apollo.MutationHookOptions<ImportRecipeMutation, ImportRecipeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ImportRecipeMutation, ImportRecipeMutationVariables>(ImportRecipeDocument, options);
-      }
-export type ImportRecipeMutationHookResult = ReturnType<typeof useImportRecipeMutation>;
-export type ImportRecipeMutationResult = Apollo.MutationResult<ImportRecipeMutation>;
-export type ImportRecipeMutationOptions = Apollo.BaseMutationOptions<ImportRecipeMutation, ImportRecipeMutationVariables>;
-export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password) {
-    token
-  }
-}
-    `;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      username: // value for 'username'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-export const RecipeDetailDocument = gql`
-    query RecipeDetail($slug: String!) {
-  recipe(slug: $slug) {
-    ...recipeDetail
-  }
-}
-    ${RecipeDetailFragmentDoc}`;
-
-/**
- * __useRecipeDetailQuery__
- *
- * To run a query within a React component, call `useRecipeDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecipeDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecipeDetailQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useRecipeDetailQuery(baseOptions: Apollo.QueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(RecipeDetailDocument, options);
-      }
-export function useRecipeDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeDetailQuery, RecipeDetailQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecipeDetailQuery, RecipeDetailQueryVariables>(RecipeDetailDocument, options);
-        }
-export type RecipeDetailQueryHookResult = ReturnType<typeof useRecipeDetailQuery>;
-export type RecipeDetailLazyQueryHookResult = ReturnType<typeof useRecipeDetailLazyQuery>;
-export type RecipeDetailQueryResult = Apollo.QueryResult<RecipeDetailQuery, RecipeDetailQueryVariables>;
-export const RecipeEditDocument = gql`
-    query RecipeEdit($slug: String!) {
-  recipe(slug: $slug) {
-    ...recipeDetail
-  }
-}
-    ${RecipeDetailFragmentDoc}`;
-
-/**
- * __useRecipeEditQuery__
- *
- * To run a query within a React component, call `useRecipeEditQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecipeEditQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecipeEditQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useRecipeEditQuery(baseOptions: Apollo.QueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecipeEditQuery, RecipeEditQueryVariables>(RecipeEditDocument, options);
-      }
-export function useRecipeEditLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditQuery, RecipeEditQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecipeEditQuery, RecipeEditQueryVariables>(RecipeEditDocument, options);
-        }
-export type RecipeEditQueryHookResult = ReturnType<typeof useRecipeEditQuery>;
-export type RecipeEditLazyQueryHookResult = ReturnType<typeof useRecipeEditLazyQuery>;
-export type RecipeEditQueryResult = Apollo.QueryResult<RecipeEditQuery, RecipeEditQueryVariables>;
-export const RecipeEditOptionsDocument = gql`
-    query RecipeEditOptions {
-  ingredients
-  sideDishes
-  tags
-}
-    `;
-
-/**
- * __useRecipeEditOptionsQuery__
- *
- * To run a query within a React component, call `useRecipeEditOptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecipeEditOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecipeEditOptionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useRecipeEditOptionsQuery(baseOptions?: Apollo.QueryHookOptions<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(RecipeEditOptionsDocument, options);
-      }
-export function useRecipeEditOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>(RecipeEditOptionsDocument, options);
-        }
-export type RecipeEditOptionsQueryHookResult = ReturnType<typeof useRecipeEditOptionsQuery>;
-export type RecipeEditOptionsLazyQueryHookResult = ReturnType<typeof useRecipeEditOptionsLazyQuery>;
-export type RecipeEditOptionsQueryResult = Apollo.QueryResult<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>;
-export const RecipeListDocument = gql`
-    query RecipeList {
-  recipes {
-    ...recipeBase
-  }
-  tags
-}
-    ${RecipeBaseFragmentDoc}`;
-
-/**
- * __useRecipeListQuery__
- *
- * To run a query within a React component, call `useRecipeListQuery` and pass it any options that fit your needs.
- * When your component renders, `useRecipeListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRecipeListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useRecipeListQuery(baseOptions?: Apollo.QueryHookOptions<RecipeListQuery, RecipeListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecipeListQuery, RecipeListQueryVariables>(RecipeListDocument, options);
-      }
-export function useRecipeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecipeListQuery, RecipeListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecipeListQuery, RecipeListQueryVariables>(RecipeListDocument, options);
-        }
-export type RecipeListQueryHookResult = ReturnType<typeof useRecipeListQuery>;
-export type RecipeListLazyQueryHookResult = ReturnType<typeof useRecipeListLazyQuery>;
-export type RecipeListQueryResult = Apollo.QueryResult<RecipeListQuery, RecipeListQueryVariables>;
-export const ResetPasswordDocument = gql`
-    mutation ResetPassword($id: ID!) {
-  resetPassword(id: $id)
-}
-    `;
-export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
-
-/**
- * __useResetPasswordMutation__
- *
- * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
-      }
-export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
-export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
-export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
-export const UpdateRecipeDocument = gql`
-    mutation UpdateRecipe($id: ID!, $recipe: RecipeInput!, $image: Upload) {
-  updateRecipe(id: $id, recipe: $recipe, image: $image) {
-    ...recipeDetail
-  }
-}
-    ${RecipeDetailFragmentDoc}`;
-export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
-
-/**
- * __useUpdateRecipeMutation__
- *
- * To run a mutation, you first call `useUpdateRecipeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateRecipeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateRecipeMutation, { data, loading, error }] = useUpdateRecipeMutation({
- *   variables: {
- *      id: // value for 'id'
- *      recipe: // value for 'recipe'
- *      image: // value for 'image'
- *   },
- * });
- */
-export function useUpdateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(UpdateRecipeDocument, options);
-      }
-export type UpdateRecipeMutationHookResult = ReturnType<typeof useUpdateRecipeMutation>;
-export type UpdateRecipeMutationResult = Apollo.MutationResult<UpdateRecipeMutation>;
-export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
-export const UpdateUserDocument = gql`
-    mutation UpdateUser($id: ID!, $user: UserInput!) {
-  updateUser(id: $id, user: $user) {
-    ...user
-  }
-}
-    ${UserFragmentDoc}`;
-export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
-
-/**
- * __useUpdateUserMutation__
- *
- * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
- *   variables: {
- *      id: // value for 'id'
- *      user: // value for 'user'
- *   },
- * });
- */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
-      }
-export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
-export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
-export const UpdateUserLastActivityDocument = gql`
-    mutation UpdateUserLastActivity {
-  updateUserLastActivity
-}
-    `;
-export type UpdateUserLastActivityMutationFn = Apollo.MutationFunction<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>;
-
-/**
- * __useUpdateUserLastActivityMutation__
- *
- * To run a mutation, you first call `useUpdateUserLastActivityMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserLastActivityMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserLastActivityMutation, { data, loading, error }] = useUpdateUserLastActivityMutation({
- *   variables: {
- *   },
- * });
- */
-export function useUpdateUserLastActivityMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>(UpdateUserLastActivityDocument, options);
-      }
-export type UpdateUserLastActivityMutationHookResult = ReturnType<typeof useUpdateUserLastActivityMutation>;
-export type UpdateUserLastActivityMutationResult = Apollo.MutationResult<UpdateUserLastActivityMutation>;
-export type UpdateUserLastActivityMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>;
-export const UserListDocument = gql`
-    query UserList {
-  users {
-    ...user
-  }
-}
-    ${UserFragmentDoc}`;
-
-/**
- * __useUserListQuery__
- *
- * To run a query within a React component, call `useUserListQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUserListQuery(baseOptions?: Apollo.QueryHookOptions<UserListQuery, UserListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserListQuery, UserListQueryVariables>(UserListDocument, options);
-      }
-export function useUserListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserListQuery, UserListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserListQuery, UserListQueryVariables>(UserListDocument, options);
-        }
-export type UserListQueryHookResult = ReturnType<typeof useUserListQuery>;
-export type UserListLazyQueryHookResult = ReturnType<typeof useUserListLazyQuery>;
-export type UserListQueryResult = Apollo.QueryResult<UserListQuery, UserListQueryVariables>;
+export const RecipeBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}}]} as unknown as DocumentNode<RecipeBaseFragment, unknown>;
+export const UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}}]} as unknown as DocumentNode<UserFragment, unknown>;
+export const RecipeDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}}]} as unknown as DocumentNode<RecipeDetailFragment, unknown>;
+export const ChangePasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ChangePassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changePassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}},{"kind":"Argument","name":{"kind":"Name","value":"newPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}}}]}]}}]} as unknown as DocumentNode<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const CreateRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recipe"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RecipeInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"recipe"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recipe"}}},{"kind":"Argument","name":{"kind":"Name","value":"imageId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}}]} as unknown as DocumentNode<CreateRecipeMutation, CreateRecipeMutationVariables>;
+export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"user"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteRecipeMutation, DeleteRecipeMutationVariables>;
+export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;
+export const ImportRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ImportRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"importRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"url"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}}]} as unknown as DocumentNode<ImportRecipeMutation, ImportRecipeMutationVariables>;
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const RecipeDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"RecipeDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}}]} as unknown as DocumentNode<RecipeDetailQuery, RecipeDetailQueryVariables>;
+export const RecipeEditDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"RecipeEdit"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}}]} as unknown as DocumentNode<RecipeEditQuery, RecipeEditQueryVariables>;
+export const RecipeEditOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"RecipeEditOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ingredients"}},{"kind":"Field","name":{"kind":"Name","value":"sideDishes"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]} as unknown as DocumentNode<RecipeEditOptionsQuery, RecipeEditOptionsQueryVariables>;
+export const RecipeListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"RecipeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recipes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}}]} as unknown as DocumentNode<RecipeListQuery, RecipeListQueryVariables>;
+export const ResetPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResetPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resetPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const UpdateRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recipe"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RecipeInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"recipe"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recipe"}}},{"kind":"Argument","name":{"kind":"Name","value":"imageId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"imageId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"sideDish"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"preparationTime"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","alias":{"kind":"Name","value":"imageWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}}]},{"kind":"Field","alias":{"kind":"Name","value":"imageThumbWebPUrl"},"name":{"kind":"Name","value":"imageUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"width"},"value":{"kind":"IntValue","value":"800"}},{"kind":"ObjectField","name":{"kind":"Name","value":"height"},"value":{"kind":"IntValue","value":"800"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"WEBP"}}]},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recipeDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Recipe"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recipeBase"}},{"kind":"Field","name":{"kind":"Name","value":"directions"}},{"kind":"Field","name":{"kind":"Name","value":"servingCount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"amountUnit"}},{"kind":"Field","name":{"kind":"Name","value":"isGroup"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}}]} as unknown as DocumentNode<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"user"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserLastActivityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserLastActivity"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserLastActivity"}}]}}]} as unknown as DocumentNode<UpdateUserLastActivityMutation, UpdateUserLastActivityMutationVariables>;
+export const UserListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"user"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"user"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivity"}}]}}]} as unknown as DocumentNode<UserListQuery, UserListQueryVariables>;

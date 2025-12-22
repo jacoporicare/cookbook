@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
+import {
+  RecipeEditDocument,
+  RecipeEditOptionsDocument,
+} from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
 import { getCurrentUser } from '@/lib/auth-server';
-import { RecipeEditDocument, RecipeEditOptionsDocument } from '@/generated/graphql';
 
 import RecipeEditPage from '../../../novy-recept/RecipeEditPage';
 
@@ -20,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   return {
-    title: data.recipe ? `Upravit: ${data.recipe.title}` : 'Upravit recept',
+    title: data?.recipe ? `Upravit: ${data.recipe.title}` : 'Upravit recept',
   };
 }
 
@@ -37,7 +40,7 @@ export default async function Page({ params }: Props) {
     client.query({ query: RecipeEditOptionsDocument }),
   ]);
 
-  if (!recipeResult.data.recipe) {
+  if (!recipeResult.data?.recipe) {
     notFound();
   }
 
@@ -53,9 +56,9 @@ export default async function Page({ params }: Props) {
     <RecipeEditPage
       recipe={recipe}
       options={{
-        ingredients: optionsResult.data.ingredients,
-        sideDishes: optionsResult.data.sideDishes,
-        tags: optionsResult.data.tags,
+        ingredients: optionsResult.data?.ingredients ?? [],
+        sideDishes: optionsResult.data?.sideDishes ?? [],
+        tags: optionsResult.data?.tags ?? [],
       }}
     />
   );

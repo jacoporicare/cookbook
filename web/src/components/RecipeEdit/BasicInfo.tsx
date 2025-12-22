@@ -1,14 +1,8 @@
-import {
-  Autocomplete,
-  Box,
-  Chip,
-  FormControlLabel,
-  InputAdornment,
-  MenuItem,
-  Switch,
-  TextField,
-  useTheme,
-} from '@mui/material';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 import { INSTANT_POT_TAG } from '../../const';
 
@@ -35,121 +29,114 @@ function BasicInfo({
   onChange,
   onTagsChange,
 }: Props) {
-  const theme = useTheme();
+  const filteredTags = tags?.filter((t) => t !== INSTANT_POT_TAG) ?? [];
+  const filteredTagOptions = tagOptions.filter((t) => t !== INSTANT_POT_TAG);
 
-  function getStyles(tag: string, tags: string[]) {
-    return {
-      fontWeight:
-        tags.indexOf(tag) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
+  function handleTagToggle(tag: string, checked: boolean) {
+    if (checked) {
+      onTagsChange([...(tags ?? []), tag]);
+    } else {
+      onTagsChange((tags ?? []).filter((t) => t !== tag));
+    }
   }
 
   return (
-    <>
-      <TextField
-        InputProps={{ endAdornment: <InputAdornment position="end">min</InputAdornment> }}
-        inputProps={{ min: 1 }}
-        label="Doba přípravy"
-        type="number"
-        value={preparationTime ?? ''}
-        variant="filled"
-        fullWidth
-        onChange={e => onChange('preparationTime', e.currentTarget.value)}
-      />
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="preparationTime">Doba přípravy</Label>
+        <div className="relative">
+          <Input
+            id="preparationTime"
+            type="number"
+            min={1}
+            value={preparationTime ?? ''}
+            className="pr-12"
+            onChange={(e) => onChange('preparationTime', e.currentTarget.value)}
+          />
+          <span className={`
+            absolute top-1/2 right-3 -translate-y-1/2 text-sm
+            text-muted-foreground
+          `}>
+            min
+          </span>
+        </div>
+      </div>
 
-      <Box mt={3}>
-        <TextField
-          inputProps={{ min: 1 }}
-          label="Počet porcí"
+      <div className="space-y-2">
+        <Label htmlFor="servingCount">Počet porcí</Label>
+        <Input
+          id="servingCount"
           type="number"
+          min={1}
           value={servingCount ?? ''}
-          variant="filled"
-          fullWidth
-          onChange={e => onChange('servingCount', e.currentTarget.value)}
+          onChange={(e) => onChange('servingCount', e.currentTarget.value)}
         />
-      </Box>
+      </div>
 
-      <Box mt={3}>
-        <Autocomplete
-          options={sideDishOptions}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="Příloha"
-              variant="filled"
-              onChange={e => onChange('sideDish', e.currentTarget.value)}
-            />
-          )}
-          value={sideDish}
-          disableClearable
-          freeSolo
-          onChange={(_, value) => onChange('sideDish', value)}
+      <div className="space-y-2">
+        <Label htmlFor="sideDish">Příloha</Label>
+        <Input
+          id="sideDish"
+          list="sideDishOptions"
+          value={sideDish ?? ''}
+          onChange={(e) => onChange('sideDish', e.currentTarget.value)}
         />
-      </Box>
+        <datalist id="sideDishOptions">
+          {sideDishOptions.map((option) => (
+            <option key={option} value={option} />
+          ))}
+        </datalist>
+      </div>
 
-      <Box mt={3}>
-        <TextField
-          SelectProps={{
-            renderValue: selected => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {(selected as string[]).map(value => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            ),
-            multiple: true,
-          }}
-          id="tags"
-          label="Štítky"
-          value={tags?.filter(t => t !== INSTANT_POT_TAG) ?? []}
-          variant="filled"
-          fullWidth
-          select
-          onChange={event => onTagsChange(event.target.value as unknown as string[])}
-        >
-          {tagOptions
-            .filter(t => t !== INSTANT_POT_TAG)
-            .map(tag => (
-              <MenuItem key={tag} style={getStyles(tag, tags ?? [])} value={tag}>
+      <div className="space-y-2">
+        <Label>Štítky</Label>
+        {filteredTags.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-1">
+            {filteredTags.map((tag) => (
+              <Badge key={tag} variant="secondary">
                 {tag}
-              </MenuItem>
+              </Badge>
             ))}
-        </TextField>
-        {/* <label htmlFor="tags">Štítky</label>
-        <Creatable
-          defaultValue={tags?.map(t => ({ value: t, label: t }))}
-          formatCreateLabel={input => `Vytvořit "${input}"`}
-          inputId="tags"
-          noOptionsMessage={() => 'Žádné možnosti'}
-          options={tagOptions.map(t => ({ value: t, label: t }))}
-          placeholder="Vybrat nebo vytvořit..."
-          getv
-          isClearable
-          isMulti
-          onChange={values => onTagsChange(values instanceof Array ? values.map(v => v.value) : [])}
-        /> */}
-      </Box>
+          </div>
+        )}
+        <div className="space-y-2">
+          {filteredTagOptions.map((tag) => (
+            <div key={tag} className="flex items-center space-x-2">
+              <Checkbox
+                id={`tag-${tag}`}
+                checked={filteredTags.includes(tag)}
+                onCheckedChange={(checked) =>
+                  handleTagToggle(tag, checked === true)
+                }
+              />
+              <Label
+                htmlFor={`tag-${tag}`}
+                className="cursor-pointer font-normal"
+              >
+                {tag}
+              </Label>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <Box mt={3}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={tags?.includes(INSTANT_POT_TAG)}
-              onChange={e =>
-                onTagsChange(
-                  e.target.checked
-                    ? [...(tags ?? []), INSTANT_POT_TAG]
-                    : (tags?.filter(t => t !== INSTANT_POT_TAG) ?? []),
-                )
-              }
-            />
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="instantPot"
+          checked={tags?.includes(INSTANT_POT_TAG) ?? false}
+          onCheckedChange={(checked) =>
+            onTagsChange(
+              checked
+                ? [...(tags ?? []), INSTANT_POT_TAG]
+                : (tags?.filter((t) => t !== INSTANT_POT_TAG) ?? []),
+            )
           }
-          label="Instant Pot recept"
         />
-      </Box>
-    </>
+        <Label htmlFor="instantPot" className="cursor-pointer">
+          Instant Pot recept
+        </Label>
+      </div>
+    </div>
   );
 }
 

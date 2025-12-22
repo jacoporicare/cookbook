@@ -1,25 +1,13 @@
 'use client';
 
-import { Delete, DragIndicator } from '@mui/icons-material';
-import {
-  Alert,
-  Box,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-} from '@mui/material';
 import {
   DndContext,
-  closestCenter,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -28,9 +16,13 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, Trash2 } from 'lucide-react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 import { Ingredient } from '../../generated/graphql';
-import { colors } from '../../styles/colors';
 
 type RemoveHandler = (index: number) => void;
 type SortHandler = (args: { oldIndex: number; newIndex: number }) => void;
@@ -48,8 +40,14 @@ type SortableItemProps = {
   onRemove: RemoveHandler;
 };
 
-function SortableItem({ id, itemIndex, ingredient, onRemove }: SortableItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+function SortableItem({
+  id,
+  itemIndex,
+  ingredient,
+  onRemove,
+}: SortableItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -59,44 +57,49 @@ function SortableItem({ id, itemIndex, ingredient, onRemove }: SortableItemProps
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   return (
-    <ListItem
+    <li
       ref={setNodeRef}
       style={style}
-      sx={
-        isGroup
-          ? {
-              listStyle: 'none',
-              backgroundColor: colors.gray200,
-            }
-          : {
-              listStyle: 'none',
-            }
-      }
+      className={cn(
+        `
+          flex items-center gap-2 border-b border-border px-1 py-2
+          last:border-b-0
+        `,
+        isGroup && 'bg-muted',
+      )}
     >
-      <ListItemIcon {...attributes} {...listeners} sx={{ cursor: 'grab' }}>
-        <DragIndicator />
-      </ListItemIcon>
+      <button
+        type="button"
+        className={`
+          cursor-grab touch-none p-1 text-muted-foreground
+          hover:text-foreground
+        `}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-5" />
+      </button>
 
-      <ListItemText>
-        <Grid spacing={1} container>
-          <Grid xs={1} item>
-            <Box textAlign="right">{amount ? amount.toLocaleString('cs') : ''}</Box>
-          </Grid>
-          <Grid xs={3} item>
-            {amountUnit}
-          </Grid>
-          <Grid xs={8} item>
-            {isGroup ? <b>{name}</b> : name}
-          </Grid>
-        </Grid>
-      </ListItemText>
+      <div className="grid flex-1 grid-cols-12 gap-1 text-sm">
+        <div className="col-span-2 text-right">
+          {amount ? amount.toLocaleString('cs') : ''}
+        </div>
+        <div className="col-span-3">{amountUnit}</div>
+        <div className="col-span-7">
+          {isGroup ? <strong>{name}</strong> : name}
+        </div>
+      </div>
 
-      <ListItemSecondaryAction>
-        <IconButton aria-label="Smazat" edge="end" size="large" onClick={() => onRemove(itemIndex)}>
-          <Delete />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label="Smazat"
+        onClick={() => onRemove(itemIndex)}
+      >
+        <Trash2 className="size-4" />
+      </Button>
+    </li>
   );
 }
 
@@ -121,13 +124,21 @@ function IngredientList({ items, onRemove, onSort }: Props) {
   }
 
   if (items.length === 0) {
-    return <Alert severity="info">Zatím žádné ingredience.</Alert>;
+    return (
+      <Alert>
+        <AlertDescription>Zatím žádné ingredience.</AlertDescription>
+      </Alert>
+    );
   }
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
       <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-        <List>
+        <ul className="m-0 list-none p-0">
           {items.map((ingredient, index) => (
             <SortableItem
               key={`item-${index}`}
@@ -137,7 +148,7 @@ function IngredientList({ items, onRemove, onSort }: Props) {
               onRemove={onRemove}
             />
           ))}
-        </List>
+        </ul>
       </SortableContext>
     </DndContext>
   );

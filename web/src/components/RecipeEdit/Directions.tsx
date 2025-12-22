@@ -1,5 +1,8 @@
-import { Help } from '@mui/icons-material';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { HelpCircle } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export type DirectionsFields = 'directions';
 
@@ -10,30 +13,27 @@ type Props = {
 
 function Directions({ directions = '', onChange }: Props) {
   return (
-    <>
-      <TextField
-        label="Postup"
-        minRows={10}
+    <div className="space-y-2">
+      <Label htmlFor="directions">Postup</Label>
+      <Textarea
+        id="directions"
         value={directions}
-        variant="filled"
-        fullWidth
-        multiline
-        onChange={e => onChange('directions', e.currentTarget.value)}
+        rows={10}
+        onChange={(e) => onChange('directions', e.currentTarget.value)}
       />
-      <Box mt={2} textAlign="right">
-        <Typography variant="caption">
-          <Button
+      <div className="text-right">
+        <Button variant="ghost" size="sm" asChild>
+          <a
             href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
             rel="noopener noreferrer"
-            size="small"
-            startIcon={<Help />}
             target="_blank"
           >
+            <HelpCircle className="mr-1 size-4" />
             Návod na Markdown
-          </Button>
-        </Typography>
-      </Box>
-    </>
+          </a>
+        </Button>
+      </div>
+    </div>
   );
 }
 

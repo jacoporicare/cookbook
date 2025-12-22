@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { AUTH_TOKEN_KEY } from '@/const';
 
 const protectedRoutes = ['/admin', '/nastaveni', '/novy-recept'];
@@ -6,13 +7,13 @@ const protectedPatterns = [/^\/recept\/[^/]+\/upravit$/];
 
 const authRoutes = ['/prihlaseni'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get(AUTH_TOKEN_KEY)?.value;
   const path = request.nextUrl.pathname;
 
   const isProtectedRoute =
-    protectedRoutes.some(route => path.startsWith(route)) ||
-    protectedPatterns.some(pattern => pattern.test(path));
+    protectedRoutes.some((route) => path.startsWith(route)) ||
+    protectedPatterns.some((pattern) => pattern.test(path));
 
   if (isProtectedRoute && !token) {
     const loginUrl = new URL('/prihlaseni', request.url);
@@ -20,7 +21,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const isAuthRoute = authRoutes.some(route => path.startsWith(route));
+  const isAuthRoute = authRoutes.some((route) => path.startsWith(route));
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL('/', request.url));
   }

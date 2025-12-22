@@ -1,9 +1,6 @@
 'use client';
 
-import { Container, Box } from '@mui/material';
 import { ReactNode } from 'react';
-
-import { colors } from '../styles/colors';
 
 import Footer from './Footer';
 import Header from './Header';
@@ -25,14 +22,18 @@ function Layout(props: Props) {
           <TrackUserActivity />
         </>
       )}
-      <Container maxWidth={false}>
-        <Box component="main" mt="62px" py={[3, 4]}>
-          {props.children}
-        </Box>
-        <Box borderTop={`1px solid ${colors.gray200}`} component="footer" py={[2, 3]}>
+      <div className="mx-auto max-w-7xl px-4">
+        <main className={`
+          mt-15.5 py-6
+          sm:py-8
+        `}>{props.children}</main>
+        <footer className={`
+          border-t border-gray-200 py-4
+          sm:py-6
+        `}>
           <Footer />
-        </Box>
-      </Container>
+        </footer>
+      </div>
     </>
   );
 }

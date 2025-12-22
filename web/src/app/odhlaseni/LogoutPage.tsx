@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '@/lib/use-auth';
 
 export default function LogoutPage() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.2"
 
 services:
   db:
@@ -12,7 +12,7 @@ services:
         target: /data/db
 
   api:
-    image: '${API_IMAGE}'
+    image: "${API_IMAGE}"
     restart: always
     depends_on:
       - db
@@ -27,28 +27,28 @@ services:
         source: ./zradelnik-firebase-adminsdk.json
         target: /srv/zradelnik-firebase-adminsdk.json
     environment:
-      VIRTUAL_HOST: '${API_HOST}'
-      LETSENCRYPT_HOST: '${API_HOST}'
-      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
+      VIRTUAL_HOST: "${API_HOST}"
+      LETSENCRYPT_HOST: "${API_HOST}"
+      LETSENCRYPT_EMAIL: "${LETSENCRYPT_EMAIL}"
       MONGO_URI: mongodb://db/cookbook
-      JWT_SECRET: '${JWT_SECRET}'
-      OPENAI_API_KEY: '${OPENAI_API_KEY}'
-      APOLLO_EXPLORER_ENABLED: '${APOLLO_EXPLORER_ENABLED}'
-      NEW_RECIPES_TOPIC: '${NEW_RECIPES_TOPIC}'
+      JWT_SECRET: "${JWT_SECRET}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      APOLLO_EXPLORER_ENABLED: "${APOLLO_EXPLORER_ENABLED}"
+      NEW_RECIPES_TOPIC: "${NEW_RECIPES_TOPIC}"
       FIREBASE_ADMIN_SDK_PATH: /srv/zradelnik-firebase-adminsdk.json
 
   web:
-    image: '${WEB_IMAGE}'
+    image: "${WEB_IMAGE}"
     restart: always
     depends_on:
       - api
     networks:
       - web
     environment:
-      VIRTUAL_HOST: '${WEB_HOST}'
-      LETSENCRYPT_HOST: '${WEB_HOST}'
-      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
-      API_URL: 'https://${API_HOST}/graphql'
+      VIRTUAL_HOST: "${WEB_HOST}"
+      LETSENCRYPT_HOST: "${WEB_HOST}"
+      LETSENCRYPT_EMAIL: "${LETSENCRYPT_EMAIL}"
+      API_URL: "https://${API_HOST}/graphql"
 
 networks:
   cookbook-api:

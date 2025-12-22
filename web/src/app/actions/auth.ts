@@ -4,9 +4,9 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { getClient } from '@/lib/apollo-client';
 import { AUTH_TOKEN_KEY } from '@/const';
-import { LoginDocument, ChangePasswordDocument } from '@/generated/graphql';
+import { ChangePasswordDocument, LoginDocument } from '@/generated/graphql';
+import { getClient } from '@/lib/apollo-client';
 
 // Schemas
 const loginSchema = z.object({
@@ -25,6 +25,7 @@ export type LoginState = {
   error?: string;
   fieldErrors?: { username?: string[]; password?: string[] };
   redirectUrl?: string;
+  values?: { username?: string };
 };
 
 export type ChangePasswordState = {
@@ -38,7 +39,10 @@ export type ChangePasswordState = {
 };
 
 // Actions
-export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
+export async function loginAction(
+  prevState: LoginState,
+  formData: FormData,
+): Promise<LoginState> {
   const rawData = {
     username: formData.get('username') as string,
     password: formData.get('password') as string,
@@ -49,7 +53,10 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
 
   const validated = loginSchema.safeParse(rawData);
   if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
+    return {
+      fieldErrors: validated.error.flatten().fieldErrors,
+      values: { username: rawData.username },
+    };
   }
 
   try {
@@ -60,7 +67,10 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     });
 
     if (!data?.login?.token) {
-      return { error: 'Neplatné uživatelské jméno nebo heslo' };
+      return {
+        error: 'Neplatné uživatelské jméno nebo heslo',
+        values: { username: validated.data.username },
+      };
     }
 
     const token = data.login.token;
@@ -89,7 +99,10 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
       throw e;
     }
-    return { error: 'Neplatné uživatelské jméno nebo heslo' };
+    return {
+      error: 'Neplatné uživatelské jméno nebo heslo',
+      values: { username: validated.data.username },
+    };
   }
 }
 

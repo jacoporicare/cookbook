@@ -1,60 +1,30 @@
-import { Alert, Snackbar } from '@mui/material';
-import { FormEvent, useState } from 'react';
+'use client';
 
-import { useChangePasswordMutation } from '../../generated/graphql';
+import { useActionState, useEffect } from 'react';
+import { toast } from 'sonner';
+
+import { ChangePasswordState, changePasswordAction } from '@/app/actions/auth';
 
 import ChangePassword from './ChangePassword';
 
+const initialState: ChangePasswordState = {};
+
 function ChangePasswordContainer() {
-  const [password, setPassword] = useState<string>();
-  const [newPassword, setNewPassword] = useState<string>();
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>();
-  const [invalidPassword, setInvalidPassword] = useState(false);
-  const [successOpen, setSuccessOpen] = useState(false);
+  const [state, formAction, isPending] = useActionState(
+    changePasswordAction,
+    initialState,
+  );
 
-  const [changePassword, { loading: submitting }] = useChangePasswordMutation({
-    onCompleted: data => {
-      if (data.changePassword) {
-        setSuccessOpen(true);
-        setPassword(undefined);
-        setNewPassword(undefined);
-        setNewPasswordConfirm(undefined);
-      } else {
-        setInvalidPassword(true);
-      }
-    },
-  });
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-
-    if (!password || !newPassword || newPassword !== newPasswordConfirm) {
-      return;
+  useEffect(() => {
+    if (state.success) {
+      toast.success('Heslo změněno!');
     }
-
-    changePassword({ variables: { password, newPassword } });
-  }
+  }, [state.success]);
 
   return (
-    <>
-      <ChangePassword
-        invalidPassword={invalidPassword}
-        newPassword={newPassword}
-        newPasswordConfirm={newPasswordConfirm}
-        password={password}
-        submitting={submitting}
-        onInvalidPasswordChange={setInvalidPassword}
-        onNewPasswordChange={setNewPassword}
-        onNewPasswordConfirmChange={setNewPasswordConfirm}
-        onPasswordChange={setPassword}
-        onSubmit={handleSubmit}
-      />
-      <Snackbar autoHideDuration={5000} open={successOpen} onClose={() => setSuccessOpen(false)}>
-        <Alert severity="success" onClose={() => setSuccessOpen(false)}>
-          Heslo změněno!
-        </Alert>
-      </Snackbar>
-    </>
+    <form action={formAction}>
+      <ChangePassword state={state} isPending={isPending} />
+    </form>
   );
 }
 

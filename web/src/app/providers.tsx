@@ -1,25 +1,27 @@
 'use client';
 
-import { CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
 import { ReactNode } from 'react';
-import theme from '@/theme';
-import { ApolloWrapper } from './ApolloWrapper';
-import { AuthProvider } from './AuthProvider';
 
-export function Providers({ children }: { children: ReactNode }) {
+import { RecipeBaseFragment } from '@/generated/graphql';
+
+import { RecipesProvider } from './RecipesProvider';
+import { UserProvider } from './UserProvider';
+
+type User = {
+  name: string;
+  isAdmin: boolean;
+} | null;
+
+type Props = {
+  children: ReactNode;
+  user: User;
+  recipes: RecipeBaseFragment[];
+};
+
+export function Providers({ children, user, recipes }: Props) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <GlobalStyles
-        styles={{
-          body: {
-            backgroundColor: theme.palette.grey[50],
-          },
-        }}
-      />
-      <ApolloWrapper>
-        <AuthProvider>{children}</AuthProvider>
-      </ApolloWrapper>
-    </ThemeProvider>
+    <UserProvider user={user}>
+      <RecipesProvider recipes={recipes}>{children}</RecipesProvider>
+    </UserProvider>
   );
 }

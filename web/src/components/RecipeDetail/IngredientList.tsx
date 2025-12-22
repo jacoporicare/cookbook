@@ -1,21 +1,14 @@
-import {
-  Alert,
-  Box,
-  InputAdornment,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
+'use client';
+
 import { ChangeEvent, useEffect, useState } from 'react';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+
 import { Ingredient } from '../../generated/graphql';
-import { colors } from '../../styles/colors';
 
 type Props = {
   ingredients?: Omit<Ingredient, '_id'>[];
@@ -23,8 +16,6 @@ type Props = {
 };
 
 function IngredientList(props: Props) {
-  const theme = useTheme();
-
   const [servingCount, setServingCount] = useState(props.servingCount);
 
   useEffect(() => {
@@ -47,7 +38,11 @@ function IngredientList(props: Props) {
     const { value } = event.target;
     const parsedValue = Number(event.target.value);
 
-    setServingCount(value !== '' && !Number.isNaN(parsedValue) ? Math.abs(parsedValue) : undefined);
+    setServingCount(
+      value !== '' && !Number.isNaN(parsedValue)
+        ? Math.abs(parsedValue)
+        : undefined,
+    );
   }
 
   function handleServingCountBlur() {
@@ -60,47 +55,46 @@ function IngredientList(props: Props) {
 
   return (
     <>
-      <Typography component="h3" variant="h5" gutterBottom>
-        Ingredience
-      </Typography>
-      <TableContainer component={Paper}>
-        {(!ingredients || !ingredients.length) && <Alert severity="info">Žádné ingredience.</Alert>}
+      <h3 className="mb-2 text-xl font-medium">Ingredience</h3>
+      <Card>
+        {(!ingredients || !ingredients.length) && (
+          <Alert>
+            <AlertDescription>Žádné ingredience.</AlertDescription>
+          </Alert>
+        )}
 
         {Boolean(initialServingCount) && (
-          <Box mt={1}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ paddingLeft: theme.spacing(2) }}>
-                    Počet porcí
-                  </InputAdornment>
-                ),
-              }}
-              inputProps={{ min: 1 }}
+          <div className="mt-2 flex items-center border-b px-4 py-2">
+            <span className="mr-2 text-muted-foreground">Počet porcí</span>
+            <Input
               type="number"
+              min={1}
               value={!servingCount ? '' : servingCount}
-              variant="standard"
-              fullWidth
               onBlur={handleServingCountBlur}
               onChange={handleServingCountChange}
+              className="h-8 w-20"
             />
-          </Box>
+          </div>
         )}
 
         {ingredients && ingredients.length > 0 && (
-          <Table size="small">
+          <Table>
             <TableBody>
-              {ingredients.map(ingredient => {
+              {ingredients.map((ingredient) => {
                 const { id, isGroup, name, amount, amountUnit } = ingredient;
 
                 return (
-                  <TableRow key={id} sx={isGroup ? { backgroundColor: colors.gray200 } : undefined}>
-                    <TableCell align="right" width="20%">
+                  <TableRow key={id} className={cn(isGroup && 'bg-gray-100')}>
+                    <TableCell className="w-[20%] text-right">
                       {!isGroup && getAmount(amount ?? undefined)}
                     </TableCell>
-                    <TableCell width="10%">{!isGroup && amountUnit}</TableCell>
+                    <TableCell className="w-[10%]">
+                      {!isGroup && amountUnit}
+                    </TableCell>
                     <TableCell>
-                      <Typography variant={isGroup ? 'subtitle1' : 'body1'}>{name}</Typography>
+                      <span className={isGroup ? 'font-medium' : ''}>
+                        {name}
+                      </span>
                     </TableCell>
                   </TableRow>
                 );
@@ -108,7 +102,7 @@ function IngredientList(props: Props) {
             </TableBody>
           </Table>
         )}
-      </TableContainer>
+      </Card>
     </>
   );
 }

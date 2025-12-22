@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 
-import { useAuth } from '@/app/AuthProvider';
 import { trackUserActivityAction } from '@/app/actions/user';
+import { useAuth } from '@/lib/use-auth';
 
 function TrackUserActivity() {
   const [token] = useAuth();

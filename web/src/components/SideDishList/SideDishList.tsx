@@ -1,17 +1,14 @@
+import { Card } from '@/components/ui/card';
 import {
-  Box,
-  Paper,
   Table,
   TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
+  TableHeader,
   TableRow,
-} from '@mui/material';
+} from '@/components/ui/table';
 
 import { SideDish } from '../../types';
 import PageHeading from '../common/PageHeading';
-
 import SideDishListItem from './SideDishListItem';
 
 type Props = {
@@ -20,33 +17,26 @@ type Props = {
 
 function SideDishList({ sideDishes }: Props) {
   return (
-    <Box maxWidth="600px" mx="auto">
+    <div className="mx-auto max-w-150">
       <PageHeading>Přílohy</PageHeading>
-      <TableContainer component={Paper}>
+      <Card>
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
-              <TableCell width="40%">Název</TableCell>
-              <TableCell align="right" width="20%">
-                Příloha
-              </TableCell>
-              <TableCell align="right" width="20%">
-                Hlavní
-              </TableCell>
-              <TableCell align="right" width="20%">
-                Po uvaření
-              </TableCell>
+              <TableHead className="w-[40%]">Název</TableHead>
+              <TableHead className="w-[20%] text-right">Příloha</TableHead>
+              <TableHead className="w-[20%] text-right">Hlavní</TableHead>
+              <TableHead className="w-[20%] text-right">Po uvaření</TableHead>
             </TableRow>
-          </TableHead>
-
+          </TableHeader>
           <TableBody>
-            {sideDishes.map(sideDish => (
+            {sideDishes.map((sideDish) => (
               <SideDishListItem key={sideDish.title} {...sideDish} />
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
-    </Box>
+      </Card>
+    </div>
   );
 }
 

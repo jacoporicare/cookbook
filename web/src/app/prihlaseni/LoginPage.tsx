@@ -1,25 +1,19 @@
 'use client';
 
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  FormControlLabel,
-  GlobalStyles,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
 
-import { loginAction, LoginState } from '@/app/actions/auth';
+import { LoginState, loginAction } from '@/app/actions/auth';
 import Layout from '@/components/Layout';
 import PageHeading from '@/components/common/PageHeading';
 import Spinner from '@/components/common/Spinner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const initialState: LoginState = {};
 
@@ -28,7 +22,10 @@ export default function LoginPage() {
   const redirectUri = searchParams.get('redirect_uri');
   const returnUrl = searchParams.get('u');
 
-  const [state, formAction, pending] = useActionState(loginAction, initialState);
+  const [state, formAction, pending] = useActionState(
+    loginAction,
+    initialState,
+  );
 
   // Handle WebView redirect (needs client-side window.location)
   useEffect(() => {
@@ -40,88 +37,103 @@ export default function LoginPage() {
   const isForWebView = !!redirectUri;
 
   const content = (
-    <Box p={isForWebView ? 5 : 3}>
+    <div className={isForWebView ? 'p-10' : 'p-6'}>
       {isForWebView && (
-        <Box alignItems="center" component="header" display="flex" flexDirection="column" mb={3}>
-          <Box alignItems="center" display="flex">
+        <header className="mb-6 flex flex-col items-center">
+          <div className="flex items-center">
             <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
-            <Typography fontSize="1.5rem" fontWeight={400} ml={1} variant="h1">
-              Žrádelník
-            </Typography>
-          </Box>
-        </Box>
+            <h1 className="ml-2 text-2xl font-normal">Žrádelník</h1>
+          </div>
+        </header>
       )}
       {state.error && (
-        <Box mb={3}>
-          <Alert severity="error">{state.error}</Alert>
-        </Box>
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription>{state.error}</AlertDescription>
+        </Alert>
       )}
       <form action={formAction}>
         {/* Hidden fields for redirect handling */}
-        {redirectUri && <input type="hidden" name="redirect_uri" value={redirectUri} />}
-        {returnUrl && <input type="hidden" name="return_url" value={returnUrl} />}
+        {redirectUri && (
+          <input type="hidden" name="redirect_uri" value={redirectUri} />
+        )}
+        {returnUrl && (
+          <input type="hidden" name="return_url" value={returnUrl} />
+        )}
 
-        <Grid direction="column" spacing={3} container>
-          <Grid item>
-            <TextField
-              inputProps={{
-                autoCapitalize: 'off',
-                autoComplete: 'username',
-                autoCorrect: 'off',
-              }}
-              label="Uživatel"
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="username">Uživatel</Label>
+            <Input
+              id="username"
               name="username"
-              variant="filled"
-              fullWidth
+              autoCapitalize="off"
+              autoComplete="username"
+              autoCorrect="off"
               required
-              error={!!state.fieldErrors?.username}
-              helperText={state.fieldErrors?.username?.[0]}
+              defaultValue={state.values?.username ?? ''}
+              className={
+                state.fieldErrors?.username ? 'border-destructive' : ''
+              }
             />
-          </Grid>
-          <Grid item>
-            <TextField
-              inputProps={{
-                autoComplete: 'current-password',
-              }}
-              label="Heslo"
+            {state.fieldErrors?.username?.[0] && (
+              <p className="text-sm text-destructive">
+                {state.fieldErrors.username[0]}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Heslo</Label>
+            <Input
+              id="password"
               name="password"
               type="password"
-              variant="filled"
-              fullWidth
+              autoComplete="current-password"
               required
-              error={!!state.fieldErrors?.password}
-              helperText={state.fieldErrors?.password?.[0]}
+              className={
+                state.fieldErrors?.password ? 'border-destructive' : ''
+              }
             />
-          </Grid>
-          <Grid item>
-            <Box alignItems="center" display="flex" justifyContent="space-between">
-              {!isForWebView && (
-                <FormControlLabel
-                  control={<Checkbox color="primary" name="rememberMe" defaultChecked />}
-                  label="Neodhlašovat"
-                />
-              )}
-              <Button
-                color="primary"
-                disabled={pending}
-                fullWidth={isForWebView}
-                size={isForWebView ? 'large' : 'medium'}
-                type="submit"
-                variant="contained"
-              >
-                Přihlásit
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
+            {state.fieldErrors?.password?.[0] && (
+              <p className="text-sm text-destructive">
+                {state.fieldErrors.password[0]}
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between">
+            {!isForWebView && (
+              <div className="flex items-center space-x-2">
+                <Checkbox id="rememberMe" name="rememberMe" defaultChecked />
+                <Label
+                  htmlFor="rememberMe"
+                  className="cursor-pointer font-normal"
+                >
+                  Neodhlašovat
+                </Label>
+              </div>
+            )}
+            <Button
+              type="submit"
+              disabled={pending}
+              className={isForWebView ? 'w-full' : ''}
+              size={isForWebView ? 'lg' : 'default'}
+            >
+              Přihlásit
+            </Button>
+          </div>
+        </div>
       </form>
-    </Box>
+    </div>
   );
 
   const formContent = (
     <>
       {pending && <Spinner overlay />}
-      <Box maxWidth="28rem" mx="auto" px={isForWebView ? 0 : 3}>
+      <div className={`
+        mx-auto max-w-md
+        ${isForWebView ? '' : 'px-4'}
+      `}>
         {isForWebView ? (
           content
         ) : (
@@ -130,16 +142,8 @@ export default function LoginPage() {
             <Card>{content}</Card>
           </>
         )}
-      </Box>
-      {isForWebView && (
-        <GlobalStyles
-          styles={{
-            body: {
-              backgroundColor: 'white',
-            },
-          }}
-        />
-      )}
+      </div>
+      {isForWebView && <style>{`body { background-color: white; }`}</style>}
     </>
   );
 

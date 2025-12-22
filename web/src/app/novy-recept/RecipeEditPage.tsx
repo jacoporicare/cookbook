@@ -1,32 +1,24 @@
 'use client';
 
-import { ApolloError } from '@apollo/client';
-import { Alert, AlertColor, Snackbar } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
-import Layout from '@/components/Layout';
-import RecipeEdit, { RecipeEditFields } from '@/components/RecipeEdit/RecipeEdit';
-import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
 import {
-  RecipeListQuery,
-  RecipeListDocument,
-  CreateRecipeMutation,
-  UpdateRecipeMutation,
-  Ingredient,
-  RecipeEditQuery,
-  useCreateRecipeMutation,
-  useUpdateRecipeMutation,
-  RecipeInput,
-} from '@/generated/graphql';
+  RecipeFormState,
+  createRecipeAction,
+  updateRecipeAction,
+} from '@/app/actions/recipe';
+import Layout from '@/components/Layout';
+import RecipeEdit, {
+  RecipeEditFields,
+} from '@/components/RecipeEdit/RecipeEdit';
+import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
+import { Ingredient, RecipeEditQuery, RecipeInput } from '@/generated/graphql';
+import { uploadImage } from '@/lib/image-upload';
+import { useAuth } from '@/lib/use-auth';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
-
-function isCreateMutation(
-  data: CreateRecipeMutation | UpdateRecipeMutation,
-): data is CreateRecipeMutation {
-  return Boolean((data as CreateRecipeMutation).createRecipe);
-}
 
 type Props = {
   recipe?: NonNullable<RecipeEditQuery['recipe']>;
@@ -37,16 +29,21 @@ type Props = {
   };
 };
 
-export default function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
+export default function RecipeEditPage({
+  recipe: initialRecipe,
+  options,
+}: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [token] = useAuth();
+  const [isPending, startTransition] = useTransition();
 
   const isInstantPotNewRecipe = searchParams.has(INSTANT_POT_TAG_SLUG);
   const isNew = !initialRecipe;
 
-  const [snackbar, setSnackbar] = useState<[AlertColor, string]>();
   const [changed, setChanged] = useState(false);
   const [image, setImage] = useState<File>();
+  const [uploadProgress, setUploadProgress] = useState(false);
 
   // Initialize state from props
   const [title, setTitle] = useState(initialRecipe?.title ?? '');
@@ -58,8 +55,10 @@ export default function RecipeEditPage({ recipe: initialRecipe, options }: Props
   const [servingCount, setServingCount] = useState<number | undefined>(
     initialRecipe?.servingCount ?? undefined,
   );
-  const [ingredients, setIngredients] = useState<Omit<Ingredient, '_id' | 'id'>[]>(
-    initialRecipe?.ingredients?.map(i => ({
+  const [ingredients, setIngredients] = useState<
+    Omit<Ingredient, '_id' | 'id'>[]
+  >(
+    initialRecipe?.ingredients?.map((i) => ({
       name: i.name,
       amount: i.amount,
       amountUnit: i.amountUnit,
@@ -70,34 +69,7 @@ export default function RecipeEditPage({ recipe: initialRecipe, options }: Props
     initialRecipe?.tags ?? (isInstantPotNewRecipe ? [INSTANT_POT_TAG] : []),
   );
 
-  // Keep mutations for file upload support
-  const [createRecipe, { loading: creating }] = useCreateRecipeMutation({
-    onCompleted: handleSave,
-    onError: handleError,
-    update: (store, result) => {
-      if (!result.data?.createRecipe) {
-        return;
-      }
-
-      const cacheData = store.readQuery<RecipeListQuery>({ query: RecipeListDocument });
-
-      if (!cacheData) {
-        return;
-      }
-
-      const data = {
-        ...cacheData,
-        recipes: [...cacheData.recipes, result.data.createRecipe],
-      };
-
-      store.writeQuery({ query: RecipeListDocument, data });
-    },
-  });
-  const [updateRecipe, { loading: updating }] = useUpdateRecipeMutation({
-    onCompleted: handleSave,
-    onError: handleError,
-  });
-  const isSaving = creating || updating;
+  const isSaving = isPending || uploadProgress;
 
   useEffect(() => {
     if (changed) {
@@ -145,7 +117,11 @@ export default function RecipeEditPage({ recipe: initialRecipe, options }: Props
     setChanged(true);
   }
 
-  function handleAddIngredient(name: string, amount?: number, amountUnit?: string) {
+  function handleAddIngredient(
+    name: string,
+    amount?: number,
+    amountUnit?: string,
+  ) {
     setChanged(true);
     setIngredients([
       ...ingredients,
@@ -176,7 +152,13 @@ export default function RecipeEditPage({ recipe: initialRecipe, options }: Props
     setIngredients(ingredients.filter((_, i) => i !== index));
   }
 
-  function handleSortIngredient({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
+  function handleSortIngredient({
+    oldIndex,
+    newIndex,
+  }: {
+    oldIndex: number;
+    newIndex: number;
+  }) {
     const newIngredients = [...ingredients];
     newIngredients.splice(newIndex, 0, newIngredients.splice(oldIndex, 1)[0]);
 
@@ -201,82 +183,90 @@ export default function RecipeEditPage({ recipe: initialRecipe, options }: Props
       return;
     }
 
-    const recipeInput: RecipeInput = {
-      title,
-      preparationTime: preparationTime || null,
-      servingCount: servingCount || null,
-      sideDish: sideDish || null,
-      directions: directions || null,
-      ingredients: ingredients.length > 0 ? ingredients : null,
-      tags: tags?.length ? tags : null,
-    };
+    startTransition(async () => {
+      try {
+        // Upload image first if there's a new image
+        let imageId: string | undefined;
+        if (image && token) {
+          setUploadProgress(true);
+          try {
+            const result = await uploadImage(image, token);
+            imageId = result.imageId;
+          } catch {
+            toast.error('Nepodařilo se nahrát obrázek');
+            setUploadProgress(false);
+            return;
+          }
+          setUploadProgress(false);
+        }
 
-    if (initialRecipe) {
-      updateRecipe({
-        variables: {
-          id: initialRecipe.id,
-          recipe: recipeInput,
-          image,
-        },
-      });
-    } else {
-      createRecipe({
-        variables: {
-          recipe: recipeInput,
-          image,
-        },
-      });
-    }
-  }
+        const recipeInput: RecipeInput = {
+          title,
+          preparationTime: preparationTime || null,
+          servingCount: servingCount || null,
+          sideDish: sideDish || null,
+          directions: directions || null,
+          ingredients: ingredients.length > 0 ? ingredients : null,
+          tags: tags?.length ? tags : null,
+        };
 
-  function handleSave(data: CreateRecipeMutation | UpdateRecipeMutation) {
-    const recipe = isCreateMutation(data) ? data.createRecipe : data.updateRecipe;
+        // Create FormData with recipe data and optional imageId
+        const formData = new FormData();
+        formData.set('recipeData', JSON.stringify(recipeInput));
+        if (imageId) {
+          formData.set('imageId', imageId);
+        }
 
-    setSnackbar(['success', 'Recept úspěšně uložen']);
-    router.push(`/recept/${recipe.slug}`);
-  }
+        let result: RecipeFormState;
+        if (initialRecipe) {
+          result = await updateRecipeAction(initialRecipe.id, {}, formData);
+        } else {
+          result = await createRecipeAction({}, formData);
+        }
 
-  function handleError(error: ApolloError) {
-    if (error.graphQLErrors[0] && error.graphQLErrors[0].message.startsWith('EEXIST')) {
-      setSnackbar(['warning', 'Zadaný název již existuje']);
-    } else {
-      setSnackbar(['error', 'Recept se nepodařilo uložit']);
-    }
+        if (result.error) {
+          if (result.error.includes('existuje')) {
+            toast.warning('Zadaný název již existuje');
+          } else {
+            toast.error(result.error);
+          }
+        } else if (result.success && result.recipeSlug) {
+          toast.success('Recept úspěšně uložen');
+          setChanged(false);
+          router.push(`/recept/${result.recipeSlug}`);
+        }
+      } catch {
+        toast.error('Recept se nepodařilo uložit');
+      }
+    });
   }
 
   return (
-    <>
-      <Layout>
-        <RecipeEdit
-          changed={changed}
-          directions={directions}
-          imageUrl={initialRecipe?.imageThumbWebPUrl ?? undefined}
-          ingredientOptions={options.ingredients}
-          ingredients={ingredients}
-          isNew={isNew}
-          isSaving={isSaving}
-          preparationTime={preparationTime}
-          servingCount={servingCount}
-          sideDish={sideDish}
-          sideDishOptions={options.sideDishes}
-          tagOptions={options.tags}
-          tags={tags}
-          title={title}
-          onAddGroup={handleAddGroup}
-          onAddIngredient={handleAddIngredient}
-          onChange={handleChange}
-          onImageChange={handleImageChange}
-          onRemoveIngredient={handleRemoveIngredient}
-          onSortIngredient={handleSortIngredient}
-          onSubmit={handleSubmit}
-          onTagsChange={handleTagsChange}
-        />
-      </Layout>
-      <Snackbar autoHideDuration={5000} open={!!snackbar} onClose={() => setSnackbar(undefined)}>
-        <Alert severity={snackbar?.[0]} onClose={() => setSnackbar(undefined)}>
-          {snackbar?.[1]}
-        </Alert>
-      </Snackbar>
-    </>
+    <Layout>
+      <RecipeEdit
+        changed={changed}
+        directions={directions}
+        imageUrl={initialRecipe?.imageThumbWebPUrl ?? undefined}
+        ingredientOptions={options.ingredients}
+        ingredients={ingredients}
+        isNew={isNew}
+        isSaving={isSaving}
+        preparationTime={preparationTime}
+        servingCount={servingCount}
+        sideDish={sideDish}
+        sideDishOptions={options.sideDishes}
+        tagOptions={options.tags}
+        tags={tags}
+        title={title}
+        onAddGroup={handleAddGroup}
+        onAddIngredient={handleAddIngredient}
+        onChange={handleChange}
+        onImageChange={handleImageChange}
+        onRemoveIngredient={handleRemoveIngredient}
+        onSortIngredient={handleSortIngredient}
+        onSubmit={handleSubmit}
+        onTagsChange={handleTagsChange}
+      />
+    </Layout>
   );
 }

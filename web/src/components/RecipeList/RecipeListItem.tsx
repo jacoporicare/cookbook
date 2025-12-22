@@ -1,7 +1,7 @@
-'use client';
-
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
+
+import { Card, CardContent } from '@/components/ui/card';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
 
@@ -14,22 +14,27 @@ function RecipeListItem({ recipe }: Props) {
   const imageUrl = imageThumbWebPUrl || '/assets/food-placeholder.webp';
 
   return (
-    <Card>
-      <Link href={`/recept/${slug}`}>
-        <CardActionArea>
-          <CardMedia
-            image={imageUrl}
-            sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }}
-            component="div"
+    <Link href={`/recept/${slug}`}>
+      <Card
+        className={`
+          cursor-pointer gap-0 overflow-hidden transition-shadow
+          hover:shadow-lg
+        `}
+      >
+        <div className="relative w-full pt-[75%]">
+          <Image
+            src={imageUrl}
+            alt={recipe.title}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            style={{ objectFit: 'cover' }}
+            fill
           />
-          <CardContent>
-            <Typography component="h2" variant="h5" noWrap>
-              {recipe.title}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Link>
-    </Card>
+        </div>
+        <CardContent className="p-4">
+          <h2 className="truncate text-xl font-medium">{recipe.title}</h2>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 

@@ -1,26 +1,20 @@
 'use client';
 
-import { useAuth } from '../../app/AuthProvider';
-import { useMeQuery } from '../../generated/graphql';
+import { useAuth } from '@/lib/use-auth';
 
+import { useUser } from '../../app/UserProvider';
 import UserInfo from './UserInfo';
 
 function UserInfoContainer() {
-  const [token, setToken] = useAuth();
-  const { data, loading } = useMeQuery({
-    skip: !token,
-    onError: error => {
-      if (error.message === 'Unauthenticated') {
-        setToken(undefined);
-      }
-    },
-  });
+  const [token] = useAuth();
+  const user = useUser();
+  const isLoggedIn = !!token;
 
   return (
     <UserInfo
-      isUserAdmin={!!data?.me.isAdmin}
-      isUserLoading={loading}
-      userName={data?.me.displayName}
+      isUserAdmin={user?.isAdmin}
+      isUserLoading={false}
+      userName={isLoggedIn ? user?.name : undefined}
     />
   );
 }

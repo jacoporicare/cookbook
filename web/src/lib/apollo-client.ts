@@ -1,13 +1,13 @@
-import { HttpLink } from '@apollo/client';
-import {
-  ApolloClient,
-  InMemoryCache,
-  registerApolloClient,
-} from '@apollo/client-integration-nextjs';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { cookies } from 'next/headers';
+
 import { AUTH_TOKEN_KEY } from '@/const';
 
-export const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
+/**
+ * Creates an Apollo Client instance for server-side use.
+ * Each request gets a fresh client instance with the current auth token.
+ */
+export async function getClient() {
   const cookieStore = await cookies();
   const token = cookieStore.get(AUTH_TOKEN_KEY)?.value;
 
@@ -20,5 +20,14 @@ export const { getClient, query, PreloadQuery } = registerApolloClient(async () 
         cache: 'no-store',
       },
     }),
+    ssrMode: true,
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'no-cache',
+      },
+      mutate: {
+        fetchPolicy: 'no-cache',
+      },
+    },
   });
-});
+}

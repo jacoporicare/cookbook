@@ -1,0 +1,5 @@
+package.json
+.next/
+src/generated/
+yarn.lock
+build/

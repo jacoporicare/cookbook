@@ -1,11 +1,8 @@
 'use client';
 
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import { AUTH_TOKEN_KEY } from '@/const';
-
-type ContextValue = [string | undefined, (token?: string) => void];
-
-const Context = createContext<ContextValue>([undefined, () => {}]);
 
 function getCookie(name: string): string | undefined {
   if (typeof document === 'undefined') return undefined;
@@ -16,7 +13,9 @@ function getCookie(name: string): string | undefined {
 }
 
 function setCookie(name: string, value: string, days: number) {
-  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+  const expires = new Date(
+    Date.now() + days * 24 * 60 * 60 * 1000,
+  ).toUTCString();
   document.cookie = `${name}=${value}; expires=${expires}; path=/`;
 }
 
@@ -24,7 +23,7 @@ function deleteCookie(name: string) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function useAuth(): [string | undefined, (token?: string) => void] {
   const [token, setTokenState] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -40,9 +39,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTokenState(newToken);
   }, []);
 
-  return <Context.Provider value={[token, setToken]}>{children}</Context.Provider>;
-}
-
-export function useAuth() {
-  return useContext(Context);
+  return [token, setToken];
 }

@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { Amatic_SC } from 'next/font/google';
+import { Toaster } from 'sonner';
+
+import { MeDocument, RecipeListDocument } from '@/generated/graphql';
+import { getClient } from '@/lib/apollo-client';
+
 import { Providers } from './providers';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: {
@@ -40,23 +47,37 @@ export const viewport: Viewport = {
   themeColor: '#fff',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const amatic = Amatic_SC({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-amatic',
+});
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const client = await getClient();
+
+  // Fetch user and recipes in parallel
+  const [meResult, recipesResult] = await Promise.all([
+    client.query({ query: MeDocument }).catch(() => ({ data: { me: null } })),
+    client.query({ query: RecipeListDocument }),
+  ]);
+
+  const user = meResult.data?.me
+    ? { name: meResult.data.me.displayName, isAdmin: meResult.data.me.isAdmin }
+    : null;
+  const recipes = recipesResult.data?.recipes ?? [];
+
   return (
-    <html lang="cs">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css?family=Amatic+SC|Open+Sans:300,400,400i,700"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="cs" className={amatic.variable}>
       <body>
-        <AppRouterCacheProvider options={{ key: 'mui' }}>
-          <Providers>{children}</Providers>
-        </AppRouterCacheProvider>
+        <Providers user={user} recipes={recipes}>
+          {children}
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );

@@ -8,8 +8,8 @@ import {
 } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
-import { graphqlUploadExpress } from 'graphql-upload';
 
+import { imageUploadMiddleware } from './imageUpload';
 import logger from './logger';
 import { recipeImageMiddleware } from './recipeImage';
 
@@ -19,7 +19,7 @@ export async function startApolloServer(
 ) {
   const app = express();
   app.use(recipeImageMiddleware());
-  app.use(graphqlUploadExpress());
+  app.use(imageUploadMiddleware());
 
   const httpServer = http.createServer(app);
 
@@ -34,17 +34,20 @@ export async function startApolloServer(
         : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
     introspection: process.env.APOLLO_EXPLORER_ENABLED === 'true',
-    context: ctx => ctx,
+    context: (ctx) => ctx,
   });
 
   await server.start();
   server.applyMiddleware({
-    app,
+    // Type assertion needed due to multer's express type conflicts
+    app: app as unknown as Parameters<typeof server.applyMiddleware>[0]['app'],
     path: '/graphql',
     cors: { origin: true, credentials: true },
   });
 
-  await new Promise<void>(resolve => httpServer.listen({ port: 4000 }, resolve));
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve),
+  );
 
   logger.info(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }

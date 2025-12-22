@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+import { RecipeEditOptionsDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
 import { getCurrentUser } from '@/lib/auth-server';
-import { RecipeEditOptionsDocument } from '@/generated/graphql';
 
 import RecipeEditPage from './RecipeEditPage';
 
@@ -23,9 +23,9 @@ export default async function Page() {
   return (
     <RecipeEditPage
       options={{
-        ingredients: data.ingredients,
-        sideDishes: data.sideDishes,
-        tags: data.tags,
+        ingredients: data?.ingredients ?? [],
+        sideDishes: data?.sideDishes ?? [],
+        tags: data?.tags ?? [],
       }}
     />
   );

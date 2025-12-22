@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
+import { RecipeListDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
 import { getCurrentUser } from '@/lib/auth-server';
-import { RecipeListDocument } from '@/generated/graphql';
 
 import RecipeListPage from '../RecipeListPage';
 
@@ -14,5 +14,11 @@ export default async function Page() {
   const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
   const { data } = await client.query({ query: RecipeListDocument });
 
-  return <RecipeListPage recipes={data.recipes} tags={data.tags} isLoggedIn={!!user} />;
+  return (
+    <RecipeListPage
+      recipes={data?.recipes ?? []}
+      tags={data?.tags ?? []}
+      isLoggedIn={!!user}
+    />
+  );
 }

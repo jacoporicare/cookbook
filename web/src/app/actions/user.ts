@@ -3,15 +3,15 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
 import {
   CreateUserDocument,
-  UpdateUserDocument,
   DeleteUserDocument,
   ResetPasswordDocument,
+  UpdateUserDocument,
   UpdateUserLastActivityDocument,
 } from '@/generated/graphql';
+import { getClient } from '@/lib/apollo-client';
+import { getCurrentUser } from '@/lib/auth-server';
 
 // Schemas
 const userSchema = z.object({
@@ -71,7 +71,13 @@ export async function createUserAction(
     const client = await getClient();
     await client.mutate({
       mutation: CreateUserDocument,
-      variables: { user: validated.data },
+      variables: {
+        user: {
+          username: validated.data.username,
+          displayName: validated.data.displayName,
+          isAdmin: validated.data.isAdmin ?? null,
+        },
+      },
     });
 
     revalidatePath('/admin');
@@ -109,7 +115,11 @@ export async function updateUserAction(
       mutation: UpdateUserDocument,
       variables: {
         id: userId,
-        user: validated.data,
+        user: {
+          username: validated.data.username,
+          displayName: validated.data.displayName,
+          isAdmin: validated.data.isAdmin ?? null,
+        },
       },
     });
 
@@ -120,7 +130,9 @@ export async function updateUserAction(
   }
 }
 
-export async function deleteUserAction(userId: string): Promise<DeleteUserState> {
+export async function deleteUserAction(
+  userId: string,
+): Promise<DeleteUserState> {
   try {
     await requireAdmin();
   } catch {
@@ -141,7 +153,9 @@ export async function deleteUserAction(userId: string): Promise<DeleteUserState>
   }
 }
 
-export async function resetPasswordAction(userId: string): Promise<UserFormState> {
+export async function resetPasswordAction(
+  userId: string,
+): Promise<UserFormState> {
   try {
     await requireAdmin();
   } catch {

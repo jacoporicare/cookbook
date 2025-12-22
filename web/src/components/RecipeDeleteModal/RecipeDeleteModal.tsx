@@ -1,11 +1,13 @@
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type Props = {
   show: boolean;
@@ -16,27 +18,20 @@ type Props = {
 
 function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
   return (
-    <Dialog
-      aria-describedby="alert-dialog-description"
-      aria-labelledby="alert-dialog-title"
-      open={show}
-      onClose={onClose}
-    >
-      <DialogTitle id="alert-dialog-title">{recipeTitle}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Chcete smazat tento recept?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button color="primary" onClick={onClose}>
-          Zrušit
-        </Button>
-        <Button color="primary" autoFocus onClick={onConfirm}>
-          Smazat
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <AlertDialog open={show} onOpenChange={(open) => !open && onClose()}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{recipeTitle}</AlertDialogTitle>
+          <AlertDialogDescription>
+            Chcete smazat tento recept?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Zrušit</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Smazat</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
