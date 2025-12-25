@@ -2,9 +2,9 @@ import { notFound } from 'next/navigation';
 
 import { RecipeDetailDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
 
-import RecipeDetailPage from './RecipeDetailPage';
+import { RecipeDetailPage } from './RecipeDetailPage';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -25,19 +25,30 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
-
-  const { data } = await client.query({
+  const client = await getClient();
+  const currentUser = await getCurrentUser(client);
+  const recipeResult = await client.query({
     query: RecipeDetailDocument,
     variables: { slug },
   });
 
-  if (!data?.recipe) {
+  if (!recipeResult.data?.recipe) {
     notFound();
   }
 
-  const isAuthor =
-    !!user && (user.isAdmin || user.username === data.recipe.user.username);
+  const { recipes, user } = await getLayoutData({ client, currentUser });
 
-  return <RecipeDetailPage recipe={data.recipe} isAuthor={isAuthor} />;
+  const isAuthor =
+    !!currentUser &&
+    (currentUser.isAdmin ||
+      currentUser.username === recipeResult.data.recipe.user.username);
+
+  return (
+    <RecipeDetailPage
+      recipe={recipeResult.data.recipe}
+      recipes={recipes}
+      currentUser={user}
+      isAuthor={isAuthor}
+    />
+  );
 }

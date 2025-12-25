@@ -8,8 +8,8 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 import { Ingredient } from '../../generated/graphql';
-import RichText from '../RichText/RichText';
-import IngredientList from './IngredientList';
+import { RichText } from '../RichText/RichText';
+import { IngredientList } from './IngredientList';
 
 type Props = {
   title: string;
@@ -23,7 +23,7 @@ type Props = {
   userName: string;
 };
 
-function RecipeDetail({
+export function RecipeDetail({
   title,
   ingredients,
   servingCount,
@@ -142,5 +142,3 @@ function RecipeDetail({
     </>
   );
 }
-
-export default RecipeDetail;

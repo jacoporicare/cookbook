@@ -5,14 +5,12 @@ import { useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export type TitleFields = 'title';
-
 type Props = {
-  title?: string;
-  onChange: (name: TitleFields, value: string) => void;
+  defaultValue: string;
+  onChange: () => void;
 };
 
-function Title({ title = '', onChange }: Props) {
+export function Title({ defaultValue, onChange }: Props) {
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -27,13 +25,11 @@ function Title({ title = '', onChange }: Props) {
       <Input
         ref={ref}
         id="title"
-        value={title}
-        className={!title ? 'border-destructive' : ''}
-        onChange={(e) => onChange('title', e.currentTarget.value)}
+        name="title"
+        defaultValue={defaultValue}
+        required
+        onChange={onChange}
       />
-      {!title && <p className="text-sm text-destructive">Název je povinný</p>}
     </div>
   );
 }
-
-export default Title;

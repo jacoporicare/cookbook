@@ -1,5 +1,7 @@
 'use server';
 
+import type { SubmissionResult } from '@conform-to/dom';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -15,20 +17,14 @@ import { getCurrentUser } from '@/lib/auth-server';
 
 // Schemas
 const userSchema = z.object({
-  username: z.string().min(1, 'Uživatelské jméno je povinné'),
-  displayName: z.string().min(1, 'Zobrazované jméno je povinné'),
-  isAdmin: z.boolean().optional(),
+  username: z.string().min(1, { error: 'Uživatelské jméno je povinné' }),
+  displayName: z.string().min(1, { error: 'Zobrazované jméno je povinné' }),
+  isAdmin: z.stringbool().optional(),
 });
 
 // Types
-export type UserFormState = {
-  success?: boolean;
-  error?: string;
-  fieldErrors?: {
-    username?: string[];
-    displayName?: string[];
-  };
-  newPassword?: string; // For password reset
+export type UserFormState = SubmissionResult<string[]> & {
+  newPassword?: string;
 };
 
 export type DeleteUserState = {
@@ -38,7 +34,8 @@ export type DeleteUserState = {
 
 // Helper to ensure admin access
 async function requireAdmin() {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user?.isAdmin) {
     throw new Error('Přístup odepřen');
   }
@@ -47,24 +44,19 @@ async function requireAdmin() {
 
 // Actions
 export async function createUserAction(
-  prevState: UserFormState,
+  _prevState: UserFormState,
   formData: FormData,
 ): Promise<UserFormState> {
   try {
     await requireAdmin();
   } catch {
-    return { error: 'Přístup odepřen' };
+    return { status: 'error', error: { '': ['Přístup odepřen'] } };
   }
 
-  const rawData = {
-    username: formData.get('username') as string,
-    displayName: formData.get('displayName') as string,
-    isAdmin: formData.get('isAdmin') === 'true',
-  };
+  const submission = parseWithZod(formData, { schema: userSchema });
 
-  const validated = userSchema.safeParse(rawData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
+  if (submission.status !== 'success') {
+    return submission.reply();
   }
 
   try {
@@ -73,40 +65,37 @@ export async function createUserAction(
       mutation: CreateUserDocument,
       variables: {
         user: {
-          username: validated.data.username,
-          displayName: validated.data.displayName,
-          isAdmin: validated.data.isAdmin ?? null,
+          username: submission.value.username,
+          displayName: submission.value.displayName,
+          isAdmin: submission.value.isAdmin ?? null,
         },
       },
     });
 
     revalidatePath('/admin');
-    return { success: true };
+    return { status: 'success' };
   } catch {
-    return { error: 'Nepodařilo se vytvořit uživatele' };
+    return submission.reply({
+      formErrors: ['Nepodařilo se vytvořit uživatele'],
+    });
   }
 }
 
 export async function updateUserAction(
   userId: string,
-  prevState: UserFormState,
+  _prevState: UserFormState,
   formData: FormData,
 ): Promise<UserFormState> {
   try {
     await requireAdmin();
   } catch {
-    return { error: 'Přístup odepřen' };
+    return { status: 'error', error: { '': ['Přístup odepřen'] } };
   }
 
-  const rawData = {
-    username: formData.get('username') as string,
-    displayName: formData.get('displayName') as string,
-    isAdmin: formData.get('isAdmin') === 'true',
-  };
+  const submission = parseWithZod(formData, { schema: userSchema });
 
-  const validated = userSchema.safeParse(rawData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
+  if (submission.status !== 'success') {
+    return submission.reply();
   }
 
   try {
@@ -116,17 +105,19 @@ export async function updateUserAction(
       variables: {
         id: userId,
         user: {
-          username: validated.data.username,
-          displayName: validated.data.displayName,
-          isAdmin: validated.data.isAdmin ?? null,
+          username: submission.value.username,
+          displayName: submission.value.displayName,
+          isAdmin: submission.value.isAdmin ?? null,
         },
       },
     });
 
     revalidatePath('/admin');
-    return { success: true };
+    return { status: 'success' };
   } catch {
-    return { error: 'Nepodařilo se aktualizovat uživatele' };
+    return submission.reply({
+      formErrors: ['Nepodařilo se aktualizovat uživatele'],
+    });
   }
 }
 
@@ -159,7 +150,7 @@ export async function resetPasswordAction(
   try {
     await requireAdmin();
   } catch {
-    return { error: 'Přístup odepřen' };
+    return { status: 'error', error: { '': ['Přístup odepřen'] } };
   }
 
   try {
@@ -170,26 +161,32 @@ export async function resetPasswordAction(
     });
 
     if (!data?.resetPassword) {
-      return { error: 'Nepodařilo se resetovat heslo' };
+      return {
+        status: 'error',
+        error: { '': ['Nepodařilo se resetovat heslo'] },
+      };
     }
 
     return {
-      success: true,
+      status: 'success',
       newPassword: data.resetPassword,
     };
   } catch {
-    return { error: 'Nepodařilo se resetovat heslo' };
+    return {
+      status: 'error',
+      error: { '': ['Nepodařilo se resetovat heslo'] },
+    };
   }
 }
 
 export async function trackUserActivityAction(): Promise<void> {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user) {
     return;
   }
 
   try {
-    const client = await getClient();
     await client.mutate({
       mutation: UpdateUserLastActivityDocument,
     });

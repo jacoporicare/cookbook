@@ -25,7 +25,7 @@ type Props = {
 
 const initialState: ImportRecipeState = {};
 
-function RecipeImportModal({ show, onClose }: Props) {
+export function RecipeImportModal({ show, onClose }: Props) {
   const router = useRouter();
   const [url, setUrl] = useState('');
   const [state, formAction, isPending] = useActionState(
@@ -35,11 +35,11 @@ function RecipeImportModal({ show, onClose }: Props) {
 
   // Handle success - redirect to edit page
   useEffect(() => {
-    if (state.success && state.recipeSlug) {
+    if (state.status === 'success' && state.recipeSlug) {
       onClose();
       router.push(`/recept/${state.recipeSlug}/upravit`);
     }
-  }, [state.success, state.recipeSlug, onClose, router]);
+  }, [state.status, state.recipeSlug, onClose, router]);
 
   const handleClose = () => {
     if (!isPending) {
@@ -48,7 +48,8 @@ function RecipeImportModal({ show, onClose }: Props) {
     }
   };
 
-  const error = state.error || state.fieldErrors?.url?.[0];
+  // Get error from form-level errors or field-level errors
+  const error = state.error?.['']?.[0] || state.error?.url?.[0];
 
   return (
     <Dialog open={show} onOpenChange={(open) => !open && handleClose()}>
@@ -106,5 +107,3 @@ function RecipeImportModal({ show, onClose }: Props) {
     </Dialog>
   );
 }
-
-export default RecipeImportModal;

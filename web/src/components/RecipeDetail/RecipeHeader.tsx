@@ -5,8 +5,8 @@ import toSlug from 'slug';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-import RecipeInfo from '../RecipeInfo/RecipeInfo';
-import PageHeading from '../common/PageHeading';
+import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
+import { PageHeading } from '../common/PageHeading';
 
 type Props = {
   preparationTime?: number;
@@ -18,7 +18,7 @@ type Props = {
   onDeleteShow: () => void;
 };
 
-function RecipeHeader({
+export function RecipeHeader({
   preparationTime,
   sideDish,
   slug,
@@ -80,5 +80,3 @@ function RecipeHeader({
     </>
   );
 }
-
-export default RecipeHeader;

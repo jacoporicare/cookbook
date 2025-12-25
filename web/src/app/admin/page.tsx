@@ -1,24 +1,35 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { UserListDocument } from '@/generated/graphql';
+import { RecipeListDocument, UserListDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser, toUser } from '@/lib/auth-server';
 
-import AdminPage from './AdminPage';
+import { AdminPage } from './AdminPage';
 
 export const metadata: Metadata = {
   title: 'Správa uživatelů',
 };
 
 export default async function Page() {
-  const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
+  const client = await getClient();
+  const currentUser = await getCurrentUser(client);
 
-  if (!user?.isAdmin) {
+  if (!currentUser?.isAdmin) {
     redirect('/');
   }
 
-  const { data } = await client.query({ query: UserListDocument });
+  const [usersResult, recipesResult] = await Promise.all([
+    client.query({ query: UserListDocument }),
+    client.query({ query: RecipeListDocument }),
+  ]);
 
-  return <AdminPage users={data?.users ?? []} currentUserId={user.id} />;
+  return (
+    <AdminPage
+      users={usersResult.data?.users ?? []}
+      currentUserId={currentUser.id}
+      recipes={recipesResult.data?.recipes ?? []}
+      user={toUser(currentUser)}
+    />
+  );
 }

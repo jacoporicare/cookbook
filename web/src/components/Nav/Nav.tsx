@@ -2,15 +2,17 @@
 
 import { usePathname } from 'next/navigation';
 
+import { User } from '@/types/user';
+
 import { INSTANT_POT_TAG_SLUG } from '../../const';
-import UserInfo from '../UserInfo';
-import NavLink from './NavLink';
+import { UserInfo } from '../UserInfo/UserInfo';
+import { NavLink } from './NavLink';
 
 type Props = {
-  showUserInfo?: boolean;
+  user?: User;
 };
 
-function Nav(props: Props) {
+export function Nav(props: Props) {
   const pathname = usePathname();
 
   return (
@@ -23,27 +25,35 @@ function Nav(props: Props) {
         `}
         htmlFor="openSidebarMenu"
       >
-        <div className={`
-          h-0.75 w-full bg-white transition-all
-          peer-checked:mt-1.75 peer-checked:rotate-135
-        `} />
-        <div className={`
-          mt-0.75 h-0.75 w-full bg-white transition-all
-          peer-checked:opacity-0
-        `} />
-        <div className={`
-          mt-0.75 h-0.75 w-full bg-white transition-all
-          peer-checked:-mt-2.25 peer-checked:rotate-[-135deg]
-        `} />
+        <div
+          className={`
+            h-0.75 w-full bg-white transition-all
+            peer-checked:mt-1.75 peer-checked:rotate-135
+          `}
+        />
+        <div
+          className={`
+            mt-0.75 h-0.75 w-full bg-white transition-all
+            peer-checked:opacity-0
+          `}
+        />
+        <div
+          className={`
+            mt-0.75 h-0.75 w-full bg-white transition-all
+            peer-checked:-mt-2.25 peer-checked:rotate-[-135deg]
+          `}
+        />
       </label>
-      <nav className={`
-        peer-checked:translate-x-0
-        peer-checked:shadow-[-16px_0_32px_rgba(0,0,0,0.25)]
-        max-lg:fixed max-lg:top-14.25 max-lg:right-0 max-lg:h-full max-lg:w-62.5
-        max-lg:translate-x-62.5 max-lg:bg-gray-900 max-lg:transition-transform
-        max-lg:duration-250 max-lg:ease-in-out
-        lg:flex lg:items-center
-      `}>
+      <nav
+        className={`
+          peer-checked:translate-x-0
+          peer-checked:shadow-[-16px_0_32px_rgba(0,0,0,0.25)]
+          max-lg:fixed max-lg:top-14.25 max-lg:right-0 max-lg:h-full
+          max-lg:w-62.5 max-lg:translate-x-62.5 max-lg:bg-gray-900
+          max-lg:transition-transform max-lg:duration-250 max-lg:ease-in-out
+          lg:flex lg:items-center
+        `}
+      >
         <NavLink active={pathname === '/'} href="/">
           Recepty
         </NavLink>
@@ -56,10 +66,13 @@ function Nav(props: Props) {
         <NavLink active={pathname === '/prilohy'} href="/prilohy">
           Přílohy
         </NavLink>
-        {props.showUserInfo && <UserInfo />}
+        {props.user !== undefined && (
+          <UserInfo
+            isUserAdmin={props.user?.isAdmin}
+            userName={props.user?.name}
+          />
+        )}
       </nav>
     </div>
   );
 }
-
-export default Nav;

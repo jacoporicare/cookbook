@@ -4,7 +4,7 @@ import { SideDish } from '../../types';
 
 type Props = SideDish;
 
-function SideDishListItem({
+export function SideDishListItem({
   title,
   sideWeight,
   mainWeight,
@@ -25,5 +25,3 @@ function SideDishListItem({
     </TableRow>
   );
 }
-
-export default SideDishListItem;

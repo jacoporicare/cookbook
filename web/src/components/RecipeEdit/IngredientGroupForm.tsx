@@ -12,7 +12,7 @@ type Props = {
   onAdd: () => void;
 };
 
-function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
+export function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -39,5 +39,3 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
     </div>
   );
 }
-
-export default IngredientGroupForm;

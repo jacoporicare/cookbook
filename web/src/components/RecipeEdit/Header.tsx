@@ -1,26 +1,24 @@
 import { Button } from '@/components/ui/button';
 
-import PageHeading from '../common/PageHeading';
+import { PageHeading } from '../common/PageHeading';
 
 type Props = {
   title?: string;
   isInstantPotNewRecipe: boolean;
   isNew: boolean;
   isSaving: boolean;
-  changed: boolean;
 };
 
-function Header({
+export function Header({
   title,
   isInstantPotNewRecipe,
   isNew,
   isSaving,
-  changed,
 }: Props) {
   return (
     <PageHeading
       buttons={
-        <Button disabled={!title || isSaving || !changed} type="submit">
+        <Button disabled={isSaving} type="submit">
           Uložit
         </Button>
       }
@@ -34,5 +32,3 @@ function Header({
     </PageHeading>
   );
 }
-
-export default Header;

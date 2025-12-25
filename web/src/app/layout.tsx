@@ -2,11 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Amatic_SC } from 'next/font/google';
 import { Toaster } from 'sonner';
 
-import { MeDocument, RecipeListDocument } from '@/generated/graphql';
-import { getClient } from '@/lib/apollo-client';
-
-import { Providers } from './providers';
-
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -53,30 +48,15 @@ const amatic = Amatic_SC({
   variable: '--font-amatic',
 });
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const client = await getClient();
-
-  // Fetch user and recipes in parallel
-  const [meResult, recipesResult] = await Promise.all([
-    client.query({ query: MeDocument }).catch(() => ({ data: { me: null } })),
-    client.query({ query: RecipeListDocument }),
-  ]);
-
-  const user = meResult.data?.me
-    ? { name: meResult.data.me.displayName, isAdmin: meResult.data.me.isAdmin }
-    : null;
-  const recipes = recipesResult.data?.recipes ?? [];
-
   return (
     <html lang="cs" className={amatic.variable}>
       <body>
-        <Providers user={user} recipes={recipes}>
-          {children}
-        </Providers>
+        {children}
         <Toaster />
       </body>
     </html>

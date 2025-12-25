@@ -1,5 +1,7 @@
 'use server';
 
+import type { SubmissionResult } from '@conform-to/dom';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -10,67 +12,57 @@ import { getClient } from '@/lib/apollo-client';
 
 // Schemas
 const loginSchema = z.object({
-  username: z.string().min(1, 'Uživatelské jméno je povinné'),
-  password: z.string().min(1, 'Heslo je povinné'),
+  username: z.string().min(1, { error: 'Uživatelské jméno je povinné' }),
+  password: z.string().min(1, { error: 'Heslo je povinné' }),
 });
 
-const changePasswordSchema = z.object({
-  password: z.string().min(1, 'Aktuální heslo je povinné'),
-  newPassword: z.string().min(6, 'Nové heslo musí mít alespoň 6 znaků'),
-  newPasswordConfirm: z.string().min(1, 'Potvrzení hesla je povinné'),
-});
+const changePasswordSchema = z
+  .object({
+    password: z.string().min(1, { error: 'Aktuální heslo je povinné' }),
+    newPassword: z
+      .string()
+      .min(6, { error: 'Nové heslo musí mít alespoň 6 znaků' }),
+    newPasswordConfirm: z
+      .string()
+      .min(1, { error: 'Potvrzení hesla je povinné' }),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
+    message: 'Hesla se neshodují',
+    path: ['newPasswordConfirm'],
+  });
 
 // Types
-export type LoginState = {
-  error?: string;
-  fieldErrors?: { username?: string[]; password?: string[] };
+export type LoginState = SubmissionResult<string[]> & {
   redirectUrl?: string;
-  values?: { username?: string };
 };
 
-export type ChangePasswordState = {
-  success?: boolean;
-  error?: string;
-  fieldErrors?: {
-    password?: string[];
-    newPassword?: string[];
-    newPasswordConfirm?: string[];
-  };
-};
+export type ChangePasswordState = SubmissionResult<string[]>;
 
 // Actions
 export async function loginAction(
-  prevState: LoginState,
+  _prevState: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
-  const rawData = {
-    username: formData.get('username') as string,
-    password: formData.get('password') as string,
-  };
-
   const redirectUri = formData.get('redirect_uri') as string | null;
   const returnUrl = formData.get('return_url') as string | null;
 
-  const validated = loginSchema.safeParse(rawData);
-  if (!validated.success) {
-    return {
-      fieldErrors: validated.error.flatten().fieldErrors,
-      values: { username: rawData.username },
-    };
+  const submission = parseWithZod(formData, { schema: loginSchema });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
   }
 
   try {
     const client = await getClient();
     const { data } = await client.mutate({
       mutation: LoginDocument,
-      variables: validated.data,
+      variables: submission.value,
     });
 
     if (!data?.login?.token) {
-      return {
-        error: 'Neplatné uživatelské jméno nebo heslo',
-        values: { username: validated.data.username },
-      };
+      return submission.reply({
+        formErrors: ['Neplatné uživatelské jméno nebo heslo'],
+      });
     }
 
     const token = data.login.token;
@@ -89,7 +81,7 @@ export async function loginAction(
     if (redirectUri) {
       const redirectUrl = new URL(redirectUri);
       redirectUrl.searchParams.set('access_token', token);
-      return { redirectUrl: redirectUrl.toString() };
+      return { status: 'success', redirectUrl: redirectUrl.toString() };
     }
 
     // Normal redirect
@@ -99,10 +91,9 @@ export async function loginAction(
     if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
       throw e;
     }
-    return {
-      error: 'Neplatné uživatelské jméno nebo heslo',
-      values: { username: validated.data.username },
-    };
+    return submission.reply({
+      formErrors: ['Neplatné uživatelské jméno nebo heslo'],
+    });
   }
 }
 
@@ -113,26 +104,13 @@ export async function logoutAction(): Promise<void> {
 }
 
 export async function changePasswordAction(
-  prevState: ChangePasswordState,
+  _prevState: ChangePasswordState,
   formData: FormData,
 ): Promise<ChangePasswordState> {
-  const rawData = {
-    password: formData.get('password') as string,
-    newPassword: formData.get('newPassword') as string,
-    newPasswordConfirm: formData.get('newPasswordConfirm') as string,
-  };
+  const submission = parseWithZod(formData, { schema: changePasswordSchema });
 
-  const validated = changePasswordSchema.safeParse(rawData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
-  }
-
-  if (rawData.newPassword !== rawData.newPasswordConfirm) {
-    return {
-      fieldErrors: {
-        newPasswordConfirm: ['Hesla se neshodují'],
-      },
-    };
+  if (submission.status !== 'success') {
+    return submission.reply();
   }
 
   try {
@@ -140,17 +118,21 @@ export async function changePasswordAction(
     const { data } = await client.mutate({
       mutation: ChangePasswordDocument,
       variables: {
-        password: validated.data.password,
-        newPassword: validated.data.newPassword,
+        password: submission.value.password,
+        newPassword: submission.value.newPassword,
       },
     });
 
     if (data?.changePassword) {
-      return { success: true };
+      return { status: 'success' };
     }
 
-    return { error: 'Nepodařilo se změnit heslo' };
+    return submission.reply({
+      formErrors: ['Nepodařilo se změnit heslo'],
+    });
   } catch {
-    return { error: 'Neplatné aktuální heslo' };
+    return submission.reply({
+      formErrors: ['Neplatné aktuální heslo'],
+    });
   }
 }

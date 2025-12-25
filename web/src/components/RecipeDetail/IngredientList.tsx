@@ -15,7 +15,7 @@ type Props = {
   servingCount?: number;
 };
 
-function IngredientList(props: Props) {
+export function IngredientList(props: Props) {
   const [servingCount, setServingCount] = useState(props.servingCount);
 
   useEffect(() => {
@@ -106,5 +106,3 @@ function IngredientList(props: Props) {
     </>
   );
 }
-
-export default IngredientList;

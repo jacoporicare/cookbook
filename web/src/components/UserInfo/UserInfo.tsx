@@ -3,30 +3,30 @@
 import { LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
-import { useAuth } from '@/lib/use-auth';
-
-import NavLink from '../Nav/NavLink';
+import { NavLink } from '../Nav/NavLink';
 
 type Props = {
   userName?: string;
-  isUserLoading?: boolean;
   isUserAdmin?: boolean;
 };
 
-function UserInfo(props: Props) {
-  const [token] = useAuth();
+export function UserInfo(props: Props) {
   const pathname = usePathname();
+  const isLoggedIn = !!props.userName;
 
   return (
     <>
       {props.isUserAdmin && <NavLink href="/admin">Admin</NavLink>}
-      <div className={`
-        px-0 py-1 text-xl font-light whitespace-nowrap text-gray-400
-        max-lg:h-0 max-lg:overflow-hidden max-lg:border-t max-lg:border-gray-600
-      `}>
+      <div
+        className={`
+          px-0 py-1 text-xl font-light whitespace-nowrap text-gray-400
+          max-lg:h-0 max-lg:overflow-hidden max-lg:border-t
+          max-lg:border-gray-600
+        `}
+      >
         ·
       </div>
-      {!token ? (
+      {!isLoggedIn ? (
         <NavLink
           active={pathname === '/prihlaseni'}
           href={
@@ -39,19 +39,7 @@ function UserInfo(props: Props) {
         </NavLink>
       ) : (
         <>
-          {props.isUserLoading ? (
-            <div className={`
-              px-2 py-1 text-xl font-light whitespace-nowrap text-gray-400
-              lg:px-2
-            `}>
-              <div className={`
-                size-6 animate-spin rounded-full border-2 border-gray-400
-                border-t-transparent
-              `} />
-            </div>
-          ) : (
-            <NavLink href="/nastaveni">{props.userName}</NavLink>
-          )}
+          <NavLink href="/nastaveni">{props.userName}</NavLink>
           <NavLink href={`/odhlaseni?u=${pathname || ''}`}>
             <LogOut className="inline size-5" />{' '}
             <span className="lg:hidden">Odhlásit</span>
@@ -61,5 +49,3 @@ function UserInfo(props: Props) {
     </>
   );
 }
-
-export default UserInfo;

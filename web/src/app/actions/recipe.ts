@@ -1,5 +1,7 @@
 'use server';
 
+import type { SubmissionResult } from '@conform-to/dom';
+import { parseWithZod } from '@conform-to/zod/v4';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -17,23 +19,33 @@ import { getCurrentUser } from '@/lib/auth-server';
 // Schemas
 const ingredientSchema = z.object({
   name: z.string().min(1),
-  amount: z.number().nullable().optional(),
+  amount: z.number({ error: 'Množství musí být číslo' }).nullable().optional(),
   amountUnit: z.string().nullable().optional(),
-  isGroup: z.boolean().optional(),
+  isGroup: z.stringbool().optional(),
 });
 
 const recipeSchema = z.object({
-  title: z.string().min(1, 'Název receptu je povinný'),
+  title: z.string().min(1, { error: 'Název receptu je povinný' }),
   directions: z.string().nullable().optional(),
-  preparationTime: z.number().nullable().optional(),
-  servingCount: z.number().nullable().optional(),
+  preparationTime: z
+    .number({ error: 'Doba přípravy musí být číslo' })
+    .nullable()
+    .optional(),
+  servingCount: z
+    .number({ error: 'Počet porcí musí být číslo' })
+    .nullable()
+    .optional(),
   sideDish: z.string().nullable().optional(),
-  tags: z.array(z.string()).optional(),
-  ingredients: z.array(ingredientSchema).optional(),
+  tags: z.array(z.string()).nullable().optional(),
+  ingredients: z
+    .array(ingredientSchema, { error: 'Neplatný formát ingrediencí' })
+    .nullable()
+    .optional(),
+  imageId: z.string().nullable().optional(),
 });
 
 const importRecipeSchema = z.object({
-  url: z.string().url('Zadejte platnou URL adresu'),
+  url: z.url({ error: 'Zadejte platnou URL adresu' }),
 });
 
 // Types
@@ -42,17 +54,11 @@ export type DeleteRecipeState = {
   error?: string;
 };
 
-export type ImportRecipeState = {
-  success?: boolean;
-  error?: string;
-  fieldErrors?: { url?: string[] };
+export type ImportRecipeState = SubmissionResult<string[]> & {
   recipeSlug?: string;
 };
 
-export type RecipeFormState = {
-  success?: boolean;
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
+export type RecipeFormState = SubmissionResult<string[]> & {
   recipeSlug?: string;
 };
 
@@ -60,13 +66,13 @@ export type RecipeFormState = {
 export async function deleteRecipeAction(
   recipeId: string,
 ): Promise<DeleteRecipeState> {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user) {
     return { error: 'Nejste přihlášen' };
   }
 
   try {
-    const client = await getClient();
     await client.mutate({
       mutation: DeleteRecipeDocument,
       variables: { id: recipeId },
@@ -83,147 +89,145 @@ export async function deleteRecipeAction(
 }
 
 export async function importRecipeAction(
-  prevState: ImportRecipeState,
+  _prevState: ImportRecipeState,
   formData: FormData,
 ): Promise<ImportRecipeState> {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user) {
-    return { error: 'Nejste přihlášen' };
+    return { status: 'error', error: { '': ['Nejste přihlášen'] } };
   }
 
-  const rawData = {
-    url: formData.get('url') as string,
-  };
+  const submission = parseWithZod(formData, { schema: importRecipeSchema });
 
-  const validated = importRecipeSchema.safeParse(rawData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
+  if (submission.status !== 'success') {
+    return submission.reply();
   }
 
   try {
-    const client = await getClient();
     const { data } = await client.mutate({
       mutation: ImportRecipeDocument,
-      variables: { url: validated.data.url },
+      variables: { url: submission.value.url },
     });
 
     if (!data?.importRecipe) {
-      return { error: 'Nepodařilo se importovat recept' };
+      return submission.reply({
+        formErrors: ['Nepodařilo se importovat recept'],
+      });
     }
 
     revalidatePath('/');
+
     return {
-      success: true,
+      status: 'success',
       recipeSlug: data.importRecipe.slug,
     };
   } catch {
-    return { error: 'Nepodařilo se importovat recept z uvedené URL' };
+    return submission.reply({
+      formErrors: ['Nepodařilo se importovat recept z uvedené URL'],
+    });
   }
 }
 
 export async function createRecipeAction(
-  prevState: RecipeFormState,
+  _prevState: RecipeFormState,
   formData: FormData,
 ): Promise<RecipeFormState> {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user) {
-    return { error: 'Nejste přihlášen' };
+    return { status: 'error', error: { '': ['Nejste přihlášen'] } };
   }
 
-  // Parse recipe data from FormData
-  const recipeDataJson = formData.get('recipeData') as string;
-  const imageId = formData.get('imageId') as string | null;
-  let recipeData: RecipeInput;
+  const submission = parseWithZod(formData, { schema: recipeSchema });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const { imageId, ...recipeData } = submission.value;
 
   try {
-    recipeData = JSON.parse(recipeDataJson);
-  } catch {
-    return { error: 'Neplatná data receptu' };
-  }
-
-  const validated = recipeSchema.safeParse(recipeData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
-  }
-
-  try {
-    const client = await getClient();
     const { data } = await client.mutate({
       mutation: CreateRecipeDocument,
       variables: {
-        recipe: validated.data as RecipeInput,
+        recipe: recipeData as RecipeInput,
         imageId: imageId || null,
       },
     });
 
     if (!data?.createRecipe) {
-      return { error: 'Nepodařilo se vytvořit recept' };
+      return submission.reply({
+        formErrors: ['Nepodařilo se vytvořit recept'],
+      });
     }
 
     revalidatePath('/');
-    return {
-      success: true,
-      recipeSlug: data.createRecipe.slug,
-    };
+
+    redirect(`/recept/${data.createRecipe.slug}?saved=true`);
   } catch (e) {
-    if (e instanceof Error && e.message.includes('EEXIST')) {
-      return { error: 'Recept s tímto názvem již existuje' };
+    if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
+      throw e;
     }
-    return { error: 'Nepodařilo se vytvořit recept' };
+    if (e instanceof Error && e.message.includes('EEXIST')) {
+      return submission.reply({
+        formErrors: ['Recept s tímto názvem již existuje'],
+      });
+    }
+    return submission.reply({ formErrors: ['Nepodařilo se vytvořit recept'] });
   }
 }
 
 export async function updateRecipeAction(
   recipeId: string,
-  prevState: RecipeFormState,
+  _prevState: RecipeFormState,
   formData: FormData,
 ): Promise<RecipeFormState> {
-  const user = await getCurrentUser();
+  const client = await getClient();
+  const user = await getCurrentUser(client);
   if (!user) {
-    return { error: 'Nejste přihlášen' };
+    return { status: 'error', error: { '': ['Nejste přihlášen'] } };
   }
 
-  // Parse recipe data from FormData
-  const recipeDataJson = formData.get('recipeData') as string;
-  const imageId = formData.get('imageId') as string | null;
-  let recipeData: RecipeInput;
+  const submission = parseWithZod(formData, { schema: recipeSchema });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const { imageId, ...recipeData } = submission.value;
 
   try {
-    recipeData = JSON.parse(recipeDataJson);
-  } catch {
-    return { error: 'Neplatná data receptu' };
-  }
-
-  const validated = recipeSchema.safeParse(recipeData);
-  if (!validated.success) {
-    return { fieldErrors: validated.error.flatten().fieldErrors };
-  }
-
-  try {
-    const client = await getClient();
     const { data } = await client.mutate({
       mutation: UpdateRecipeDocument,
       variables: {
         id: recipeId,
-        recipe: validated.data as RecipeInput,
+        recipe: recipeData as RecipeInput,
         imageId: imageId || null,
       },
     });
 
     if (!data?.updateRecipe) {
-      return { error: 'Nepodařilo se aktualizovat recept' };
+      return submission.reply({
+        formErrors: ['Nepodařilo se aktualizovat recept'],
+      });
     }
 
     revalidatePath('/');
     revalidatePath(`/recept/${data.updateRecipe.slug}`);
-    return {
-      success: true,
-      recipeSlug: data.updateRecipe.slug,
-    };
+
+    redirect(`/recept/${data.updateRecipe.slug}?saved=true`);
   } catch (e) {
-    if (e instanceof Error && e.message.includes('EEXIST')) {
-      return { error: 'Recept s tímto názvem již existuje' };
+    if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
+      throw e;
     }
-    return { error: 'Nepodařilo se aktualizovat recept' };
+    if (e instanceof Error && e.message.includes('EEXIST')) {
+      return submission.reply({
+        formErrors: ['Recept s tímto názvem již existuje'],
+      });
+    }
+    return submission.reply({
+      formErrors: ['Nepodařilo se aktualizovat recept'],
+    });
   }
 }

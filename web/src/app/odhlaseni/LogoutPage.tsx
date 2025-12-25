@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 import { useAuth } from '@/lib/use-auth';
 
-export default function LogoutPage() {
+export function LogoutPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, setToken] = useAuth();

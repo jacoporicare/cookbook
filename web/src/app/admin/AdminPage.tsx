@@ -11,9 +11,9 @@ import {
   resetPasswordAction,
   updateUserAction,
 } from '@/app/actions/user';
-import Layout from '@/components/Layout';
-import PageHeading from '@/components/common/PageHeading';
-import Spinner from '@/components/common/Spinner';
+import { Layout } from '@/components/Layout';
+import { PageHeading } from '@/components/common/PageHeading';
+import { Spinner } from '@/components/common/Spinner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +36,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { UserFragment } from '@/generated/graphql';
+import { RecipeBaseFragment, UserFragment } from '@/generated/graphql';
+import { User } from '@/types/user';
 
 type DialogOptions = {
   title?: ReactNode;
@@ -50,9 +51,11 @@ type DialogOptions = {
 type Props = {
   users: UserFragment[];
   currentUserId: string;
+  recipes: RecipeBaseFragment[];
+  user: User;
 };
 
-export default function AdminPage({ users, currentUserId }: Props) {
+export function AdminPage({ users, currentUserId, recipes, user }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -85,10 +88,12 @@ export default function AdminPage({ users, currentUserId }: Props) {
       formData.set('displayName', newDisplayName.trim());
       formData.set('isAdmin', String(newIsAdmin));
 
-      const result = await createUserAction({}, formData);
+      const result = await createUserAction({ status: undefined }, formData);
 
-      if (result.error) {
-        toast.error(result.error);
+      if (result.status !== 'success') {
+        const formErrors = result.error?.[''] ?? [];
+        toast.error(formErrors[0] ?? 'Nepodařilo se vytvořit uživatele');
+        console.error(result);
       } else {
         setNewUsername(undefined);
         setNewDisplayName(undefined);
@@ -109,10 +114,15 @@ export default function AdminPage({ users, currentUserId }: Props) {
       formData.set('displayName', displayName.trim());
       formData.set('isAdmin', String(isAdmin));
 
-      const result = await updateUserAction(userIdEditing, {}, formData);
+      const result = await updateUserAction(
+        userIdEditing,
+        { status: undefined },
+        formData,
+      );
 
-      if (result.error) {
-        toast.error(result.error);
+      if (result.status !== 'success') {
+        const formErrors = result.error?.[''] ?? [];
+        toast.error(formErrors[0] ?? 'Nepodařilo se aktualizovat uživatele');
       } else {
         setUserIdEditing('');
         router.refresh();
@@ -160,8 +170,9 @@ export default function AdminPage({ users, currentUserId }: Props) {
         onClick: () => {
           startTransition(async () => {
             const result = await resetPasswordAction(user.id);
-            if (result.error) {
-              toast.error(result.error);
+            if (result.status !== 'success') {
+              const formErrors = result.error?.[''] ?? [];
+              toast.error(formErrors[0] ?? 'Nepodařilo se resetovat heslo');
               setDialogOpen(false);
             } else if (result.newPassword) {
               setDialog({
@@ -178,7 +189,7 @@ export default function AdminPage({ users, currentUserId }: Props) {
 
   return (
     <>
-      <Layout>
+      <Layout recipes={recipes} user={user}>
         {isPending && <Spinner overlay />}
         <div className="mx-auto max-w-4xl">
           <PageHeading>Správa uživatelů</PageHeading>

@@ -20,7 +20,7 @@ type Props = {
   onMatchAllChange: (matchAll: boolean) => void;
 };
 
-function Search(props: Props) {
+export function Search(props: Props) {
   const [open, setOpen] = useState(false);
 
   const toggleTag = (tagValue: string) => {
@@ -35,10 +35,12 @@ function Search(props: Props) {
   };
 
   return (
-    <div className={`
-      -mt-4 mb-6 flex justify-end
-      sm:-mt-8
-    `}>
+    <div
+      className={`
+        -mt-4 mb-6 flex justify-end
+        sm:-mt-8
+      `}
+    >
       <div className="max-w-100 min-w-50 flex-auto">
         <Label
           htmlFor="tags"
@@ -115,5 +117,3 @@ function Search(props: Props) {
     </div>
   );
 }
-
-export default Search;

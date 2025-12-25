@@ -5,21 +5,21 @@ import { toast } from 'sonner';
 
 import { ChangePasswordState, changePasswordAction } from '@/app/actions/auth';
 
-import ChangePassword from './ChangePassword';
+import { ChangePassword } from './ChangePassword';
 
-const initialState: ChangePasswordState = {};
+const initialState: ChangePasswordState = { status: undefined };
 
-function ChangePasswordContainer() {
+export function ChangePasswordContainer() {
   const [state, formAction, isPending] = useActionState(
     changePasswordAction,
     initialState,
   );
 
   useEffect(() => {
-    if (state.success) {
+    if (state.status === 'success') {
       toast.success('Heslo změněno!');
     }
-  }, [state.success]);
+  }, [state.status]);
 
   return (
     <form action={formAction}>
@@ -27,5 +27,3 @@ function ChangePasswordContainer() {
     </form>
   );
 }
-
-export default ChangePasswordContainer;

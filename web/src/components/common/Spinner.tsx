@@ -6,7 +6,7 @@ type Props = {
   overlay?: boolean;
 };
 
-function Spinner(props: Props) {
+export function Spinner(props: Props) {
   const timer = useRef<number | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
@@ -32,10 +32,8 @@ function Spinner(props: Props) {
         className={`
           mx-auto h-5 w-12 text-center text-sm
           ${
-          props.overlay
-            ? 'absolute top-1/2 left-1/2 -translate-1/2'
-            : 'mt-24'
-        }
+            props.overlay ? 'absolute top-1/2 left-1/2 -translate-1/2' : 'mt-24'
+          }
         `}
       >
         <svg
@@ -62,5 +60,3 @@ function Spinner(props: Props) {
     </div>
   );
 }
-
-export default Spinner;

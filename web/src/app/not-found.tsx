@@ -1,10 +1,16 @@
-import Layout from '@/components/Layout';
-import PageHeading from '@/components/common/PageHeading';
+import { Layout } from '@/components/Layout';
+import { PageHeading } from '@/components/common/PageHeading';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { getClient } from '@/lib/apollo-client';
+import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
 
-export default function NotFound() {
+export default async function NotFound() {
+  const client = await getClient();
+  const currentUser = await getCurrentUser(client);
+  const { recipes, user } = await getLayoutData({ client, currentUser });
+
   return (
-    <Layout static>
+    <Layout recipes={recipes} user={user}>
       <PageHeading>Nenalezeno</PageHeading>
       <Alert>
         <AlertDescription>Toto není stránka, kterou hledáš.</AlertDescription>

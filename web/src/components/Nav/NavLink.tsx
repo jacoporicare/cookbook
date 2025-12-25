@@ -8,29 +8,25 @@ type Props = LinkProps & {
   children: ReactNode;
 };
 
-function NavLink({ active, children, ...linkProps }: Props) {
+export function NavLink({ active, children, ...linkProps }: Props) {
   return (
     <Link
       {...linkProps}
       className={cn(
         `
-          block px-2 py-1 text-xl font-light whitespace-nowrap text-white
-          no-underline
+          relative block px-2 py-1 text-xl font-light whitespace-nowrap
+          text-white no-underline
+          after:absolute after:left-0 after:block after:h-1 after:w-full
+          after:origin-left after:bg-gray-500 after:transition
+          after:duration-250 after:ease-out after:content-[""]
+          hover:text-white hover:no-underline hover:after:scale-x-100
+          hover:after:bg-gray-200
+          lg:p-2
         `,
-        'lg:p-2',
-        `
-          relative
-          after:mt-1 after:block after:h-1 after:w-full after:content-[""]
-        `,
-        'after:transition-transform after:duration-250 after:ease-out',
-        'after:origin-left after:bg-primary',
         active ? 'after:scale-x-100' : 'after:scale-x-0',
-        'hover:text-white hover:no-underline hover:after:scale-x-100',
       )}
     >
       {children}
     </Link>
   );
 }
-
-export default NavLink;

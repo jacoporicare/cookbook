@@ -9,15 +9,15 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import PageHeading from '../common/PageHeading';
-import Spinner from '../common/Spinner';
+import { PageHeading } from '../common/PageHeading';
+import { Spinner } from '../common/Spinner';
 
 type Props = {
   state: ChangePasswordState;
   isPending: boolean;
 };
 
-function ChangePassword({ state, isPending }: Props) {
+export function ChangePassword({ state, isPending }: Props) {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -25,15 +25,21 @@ function ChangePassword({ state, isPending }: Props) {
 
   const passwordsMatch = newPassword === newPasswordConfirm;
 
+  // Extract errors from conform format
+  const formErrors = state.error?.[''];
+  const passwordErrors = state.error?.['password'];
+  const newPasswordErrors = state.error?.['newPassword'];
+  const newPasswordConfirmErrors = state.error?.['newPasswordConfirm'];
+
   // Reset form on success
   useEffect(() => {
-    if (state.success && formRef.current) {
+    if (state.status === 'success' && formRef.current) {
       formRef.current.reset();
       setPassword('');
       setNewPassword('');
       setNewPasswordConfirm('');
     }
-  }, [state.success]);
+  }, [state.status]);
 
   return (
     <>
@@ -50,15 +56,11 @@ function ChangePassword({ state, isPending }: Props) {
                 type="password"
                 value={password}
                 required
-                className={
-                  state.fieldErrors?.password ? 'border-destructive' : ''
-                }
+                className={passwordErrors ? 'border-destructive' : ''}
                 onChange={(e) => setPassword(e.currentTarget.value)}
               />
-              {state.fieldErrors?.password?.[0] && (
-                <p className="text-sm text-destructive">
-                  {state.fieldErrors.password[0]}
-                </p>
+              {passwordErrors?.[0] && (
+                <p className="text-sm text-destructive">{passwordErrors[0]}</p>
               )}
             </div>
 
@@ -70,14 +72,12 @@ function ChangePassword({ state, isPending }: Props) {
                 type="password"
                 value={newPassword}
                 required
-                className={
-                  state.fieldErrors?.newPassword ? 'border-destructive' : ''
-                }
+                className={newPasswordErrors ? 'border-destructive' : ''}
                 onChange={(e) => setNewPassword(e.currentTarget.value)}
               />
-              {state.fieldErrors?.newPassword?.[0] && (
+              {newPasswordErrors?.[0] && (
                 <p className="text-sm text-destructive">
-                  {state.fieldErrors.newPassword[0]}
+                  {newPasswordErrors[0]}
                 </p>
               )}
             </div>
@@ -90,16 +90,12 @@ function ChangePassword({ state, isPending }: Props) {
                 type="password"
                 value={newPasswordConfirm}
                 required
-                className={
-                  state.fieldErrors?.newPasswordConfirm
-                    ? 'border-destructive'
-                    : ''
-                }
+                className={newPasswordConfirmErrors ? 'border-destructive' : ''}
                 onChange={(e) => setNewPasswordConfirm(e.currentTarget.value)}
               />
-              {state.fieldErrors?.newPasswordConfirm?.[0] && (
+              {newPasswordConfirmErrors?.[0] && (
                 <p className="text-sm text-destructive">
-                  {state.fieldErrors.newPasswordConfirm[0]}
+                  {newPasswordConfirmErrors[0]}
                 </p>
               )}
             </div>
@@ -119,9 +115,9 @@ function ChangePassword({ state, isPending }: Props) {
               </Button>
             </div>
 
-            {state.error && (
+            {formErrors?.[0] && (
               <Alert variant="destructive">
-                <AlertDescription>{state.error}</AlertDescription>
+                <AlertDescription>{formErrors[0]}</AlertDescription>
               </Alert>
             )}
 
@@ -136,5 +132,3 @@ function ChangePassword({ state, isPending }: Props) {
     </>
   );
 }
-
-export default ChangePassword;

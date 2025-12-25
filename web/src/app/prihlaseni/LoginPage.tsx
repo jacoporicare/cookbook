@@ -1,27 +1,29 @@
 'use client';
 
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
 
 import { LoginState, loginAction } from '@/app/actions/auth';
-import Layout from '@/components/Layout';
-import PageHeading from '@/components/common/PageHeading';
-import Spinner from '@/components/common/Spinner';
+import { Layout } from '@/components/Layout';
+import { PageHeading } from '@/components/common/PageHeading';
+import { Spinner } from '@/components/common/Spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RecipeBaseFragment } from '@/generated/graphql';
 
-const initialState: LoginState = {};
+const initialState: LoginState = { status: undefined };
 
-export default function LoginPage() {
-  const searchParams = useSearchParams();
-  const redirectUri = searchParams.get('redirect_uri');
-  const returnUrl = searchParams.get('u');
+type Props = {
+  recipes: RecipeBaseFragment[];
+  redirectUri?: string;
+  returnUrl?: string;
+};
 
+export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
   const [state, formAction, pending] = useActionState(
     loginAction,
     initialState,
@@ -36,6 +38,11 @@ export default function LoginPage() {
 
   const isForWebView = !!redirectUri;
 
+  // Extract errors from conform format
+  const formErrors = state.error?.[''];
+  const usernameErrors = state.error?.['username'];
+  const passwordErrors = state.error?.['password'];
+
   const content = (
     <div className={isForWebView ? 'p-10' : 'p-6'}>
       {isForWebView && (
@@ -46,9 +53,9 @@ export default function LoginPage() {
           </div>
         </header>
       )}
-      {state.error && (
+      {formErrors?.[0] && (
         <Alert variant="destructive" className="mb-6">
-          <AlertDescription>{state.error}</AlertDescription>
+          <AlertDescription>{formErrors[0]}</AlertDescription>
         </Alert>
       )}
       <form action={formAction}>
@@ -70,15 +77,11 @@ export default function LoginPage() {
               autoComplete="username"
               autoCorrect="off"
               required
-              defaultValue={state.values?.username ?? ''}
-              className={
-                state.fieldErrors?.username ? 'border-destructive' : ''
-              }
+              defaultValue={(state.initialValue?.username as string) ?? ''}
+              className={usernameErrors ? 'border-destructive' : ''}
             />
-            {state.fieldErrors?.username?.[0] && (
-              <p className="text-sm text-destructive">
-                {state.fieldErrors.username[0]}
-              </p>
+            {usernameErrors?.[0] && (
+              <p className="text-sm text-destructive">{usernameErrors[0]}</p>
             )}
           </div>
 
@@ -90,14 +93,10 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               required
-              className={
-                state.fieldErrors?.password ? 'border-destructive' : ''
-              }
+              className={passwordErrors ? 'border-destructive' : ''}
             />
-            {state.fieldErrors?.password?.[0] && (
-              <p className="text-sm text-destructive">
-                {state.fieldErrors.password[0]}
-              </p>
+            {passwordErrors?.[0] && (
+              <p className="text-sm text-destructive">{passwordErrors[0]}</p>
             )}
           </div>
 
@@ -130,10 +129,12 @@ export default function LoginPage() {
   const formContent = (
     <>
       {pending && <Spinner overlay />}
-      <div className={`
-        mx-auto max-w-md
-        ${isForWebView ? '' : 'px-4'}
-      `}>
+      <div
+        className={`
+          mx-auto max-w-md
+          ${isForWebView ? '' : 'px-4'}
+        `}
+      >
         {isForWebView ? (
           content
         ) : (
@@ -151,5 +152,5 @@ export default function LoginPage() {
     return formContent;
   }
 
-  return <Layout static>{formContent}</Layout>;
+  return <Layout recipes={recipes}>{formContent}</Layout>;
 }

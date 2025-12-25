@@ -1,32 +1,41 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { RecipeEditOptionsDocument } from '@/generated/graphql';
+import {
+  RecipeEditOptionsDocument,
+  RecipeListDocument,
+} from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser, toUser } from '@/lib/auth-server';
 
-import RecipeEditPage from './RecipeEditPage';
+import { RecipeEditPage } from './RecipeEditPage';
 
 export const metadata: Metadata = {
   title: 'Nový recept',
 };
 
 export default async function Page() {
-  const [client, user] = await Promise.all([getClient(), getCurrentUser()]);
+  const client = await getClient();
+  const currentUser = await getCurrentUser(client);
 
-  if (!user) {
+  if (!currentUser) {
     redirect('/prihlaseni');
   }
 
-  const { data } = await client.query({ query: RecipeEditOptionsDocument });
+  const [optionsResult, recipesResult] = await Promise.all([
+    client.query({ query: RecipeEditOptionsDocument }),
+    client.query({ query: RecipeListDocument }),
+  ]);
 
   return (
     <RecipeEditPage
       options={{
-        ingredients: data?.ingredients ?? [],
-        sideDishes: data?.sideDishes ?? [],
-        tags: data?.tags ?? [],
+        ingredients: optionsResult.data?.ingredients ?? [],
+        sideDishes: optionsResult.data?.sideDishes ?? [],
+        tags: optionsResult.data?.tags ?? [],
       }}
+      recipes={recipesResult.data?.recipes ?? []}
+      user={toUser(currentUser)}
     />
   );
 }

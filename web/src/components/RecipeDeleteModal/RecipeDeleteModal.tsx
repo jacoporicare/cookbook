@@ -16,7 +16,12 @@ type Props = {
   onConfirm: () => void;
 };
 
-function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
+export function RecipeDeleteModal({
+  show,
+  recipeTitle,
+  onClose,
+  onConfirm,
+}: Props) {
   return (
     <AlertDialog open={show} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
@@ -34,5 +39,3 @@ function RecipeDeleteModal({ show, recipeTitle, onClose, onConfirm }: Props) {
     </AlertDialog>
   );
 }
-
-export default RecipeDeleteModal;

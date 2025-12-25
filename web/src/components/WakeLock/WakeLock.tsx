@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
-function WakeLock() {
+export function WakeLock() {
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
   const wakeLock = useRef<WakeLockSentinel | undefined>(undefined);
 
@@ -45,5 +45,3 @@ function WakeLock() {
     </div>
   );
 }
-
-export default WakeLock;

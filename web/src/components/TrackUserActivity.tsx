@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { trackUserActivityAction } from '@/app/actions/user';
 import { useAuth } from '@/lib/use-auth';
 
-function TrackUserActivity() {
+export function TrackUserActivity() {
   const [token] = useAuth();
 
   useEffect(() => {
@@ -23,5 +23,3 @@ function TrackUserActivity() {
 
   return null;
 }
-
-export default TrackUserActivity;

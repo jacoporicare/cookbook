@@ -5,11 +5,12 @@ import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 
 import { Ingredient } from '../../generated/graphql';
-import IngredientForm, { IngredientFields } from './IngredientForm';
-import IngredientGroupForm, {
+import { IngredientFields, IngredientForm } from './IngredientForm';
+import {
   IngredientGroupFields,
+  IngredientGroupForm,
 } from './IngredientGroupForm';
-import IngredientList from './IngredientList';
+import { IngredientList } from './IngredientList';
 
 export type AddIngredientEventHandler = (
   name: string,
@@ -32,7 +33,7 @@ type Props = {
   onSort: SortHandler;
 };
 
-function IngredientEdit({
+export function IngredientEdit({
   items,
   ingredientOptions,
   onRemove,
@@ -113,5 +114,3 @@ function IngredientEdit({
     </div>
   );
 }
-
-export default IngredientEdit;

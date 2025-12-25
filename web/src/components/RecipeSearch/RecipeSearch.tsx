@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
-import RecipeInfo from '../RecipeInfo/RecipeInfo';
+import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 
 type Props = {
   recipes: RecipeBaseFragment[];
@@ -20,7 +20,7 @@ type Props = {
 
 const MAX_ITEMS = 10;
 
-function RecipeSearch(props: Props) {
+export function RecipeSearch(props: Props) {
   const [prevRecipes, setPrevRecipes] = useState(props.recipes);
   const [suggestions, setSuggestions] = useState<RecipeBaseFragment[]>(
     props.recipes.slice(0, MAX_ITEMS),
@@ -144,5 +144,3 @@ function RecipeSearch(props: Props) {
     </div>
   );
 }
-
-export default RecipeSearch;

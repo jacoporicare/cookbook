@@ -5,12 +5,12 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import slug from 'slug';
 
-import Layout from '@/components/Layout';
-import RecipeImportModal from '@/components/RecipeImport/RecipeImportModal';
-import RecipeList from '@/components/RecipeList/RecipeList';
-import Search from '@/components/RecipeList/Search';
-import FabContainer from '@/components/common/FabContainer';
-import PageHeading from '@/components/common/PageHeading';
+import { Layout } from '@/components/Layout';
+import { RecipeImportModal } from '@/components/RecipeImport/RecipeImportModal';
+import { RecipeList } from '@/components/RecipeList/RecipeList';
+import { Search } from '@/components/RecipeList/Search';
+import { FabContainer } from '@/components/common/FabContainer';
+import { PageHeading } from '@/components/common/PageHeading';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,18 +21,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
 import { RecipeListQuery } from '@/generated/graphql';
-import useHideOnScroll from '@/hooks/useHideOnScroll';
+import { useHideOnScroll } from '@/hooks/useHideOnScroll';
+import { User } from '@/types/user';
 
 type Props = {
   recipes: RecipeListQuery['recipes'];
   tags: RecipeListQuery['tags'];
-  isLoggedIn: boolean;
+  user: User;
 };
 
-export default function RecipeListPage({
+export function RecipeListPage({
   recipes: allRecipesRaw,
   tags: allTags,
-  isLoggedIn,
+  user,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -84,7 +85,7 @@ export default function RecipeListPage({
   const isEmpty = recipes.length === 0;
 
   return (
-    <Layout>
+    <Layout recipes={allRecipesRaw} user={user}>
       <section>
         <PageHeading
           buttons={
@@ -118,7 +119,7 @@ export default function RecipeListPage({
           <RecipeList recipes={recipes} />
         )}
       </section>
-      {isLoggedIn && !fabHidden && (
+      {user && !fabHidden && (
         <FabContainer>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -6,7 +6,7 @@ type Props = {
   text?: string;
 };
 
-function RichText({ text = '' }: Props) {
+export function RichText({ text = '' }: Props) {
   return (
     // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
     <div className="rich-text">
@@ -14,5 +14,3 @@ function RichText({ text = '' }: Props) {
     </div>
   );
 }
-
-export default RichText;

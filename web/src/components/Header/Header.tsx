@@ -4,25 +4,37 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Nav from '../Nav';
-import RecipeSearch from '../RecipeSearch';
+import { RecipeBaseFragment } from '@/generated/graphql';
+import { User } from '@/types/user';
 
-const WakeLock = dynamic(() => import('../WakeLock'), { ssr: false });
+import { Nav } from '../Nav/Nav';
+import { RecipeSearchContainer as RecipeSearch } from '../RecipeSearch/RecipeSearch.container';
+
+const WakeLock = dynamic(
+  () => import('../WakeLock/WakeLock').then((mod) => mod.WakeLock),
+  { ssr: false },
+);
 
 type Props = {
-  showRecipeSearch?: boolean;
-  showUserInfo?: boolean;
+  recipes?: RecipeBaseFragment[];
+  user?: User;
 };
 
-function Header(props: Props) {
+export function Header(props: Props) {
   return (
-    <header className={`
-      fixed top-0 right-0 left-0 z-10 bg-gray-900 text-white shadow-md
-    `}>
-      <div className={`
-        flex justify-between px-6 py-2
-        sm:px-8
-      `}>
+    <header
+      className={`
+        fixed top-0 right-0 left-0 z-10 bg-gray-900 text-white shadow-md
+      `}
+    >
+      <div
+        className={`
+          flex justify-between px-4 py-2
+          lg:px-8
+          xl:px-12
+          2xl:px-16
+        `}
+      >
         <div className="flex items-center">
           <Link
             href="/"
@@ -31,24 +43,26 @@ function Header(props: Props) {
             `}
           >
             <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
-            <span className={`
-              ml-3 hidden
-              sm:inline
-            `}>Žrádelník</span>
+            <span
+              className={`
+                ml-3 hidden
+                sm:inline
+              `}
+            >
+              Žrádelník
+            </span>
           </Link>
         </div>
         <div className="flex items-center">
-          {props.showRecipeSearch && (
+          {props.recipes && (
             <div className="mx-2">
-              <RecipeSearch />
+              <RecipeSearch recipes={props.recipes} />
             </div>
           )}
           <WakeLock />
-          <Nav showUserInfo={props.showUserInfo} />
+          <Nav user={props.user} />
         </div>
       </div>
     </header>
   );
 }
-
-export default Header;

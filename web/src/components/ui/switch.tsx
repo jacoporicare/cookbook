@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function Switch({
+export function Switch({
   className,
   ...props
 }: React.ComponentProps<typeof SwitchPrimitive.Root>) {
@@ -43,5 +43,3 @@ function Switch({
     </SwitchPrimitive.Root>
   );
 }
-
-export { Switch };

@@ -4,12 +4,10 @@ type Props = {
   title?: string;
 };
 
-function DocumentTitle({ title }: Props) {
+export function DocumentTitle({ title }: Props) {
   return (
     <Head>
       <title>{title ? `${title} - Žrádelník` : 'Žrádelník'}</title>
     </Head>
   );
 }
-
-export default DocumentTitle;

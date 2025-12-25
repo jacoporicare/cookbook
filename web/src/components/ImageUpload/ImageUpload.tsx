@@ -10,7 +10,7 @@ type Props = {
   onImageChange: (data: File) => void;
 };
 
-function ImageUpload(props: Props) {
+export function ImageUpload(props: Props) {
   const [image, setImage] = useState<string>();
 
   useEffect(
@@ -66,11 +66,13 @@ function ImageUpload(props: Props) {
                 style={{ backgroundImage: `url(${src})` }}
               />
             )}
-            <div className={`
-              upload-text absolute z-10 flex size-50 items-center justify-center
-              bg-white/70 text-center font-bold
-              group-hover:z-30
-            `}>
+            <div
+              className={`
+                upload-text absolute z-10 flex size-50 items-center
+                justify-center bg-white/70 text-center font-bold
+                group-hover:z-30
+              `}
+            >
               Klikni nebo sem přetáhni obrázek
             </div>
           </div>
@@ -79,5 +81,3 @@ function ImageUpload(props: Props) {
     </div>
   );
 }
-
-export default ImageUpload;

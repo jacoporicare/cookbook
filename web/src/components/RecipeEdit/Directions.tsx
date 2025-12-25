@@ -1,25 +1,23 @@
 import { HelpCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-export type DirectionsFields = 'directions';
-
 type Props = {
-  directions?: string;
-  onChange: (name: DirectionsFields, value: string) => void;
+  defaultValue: string;
+  onChange: () => void;
 };
 
-function Directions({ directions = '', onChange }: Props) {
+export function Directions({ defaultValue, onChange }: Props) {
   return (
     <div className="space-y-2">
-      <Label htmlFor="directions">Postup</Label>
       <Textarea
         id="directions"
-        value={directions}
+        name="directions"
+        className="border-0 p-0 shadow-none focus-visible:ring-0"
+        defaultValue={defaultValue}
         rows={10}
-        onChange={(e) => onChange('directions', e.currentTarget.value)}
+        onChange={onChange}
       />
       <div className="text-right">
         <Button variant="ghost" size="sm" asChild>
@@ -36,5 +34,3 @@ function Directions({ directions = '', onChange }: Props) {
     </div>
   );
 }
-
-export default Directions;

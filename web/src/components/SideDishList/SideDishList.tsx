@@ -8,14 +8,14 @@ import {
 } from '@/components/ui/table';
 
 import { SideDish } from '../../types';
-import PageHeading from '../common/PageHeading';
-import SideDishListItem from './SideDishListItem';
+import { PageHeading } from '../common/PageHeading';
+import { SideDishListItem } from './SideDishListItem';
 
 type Props = {
   sideDishes: SideDish[];
 };
 
-function SideDishList({ sideDishes }: Props) {
+export function SideDishList({ sideDishes }: Props) {
   return (
     <div className="mx-auto max-w-150">
       <PageHeading>Přílohy</PageHeading>
@@ -39,5 +39,3 @@ function SideDishList({ sideDishes }: Props) {
     </div>
   );
 }
-
-export default SideDishList;

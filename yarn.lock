@@ -1374,6 +1374,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@conform-to/dom@npm:1.15.1":
+  version: 1.15.1
+  resolution: "@conform-to/dom@npm:1.15.1"
+  checksum: 10c0/c2025b3d3a3810c3be5746377a9beb745de123867258c424280bfa14110643c87ab0e7a7d8009eeecd99134583bf7aae0af4180cd73fac4e40fc256b370b29b2
+  languageName: node
+  linkType: hard
+
+"@conform-to/zod@npm:^1.15.1":
+  version: 1.15.1
+  resolution: "@conform-to/zod@npm:1.15.1"
+  dependencies:
+    "@conform-to/dom": "npm:1.15.1"
+  peerDependencies:
+    zod: ^3.21.0 || ^4.0.0
+  checksum: 10c0/179c613936e97b1163150e988d4c7038ab20c103ad07e6c58ccd073e5b808a04fe7d9abfbd2b86bab2db99823f16ae840d759d780b9e94a2bf33e0f2aa4d7608
+  languageName: node
+  linkType: hard
+
 "@dnd-kit/accessibility@npm:^3.1.1":
   version: 3.1.1
   resolution: "@dnd-kit/accessibility@npm:3.1.1"
@@ -8674,6 +8692,7 @@ __metadata:
   resolution: "cookbook-web@workspace:web"
   dependencies:
     "@apollo/client": "npm:^4.0.0"
+    "@conform-to/zod": "npm:^1.15.1"
     "@dnd-kit/core": "npm:^6.3.1"
     "@dnd-kit/sortable": "npm:^10.0.0"
     "@dnd-kit/utilities": "npm:^3.2.2"

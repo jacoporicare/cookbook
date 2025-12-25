@@ -15,7 +15,7 @@ type Props = {
   onAdd: () => void;
 };
 
-function IngredientForm({
+export function IngredientForm({
   name,
   amount,
   amountUnit,
@@ -78,5 +78,3 @@ function IngredientForm({
     </div>
   );
 }
-
-export default IngredientForm;

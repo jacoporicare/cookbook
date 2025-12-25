@@ -5,12 +5,14 @@ type Props = {
   buttons?: ReactNode;
 };
 
-function PageHeading({ children, buttons }: Props) {
+export function PageHeading({ children, buttons }: Props) {
   return (
-    <div className={`
-      mb-6
-      sm:mb-8
-    `}>
+    <div
+      className={`
+        mb-6
+        sm:mb-8
+      `}
+    >
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-3xl font-light">{children}</h2>
         <div>{buttons}</div>
@@ -18,5 +20,3 @@ function PageHeading({ children, buttons }: Props) {
     </div>
   );
 }
-
-export default PageHeading;

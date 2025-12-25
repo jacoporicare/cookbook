@@ -2,18 +2,21 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useRecipes } from '../../app/RecipesProvider';
-import RecipeSearch from './RecipeSearch';
+import { RecipeBaseFragment } from '../../generated/graphql';
+import { RecipeSearch } from './RecipeSearch';
 
-function RecipeSearchContainer() {
+type Props = {
+  recipes: RecipeBaseFragment[];
+};
+
+export function RecipeSearchContainer(props: Props) {
   const router = useRouter();
-  const recipes = useRecipes();
 
   function handleRecipeSelected(slug: string) {
     router.push(`/recept/${slug}`);
   }
 
-  return <RecipeSearch recipes={recipes} onSelected={handleRecipeSelected} />;
+  return (
+    <RecipeSearch recipes={props.recipes} onSelected={handleRecipeSelected} />
+  );
 }
-
-export default RecipeSearchContainer;

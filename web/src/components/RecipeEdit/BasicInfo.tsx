@@ -6,37 +6,35 @@ import { Switch } from '@/components/ui/switch';
 
 import { INSTANT_POT_TAG } from '../../const';
 
-export type BasicInfoFields = 'preparationTime' | 'servingCount' | 'sideDish';
-
 type Props = {
-  preparationTime?: number;
-  servingCount?: number;
-  sideDish?: string;
+  defaultPreparationTime: string;
+  defaultServingCount: string;
+  defaultSideDish: string;
   sideDishOptions: string[];
   tagOptions: string[];
-  tags?: string[];
-  onChange: (name: BasicInfoFields, value: string) => void;
+  tags: string[];
+  onChange: () => void;
   onTagsChange: (tags: string[]) => void;
 };
 
-function BasicInfo({
-  preparationTime,
-  servingCount,
-  sideDish,
+export function BasicInfo({
+  defaultPreparationTime,
+  defaultServingCount,
+  defaultSideDish,
   sideDishOptions,
   tagOptions,
   tags,
   onChange,
   onTagsChange,
 }: Props) {
-  const filteredTags = tags?.filter((t) => t !== INSTANT_POT_TAG) ?? [];
+  const filteredTags = tags.filter((t) => t !== INSTANT_POT_TAG);
   const filteredTagOptions = tagOptions.filter((t) => t !== INSTANT_POT_TAG);
 
   function handleTagToggle(tag: string, checked: boolean) {
     if (checked) {
-      onTagsChange([...(tags ?? []), tag]);
+      onTagsChange([...tags, tag]);
     } else {
-      onTagsChange((tags ?? []).filter((t) => t !== tag));
+      onTagsChange(tags.filter((t) => t !== tag));
     }
   }
 
@@ -47,16 +45,19 @@ function BasicInfo({
         <div className="relative">
           <Input
             id="preparationTime"
+            name="preparationTime"
             type="number"
             min={1}
-            value={preparationTime ?? ''}
+            defaultValue={defaultPreparationTime}
             className="pr-12"
-            onChange={(e) => onChange('preparationTime', e.currentTarget.value)}
+            onChange={onChange}
           />
-          <span className={`
-            absolute top-1/2 right-3 -translate-y-1/2 text-sm
-            text-muted-foreground
-          `}>
+          <span
+            className={`
+              absolute top-1/2 right-3 -translate-y-1/2 text-sm
+              text-muted-foreground
+            `}
+          >
             min
           </span>
         </div>
@@ -66,10 +67,11 @@ function BasicInfo({
         <Label htmlFor="servingCount">Počet porcí</Label>
         <Input
           id="servingCount"
+          name="servingCount"
           type="number"
           min={1}
-          value={servingCount ?? ''}
-          onChange={(e) => onChange('servingCount', e.currentTarget.value)}
+          defaultValue={defaultServingCount}
+          onChange={onChange}
         />
       </div>
 
@@ -77,9 +79,10 @@ function BasicInfo({
         <Label htmlFor="sideDish">Příloha</Label>
         <Input
           id="sideDish"
+          name="sideDish"
           list="sideDishOptions"
-          value={sideDish ?? ''}
-          onChange={(e) => onChange('sideDish', e.currentTarget.value)}
+          defaultValue={defaultSideDish}
+          onChange={onChange}
         />
         <datalist id="sideDishOptions">
           {sideDishOptions.map((option) => (
@@ -123,12 +126,12 @@ function BasicInfo({
       <div className="flex items-center space-x-2">
         <Switch
           id="instantPot"
-          checked={tags?.includes(INSTANT_POT_TAG) ?? false}
+          checked={tags.includes(INSTANT_POT_TAG)}
           onCheckedChange={(checked) =>
             onTagsChange(
               checked
-                ? [...(tags ?? []), INSTANT_POT_TAG]
-                : (tags?.filter((t) => t !== INSTANT_POT_TAG) ?? []),
+                ? [...tags, INSTANT_POT_TAG]
+                : tags.filter((t) => t !== INSTANT_POT_TAG),
             )
           }
         />
@@ -139,5 +142,3 @@ function BasicInfo({
     </div>
   );
 }
-
-export default BasicInfo;

@@ -38,7 +38,7 @@ async function fetchUrlContent(url: string): Promise<string> {
     }
 
     return await response.text();
-  } catch (error) {
+  } catch {
     throw new Error(
       'Nepodařilo se načíst recept z této URL. Zkontrolujte připojení k internetu.',
     );
@@ -69,7 +69,7 @@ const IngredientSchema = z.object({
     .optional()
     .describe('Jednotka (g, ml, lžíce, ks, atd.)'),
   isGroup: z
-    .boolean()
+    .stringbool()
     .optional()
     .default(false)
     .describe(

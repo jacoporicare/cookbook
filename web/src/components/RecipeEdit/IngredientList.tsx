@@ -46,8 +46,14 @@ function SortableItem({
   ingredient,
   onRemove,
 }: SortableItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,7 +71,8 @@ function SortableItem({
           flex items-center gap-2 border-b border-border px-1 py-2
           last:border-b-0
         `,
-        isGroup && 'bg-muted',
+        isGroup ? 'bg-muted' : 'bg-background',
+        isDragging && 'z-10 opacity-50',
       )}
     >
       <button
@@ -103,7 +110,7 @@ function SortableItem({
   );
 }
 
-function IngredientList({ items, onRemove, onSort }: Props) {
+export function IngredientList({ items, onRemove, onSort }: Props) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -153,5 +160,3 @@ function IngredientList({ items, onRemove, onSort }: Props) {
     </DndContext>
   );
 }
-
-export default IngredientList;

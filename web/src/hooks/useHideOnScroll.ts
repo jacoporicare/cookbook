@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-function useHideOnScroll() {
+export function useHideOnScroll() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(
     typeof window !== 'undefined' ? window.pageYOffset : 0,
@@ -39,5 +39,3 @@ function useHideOnScroll() {
 
   return hidden;
 }
-
-export default useHideOnScroll;
