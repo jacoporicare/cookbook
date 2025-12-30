@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import Link from 'next/link';
 import toSlug from 'slug';
 
@@ -7,25 +7,26 @@ import { Button } from '@/components/ui/button';
 
 import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 import { PageHeading } from '../common/PageHeading';
+import { RecipeDelete } from './RecipeDelete';
 
 type Props = {
+  id: string;
   preparationTime?: number;
   sideDish?: string;
   slug: string;
   tags?: string[];
   title: string;
   isAuthor?: boolean;
-  onDeleteShow: () => void;
 };
 
 export function RecipeHeader({
+  id,
   preparationTime,
   sideDish,
   slug,
   tags,
   title,
   isAuthor,
-  onDeleteShow,
 }: Props) {
   return (
     <>
@@ -38,14 +39,7 @@ export function RecipeHeader({
                   <Pencil className="size-5" />
                 </Button>
               </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Smazat"
-                onClick={onDeleteShow}
-              >
-                <Trash2 className="size-5" />
-              </Button>
+              <RecipeDelete id={id} title={title} />
             </div>
           )
         }

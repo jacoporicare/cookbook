@@ -19,7 +19,7 @@ import { getCurrentUser } from '@/lib/auth-server';
 const userSchema = z.object({
   username: z.string().min(1, { error: 'Uživatelské jméno je povinné' }),
   displayName: z.string().min(1, { error: 'Zobrazované jméno je povinné' }),
-  isAdmin: z.stringbool().optional(),
+  isAdmin: z.stringbool().optional().default(false),
 });
 
 // Types

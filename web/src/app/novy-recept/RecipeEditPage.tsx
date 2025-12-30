@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -42,6 +42,7 @@ export function RecipeEditPage({
   recipes,
   user,
 }: Props) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [token] = useAuth();
 
@@ -84,7 +85,10 @@ export function RecipeEditPage({
 
   // Handle errors from Conform submission
   useEffect(() => {
-    if (state.status === 'error' && state.error) {
+    if (state.status === 'success') {
+      toast.success('Recept úspěšně uložen');
+      router.replace(`/recept/${state.recipeSlug}`);
+    } else if (state.status === 'error' && state.error) {
       // Form-level errors (stored under empty key)
       const formErrors = state.error[''];
       if (formErrors?.[0]) {
@@ -106,7 +110,7 @@ export function RecipeEditPage({
         }
       }
     }
-  }, [state.status, state.error]);
+  }, [state, router]);
 
   // Unsaved changes warning
   useEffect(() => {

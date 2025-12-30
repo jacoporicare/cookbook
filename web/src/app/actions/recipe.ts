@@ -3,7 +3,6 @@
 import type { SubmissionResult } from '@conform-to/dom';
 import { parseWithZod } from '@conform-to/zod/v4';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import {
@@ -21,7 +20,7 @@ const ingredientSchema = z.object({
   name: z.string().min(1),
   amount: z.number({ error: 'Množství musí být číslo' }).nullable().optional(),
   amountUnit: z.string().nullable().optional(),
-  isGroup: z.stringbool().optional(),
+  isGroup: z.stringbool().optional().default(false),
 });
 
 const recipeSchema = z.object({
@@ -79,7 +78,8 @@ export async function deleteRecipeAction(
     });
 
     revalidatePath('/');
-    redirect('/');
+
+    return { success: true };
   } catch (e) {
     if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
       throw e;
@@ -164,7 +164,7 @@ export async function createRecipeAction(
 
     revalidatePath('/');
 
-    redirect(`/recept/${data.createRecipe.slug}?saved=true`);
+    return { ...submission.reply(), recipeSlug: data.createRecipe.slug };
   } catch (e) {
     if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
       throw e;
@@ -216,7 +216,7 @@ export async function updateRecipeAction(
     revalidatePath('/');
     revalidatePath(`/recept/${data.updateRecipe.slug}`);
 
-    redirect(`/recept/${data.updateRecipe.slug}?saved=true`);
+    return { ...submission.reply(), recipeSlug: data.updateRecipe.slug };
   } catch (e) {
     if (e instanceof Error && e.message === 'NEXT_REDIRECT') {
       throw e;

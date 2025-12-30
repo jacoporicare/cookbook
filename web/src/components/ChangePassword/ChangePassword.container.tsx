@@ -19,7 +19,7 @@ export function ChangePasswordContainer() {
     if (state.status === 'success') {
       toast.success('Heslo změněno!');
     }
-  }, [state.status]);
+  }, [state]);
 
   return (
     <form action={formAction}>

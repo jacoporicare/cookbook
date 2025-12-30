@@ -30,5 +30,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|icons|.*\\.png$|.*\\.ico$).*)'],
+  matcher: ['/admin/:path*', '/nastaveni/:path*', '/novy-recept/:path*', '/recept/:slug/upravit', '/prihlaseni/:path*'],
 };

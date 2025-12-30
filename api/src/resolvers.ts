@@ -31,7 +31,11 @@ const populateFields = ['user', 'cookedHistory.user'];
 const resolvers: Resolvers = {
   Query: {
     recipes: async () => {
-      return (await RecipeModel.find().populate(populateFields))
+      return (
+        await RecipeModel.find({
+          deleted: { $in: [false, null] },
+        }).populate(populateFields)
+      )
         .sort((a, b) => a.title.localeCompare(b.title, 'cs'))
         .map(mapToRecipeGqlObject);
     },
