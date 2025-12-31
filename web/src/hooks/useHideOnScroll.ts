@@ -1,9 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-function useHideOnScroll() {
+export function useHideOnScroll() {
   const [hidden, setHidden] = useState(false);
-  const lastScrollY = useRef(typeof window !== 'undefined' ? window.pageYOffset : 0);
-  const scrollYThreshold = useRef(typeof window !== 'undefined' ? window.pageYOffset : 0);
+  const lastScrollY = useRef(
+    typeof window !== 'undefined' ? window.pageYOffset : 0,
+  );
+  const scrollYThreshold = useRef(
+    typeof window !== 'undefined' ? window.pageYOffset : 0,
+  );
 
   useEffect(() => {
     function handleScroll() {
@@ -35,5 +39,3 @@ function useHideOnScroll() {
 
   return hidden;
 }
-
-export default useHideOnScroll;

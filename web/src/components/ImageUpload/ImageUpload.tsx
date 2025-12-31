@@ -1,78 +1,16 @@
-import { Box, styled } from '@mui/material';
-import classNames from 'classnames';
+'use client';
+
 import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
-const PREFIX = 'ImageUpload';
-
-const classes = {
-  text: `${PREFIX}-text`,
-  preview: `${PREFIX}-preview`,
-  dropzone: `${PREFIX}-dropzone`,
-  active: `${PREFIX}-active`,
-  accept: `${PREFIX}-accept`,
-  reject: `${PREFIX}-reject`,
-};
-
-const StyledBox = styled(Box)({
-  [`& .${classes.text}`]: {
-    position: 'absolute',
-    width: '200px',
-    height: '200px',
-    display: 'flex',
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: 'bold',
-    zIndex: 1,
-  },
-  [`& .${classes.preview}`]: {
-    position: 'absolute',
-    width: '200px',
-    height: '200px',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center center',
-    borderRadius: '4px',
-    zIndex: 2,
-  },
-  [`& .${classes.dropzone}`]: {
-    float: 'right',
-    marginLeft: '15px',
-    position: 'relative',
-    width: '204px',
-    height: '204px',
-    borderWidth: '2px',
-    borderColor: 'rgb(102, 102, 102)',
-    borderStyle: 'dashed',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    overflow: 'hidden',
-    '&:hover $text': {
-      zIndex: 3,
-    },
-  },
-  [`& .${classes.active}`]: {
-    '& $text': {
-      zIndex: 3,
-    },
-  },
-  [`& .${classes.accept}`]: {
-    borderStyle: 'solid',
-    borderColor: 'rgb(63, 195, 0)',
-  },
-  [`& .${classes.reject}`]: {
-    borderStyle: 'solid',
-    borderColor: 'rgb(195, 31, 31)',
-  },
-});
+import { cn } from '@/lib/utils';
 
 type Props = {
   imageUrl?: string;
   onImageChange: (data: File) => void;
 };
 
-function ImageUpload(props: Props) {
+export function ImageUpload(props: Props) {
   const [image, setImage] = useState<string>();
 
   useEffect(
@@ -98,25 +36,48 @@ function ImageUpload(props: Props) {
   const src = image || props.imageUrl;
 
   return (
-    <StyledBox>
-      <Dropzone accept="image/*" multiple={false} onDrop={handleDrop}>
-        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => (
+    <div>
+      <Dropzone accept={{ 'image/*': [] }} multiple={false} onDrop={handleDrop}>
+        {({
+          getRootProps,
+          getInputProps,
+          isDragActive,
+          isDragAccept,
+          isDragReject,
+        }) => (
           <div
             {...getRootProps()}
-            className={classNames(classes.dropzone, {
-              [classes.accept]: isDragAccept,
-              [classes.active]: isDragActive,
-              [classes.reject]: isDragReject,
-            })}
+            className={cn(
+              'relative float-right ml-4 size-51',
+              `
+                cursor-pointer overflow-hidden rounded border-2 border-dashed
+                border-gray-500
+              `,
+              'group',
+              isDragActive && '[&_.upload-text]:z-30',
+              isDragAccept && 'border-solid border-green-500',
+              isDragReject && 'border-solid border-red-500',
+            )}
           >
             <input {...getInputProps()} />
-            {src && <div className={classes.preview} style={{ backgroundImage: `url(${src})` }} />}
-            <div className={classes.text}>Klikni nebo sem přetáhni obrázek</div>
+            {src && (
+              <div
+                className="absolute z-20 size-50 rounded bg-cover bg-center"
+                style={{ backgroundImage: `url(${src})` }}
+              />
+            )}
+            <div
+              className={`
+                upload-text absolute z-10 flex size-50 items-center
+                justify-center bg-white/70 text-center font-bold
+                group-hover:z-30
+              `}
+            >
+              Klikni nebo sem přetáhni obrázek
+            </div>
           </div>
         )}
       </Dropzone>
-    </StyledBox>
+    </div>
   );
 }
-
-export default ImageUpload;

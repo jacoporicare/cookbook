@@ -1,0 +1,29 @@
+@reference "../../app/globals.css";
+
+.rich-text ol {
+  @apply list-none pl-0 mb-6 mt-0;
+  counter-reset: step-counter;
+}
+
+.rich-text ol li {
+  @apply relative pl-12 leading-6;
+  counter-increment: step-counter;
+}
+
+.rich-text ol li + li {
+  @apply mt-4;
+}
+
+.rich-text ol li::before {
+  @apply absolute left-0 -top-1 w-8 h-8 leading-8 text-center rounded-full bg-primary text-primary-foreground;
+  content: counter(step-counter);
+}
+
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+  @apply mt-0;
+}

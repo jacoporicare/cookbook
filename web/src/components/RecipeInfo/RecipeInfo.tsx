@@ -1,4 +1,3 @@
-import { Box, styled, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -23,70 +22,50 @@ function formatTime(time: number) {
   return `${minutes} min`;
 }
 
-const Item = styled('li')({
-  display: 'inline-block',
-  '& + &': {
-    marginLeft: '4px',
-  },
-  '& + &::before': {
-    display: 'inline-block',
-    content: "'·'",
-    marginRight: '4px',
-  },
-});
-
-function RecipeInfo({ preparationTime, sideDish, placeholder, small }: Props) {
+export function RecipeInfo({
+  preparationTime,
+  sideDish,
+  placeholder,
+  small,
+}: Props) {
   if (!preparationTime && !sideDish) {
     return placeholder ? (
-      <Typography color="textSecondary" variant="body1">
-        {placeholder}
-      </Typography>
+      <p className="text-muted-foreground">{placeholder}</p>
     ) : null;
   }
 
   return (
-    <Box
-      component="ul"
-      sx={{
-        margin: 0,
-        padding: 0,
-        listStyle: 'none',
-      }}
-    >
+    <ul className="m-0 list-none p-0">
       {!!preparationTime && preparationTime > 0 && (
-        <Item>
+        <li
+          className={`
+            inline-block
+            [&+&]:ml-1 [&+&]:before:mr-1 [&+&]:before:inline-block
+            [&+&]:before:content-['·']
+          `}
+        >
           {!small && (
-            <Typography color="textSecondary" component="span" variant="body1">
-              Doba přípravy{' '}
-            </Typography>
+            <span className="text-muted-foreground">Doba přípravy </span>
           )}
-          <Typography
-            color={small ? 'textSecondary' : undefined}
-            component="span"
-            variant={small ? 'body2' : 'body1'}
-          >
+          <span className={small ? 'text-sm text-muted-foreground' : ''}>
             {formatTime(preparationTime)}
-          </Typography>{' '}
-        </Item>
+          </span>{' '}
+        </li>
       )}
       {!!sideDish && (
-        <Item>
-          {!small && (
-            <Typography color="textSecondary" component="span" variant="body1">
-              Příloha{' '}
-            </Typography>
-          )}
-          <Typography
-            color={small ? 'textSecondary' : undefined}
-            component="span"
-            variant={small ? 'body2' : 'body1'}
-          >
+        <li
+          className={`
+            inline-block
+            [&+&]:ml-1 [&+&]:before:mr-1 [&+&]:before:inline-block
+            [&+&]:before:content-['·']
+          `}
+        >
+          {!small && <span className="text-muted-foreground">Příloha </span>}
+          <span className={small ? 'text-sm text-muted-foreground' : ''}>
             {sideDish}
-          </Typography>
-        </Item>
+          </span>
+        </li>
       )}
-    </Box>
+    </ul>
   );
 }
-
-export default RecipeInfo;

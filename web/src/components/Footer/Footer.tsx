@@ -1,13 +1,7 @@
-import { Grid } from '@mui/material';
-
-function Footer() {
+export function Footer() {
   return (
-    <Grid alignItems="center" container>
-      <Grid item xs>
-        © {new Date().getFullYear()} · Žrádelník
-      </Grid>
-    </Grid>
+    <div className="flex items-center">
+      <div className="flex-1">© {new Date().getFullYear()} · Žrádelník</div>
+    </div>
   );
 }
-
-export default Footer;

@@ -1,11 +1,10 @@
-import { Alert, Box, Grid, Paper, Typography } from '@mui/material';
-import { MouseEvent, useState } from 'react';
-import Lightbox from 'react-image-lightbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 
 import { Ingredient } from '../../generated/graphql';
-import RichText from '../RichText/RichText';
-
-import IngredientList from './IngredientList';
+import { RichText } from '../RichText/RichText';
+import { IngredientList } from './IngredientList';
+import { RecipeImage } from './RecipeImage';
 
 type Props = {
   title: string;
@@ -19,7 +18,7 @@ type Props = {
   userName: string;
 };
 
-function RecipeDetail({
+export function RecipeDetail({
   title,
   ingredients,
   servingCount,
@@ -30,91 +29,75 @@ function RecipeDetail({
   isInstantPotRecipe,
   userName,
 }: Props) {
-  const [isImageOpen, setIsImageOpen] = useState(false);
-
-  function handleImageClick(e: MouseEvent) {
-    e.preventDefault();
-    setIsImageOpen(true);
-  }
-
   return (
-    <>
-      <Grid spacing={4} container>
-        <Grid lg={3} md={4} xs={12} item>
-          <IngredientList ingredients={ingredients} servingCount={servingCount} />
-        </Grid>
+    <div
+      className={`
+        grid grid-cols-1 gap-8
+        md:grid-cols-12
+      `}
+    >
+      <div
+        className={`
+          md:col-span-4
+          lg:col-span-3
+        `}
+      >
+        <IngredientList ingredients={ingredients} servingCount={servingCount} />
+      </div>
 
-        <Grid lg={7} md={6} xs={12} item>
-          <Typography component="h3" variant="h5" gutterBottom>
-            Postup
-          </Typography>
-          {isInstantPotRecipe && (
-            <Paper>
-              <Box mb={3}>
-                <Alert severity="info">
-                  <strong>Instant Pot</strong>
-                  <br />
-                  Tento recept je určený pro multifunkční hrnec Instant Pot nebo jeho kopie, např.
-                  česká Tesla EliteCook K70.
-                </Alert>
-              </Box>
-            </Paper>
+      <div
+        className={`
+          md:col-span-6
+          lg:col-span-7
+        `}
+      >
+        <h3 className="mb-2 text-xl font-medium">Postup</h3>
+        {isInstantPotRecipe && (
+          <Card className="mb-6">
+            <Alert>
+              <AlertDescription>
+                <strong>Instant Pot</strong>
+                <br />
+                Tento recept je určený pro multifunkční hrnec Instant Pot nebo
+                jeho kopie, např. česká Tesla EliteCook K70.
+              </AlertDescription>
+            </Alert>
+          </Card>
+        )}
+        <Card>
+          {directions ? (
+            <div className="p-6">
+              <RichText text={directions} />
+            </div>
+          ) : (
+            <Alert>
+              <AlertDescription>Žádný postup.</AlertDescription>
+            </Alert>
           )}
-          <Paper>
-            {directions ? (
-              <Box p={3}>
-                <RichText text={directions} />
-              </Box>
-            ) : (
-              <Alert severity="info">Žádný postup.</Alert>
-            )}
-          </Paper>
-        </Grid>
-        <Grid md={2} xs={12} item>
-          <Box pt={{ xs: 0, md: '2.525rem' }}>
-            {imageUrl && (
-              <Paper>
-                <Box
-                  component="a"
-                  href={imageFullUrl}
-                  sx={{
-                    display: 'block',
-                    lineHeight: 0,
-                  }}
-                  onClick={handleImageClick}
-                >
-                  <Box
-                    alt={title}
-                    component="img"
-                    src={imageUrl}
-                    sx={{
-                      width: '100%',
-                      borderRadius: '4px',
-                    }}
-                  />
-                </Box>
-              </Paper>
-            )}
-            <Box my={2}>
-              <Typography color="textSecondary" variant="subtitle1">
-                Autor:
-              </Typography>
-              <Typography variant="body1">{userName}</Typography>
-              <Typography color="textSecondary" variant="subtitle1">
-                Naposledy upraveno:
-              </Typography>
-              <Typography variant="body1">
-                {new Date(lastModifiedDate).toLocaleDateString('cs')}
-              </Typography>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-      {isImageOpen && (
-        <Lightbox mainSrc={imageFullUrl!} onCloseRequest={() => setIsImageOpen(false)} />
-      )}
-    </>
+        </Card>
+      </div>
+
+      <div className="md:col-span-2">
+        <div className="md:pt-10">
+          {imageUrl && (
+            <Card className="overflow-hidden p-0">
+              <RecipeImage
+                imageUrl={imageUrl}
+                imageFullUrl={imageFullUrl}
+                title={title}
+              />
+            </Card>
+          )}
+          <div className="my-4">
+            <p className="text-sm text-muted-foreground">Autor:</p>
+            <p>{userName}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Naposledy upraveno:
+            </p>
+            <p>{new Date(lastModifiedDate).toLocaleDateString('cs')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
-
-export default RecipeDetail;

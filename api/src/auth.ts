@@ -39,17 +39,26 @@ export function authenticated<TResult, TParent = unknown, TArgs = unknown>(
 
     if (token) {
       const payload = verifyToken<{ userId: string }>(token);
-      userDocument = payload?.userId ? await UserModel.findById(payload.userId) : null;
+      userDocument = payload?.userId
+        ? await UserModel.findById(payload.userId)
+        : null;
     }
 
     if (!userDocument || (options.requireAdmin && !userDocument.isAdmin)) {
-      throw new Error(options.requireAdmin ? 'Unauthorized' : 'Unauthenticated');
+      throw new Error(
+        options.requireAdmin ? 'Unauthorized' : 'Unauthenticated',
+      );
     }
 
     return next(
       root,
       args,
-      { currentUser: userDocument.toObject<UserDbObject>({ getters: true, versionKey: false }) },
+      {
+        currentUser: userDocument.toObject<UserDbObject>({
+          getters: true,
+          versionKey: false,
+        }),
+      },
       info,
     );
   };

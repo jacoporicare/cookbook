@@ -1,70 +1,68 @@
-import { Box } from '@mui/material';
+'use client';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { colors } from '../../styles/colors';
-import Nav from '../Nav';
-import RecipeSearch from '../RecipeSearch';
+import { RecipeBaseFragment } from '@/generated/graphql';
+import { User } from '@/types/user';
 
-const WakeLock = dynamic(() => import('../WakeLock'), { ssr: false });
+import { Nav } from '../Nav/Nav';
+import { RecipeSearchContainer as RecipeSearch } from '../RecipeSearch/RecipeSearch.container';
+
+const WakeLock = dynamic(
+  () => import('../WakeLock/WakeLock').then((mod) => mod.WakeLock),
+  { ssr: false },
+);
 
 type Props = {
-  showRecipeSearch?: boolean;
-  showUserInfo?: boolean;
+  recipes?: RecipeBaseFragment[];
+  user?: User;
 };
 
-function Header(props: Props) {
+export function Header(props: Props) {
   return (
-    <Box
-      bgcolor={colors.gray900}
-      boxShadow="0px 2px 4px 0px rgba(0,0,0,0.2)"
-      color="white"
-      component="header"
-      left={0}
-      position="fixed"
-      right={0}
-      top={0}
-      zIndex={10}
+    <header
+      className={`
+        fixed top-0 right-0 left-0 z-10 bg-gray-900 text-white shadow-md
+      `}
     >
-      <Box display="flex" justifyContent="space-between" px={[3, 4]} py={1}>
-        <Box alignItems="center" display="flex">
-          <Link href="/" passHref>
-            <Box
-              component="a"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                fontFamily: "'Amatic SC', cursive",
-                fontSize: '36px',
-                color: 'white',
-                textDecoration: 'none',
-
-                '&:hover': {
-                  color: 'white',
-                  textDecoration: 'none',
-                },
-              }}
+      <div
+        className={`
+          flex justify-between px-4 py-2
+          lg:px-8
+          xl:px-12
+          2xl:px-16
+        `}
+      >
+        <div className="flex items-center">
+          <Link
+            href="/"
+            className={`
+              flex items-center font-display text-4xl text-white no-underline
+            `}
+          >
+            <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
+            <span
+              className={`
+                ml-3 hidden
+                sm:inline
+              `}
             >
-              <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
-              <Box display={['none', 'inline']} ml={3}>
-                Žrádelník
-              </Box>
-            </Box>
+              Žrádelník
+            </span>
           </Link>
-        </Box>
-        <Box alignItems="center" display="flex">
-          {props.showRecipeSearch && (
-            <Box mx={2}>
-              <RecipeSearch />
-            </Box>
+        </div>
+        <div className="flex items-center">
+          {props.recipes && (
+            <div className="mx-2">
+              <RecipeSearch recipes={props.recipes} />
+            </div>
           )}
           <WakeLock />
-          <Nav showUserInfo={props.showUserInfo} />
-        </Box>
-      </Box>
-    </Box>
+          <Nav user={props.user} />
+        </div>
+      </div>
+    </header>
   );
 }
-
-export default Header;

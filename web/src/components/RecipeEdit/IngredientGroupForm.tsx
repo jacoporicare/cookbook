@@ -1,5 +1,8 @@
-import { Button, Grid, TextField } from '@mui/material';
 import { KeyboardEvent } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export type IngredientGroupFields = 'group';
 
@@ -9,11 +12,10 @@ type Props = {
   onAdd: () => void;
 };
 
-function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
-  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+export function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       event.preventDefault();
-
       if (group) {
         onAdd();
       }
@@ -21,24 +23,19 @@ function IngredientGroupForm({ group = '', onChange, onAdd }: Props) {
   }
 
   return (
-    <Grid alignItems="flex-end" spacing={2} container>
-      <Grid item xs>
-        <TextField
-          label="Nová skupina"
+    <div className="flex items-end gap-3">
+      <div className="flex-1 space-y-2">
+        <Label htmlFor="group">Nová skupina</Label>
+        <Input
+          id="group"
           value={group}
-          variant="filled"
-          fullWidth
-          onChange={e => onChange('group', e.currentTarget.value)}
-          onKeyPress={handleKeyPress}
+          onChange={(e) => onChange('group', e.currentTarget.value)}
+          onKeyDown={handleKeyDown}
         />
-      </Grid>
-      <Grid item>
-        <Button disabled={!group} onClick={onAdd}>
-          Přidat
-        </Button>
-      </Grid>
-    </Grid>
+      </div>
+      <Button type="button" disabled={!group} onClick={onAdd}>
+        Přidat
+      </Button>
+    </div>
   );
 }
-
-export default IngredientGroupForm;

@@ -1,45 +1,32 @@
-import {
-  Alert,
-  Avatar,
-  Box,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  OutlinedInput,
-  Paper,
-  Typography,
-} from '@mui/material';
+'use client';
+
 import { useCombobox } from 'downshift';
+import { Search } from 'lucide-react';
 import { matchSorter } from 'match-sorter';
 import { useState } from 'react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+
 import { RecipeBaseFragment } from '../../generated/graphql';
-import useSupportsWebP from '../../hooks/useSupportsWebP';
-import { colors } from '../../styles/colors';
-import RecipeInfo from '../RecipeInfo/RecipeInfo';
+import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 
 type Props = {
   recipes: RecipeBaseFragment[];
   onSelected: (slug: string) => void;
 };
 
-// https://feathericons.com search
-const icon =
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMSIgY3k9IjExIiByPSI4Ii8+PHBhdGggZD0iTTIxIDIxbC00LjM1LTQuMzUiLz48L3N2Zz4=';
-
 const MAX_ITEMS = 10;
 
-function RecipeSearch(props: Props) {
-  const supportsWebP = useSupportsWebP();
-
+export function RecipeSearch(props: Props) {
   const [prevRecipes, setPrevRecipes] = useState(props.recipes);
   const [suggestions, setSuggestions] = useState<RecipeBaseFragment[]>(
     props.recipes.slice(0, MAX_ITEMS),
   );
 
   const {
-    getComboboxProps,
     getInputProps,
     getItemProps,
     getMenuProps,
@@ -54,10 +41,13 @@ function RecipeSearch(props: Props) {
     menuId: 'recipesearch-menu',
     items: suggestions,
     defaultHighlightedIndex: 0,
-    itemToString: () => '', // sneaky way to reset the input without any flash of selected item
+    itemToString: () => '',
     onInputValueChange: ({ inputValue }) => {
       setSuggestions(
-        matchSorter(props.recipes, inputValue || '', { keys: ['title'] }).slice(0, MAX_ITEMS),
+        matchSorter(props.recipes, inputValue || '', { keys: ['title'] }).slice(
+          0,
+          MAX_ITEMS,
+        ),
       );
     },
     onSelectedItemChange: ({ selectedItem }) => {
@@ -69,39 +59,30 @@ function RecipeSearch(props: Props) {
 
   if (props.recipes !== prevRecipes) {
     setPrevRecipes(props.recipes);
-    setSuggestions(matchSorter(props.recipes, inputValue, { keys: ['title'] }).slice(0, MAX_ITEMS));
+    setSuggestions(
+      matchSorter(props.recipes, inputValue, { keys: ['title'] }).slice(
+        0,
+        MAX_ITEMS,
+      ),
+    );
   }
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        maxWidth: '400px',
-        margin: '0 auto',
-      }}
-    >
-      <div {...getComboboxProps()}>
-        <OutlinedInput
-          inputProps={getInputProps()}
+    <div className="relative mx-auto max-w-100">
+      <div className="relative">
+        <Search
+          className={`
+            absolute top-1/2 left-2 size-4 -translate-y-1/2 text-white
+          `}
+        />
+        <Input
+          {...getInputProps()}
           placeholder="Hledat..."
-          sx={{
-            '& .MuiOutlinedInput-input': {
-              backgroundImage: `url(${icon})`,
-              backgroundPositionX: '8px',
-              backgroundPositionY: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '16px 16px',
-              borderRadius: '4px',
-              color: colors.white,
-              padding: '8px 8px 8px 32px',
-              transition: 'background-color 200ms ease',
-
-              '&:focus': {
-                backgroundColor: colors.gray800,
-              },
-            },
-          }}
-          fullWidth
+          className={`
+            border-gray-600 bg-transparent pl-8 text-white
+            placeholder:text-gray-400
+            focus:bg-gray-800
+          `}
           onFocus={() => {
             if (inputValue) {
               openMenu();
@@ -109,85 +90,57 @@ function RecipeSearch(props: Props) {
           }}
         />
       </div>
-      <Paper
-        elevation={8}
-        sx={{
-          display: 'none',
-          position: 'fixed',
-          top: 'calc(57px + 0.5rem)',
-          left: '0.5rem',
-          right: '0.5rem',
-          maxHeight: '288px',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          zIndex: 1001,
-
-          ...(isOpen && {
-            display: 'block',
-          }),
-
-          '@media (min-width: 40em)': {
-            position: 'absolute',
-            top: 'calc(100% + 0.25rem)',
-            left: 'initial',
-            right: 0,
-            width: '350px',
-          },
-
-          '@media (min-height: 412px)': {
-            maxHeight: '352px',
-          },
-        }}
+      <Card
         {...getMenuProps()}
+        className={cn(
+          `
+            fixed top-16.25 right-2 left-2 z-1001 max-h-72 overflow-x-hidden
+            overflow-y-auto
+            sm:absolute sm:top-[calc(100%+0.25rem)] sm:right-0 sm:left-auto
+            sm:w-87.5
+          `,
+          !isOpen && 'hidden',
+        )}
       >
-        <List>
+        <ul className="divide-y">
           {inputValue && suggestions.length === 0 && (
-            <ListItem>
-              <Alert severity="info" sx={{ width: '100%' }}>
-                Žádné výsledky.
-              </Alert>
-            </ListItem>
+            <li className="p-4 text-center text-muted-foreground">
+              Žádné výsledky.
+            </li>
           )}
           {isOpen &&
             suggestions.map((recipe, index) => {
-              const { imageThumbUrl, imageThumbWebPUrl, preparationTime, sideDish } = recipe;
-
-              const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
-              const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-              const imageUrl = thumbUrl || placeholderUrl;
+              const { imageThumbWebPUrl, preparationTime, sideDish } = recipe;
+              const imageUrl =
+                imageThumbWebPUrl || '/assets/food-placeholder.webp';
 
               return (
-                <ListItem
+                <li
                   key={recipe.id}
-                  sx={highlightedIndex === index ? { backgroundColor: colors.gray200 } : undefined}
                   {...getItemProps({ item: recipe, index })}
+                  className={cn(
+                    'flex cursor-pointer items-center gap-3 p-3',
+                    highlightedIndex === index && 'bg-gray-100',
+                  )}
                 >
-                  <ListItemAvatar>
-                    <Avatar alt={recipe.title} src={imageUrl} variant="rounded" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1" noWrap>
-                        {recipe.title}
-                      </Typography>
-                    }
-                    secondary={
-                      <RecipeInfo
-                        placeholder={<>&nbsp;</>}
-                        preparationTime={preparationTime ?? undefined}
-                        sideDish={sideDish ?? undefined}
-                        small
-                      />
-                    }
-                    disableTypography
-                  />
-                </ListItem>
+                  <Avatar className="size-10 rounded">
+                    <AvatarImage src={imageUrl} alt={recipe.title} />
+                    <AvatarFallback>{recipe.title[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{recipe.title}</p>
+                    <RecipeInfo
+                      placeholder={<span>&nbsp;</span>}
+                      preparationTime={preparationTime ?? undefined}
+                      sideDish={sideDish ?? undefined}
+                      small
+                    />
+                  </div>
+                </li>
               );
             })}
-        </List>
-      </Paper>
-    </Box>
+        </ul>
+      </Card>
+    </div>
   );
 }
-
-export default RecipeSearch;

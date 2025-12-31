@@ -1,2 +1,6 @@
 package.json
-src/generated/graphql.tsx
+.next/
+src/generated/
+schema.json
+yarn.lock
+.next/

@@ -1,23 +1,26 @@
-import { Grid } from '@mui/material';
-
 import { RecipeBaseFragment } from '../../generated/graphql';
-
-import RecipeListItem from './RecipeListItem';
+import { RecipeListItem } from './RecipeListItem';
 
 type Props = {
   recipes: RecipeBaseFragment[];
 };
 
-function RecipeList({ recipes }: Props) {
+export function RecipeList({ recipes }: Props) {
   return (
-    <Grid spacing={2} container>
-      {recipes.map(recipe => (
-        <Grid key={recipe.slug} component="article" lg={3} md={4} sm={6} xl={2} xs={12} item>
+    <div
+      className={`
+        grid grid-cols-1 gap-4
+        sm:grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-4
+        xl:grid-cols-6
+      `}
+    >
+      {recipes.map((recipe) => (
+        <article key={recipe.slug}>
           <RecipeListItem recipe={recipe} />
-        </Grid>
+        </article>
       ))}
-    </Grid>
+    </div>
   );
 }
-
-export default RecipeList;

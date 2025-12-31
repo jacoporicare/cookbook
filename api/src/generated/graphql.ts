@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { FileUpload } from 'graphql-upload';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,7 +13,6 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: Date;
-  Upload: Promise<FileUpload>;
 };
 
 export type AuthPayload = {
@@ -72,7 +70,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreateRecipeArgs = {
-  image?: InputMaybe<Scalars['Upload']>;
+  imageId?: InputMaybe<Scalars['ID']>;
   recipe: RecipeInput;
 };
 
@@ -122,7 +120,7 @@ export type MutationResetPasswordArgs = {
 
 export type MutationUpdateRecipeArgs = {
   id: Scalars['ID'];
-  image?: InputMaybe<Scalars['Upload']>;
+  imageId?: InputMaybe<Scalars['ID']>;
   recipe: RecipeInput;
 };
 
@@ -147,12 +145,6 @@ export type Query = {
 export type QueryRecipeArgs = {
   id?: InputMaybe<Scalars['ID']>;
   slug?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryRecipesArgs = {
-  deleted?: InputMaybe<Scalars['Boolean']>;
-  since?: InputMaybe<Scalars['Date']>;
 };
 
 export type Recipe = {
@@ -297,7 +289,6 @@ export type ResolversTypes = {
   RecipeCooked: ResolverTypeWrapper<RecipeCooked>;
   RecipeInput: RecipeInput;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
 };
@@ -319,7 +310,6 @@ export type ResolversParentTypes = {
   RecipeCooked: RecipeCooked;
   RecipeInput: RecipeInput;
   String: Scalars['String'];
-  Upload: Scalars['Upload'];
   User: User;
   UserInput: UserInput;
 };
@@ -362,7 +352,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   ingredients?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   recipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, Partial<QueryRecipeArgs>>;
-  recipes?: Resolver<Array<ResolversTypes['Recipe']>, ParentType, ContextType, Partial<QueryRecipesArgs>>;
+  recipes?: Resolver<Array<ResolversTypes['Recipe']>, ParentType, ContextType>;
   sideDishes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
@@ -394,10 +384,6 @@ export type RecipeCookedResolvers<ContextType = any, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
-  name: 'Upload';
-}
-
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -415,7 +401,6 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Recipe?: RecipeResolvers<ContextType>;
   RecipeCooked?: RecipeCookedResolvers<ContextType>;
-  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
 

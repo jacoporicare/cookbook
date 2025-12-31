@@ -1,34 +1,22 @@
-import { TextField } from '@mui/material';
-import { useRef, useEffect } from 'react';
-
-export type TitleFields = 'title';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 type Props = {
-  title?: string;
-  onChange: (name: TitleFields, value: string) => void;
+  defaultValue: string;
+  onChange: () => void;
 };
 
-function Title({ title = '', onChange }: Props) {
-  const ref = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.focus();
-    }
-  }, []);
-
+export function Title({ defaultValue, onChange }: Props) {
   return (
-    <TextField
-      ref={ref}
-      error={!title}
-      helperText={!title ? 'Název je povinný' : undefined}
-      label="Název"
-      value={title}
-      variant="filled"
-      fullWidth
-      onChange={e => onChange('title', e.currentTarget.value)}
-    />
+    <div className="space-y-2">
+      <Label htmlFor="title">Název</Label>
+      <Input
+        id="title"
+        name="title"
+        defaultValue={defaultValue}
+        required
+        onChange={onChange}
+      />
+    </div>
   );
 }
-
-export default Title;

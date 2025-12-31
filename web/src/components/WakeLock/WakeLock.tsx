@@ -1,20 +1,24 @@
-import { DesktopWindows } from '@mui/icons-material';
-import { Box } from '@mui/material';
+'use client';
+
+import { Monitor } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { colors } from '../../styles/colors';
+import { cn } from '@/lib/utils';
 
-function WakeLock() {
+export function WakeLock() {
   const [wakeLockEnabled, setWakeLockEnabled] = useState(false);
-  const wakeLock = useRef<WakeLock>();
+  const wakeLock = useRef<WakeLockSentinel | undefined>(undefined);
 
-  const wakeLockSupported = 'wakeLock' in navigator;
+  const wakeLockSupported =
+    typeof navigator !== 'undefined' && 'wakeLock' in navigator;
 
   useEffect(() => {
     if (wakeLockEnabled) {
-      navigator.wakeLock.request('screen').then(newWakeLock => {
+      navigator.wakeLock.request('screen').then((newWakeLock) => {
         wakeLock.current = newWakeLock;
-        wakeLock.current.addEventListener('release', () => setWakeLockEnabled(false));
+        wakeLock.current.addEventListener('release', () =>
+          setWakeLockEnabled(false),
+        );
       });
     }
 
@@ -29,21 +33,15 @@ function WakeLock() {
   }
 
   return (
-    <Box
-      sx={{
-        cursor: 'pointer',
-        textAlign: 'center',
-        fontSize: '0.8em',
-        color: colors.gray600,
-        marginRight: '1rem',
-        ...(wakeLockEnabled && { color: colors.white }),
-      }}
+    <div
+      className={cn(
+        'mr-4 cursor-pointer text-center text-[0.8em]',
+        wakeLockEnabled ? 'text-white' : 'text-gray-400',
+      )}
       onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
     >
-      <DesktopWindows fontSize="small" />
+      <Monitor className="mx-auto size-4" />
       <div>Nevypínat</div>
-    </Box>
+    </div>
   );
 }
-
-export default WakeLock;

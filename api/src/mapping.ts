@@ -7,7 +7,10 @@ import { UserDbObject, UserDocument } from './models/user';
 import { getImageUrl } from './recipeImage';
 
 export function mapToRecipeGqlObject(recipeDocument: RecipeDocument): Recipe {
-  const recipe = recipeDocument.toObject<RecipeDbObject>({ getters: true, versionKey: false });
+  const recipe = recipeDocument.toObject<RecipeDbObject>({
+    getters: true,
+    versionKey: false,
+  });
 
   return {
     ...recipe,
@@ -28,7 +31,7 @@ export function mapToRecipeDbObject(
     servingCount: recipe.servingCount || undefined,
     directions: recipe.directions?.trim() || undefined,
     ingredients:
-      recipe.ingredients?.map(ingredient => ({
+      recipe.ingredients?.map((ingredient) => ({
         ...ingredient,
         name: ingredient.name.trim(),
         amount: ingredient.amount || undefined,
@@ -51,7 +54,10 @@ export function mapToRecipeDbObject(
 }
 
 export function mapToUserGqlObject(userDocument: UserDocument): User {
-  return userDocument.toObject<UserDbObject>({ getters: true, versionKey: false });
+  return userDocument.toObject<UserDbObject>({
+    getters: true,
+    versionKey: false,
+  });
 }
 
 export function mapToUserDbObject(user: UserInput): AnyKeys<UserDbObject> {

@@ -1,26 +1,25 @@
+'use client';
+
 import { useEffect } from 'react';
 
-import { useAuth } from '../AuthContext';
-import { useUpdateUserLastActivityMutation } from '../generated/graphql';
+import { trackUserActivityAction } from '@/app/actions/user';
+import { useAuth } from '@/lib/use-auth';
 
-function TrackUserActivity() {
+export function TrackUserActivity() {
   const [token] = useAuth();
-  const [updateUserLastActivity] = useUpdateUserLastActivityMutation();
 
   useEffect(() => {
-    let int: number | undefined = undefined;
-
-    if (token) {
-      updateUserLastActivity();
-      int = token ? window.setInterval(updateUserLastActivity, 60 * 1000) : undefined;
+    if (!token) {
+      return;
     }
 
+    trackUserActivityAction();
+    const interval = window.setInterval(trackUserActivityAction, 60 * 1000);
+
     return () => {
-      int && window.clearInterval(int);
+      window.clearInterval(interval);
     };
-  }, [updateUserLastActivity, token]);
+  }, [token]);
 
   return null;
 }
-
-export default TrackUserActivity;

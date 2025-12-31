@@ -1,18 +1,20 @@
-import { Box, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
 };
 
-function FabContainer(props: Props) {
-  const theme = useTheme();
-
+export function FabContainer(props: Props) {
   return (
-    <Box bottom={theme.spacing(3)} position="fixed" right={theme.spacing(3)} zIndex={10}>
+    <div
+      className={`
+        fixed right-2 bottom-6 z-10 px-4
+        lg:px-8
+        xl:px-12
+        2xl:px-16
+      `}
+    >
       {props.children}
-    </Box>
+    </div>
   );
 }
-
-export default FabContainer;

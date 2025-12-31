@@ -24,7 +24,8 @@ jobs:
       - name: Build and push API
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:api"
+          context: "{{defaultContext}}"
+          file: api/Dockerfile
           push: true
           tags: ${{ env.API_IMAGE }}
 
@@ -42,7 +43,8 @@ jobs:
       - name: Build and push web
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:web"
+          context: "{{defaultContext}}"
+          file: web/Dockerfile
           push: true
           tags: ${{ env.WEB_IMAGE }}
 

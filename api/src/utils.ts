@@ -5,7 +5,10 @@ import bcrypt from 'bcrypt';
 import RecipeModel from './models/recipe';
 import { UserDbObject } from './models/user';
 
-export async function checkUserRightsAsync(user: UserDbObject, recipeId: string) {
+export async function checkUserRightsAsync(
+  user: UserDbObject,
+  recipeId: string,
+) {
   const recipe = await RecipeModel.findById(recipeId);
 
   return Boolean(recipe && (user.isAdmin || recipe.user === user.id));

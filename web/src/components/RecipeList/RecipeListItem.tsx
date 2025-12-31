@@ -1,48 +1,39 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
-import { LazyImage } from 'react-lazy-images';
+
+import { Card, CardContent } from '@/components/ui/card';
 
 import { RecipeBaseFragment } from '../../generated/graphql';
-import useSupportsWebP from '../../hooks/useSupportsWebP';
 
 type Props = {
   recipe: RecipeBaseFragment;
 };
 
-function RecipeListItem({ recipe }: Props) {
-  const supportsWebP = useSupportsWebP();
-
-  const { slug, imageThumbUrl, imageThumbWebPUrl } = recipe;
-  const thumbUrl = supportsWebP ? imageThumbWebPUrl : imageThumbUrl;
-  const placeholderUrl = `/assets/food-placeholder.${supportsWebP ? 'webp' : 'png'}`;
-  const imageUrl = thumbUrl || placeholderUrl;
+export function RecipeListItem({ recipe }: Props) {
+  const { slug, imageThumbWebPUrl } = recipe;
+  const imageUrl = imageThumbWebPUrl || '/assets/food-placeholder.webp';
 
   return (
-    <Card>
-      <Link as={`/recept/${slug}`} href="/recept/[slug]" passHref>
-        <CardActionArea>
-          <LazyImage
-            actual={({ imageProps }) => (
-              <CardMedia image={imageProps.src} sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }} />
-            )}
-            placeholder={({ ref }) => (
-              <CardMedia
-                ref={ref}
-                image={placeholderUrl}
-                sx={{ height: 0, paddingTop: '75%' /* 4:3 */ }}
-              />
-            )}
+    <Link href={`/recept/${slug}`}>
+      <Card
+        className={`
+          cursor-pointer gap-0 overflow-hidden transition-shadow
+          hover:bg-gray-100 hover:shadow-lg
+        `}
+      >
+        <div className="relative w-full pt-[75%]">
+          <Image
             src={imageUrl}
+            alt={recipe.title}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            style={{ objectFit: 'cover' }}
+            fill
           />
-          <CardContent>
-            <Typography component="h2" variant="h5" noWrap>
-              {recipe.title}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Link>
-    </Card>
+        </div>
+        <CardContent className="p-4">
+          <h2 className="truncate text-xl font-medium">{recipe.title}</h2>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
-
-export default RecipeListItem;

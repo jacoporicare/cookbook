@@ -1,28 +1,34 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
-import { FormEventHandler } from 'react';
-import { SortEndHandler } from 'react-sortable-hoc';
+import { Card } from '@/components/ui/card';
 
 import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
-import ImageUpload from '../ImageUpload/ImageUpload';
-import RichText from '../RichText/RichText';
-import Spinner from '../common/Spinner';
-
-import BasicInfo, { BasicInfoFields } from './BasicInfo';
-import Directions, { DirectionsFields } from './Directions';
-import Header from './Header';
-import IngredientEdit, {
+import { ImageUpload } from '../ImageUpload/ImageUpload';
+import { RichText } from '../RichText/RichText';
+import { Spinner } from '../common/Spinner';
+import { BasicInfo } from './BasicInfo';
+import { Directions } from './Directions';
+import { Header } from './Header';
+import {
   AddGroupEventHandler,
   AddIngredientEventHandler,
+  IngredientEdit,
   RemoveEventHandler,
+  SortHandler,
 } from './IngredientEdit';
-import Title, { TitleFields } from './Title';
+import { Title } from './Title';
 
-export type RecipeEditFields = TitleFields | BasicInfoFields | DirectionsFields;
+type DefaultValues = {
+  title: string;
+  directions: string;
+  preparationTime: string;
+  servingCount: string;
+  sideDish: string;
+};
 
 type Props = {
-  changed: boolean;
-  directions?: string;
+  defaultValues: DefaultValues;
+  formAction: (payload: FormData) => void;
+  imageId?: string;
   imageUrl?: string;
   ingredientOptions: string[];
   ingredients: Omit<Ingredient, '_id' | 'id'>[];
@@ -30,24 +36,20 @@ type Props = {
   isSaving: boolean;
   onAddGroup: AddGroupEventHandler;
   onAddIngredient: AddIngredientEventHandler;
-  onChange: (name: RecipeEditFields, value: string) => void;
+  onChange: () => void;
   onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
-  onSortIngredient: SortEndHandler;
-  onSubmit: FormEventHandler<HTMLFormElement>;
+  onSortIngredient: SortHandler;
   onTagsChange: (tags: string[]) => void;
-  preparationTime?: number;
-  servingCount?: number;
-  sideDish?: string;
   sideDishOptions: string[];
-  tags?: string[];
+  tags: string[];
   tagOptions: string[];
-  title?: string;
 };
 
-function RecipeEdit({
-  changed,
-  directions,
+export function RecipeEdit({
+  defaultValues,
+  formAction,
+  imageId,
   imageUrl,
   ingredientOptions,
   ingredients,
@@ -59,92 +61,120 @@ function RecipeEdit({
   onImageChange,
   onRemoveIngredient,
   onSortIngredient,
-  onSubmit,
   onTagsChange,
-  preparationTime,
-  servingCount,
-  sideDish,
   sideDishOptions,
   tags,
   tagOptions,
-  title,
 }: Props) {
   return (
-    <form onSubmit={onSubmit}>
+    <form action={formAction}>
       {isSaving && <Spinner overlay />}
 
+      {/* Hidden inputs for complex data */}
+      {imageId && <input type="hidden" name="imageId" value={imageId} />}
+
+      {/* Hidden inputs for ingredients array */}
+      {ingredients.map((ingredient, index) => (
+        <div key={index}>
+          <input
+            type="hidden"
+            name={`ingredients[${index}].name`}
+            value={ingredient.name}
+          />
+          <input
+            type="hidden"
+            name={`ingredients[${index}].amount`}
+            value={ingredient.amount ?? ''}
+          />
+          <input
+            type="hidden"
+            name={`ingredients[${index}].amountUnit`}
+            value={ingredient.amountUnit ?? ''}
+          />
+          <input
+            type="hidden"
+            name={`ingredients[${index}].isGroup`}
+            value={String(ingredient.isGroup ?? false)}
+          />
+        </div>
+      ))}
+
+      {/* Hidden inputs for tags array */}
+      {tags.map((tag, index) => (
+        <input key={index} type="hidden" name="tags[]" value={tag} />
+      ))}
+
       <Header
-        changed={changed}
-        isInstantPotNewRecipe={!!tags?.includes(INSTANT_POT_TAG)}
+        isInstantPotNewRecipe={tags.includes(INSTANT_POT_TAG)}
         isNew={isNew}
         isSaving={isSaving}
-        title={title}
+        title={defaultValues.title}
       />
 
-      <Title title={title} onChange={onChange} />
+      <Title defaultValue={defaultValues.title} onChange={onChange} />
 
-      <Box mt={4}>
-        <Grid spacing={4} container>
-          <Grid md={3} xl={2} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Základní údaje
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <BasicInfo
-                  preparationTime={preparationTime}
-                  servingCount={servingCount}
-                  sideDish={sideDish}
-                  sideDishOptions={sideDishOptions}
-                  tagOptions={tagOptions}
-                  tags={tags}
-                  onChange={onChange}
-                  onTagsChange={onTagsChange}
-                />
-              </Box>
-            </Paper>
-          </Grid>
+      <div
+        className={`
+          mt-8 grid grid-cols-1 gap-8
+          md:grid-cols-12
+        `}
+      >
+        <div
+          className={`
+            md:col-span-3
+            xl:col-span-2
+          `}
+        >
+          <h3 className="mb-4 text-xl font-medium">Základní údaje</h3>
+          <Card className="p-6">
+            <BasicInfo
+              defaultPreparationTime={defaultValues.preparationTime}
+              defaultServingCount={defaultValues.servingCount}
+              defaultSideDish={defaultValues.sideDish}
+              sideDishOptions={sideDishOptions}
+              tagOptions={tagOptions}
+              tags={tags}
+              onChange={onChange}
+              onTagsChange={onTagsChange}
+            />
+          </Card>
+        </div>
 
-          <Grid md={4} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Ingredience
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <IngredientEdit
-                  ingredientOptions={ingredientOptions}
-                  items={ingredients}
-                  onAdd={onAddIngredient}
-                  onAddGroup={onAddGroup}
-                  onRemove={onRemoveIngredient}
-                  onSort={onSortIngredient}
-                />
-              </Box>
-            </Paper>
-          </Grid>
+        <div className="md:col-span-4">
+          <h3 className="mb-4 text-xl font-medium">Ingredience</h3>
+          <Card className="p-6">
+            <IngredientEdit
+              ingredientOptions={ingredientOptions}
+              items={ingredients}
+              onAdd={onAddIngredient}
+              onAddGroup={onAddGroup}
+              onRemove={onRemoveIngredient}
+              onSort={onSortIngredient}
+            />
+          </Card>
+        </div>
 
-          <Grid md={5} xl={6} xs={12} item>
-            <Typography component="h3" variant="h5" gutterBottom>
-              Postup
-            </Typography>
-            <Paper>
-              <Box p={3}>
-                <Directions directions={directions} onChange={onChange} />
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
+        <div
+          className={`
+            md:col-span-5
+            xl:col-span-6
+          `}
+        >
+          <h3 className="mb-4 text-xl font-medium">Postup</h3>
+          <Card className="p-6">
+            <Directions
+              defaultValue={defaultValues.directions}
+              onChange={onChange}
+            />
+          </Card>
+        </div>
+      </div>
 
-      <Box mt={4}>
-        <Typography component="h3" variant="h5" gutterBottom>
-          Náhled postupu
-        </Typography>
+      <div className="mt-8">
+        <h3 className="mb-4 text-xl font-medium">Náhled postupu</h3>
         <ImageUpload imageUrl={imageUrl} onImageChange={onImageChange} />
-        <RichText text={directions} />
-      </Box>
+        <RichText text={defaultValues.directions} />
+      </div>
     </form>
   );
 }
-
-export default RecipeEdit;

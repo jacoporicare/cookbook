@@ -1,40 +1,50 @@
-import { Container, Box } from '@mui/material';
+'use client';
+
 import { ReactNode } from 'react';
 
-import { colors } from '../styles/colors';
+import { RecipeBaseFragment } from '@/generated/graphql';
+import { User } from '@/types/user';
 
-import Footer from './Footer';
-import Header from './Header';
-import TrackUserActivity from './TrackUserActivity';
-import DocumentTitle from './common/DocumentTitle';
+import { Footer } from './Footer/Footer';
+import { Header } from './Header/Header';
+import { TrackUserActivity } from './TrackUserActivity';
 
 type Props = {
   children: NonNullable<ReactNode>;
-  static?: boolean;
+  recipes?: RecipeBaseFragment[];
+  user?: User;
 };
 
-function Layout(props: Props) {
+export function Layout(props: Props) {
   return (
     <>
-      <DocumentTitle />
-      {props.static ? (
-        <Header />
-      ) : (
-        <>
-          <Header showRecipeSearch showUserInfo />
-          <TrackUserActivity />
-        </>
-      )}
-      <Container maxWidth={false}>
-        <Box component="main" mt="62px" py={[3, 4]}>
+      <Header recipes={props.recipes} user={props.user} />
+      <TrackUserActivity />
+      <div
+        className={`
+          px-4
+          lg:px-8
+          xl:px-12
+          2xl:px-16
+        `}
+      >
+        <main
+          className={`
+            mt-15.5 py-6
+            sm:py-8
+          `}
+        >
           {props.children}
-        </Box>
-        <Box borderTop={`1px solid ${colors.gray200}`} component="footer" py={[2, 3]}>
+        </main>
+        <footer
+          className={`
+            border-t border-gray-200 py-4
+            sm:py-6
+          `}
+        >
           <Footer />
-        </Box>
-      </Container>
+        </footer>
+      </div>
     </>
   );
 }
-
-export default Layout;

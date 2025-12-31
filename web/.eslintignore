@@ -1,6 +1,0 @@
-*.d.ts
-*.test.ts
-src/generated/graphql.tsx
-src/types/ext/*
-scripts/*
-next.config.js

@@ -1,16 +1,21 @@
-import { TableRow, TableCell } from '@mui/material';
+import { TableCell, TableRow } from '@/components/ui/table';
 
 import { SideDish } from '../../types';
 
 type Props = SideDish;
 
-function SideDishListItem({ title, sideWeight, mainWeight, multiplicator }: Props) {
+export function SideDishListItem({
+  title,
+  sideWeight,
+  mainWeight,
+  multiplicator,
+}: Props) {
   return (
     <TableRow>
       <TableCell>{title}</TableCell>
-      <TableCell align="right">{sideWeight}</TableCell>
-      <TableCell align="right">{mainWeight}</TableCell>
-      <TableCell align="right">
+      <TableCell className="text-right">{sideWeight}</TableCell>
+      <TableCell className="text-right">{mainWeight}</TableCell>
+      <TableCell className="text-right">
         {multiplicator &&
           `×${multiplicator.toLocaleString('cs', {
             minimumFractionDigits: 2,
@@ -20,5 +25,3 @@ function SideDishListItem({ title, sideWeight, mainWeight, multiplicator }: Prop
     </TableRow>
   );
 }
-
-export default SideDishListItem;

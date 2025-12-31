@@ -4,12 +4,9 @@ documents: null
 config:
   scalars:
     Date: Date
-    Upload: Promise<FileUpload>
 generates:
   src/generated/graphql.ts:
     plugins:
       - 'typescript'
       - 'typescript-resolvers'
-      - add:
-          content: "import { FileUpload } from 'graphql-upload';"
     #      - 'typescript-mongodb'

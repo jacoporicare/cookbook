@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model, models } from 'mongoose';
+import { Document, Model, model, models, Schema } from 'mongoose';
 
 export type UserDbObject = {
   id: string;
@@ -21,4 +21,5 @@ const UserSchema = new Schema({
   lastActivity: Date,
 });
 
-export default (models.User as Model<UserDocument>) || model<UserDocument>('User', UserSchema);
+export default (models.User as Model<UserDocument>) ||
+  model<UserDocument>('User', UserSchema);

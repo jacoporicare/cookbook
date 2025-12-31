@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model, models } from 'mongoose';
+import { Document, Model, model, models, Schema } from 'mongoose';
 
 import { ImageDbObject } from './image';
 import { UserDbObject } from './user';
@@ -83,7 +83,10 @@ RecipeSchema.virtual('creationDate').get(function (this: Document) {
  * Validations
  */
 
-RecipeSchema.paths.title.validate((title: string) => title.length, 'Nadpis musí být vyplněný');
+RecipeSchema.paths.title.validate(
+  (title: string) => title.length,
+  'Nadpis musí být vyplněný',
+);
 
 export default (models.Recipe as Model<RecipeDocument>) ||
   model<RecipeDocument>('Recipe', RecipeSchema);

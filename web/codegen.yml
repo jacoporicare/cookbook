@@ -9,9 +9,6 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-apollo
+      - typed-document-node
     config:
-      withComponent: false
-      withHOC: false
-      withHooks: true
       avoidOptionals: true

@@ -1,108 +1,162 @@
-import { Delete, Menu } from '@mui/icons-material';
+'use client';
+
 import {
-  Alert,
-  Box,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-} from '@mui/material';
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  SortEndHandler,
-} from 'react-sortable-hoc';
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, Trash2 } from 'lucide-react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 import { Ingredient } from '../../generated/graphql';
-import { colors } from '../../styles/colors';
 
 type RemoveHandler = (index: number) => void;
+type SortHandler = (args: { oldIndex: number; newIndex: number }) => void;
 
-type SortableListProps = {
+type Props = {
   items: Omit<Ingredient, '_id' | 'id'>[];
   onRemove: RemoveHandler;
+  onSort: SortHandler;
 };
-
-type Props = SortableListProps & {
-  onSort: SortEndHandler;
-};
-
-const Handle = SortableHandle(() => <Menu />);
 
 type SortableItemProps = {
+  id: string;
   itemIndex: number;
   ingredient: Omit<Ingredient, '_id' | 'id'>;
   onRemove: RemoveHandler;
 };
 
-const SortableItem = SortableElement(({ itemIndex, ingredient, onRemove }: SortableItemProps) => {
+function SortableItem({
+  id,
+  itemIndex,
+  ingredient,
+  onRemove,
+}: SortableItemProps) {
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const { name, amount, amountUnit, isGroup } = ingredient;
 
   return (
-    <ListItem
-      sx={
-        isGroup
-          ? {
-              listStyle: 'none',
-              backgroundColor: colors.gray200,
-            }
-          : {
-              listStyle: 'none',
-            }
-      }
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        `
+          flex items-center gap-2 border-b border-border px-1 py-2
+          last:border-b-0
+        `,
+        isGroup ? 'bg-muted' : 'bg-background',
+        isDragging && 'z-10 opacity-50',
+      )}
     >
-      <ListItemIcon>
-        <Handle />
-      </ListItemIcon>
+      <button
+        type="button"
+        className={`
+          cursor-grab touch-none p-1 text-muted-foreground
+          hover:text-foreground
+        `}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-5" />
+      </button>
 
-      <ListItemText>
-        <Grid spacing={1} container>
-          <Grid xs={1} item>
-            <Box textAlign="right">{amount ? amount.toLocaleString('cs') : ''}</Box>
-          </Grid>
-          <Grid xs={3} item>
-            {amountUnit}
-          </Grid>
-          <Grid xs={8} item>
-            {isGroup ? <b>{name}</b> : name}
-          </Grid>
-        </Grid>
-      </ListItemText>
+      <div className="grid flex-1 grid-cols-12 gap-1 text-sm">
+        <div className="col-span-2 text-right">
+          {amount ? amount.toLocaleString('cs') : ''}
+        </div>
+        <div className="col-span-3">{amountUnit}</div>
+        <div className="col-span-7">
+          {isGroup ? <strong>{name}</strong> : name}
+        </div>
+      </div>
 
-      <ListItemSecondaryAction>
-        <IconButton aria-label="Smazat" edge="end" size="large" onClick={() => onRemove(itemIndex)}>
-          <Delete />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label="Smazat"
+        onClick={() => onRemove(itemIndex)}
+      >
+        <Trash2 className="size-4" />
+      </Button>
+    </li>
   );
-});
-
-const SortableList = SortableContainer(({ items, onRemove }: SortableListProps) => (
-  <List>
-    {items.map((ingredient, index) => (
-      <SortableItem
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-        index={index}
-        ingredient={ingredient}
-        itemIndex={index}
-        onRemove={onRemove}
-      />
-    ))}
-  </List>
-));
-
-function IngredientList({ items, onRemove, onSort }: Props) {
-  if (items.length === 0) {
-    return <Alert severity="info">Zatím žádné ingredience.</Alert>;
-  }
-
-  return <SortableList items={items} useDragHandle onRemove={onRemove} onSortEnd={onSort} />;
 }
 
-export default IngredientList;
+export function IngredientList({ items, onRemove, onSort }: Props) {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const ids = items.map((_, index) => `item-${index}`);
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = ids.indexOf(active.id as string);
+      const newIndex = ids.indexOf(over.id as string);
+      onSort({ oldIndex, newIndex });
+    }
+  }
+
+  if (items.length === 0) {
+    return (
+      <Alert>
+        <AlertDescription>Zatím žádné ingredience.</AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        <ul className="m-0 list-none p-0">
+          {items.map((ingredient, index) => (
+            <SortableItem
+              key={`item-${index}`}
+              id={`item-${index}`}
+              ingredient={ingredient}
+              itemIndex={index}
+              onRemove={onRemove}
+            />
+          ))}
+        </ul>
+      </SortableContext>
+    </DndContext>
+  );
+}
