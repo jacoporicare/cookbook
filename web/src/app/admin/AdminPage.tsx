@@ -12,6 +12,7 @@ import {
   updateUserAction,
 } from '@/app/actions/user';
 import { Layout } from '@/components/Layout';
+import { ClientDate } from '@/components/common/ClientDate';
 import { PageHeading } from '@/components/common/PageHeading';
 import { Spinner } from '@/components/common/Spinner';
 import {
@@ -242,8 +243,9 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
                           />
                         </TableCell>
                         <TableCell>
-                          {user.lastActivity &&
-                            new Date(user.lastActivity).toLocaleString('cs')}
+                          {user.lastActivity && (
+                            <ClientDate date={user.lastActivity} />
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
@@ -271,8 +273,9 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
                         {user.isAdmin && <Check className="mx-auto size-5" />}
                       </TableCell>
                       <TableCell>
-                        {user.lastActivity &&
-                          new Date(user.lastActivity).toLocaleString('cs')}
+                        {user.lastActivity && (
+                          <ClientDate date={user.lastActivity} />
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
