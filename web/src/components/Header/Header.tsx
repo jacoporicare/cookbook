@@ -25,7 +25,7 @@ export function Header(props: Props) {
   return (
     <header
       className={`
-        fixed top-0 right-0 left-0 z-10 bg-gray-900 text-white shadow-md
+        fixed top-0 right-0 left-0 z-20 bg-gray-900 text-white shadow-md
       `}
     >
       <div
