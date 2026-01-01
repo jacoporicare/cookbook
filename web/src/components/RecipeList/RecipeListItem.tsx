@@ -18,7 +18,7 @@ export function RecipeListItem({ recipe }: Props) {
       <Card
         className={`
           cursor-pointer gap-0 overflow-hidden transition-shadow
-          hover:bg-gray-100 hover:shadow-lg
+          hover:bg-muted hover:shadow-lg
         `}
       >
         <div className="relative w-full pt-[75%]">

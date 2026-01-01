@@ -44,7 +44,8 @@ export function RecipeListPage({
       >
         <section>
           <PageHeading buttons={<FilterToggleButton />}>
-            Recepty <span className="text-muted-foreground">{recipes.length}</span>
+            Recepty{' '}
+            <span className="text-muted-foreground">{recipes.length}</span>
           </PageHeading>
           <FilterContent>
             <TagFilter tagOptions={tagOptions} selectedTag={selectedTag} />

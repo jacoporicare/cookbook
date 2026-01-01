@@ -36,7 +36,7 @@ export function ImageUpload(props: Props) {
   const src = image || props.imageUrl;
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <Dropzone accept={{ 'image/*': [] }} multiple={false} onDrop={handleDrop}>
         {({
           getRootProps,
@@ -48,12 +48,10 @@ export function ImageUpload(props: Props) {
           <div
             {...getRootProps()}
             className={cn(
-              'relative float-right ml-4 size-51',
               `
-                cursor-pointer overflow-hidden rounded border-2 border-dashed
-                border-gray-500
+                group relative float-right ml-4 size-51 cursor-pointer
+                overflow-hidden rounded border-2 border-dashed border-gray-500
               `,
-              'group',
               isDragActive && '[&_.upload-text]:z-30',
               isDragAccept && 'border-solid border-green-500',
               isDragReject && 'border-solid border-red-500',
@@ -69,7 +67,7 @@ export function ImageUpload(props: Props) {
             <div
               className={`
                 upload-text absolute z-10 flex size-50 items-center
-                justify-center bg-white/70 text-center font-bold
+                justify-center bg-white/30 text-center font-bold
                 group-hover:z-30
               `}
             >

@@ -120,7 +120,7 @@ export function RecipeSearch(props: Props) {
                   {...getItemProps({ item: recipe, index })}
                   className={cn(
                     'flex cursor-pointer items-center gap-3 p-3',
-                    highlightedIndex === index && 'bg-gray-100',
+                    highlightedIndex === index && 'bg-muted',
                   )}
                 >
                   <Avatar className="size-10 rounded">

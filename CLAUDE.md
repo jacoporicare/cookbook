@@ -7,13 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a monorepo cookbook/recipe management application with:
 
 - **API** ([api/](api/)): GraphQL API built with Apollo Server, Express, and MongoDB
-- **Web** ([web/](web/)): Next.js frontend with Material-UI and Apollo Client
+- **Web** ([web/](web/)): Next.js frontend with Tailwind CSS 4 and Apollo Client
 
 The application is deployed at https://www.zradelnik.cz/ and allows users to create, edit, and manage recipes.
 
 ## AI Assistant Guidelines
 
 **Context7 Integration**: Always use Context7 MCP tools when code generation, setup or configuration steps, or library/API documentation is needed. This means automatically using the Context7 MCP tools to resolve library IDs and get library documentation without requiring explicit requests.
+
+**Server Components First**: Prefer React Server Components over Client Components. Avoid React Context as it requires client components - use self-contained components with localStorage/cookies for state persistence instead.
 
 ## Development Commands
 
@@ -124,12 +126,12 @@ docker-compose up
 
 ### Web Architecture
 
-**Framework**: Next.js 10 with TypeScript
+**Framework**: Next.js 16 (App Router) with TypeScript
 
 **Entry Points**:
 
-- [web/src/pages/\_app.tsx](web/src/pages/_app.tsx): App wrapper with Material-UI theme, Emotion CSS-in-JS, and Sentry integration
-- [web/src/pages/\_document.tsx](web/src/pages/_document.tsx): Custom document for server-side rendering
+- [web/src/app/layout.tsx](web/src/app/layout.tsx): Root layout with fonts and theme initialization
+- [web/src/app/globals.css](web/src/app/globals.css): Global CSS with Tailwind and CSS variables for light/dark themes
 
 **Apollo Client Setup** ([web/src/apollo/client.tsx](web/src/apollo/client.tsx)):
 
@@ -160,9 +162,11 @@ docker-compose up
 
 **Styling**:
 
-- Material-UI v5 with Emotion
-- Custom theme in [web/src/theme.ts](web/src/theme.ts)
-- Global styles in [web/src/styles.ts](web/src/styles.ts)
+- Tailwind CSS 4 with OKLch color space
+- CSS variables for theming in [web/src/app/globals.css](web/src/app/globals.css)
+- Dark mode via `.dark` class on `<html>` element
+- Shadcn/Radix UI components with Tailwind styling
+- Lucide React for icons
 
 ## GraphQL Code Generation Workflow
 

@@ -17,13 +17,19 @@ export async function POST(request: NextRequest) {
   try {
     formData = await request.formData();
   } catch {
-    return NextResponse.json({ error: 'Failed to parse form data' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Failed to parse form data' },
+      { status: 400 },
+    );
   }
 
   const file = formData.get('image');
 
   if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: 'No image file provided' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'No image file provided' },
+      { status: 400 },
+    );
   }
 
   const uploadFormData = new FormData();
@@ -47,13 +53,19 @@ export async function POST(request: NextRequest) {
     } catch {
       errorMessage = text || errorMessage;
     }
-    return NextResponse.json({ error: errorMessage }, { status: response.status });
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: response.status },
+    );
   }
 
   try {
     const result = JSON.parse(text);
     return NextResponse.json(result);
   } catch {
-    return NextResponse.json({ error: 'Invalid response from API' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Invalid response from API' },
+      { status: 500 },
+    );
   }
 }

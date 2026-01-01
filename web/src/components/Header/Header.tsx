@@ -9,6 +9,7 @@ import { User } from '@/types/user';
 
 import { Nav } from '../Nav/Nav';
 import { RecipeSearchContainer as RecipeSearch } from '../RecipeSearch/RecipeSearch.container';
+import { ThemeToggle } from '../ThemeToggle';
 
 const WakeLock = dynamic(
   () => import('../WakeLock/WakeLock').then((mod) => mod.WakeLock),
@@ -29,7 +30,7 @@ export function Header(props: Props) {
     >
       <div
         className={`
-          flex justify-between px-4 py-2
+          flex justify-between gap-4 px-4 py-2
           lg:px-8
           xl:px-12
           2xl:px-16
@@ -39,13 +40,14 @@ export function Header(props: Props) {
           <Link
             href="/"
             className={`
-              flex items-center font-display text-4xl text-white no-underline
+              flex items-center gap-3 font-display text-4xl text-white
+              no-underline
             `}
           >
             <Image alt="Ikona" height={40} src="/assets/piggy.png" width={33} />
             <span
               className={`
-                ml-3 hidden
+                hidden
                 sm:inline
               `}
             >
@@ -53,12 +55,9 @@ export function Header(props: Props) {
             </span>
           </Link>
         </div>
-        <div className="flex items-center">
-          {props.recipes && (
-            <div className="mx-2">
-              <RecipeSearch recipes={props.recipes} />
-            </div>
-          )}
+        <div className="flex items-center gap-5">
+          {props.recipes && <RecipeSearch recipes={props.recipes} />}
+          <ThemeToggle className="max-sm:hidden" />
           <WakeLock />
           <Nav user={props.user} />
         </div>

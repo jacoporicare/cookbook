@@ -97,6 +97,8 @@ export function IngredientEdit({
   return (
     <div className="space-y-6">
       <IngredientList items={items} onRemove={onRemove} onSort={onSort} />
+      <div />
+      <Separator />
       <IngredientForm
         amount={amount}
         amountUnit={amountUnit}

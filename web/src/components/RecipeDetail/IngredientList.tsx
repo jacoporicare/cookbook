@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
@@ -17,10 +17,15 @@ type Props = {
 
 export function IngredientList(props: Props) {
   const [servingCount, setServingCount] = useState(props.servingCount);
+  const [prevPropServingCount, setPrevPropServingCount] = useState(
+    props.servingCount,
+  );
 
-  useEffect(() => {
+  // Adjust state when prop changes (React-recommended pattern instead of useEffect)
+  if (props.servingCount !== prevPropServingCount) {
+    setPrevPropServingCount(props.servingCount);
     setServingCount(props.servingCount);
-  }, [props.servingCount]);
+  }
 
   function getAmount(amount?: number) {
     if (!amount) {
@@ -84,7 +89,7 @@ export function IngredientList(props: Props) {
                 const { id, isGroup, name, amount, amountUnit } = ingredient;
 
                 return (
-                  <TableRow key={id} className={cn(isGroup && 'bg-gray-100')}>
+                  <TableRow key={id} className={cn(isGroup && 'bg-muted')}>
                     <TableCell className="w-[20%] text-right">
                       {!isGroup && getAmount(amount ?? undefined)}
                     </TableCell>

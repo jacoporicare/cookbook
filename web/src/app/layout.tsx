@@ -48,13 +48,24 @@ const amatic = Amatic_SC({
   variable: '--font-amatic',
 });
 
+const themeScript = `
+  document.documentElement.classList.toggle(
+    "dark",
+    localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+  );
+`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="cs" className={amatic.variable}>
+    <html lang="cs" className={amatic.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         {children}
         <Toaster />

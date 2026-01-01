@@ -35,12 +35,12 @@ export function WakeLock() {
   return (
     <div
       className={cn(
-        'mr-4 cursor-pointer text-center text-[0.8em]',
+        'cursor-pointer text-center text-[0.8em]',
         wakeLockEnabled ? 'text-white' : 'text-gray-400',
       )}
       onClick={() => setWakeLockEnabled(!wakeLockEnabled)}
     >
-      <Monitor className="mx-auto size-4" />
+      <Monitor className="mx-auto my-1.5 size-4" />
       <div>Nevypínat</div>
     </div>
   );
