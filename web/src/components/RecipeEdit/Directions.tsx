@@ -14,7 +14,10 @@ export function Directions({ defaultValue, onChange }: Props) {
       <Textarea
         id="directions"
         name="directions"
-        className="border-0 p-0 shadow-none focus-visible:ring-0"
+        className={`
+          border-0 p-0 shadow-none
+          focus-visible:ring-0
+        `}
         defaultValue={defaultValue}
         rows={10}
         onChange={onChange}

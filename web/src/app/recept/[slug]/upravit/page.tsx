@@ -50,7 +50,7 @@ export default async function Page({ params }: Props) {
   // Check if user can edit this recipe
   const recipe = recipeResult.data.recipe;
   const canEdit =
-    currentUser.isAdmin || currentUser.username === recipe.user.username;
+    currentUser.isAdmin || currentUser.username === recipe.user?.username;
 
   if (!canEdit) {
     redirect(`/recept/${slug}`);

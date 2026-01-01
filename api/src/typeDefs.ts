@@ -20,7 +20,7 @@ const typeDefs = gql`
     sideDish: String
     preparationTime: Int
     servingCount: Int
-    user: User!
+    user: User
     imageUrl(size: ImageSize, format: ImageFormat): String
     creationDate: Date!
     lastModifiedDate: Date!
@@ -41,7 +41,7 @@ const typeDefs = gql`
   type RecipeCooked {
     id: ID!
     date: Date!
-    user: User!
+    user: User
   }
 
   type User {

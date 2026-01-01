@@ -55,7 +55,7 @@ export function RecipeDetailPage({
           lastModifiedDate={lastModifiedDate}
           servingCount={servingCount ?? undefined}
           title={title}
-          userName={user.displayName}
+          userName={user?.displayName}
         />
       </article>
     </Layout>

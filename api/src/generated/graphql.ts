@@ -163,7 +163,7 @@ export type Recipe = {
   slug: Scalars['String'];
   tags: Array<Scalars['String']>;
   title: Scalars['String'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 
@@ -176,7 +176,7 @@ export type RecipeCooked = {
   __typename?: 'RecipeCooked';
   date: Scalars['Date'];
   id: Scalars['ID'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 export type RecipeInput = {
@@ -373,14 +373,14 @@ export type RecipeResolvers<ContextType = any, ParentType extends ResolversParen
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type RecipeCookedResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecipeCooked'] = ResolversParentTypes['RecipeCooked']> = {
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

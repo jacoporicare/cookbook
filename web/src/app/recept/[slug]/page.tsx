@@ -41,7 +41,7 @@ export default async function Page({ params }: Props) {
   const isAuthor =
     !!currentUser &&
     (currentUser.isAdmin ||
-      currentUser.username === recipeResult.data.recipe.user.username);
+      currentUser.username === recipeResult.data.recipe.user?.username);
 
   return (
     <RecipeDetailPage

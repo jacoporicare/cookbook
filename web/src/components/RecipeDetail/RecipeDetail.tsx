@@ -1,5 +1,6 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 import { Ingredient } from '../../generated/graphql';
 import { RichText } from '../RichText/RichText';
@@ -15,7 +16,7 @@ type Props = {
   imageUrl?: string;
   imageFullUrl?: string;
   isInstantPotRecipe?: boolean;
-  userName: string;
+  userName?: string;
 };
 
 export function RecipeDetail({
@@ -89,9 +90,18 @@ export function RecipeDetail({
             </Card>
           )}
           <div className="my-4">
-            <p className="text-sm text-muted-foreground">Autor:</p>
-            <p>{userName}</p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            {userName && (
+              <>
+                <p className="text-sm text-muted-foreground">Autor:</p>
+                <p>{userName}</p>
+              </>
+            )}
+            <p
+              className={cn(
+                'text-sm text-muted-foreground',
+                userName && 'mt-2',
+              )}
+            >
               Naposledy upraveno:
             </p>
             <p>{new Date(lastModifiedDate).toLocaleDateString('cs')}</p>
