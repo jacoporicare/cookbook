@@ -88,12 +88,11 @@ const resolvers: Resolvers = {
     tags: async () => {
       const tags: string[] = await RecipeModel.distinct('tags');
 
-      return [
-        'Instant Pot',
-        ...tags
-          .filter((t) => t && t !== 'Instant Pot')
-          .sort((a, b) => a.localeCompare(b, 'cs')),
-      ];
+      return [...tags].sort((a, b) =>
+        a
+          .toLocaleLowerCase('cs')
+          .localeCompare(b.toLocaleLowerCase('cs'), 'cs'),
+      );
     },
     me: authenticated(async (_, __, ctx) => ctx.currentUser),
     users: authenticated(

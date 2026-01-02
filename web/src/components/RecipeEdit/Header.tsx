@@ -4,17 +4,11 @@ import { PageHeading } from '../common/PageHeading';
 
 type Props = {
   title?: string;
-  isInstantPotNewRecipe: boolean;
   isNew: boolean;
   isSaving: boolean;
 };
 
-export function Header({
-  title,
-  isInstantPotNewRecipe,
-  isNew,
-  isSaving,
-}: Props) {
+export function Header({ title, isNew, isSaving }: Props) {
   return (
     <PageHeading
       buttons={
@@ -23,12 +17,7 @@ export function Header({
         </Button>
       }
     >
-      {title ||
-        (isInstantPotNewRecipe
-          ? 'Nový Instant Pot recept'
-          : isNew
-            ? 'Nový recept'
-            : 'Název chybí')}
+      {title || (isNew ? 'Nový recept' : 'Název chybí')}
     </PageHeading>
   );
 }

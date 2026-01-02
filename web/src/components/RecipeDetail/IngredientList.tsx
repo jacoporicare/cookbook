@@ -61,7 +61,7 @@ export function IngredientList(props: Props) {
   return (
     <>
       <h3 className="mb-2 text-xl font-medium">Ingredience</h3>
-      <Card>
+      <Card className="gap-0">
         {(!ingredients || !ingredients.length) && (
           <Alert>
             <AlertDescription>Žádné ingredience.</AlertDescription>
@@ -69,15 +69,15 @@ export function IngredientList(props: Props) {
         )}
 
         {Boolean(initialServingCount) && (
-          <div className="mt-2 flex items-center border-b px-4 py-2">
-            <span className="mr-2 text-muted-foreground">Počet porcí</span>
+          <div className="flex items-center gap-3 border-b px-4 py-2">
+            <span className="text-muted-foreground">Počet porcí</span>
             <Input
               type="number"
               min={1}
               value={!servingCount ? '' : servingCount}
               onBlur={handleServingCountBlur}
               onChange={handleServingCountChange}
-              className="h-8 w-20"
+              className="flex-1"
             />
           </div>
         )}

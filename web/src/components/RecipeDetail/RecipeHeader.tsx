@@ -4,6 +4,7 @@ import toSlug from 'slug';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { sortLocaleInsensitive } from '@/lib/utils';
 
 import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 import { PageHeading } from '../common/PageHeading';
@@ -61,8 +62,8 @@ export function RecipeHeader({
             {!!tags?.length && (
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-muted-foreground">Štítky</span>
-                {tags?.map((tag) => (
-                  <Link key={tag} href={`/?stitky=${toSlug(tag)}`}>
+                {sortLocaleInsensitive(tags).map((tag) => (
+                  <Link key={tag} href={`/?stitek=${toSlug(tag)}`}>
                     <Badge className="cursor-pointer">{tag}</Badge>
                   </Link>
                 ))}

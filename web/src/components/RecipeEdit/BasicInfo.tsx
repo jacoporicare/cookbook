@@ -1,10 +1,11 @@
+import { useState } from 'react';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-
-import { INSTANT_POT_TAG } from '../../const';
+import { sortLocaleInsensitive } from '@/lib/utils';
 
 type Props = {
   defaultPreparationTime: string;
@@ -27,14 +28,23 @@ export function BasicInfo({
   onChange,
   onTagsChange,
 }: Props) {
-  const filteredTags = tags.filter((t) => t !== INSTANT_POT_TAG);
-  const filteredTagOptions = tagOptions.filter((t) => t !== INSTANT_POT_TAG);
+  const [newTagValue, setNewTagValue] = useState('');
+
+  const allTags = [...new Set([...sortLocaleInsensitive(tags), ...tagOptions])];
 
   function handleTagToggle(tag: string, checked: boolean) {
     if (checked) {
       onTagsChange([...tags, tag]);
     } else {
       onTagsChange(tags.filter((t) => t !== tag));
+    }
+  }
+
+  function handleAddTag() {
+    const trimmed = newTagValue.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      onTagsChange([trimmed, ...tags]);
+      setNewTagValue('');
     }
   }
 
@@ -93,21 +103,37 @@ export function BasicInfo({
 
       <div className="space-y-2">
         <Label>Štítky</Label>
-        {filteredTags.length > 0 && (
+        {tags.length > 0 && (
           <div className="mb-2 flex flex-wrap gap-1">
-            {filteredTags.map((tag) => (
+            {tags.map((tag) => (
               <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
             ))}
           </div>
         )}
+        <div className="mb-2 flex gap-2">
+          <Input
+            placeholder="Přidat nový štítek..."
+            value={newTagValue}
+            onChange={(e) => setNewTagValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
+          />
+          <Button type="button" variant="secondary" onClick={handleAddTag}>
+            Přidat
+          </Button>
+        </div>
         <div className="space-y-2">
-          {filteredTagOptions.map((tag) => (
+          {allTags.map((tag) => (
             <div key={tag} className="flex items-center space-x-2">
               <Checkbox
                 id={`tag-${tag}`}
-                checked={filteredTags.includes(tag)}
+                checked={tags.includes(tag)}
                 onCheckedChange={(checked) =>
                   handleTagToggle(tag, checked === true)
                 }
@@ -121,23 +147,6 @@ export function BasicInfo({
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="instantPot"
-          checked={tags.includes(INSTANT_POT_TAG)}
-          onCheckedChange={(checked) =>
-            onTagsChange(
-              checked
-                ? [...tags, INSTANT_POT_TAG]
-                : tags.filter((t) => t !== INSTANT_POT_TAG),
-            )
-          }
-        />
-        <Label htmlFor="instantPot" className="cursor-pointer">
-          Instant Pot recept
-        </Label>
       </div>
     </div>
   );

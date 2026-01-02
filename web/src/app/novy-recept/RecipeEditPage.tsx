@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -11,7 +11,6 @@ import {
 } from '@/app/actions/recipe';
 import { Layout } from '@/components/Layout';
 import { RecipeEdit } from '@/components/RecipeEdit/RecipeEdit';
-import { INSTANT_POT_TAG, INSTANT_POT_TAG_SLUG } from '@/const';
 import {
   Ingredient,
   RecipeBaseFragment,
@@ -42,9 +41,7 @@ export function RecipeEditPage({
   user,
 }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const isInstantPotNewRecipe = searchParams.has(INSTANT_POT_TAG_SLUG);
   const isNew = !initialRecipe;
 
   // Bind update action with recipeId if editing
@@ -75,9 +72,7 @@ export function RecipeEditPage({
   );
 
   // Tags require local state for checkbox interactivity
-  const [tags, setTags] = useState<string[]>(
-    initialRecipe?.tags ?? (isInstantPotNewRecipe ? [INSTANT_POT_TAG] : []),
-  );
+  const [tags, setTags] = useState<string[]>(initialRecipe?.tags ?? []);
 
   const isSaving = isPending || uploadProgress;
 

@@ -1,6 +1,5 @@
 import { Card } from '@/components/ui/card';
 
-import { INSTANT_POT_TAG } from '../../const';
 import { Ingredient } from '../../generated/graphql';
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import { RichText } from '../RichText/RichText';
@@ -104,12 +103,7 @@ export function RecipeEdit({
         <input key={index} type="hidden" name="tags[]" value={tag} />
       ))}
 
-      <Header
-        isInstantPotNewRecipe={tags.includes(INSTANT_POT_TAG)}
-        isNew={isNew}
-        isSaving={isSaving}
-        title={defaultValues.title}
-      />
+      <Header isNew={isNew} isSaving={isSaving} title={defaultValues.title} />
 
       <Title defaultValue={defaultValues.title} onChange={onChange} />
 
