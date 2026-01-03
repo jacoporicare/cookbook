@@ -30,7 +30,7 @@ export function UserInfo(props: Props) {
           href={
             !pathname || pathname === '/prihlaseni'
               ? '/prihlaseni'
-              : `/prihlaseni?u=${pathname || ''}`
+              : `/prihlaseni?u=${encodeURIComponent(pathname) || ''}`
           }
         >
           Přihlásit
@@ -38,7 +38,7 @@ export function UserInfo(props: Props) {
       ) : (
         <>
           <NavLink href="/nastaveni">{props.userName}</NavLink>
-          <NavLink href={`/odhlaseni?u=${pathname || ''}`}>
+          <NavLink href={`/odhlaseni?u=${encodeURIComponent(pathname) || ''}`}>
             <LogOut className="inline size-5" />{' '}
             <span className="lg:hidden">Odhlásit</span>
           </NavLink>
