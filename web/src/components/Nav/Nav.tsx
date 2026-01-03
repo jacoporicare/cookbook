@@ -61,12 +61,12 @@ export function Nav(props: Props) {
           <NavLink active={pathname === '/prilohy'} href="/prilohy">
             Přílohy
           </NavLink>
-          {props.user !== undefined && (
-            <UserInfo
-              isUserAdmin={props.user?.isAdmin}
-              userName={props.user?.name}
-            />
+          {props.user?.isAdmin && (
+            <NavLink active={pathname === '/admin'} href="/admin">
+              Admin
+            </NavLink>
           )}
+          <UserInfo userName={props.user?.name} />
         </nav>
         <ThemeToggle className="sm:hidden" />
       </div>

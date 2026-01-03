@@ -7,7 +7,6 @@ import { NavLink } from '../Nav/NavLink';
 
 type Props = {
   userName?: string;
-  isUserAdmin?: boolean;
 };
 
 export function UserInfo(props: Props) {
@@ -16,7 +15,6 @@ export function UserInfo(props: Props) {
 
   return (
     <>
-      {props.isUserAdmin && <NavLink href="/admin">Admin</NavLink>}
       <div
         className={`
           px-0 py-1 text-xl font-light whitespace-nowrap text-gray-400
@@ -30,7 +28,7 @@ export function UserInfo(props: Props) {
         <NavLink
           active={pathname === '/prihlaseni'}
           href={
-            !pathname || pathname.startsWith('/prihlaseni')
+            !pathname || pathname === '/prihlaseni'
               ? '/prihlaseni'
               : `/prihlaseni?u=${pathname || ''}`
           }

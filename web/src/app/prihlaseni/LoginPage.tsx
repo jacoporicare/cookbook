@@ -9,7 +9,7 @@ import { PageHeading } from '@/components/common/PageHeading';
 import { Spinner } from '@/components/common/Spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,7 +44,7 @@ export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
   const passwordErrors = state.error?.['password'];
 
   const content = (
-    <div className={isForWebView ? 'p-10' : 'p-6'}>
+    <div className={isForWebView ? 'p-10' : undefined}>
       {isForWebView && (
         <header className="mb-6 flex flex-col items-center">
           <div className="flex items-center">
@@ -129,22 +129,17 @@ export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
   const formContent = (
     <>
       {pending && <Spinner overlay />}
-      <div
-        className={`
-          mx-auto max-w-md
-          ${isForWebView ? '' : 'px-4'}
-        `}
-      >
-        {isForWebView ? (
-          content
-        ) : (
-          <>
-            <PageHeading>Přihlášení</PageHeading>
-            <Card>{content}</Card>
-          </>
-        )}
-      </div>
-      {isForWebView && <style>{`body { background-color: white; }`}</style>}
+
+      {isForWebView ? (
+        <div className="mx-auto max-w-md">{content}</div>
+      ) : (
+        <div className="max-w-md">
+          <PageHeading>Přihlášení</PageHeading>
+          <Card>
+            <CardContent>{content}</CardContent>
+          </Card>
+        </div>
+      )}
     </>
   );
 

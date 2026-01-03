@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -17,24 +17,26 @@ type Props = {
 
 export function SideDishList({ sideDishes }: Props) {
   return (
-    <div className="mx-auto max-w-150">
+    <div className="max-w-150">
       <PageHeading>Přílohy</PageHeading>
       <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[40%]">Název</TableHead>
-              <TableHead className="w-[20%] text-right">Příloha</TableHead>
-              <TableHead className="w-[20%] text-right">Hlavní</TableHead>
-              <TableHead className="w-[20%] text-right">Po uvaření</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sideDishes.map((sideDish) => (
-              <SideDishListItem key={sideDish.title} {...sideDish} />
-            ))}
-          </TableBody>
-        </Table>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[40%]">Název</TableHead>
+                <TableHead className="w-[20%] text-right">Příloha</TableHead>
+                <TableHead className="w-[20%] text-right">Hlavní</TableHead>
+                <TableHead className="w-[20%] text-right">Po uvaření</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sideDishes.map((sideDish) => (
+                <SideDishListItem key={sideDish.title} {...sideDish} />
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
       </Card>
     </div>
   );
