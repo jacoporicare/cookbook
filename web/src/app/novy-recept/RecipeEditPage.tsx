@@ -11,6 +11,7 @@ import {
 } from '@/app/actions/recipe';
 import { Layout } from '@/components/Layout';
 import { RecipeEdit } from '@/components/RecipeEdit/RecipeEdit';
+import { SousVideOption } from '@/components/RecipeEdit/SousVideEdit';
 import {
   Ingredient,
   RecipeBaseFragment,
@@ -73,6 +74,15 @@ export function RecipeEditPage({
 
   // Tags require local state for checkbox interactivity
   const [tags, setTags] = useState<string[]>(initialRecipe?.tags ?? []);
+
+  // Sous-vide options require local state for reordering
+  const [sousVideOptions, setSousVideOptions] = useState<SousVideOption[]>(
+    initialRecipe?.sousVideOptions?.map((o) => ({
+      temperature: o.temperature,
+      time: o.time,
+      label: o.label,
+    })) ?? [],
+  );
 
   const isSaving = isPending || uploadProgress;
 
@@ -188,6 +198,29 @@ export function RecipeEditPage({
     setTags(newTags);
   }
 
+  function handleAddSousVideOption(option: SousVideOption) {
+    setChanged(true);
+    setSousVideOptions([...sousVideOptions, option]);
+  }
+
+  function handleRemoveSousVideOption(index: number) {
+    setChanged(true);
+    setSousVideOptions(sousVideOptions.filter((_, i) => i !== index));
+  }
+
+  function handleSortSousVideOption({
+    oldIndex,
+    newIndex,
+  }: {
+    oldIndex: number;
+    newIndex: number;
+  }) {
+    const newOptions = [...sousVideOptions];
+    newOptions.splice(newIndex, 0, newOptions.splice(oldIndex, 1)[0]);
+    setChanged(true);
+    setSousVideOptions(newOptions);
+  }
+
   function handleChange() {
     setChanged(true);
   }
@@ -213,14 +246,18 @@ export function RecipeEditPage({
         isNew={isNew}
         isSaving={isSaving}
         sideDishOptions={options.sideDishes}
+        sousVideOptions={sousVideOptions}
         tagOptions={options.tags}
         tags={tags}
         onAddGroup={handleAddGroup}
         onAddIngredient={handleAddIngredient}
+        onAddSousVideOption={handleAddSousVideOption}
         onChange={handleChange}
         onImageChange={handleImageChange}
         onRemoveIngredient={handleRemoveIngredient}
+        onRemoveSousVideOption={handleRemoveSousVideOption}
         onSortIngredient={handleSortIngredient}
+        onSortSousVideOption={handleSortSousVideOption}
         onTagsChange={handleTagsChange}
       />
     </Layout>

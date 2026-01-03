@@ -27,6 +27,7 @@ export function RecipeDetailPage({
     servingCount,
     sideDish,
     slug,
+    sousVideOptions,
     tags,
     title,
     imageWebPUrl,
@@ -54,6 +55,7 @@ export function RecipeDetailPage({
           isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
           lastModifiedDate={lastModifiedDate}
           servingCount={servingCount ?? undefined}
+          sousVideOptions={sousVideOptions ?? undefined}
           title={title}
           userName={user?.displayName}
         />

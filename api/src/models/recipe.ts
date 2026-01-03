@@ -11,6 +11,13 @@ export type IngredientDbObject = {
   isGroup: boolean;
 };
 
+export type SousVideOptionDbObject = {
+  id: string;
+  temperature: number;
+  time: string;
+  label: string;
+};
+
 export type RecipeCookedDbObject = {
   id: string;
   user: string | UserDbObject;
@@ -31,6 +38,7 @@ export type RecipeDbObject = {
   lastModifiedDate: Date;
   ingredients: IngredientDbObject[];
   tags: string[];
+  sousVideOptions: SousVideOptionDbObject[];
   cookedHistory: RecipeCookedDbObject[];
   deleted: boolean;
 };
@@ -59,6 +67,16 @@ const RecipeSchema = new Schema({
     default: [],
   },
   tags: { type: [String], default: [] },
+  sousVideOptions: {
+    type: [
+      {
+        temperature: { type: Number, required: true },
+        time: { type: String, required: true },
+        label: { type: String, required: true },
+      },
+    ],
+    default: [],
+  },
   deleted: { type: Boolean, default: false },
   cookedHistory: {
     type: [

@@ -10,3 +10,9 @@ export function sortLocaleInsensitive(arr: string[]): string[] {
     a.toLocaleLowerCase('cs').localeCompare(b.toLocaleLowerCase('cs'), 'cs'),
   );
 }
+
+export function formatTemperature(temp: number): string {
+  return Number.isInteger(temp)
+    ? String(temp)
+    : temp.toFixed(1).replace('.', ',');
+}

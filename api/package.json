@@ -9,7 +9,7 @@
     "compile": "tsc",
     "clean": "rimraf build",
     "generate": "graphql-codegen --config codegen.yml",
-    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

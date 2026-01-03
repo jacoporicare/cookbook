@@ -49,10 +49,9 @@ export function ImageUpload(props: Props) {
             {...getRootProps()}
             className={cn(
               `
-                group relative float-right ml-4 size-51 cursor-pointer
-                overflow-hidden rounded border-2 border-dashed border-gray-500
+                group relative size-51 cursor-pointer rounded border-2
+                border-dashed border-gray-500
               `,
-              isDragActive && '[&_.upload-text]:z-30',
               isDragAccept && 'border-solid border-green-500',
               isDragReject && 'border-solid border-red-500',
             )}
@@ -65,11 +64,14 @@ export function ImageUpload(props: Props) {
               />
             )}
             <div
-              className={`
-                upload-text absolute z-10 flex size-50 items-center
-                justify-center bg-white/30 text-center font-bold
-                group-hover:z-30
-              `}
+              className={cn(
+                `
+                  absolute z-10 flex size-50 items-center justify-center rounded
+                  bg-white/30 text-center font-bold text-black
+                  group-hover:z-30
+                `,
+                isDragActive && 'z-30',
+              )}
             >
               Klikni nebo sem přetáhni obrázek
             </div>

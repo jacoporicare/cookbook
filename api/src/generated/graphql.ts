@@ -161,6 +161,7 @@ export type Recipe = {
   servingCount?: Maybe<Scalars['Int']>;
   sideDish?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
+  sousVideOptions: Array<SousVideOption>;
   tags: Array<Scalars['String']>;
   title: Scalars['String'];
   user?: Maybe<User>;
@@ -185,8 +186,23 @@ export type RecipeInput = {
   preparationTime?: InputMaybe<Scalars['Int']>;
   servingCount?: InputMaybe<Scalars['Int']>;
   sideDish?: InputMaybe<Scalars['String']>;
+  sousVideOptions?: InputMaybe<Array<SousVideOptionInput>>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title: Scalars['String'];
+};
+
+export type SousVideOption = {
+  __typename?: 'SousVideOption';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  temperature: Scalars['Float'];
+  time: Scalars['String'];
+};
+
+export type SousVideOptionInput = {
+  label: Scalars['String'];
+  temperature: Scalars['Float'];
+  time: Scalars['String'];
 };
 
 export type User = {
@@ -288,6 +304,8 @@ export type ResolversTypes = {
   Recipe: ResolverTypeWrapper<Recipe>;
   RecipeCooked: ResolverTypeWrapper<RecipeCooked>;
   RecipeInput: RecipeInput;
+  SousVideOption: ResolverTypeWrapper<SousVideOption>;
+  SousVideOptionInput: SousVideOptionInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
@@ -309,6 +327,8 @@ export type ResolversParentTypes = {
   Recipe: Recipe;
   RecipeCooked: RecipeCooked;
   RecipeInput: RecipeInput;
+  SousVideOption: SousVideOption;
+  SousVideOptionInput: SousVideOptionInput;
   String: Scalars['String'];
   User: User;
   UserInput: UserInput;
@@ -371,6 +391,7 @@ export type RecipeResolvers<ContextType = any, ParentType extends ResolversParen
   servingCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sideDish?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  sousVideOptions?: Resolver<Array<ResolversTypes['SousVideOption']>, ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -381,6 +402,14 @@ export type RecipeCookedResolvers<ContextType = any, ParentType extends Resolver
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SousVideOptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SousVideOption'] = ResolversParentTypes['SousVideOption']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  temperature?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -401,6 +430,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Recipe?: RecipeResolvers<ContextType>;
   RecipeCooked?: RecipeCookedResolvers<ContextType>;
+  SousVideOption?: SousVideOptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

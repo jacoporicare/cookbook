@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 type Props = {
   date: string | Date;
@@ -9,11 +9,11 @@ type Props = {
 };
 
 export function ClientDate({ date, locale = 'cs', options }: Props) {
-  const [formatted, setFormatted] = useState<string>();
-
-  useEffect(() => {
-    setFormatted(new Date(date).toLocaleString(locale, options));
-  }, [date, locale, options]);
+  const formatted = useSyncExternalStore(
+    () => () => {},
+    () => new Date(date).toLocaleString(locale, options),
+    () => undefined,
+  );
 
   return formatted ?? null;
 }

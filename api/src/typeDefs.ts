@@ -26,6 +26,7 @@ const typeDefs = gql`
     lastModifiedDate: Date!
     ingredients: [Ingredient!]!
     tags: [String!]!
+    sousVideOptions: [SousVideOption!]!
     cookedHistory: [RecipeCooked!]!
     deleted: Boolean!
   }
@@ -42,6 +43,13 @@ const typeDefs = gql`
     id: ID!
     date: Date!
     user: User
+  }
+
+  type SousVideOption {
+    id: ID!
+    temperature: Float!
+    time: String!
+    label: String!
   }
 
   type User {
@@ -64,6 +72,7 @@ const typeDefs = gql`
     servingCount: Int
     ingredients: [IngredientInput!]
     tags: [String!]
+    sousVideOptions: [SousVideOptionInput!]
   }
 
   input IngredientInput {
@@ -71,6 +80,12 @@ const typeDefs = gql`
     amountUnit: String
     name: String!
     isGroup: Boolean
+  }
+
+  input SousVideOptionInput {
+    temperature: Float!
+    time: String!
+    label: String!
   }
 
   input UserInput {

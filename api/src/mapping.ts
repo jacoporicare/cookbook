@@ -40,6 +40,12 @@ export function mapToRecipeDbObject(
       })) ?? [],
     lastModifiedDate: new Date(),
     tags: recipe.tags ?? [],
+    sousVideOptions:
+      recipe.sousVideOptions?.map((option) => ({
+        temperature: option.temperature,
+        time: option.time.trim(),
+        label: option.label.trim(),
+      })) ?? [],
   };
 
   if (imageId) {

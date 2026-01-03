@@ -23,6 +23,12 @@ const ingredientSchema = z.object({
   isGroup: z.stringbool().optional().default(false),
 });
 
+const sousVideOptionSchema = z.object({
+  temperature: z.number({ error: 'Teplota musí být číslo' }),
+  time: z.string().min(1, { error: 'Čas je povinný' }),
+  label: z.string().min(1, { error: 'Popisek je povinný' }),
+});
+
 const recipeSchema = z.object({
   title: z.string().min(1, { error: 'Název receptu je povinný' }),
   directions: z.string().nullable().optional(),
@@ -38,6 +44,12 @@ const recipeSchema = z.object({
   tags: z.array(z.string()).nullable().optional(),
   ingredients: z
     .array(ingredientSchema, { error: 'Neplatný formát ingrediencí' })
+    .nullable()
+    .optional(),
+  sousVideOptions: z
+    .array(sousVideOptionSchema, {
+      error: 'Neplatný formát sous-vide možností',
+    })
     .nullable()
     .optional(),
   imageId: z.string().nullable().optional(),

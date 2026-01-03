@@ -15,6 +15,12 @@ export default gql`
       amountUnit
       isGroup
     }
+    sousVideOptions {
+      id
+      temperature
+      time
+      label
+    }
     user {
       ...user
     }

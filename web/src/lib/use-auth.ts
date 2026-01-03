@@ -1,11 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 
 import { AUTH_TOKEN_KEY } from '@/const';
 
 function getCookie(name: string): string | undefined {
-  if (typeof document === 'undefined') return undefined;
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop()?.split(';').shift();
@@ -23,12 +22,17 @@ function deleteCookie(name: string) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 }
 
-export function useAuth(): [string | undefined, (token?: string) => void] {
-  const [token, setTokenState] = useState<string | undefined>(undefined);
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    setTokenState(getCookie(AUTH_TOKEN_KEY));
-  }, []);
+export function useAuth(): [string | undefined, (token?: string) => void] {
+  const token = useSyncExternalStore(
+    (callback) => {
+      listeners.add(callback);
+      return () => listeners.delete(callback);
+    },
+    () => getCookie(AUTH_TOKEN_KEY),
+    () => undefined,
+  );
 
   const setToken = useCallback((newToken?: string) => {
     if (newToken) {
@@ -36,7 +40,8 @@ export function useAuth(): [string | undefined, (token?: string) => void] {
     } else {
       deleteCookie(AUTH_TOKEN_KEY);
     }
-    setTokenState(newToken);
+
+    listeners.forEach((listener) => listener());
   }, []);
 
   return [token, setToken];

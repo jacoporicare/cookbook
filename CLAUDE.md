@@ -17,64 +17,84 @@ The application is deployed at https://www.zradelnik.cz/ and allows users to cre
 
 **Server Components First**: Prefer React Server Components over Client Components. Avoid React Context as it requires client components - use self-contained components with localStorage/cookies for state persistence instead.
 
+## Package Manager
+
+This project uses **Yarn 4** with **Yarn Workspaces**. The two workspaces are:
+- `cookbook-api` (in `api/`)
+- `cookbook-web` (in `web/`)
+
 ## Development Commands
 
 ### Root Level
 
 ```bash
-# Format all code
-prettier --write '**/*.{ts,tsx}'
+# Start both API and Web dev servers concurrently
+yarn dev
+
+# Format all code across workspaces
+yarn format
+
+# Check formatting across workspaces
+yarn format:check
 ```
 
-### API ([api/](api/))
+### API (`yarn workspace cookbook-api <script>`)
 
 ```bash
-cd api
-
 # Start development server (auto-restarts on changes)
-npm start
+yarn workspace cookbook-api start
 
 # Start with debugging enabled
-npm run start:inspect
+yarn workspace cookbook-api start:inspect
 
 # Build for production
-npm run build
+yarn workspace cookbook-api build
 
 # Generate TypeScript types from GraphQL schema
-npm run generate
-```
-
-### Web ([web/](web/))
-
-```bash
-cd web
-
-# Start Next.js dev server
-npm run dev
-
-# Start with Node.js inspector
-npm run dev:inspect
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+yarn workspace cookbook-api generate
 
 # Lint code
-npm run lint
+yarn workspace cookbook-api lint
 
 # Format code
-npm run prettier
+yarn workspace cookbook-api format
+
+# Check formatting
+yarn workspace cookbook-api format:check
+```
+
+### Web (`yarn workspace cookbook-web <script>`)
+
+```bash
+# Start Next.js dev server
+yarn workspace cookbook-web dev
+
+# Start with Node.js inspector
+yarn workspace cookbook-web dev:inspect
+
+# Build for production
+yarn workspace cookbook-web build
+
+# Start production server
+yarn workspace cookbook-web start
+
+# Lint code
+yarn workspace cookbook-web lint
+
+# Format code
+yarn workspace cookbook-web format
+
+# Check formatting
+yarn workspace cookbook-web format:check
 
 # Download GraphQL schema from local API
-npm run schema:local
+yarn workspace cookbook-web schema:local
 
 # Download GraphQL schema from staging API
-npm run schema:dev
+yarn workspace cookbook-web schema:dev
 
 # Generate TypeScript types and React hooks from GraphQL operations
-npm run generate
+yarn workspace cookbook-web generate
 ```
 
 ### Docker
@@ -105,7 +125,7 @@ docker-compose up
 
 **Database Models** ([api/src/models/](api/src/models/)):
 
-- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history
+- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history, sous vide options
 - [user.ts](api/src/models/user.ts): User schema with bcrypt password hashing
 - [image.ts](api/src/models/image.ts): Image metadata storage
 
@@ -133,18 +153,23 @@ docker-compose up
 - [web/src/app/layout.tsx](web/src/app/layout.tsx): Root layout with fonts and theme initialization
 - [web/src/app/globals.css](web/src/app/globals.css): Global CSS with Tailwind and CSS variables for light/dark themes
 
-**Apollo Client Setup** ([web/src/apollo/client.tsx](web/src/apollo/client.tsx)):
+**Apollo Client Setup** ([web/src/lib/apollo-client.ts](web/src/lib/apollo-client.ts)):
 
-- Creates Apollo Client with authentication link and upload link
+- Creates Apollo Client with authentication link
 - SSR-aware (checks `typeof window === 'undefined'`)
 - Injects auth token from cookies into request headers
-- Supports file uploads via `apollo-upload-client`
 
-**Authentication** ([web/src/auth.tsx](web/src/auth.tsx)):
+**Server Actions** ([web/src/app/actions/](web/src/app/actions/)):
 
-- `withAuth()` HOC wraps pages requiring authentication
+- [auth.ts](web/src/app/actions/auth.ts): Login/logout actions
+- [recipe.ts](web/src/app/actions/recipe.ts): Recipe CRUD operations
+- [user.ts](web/src/app/actions/user.ts): User management actions
+
+**Authentication**:
+
+- [web/src/lib/auth-server.ts](web/src/lib/auth-server.ts): Server-side auth utilities
+- [web/src/lib/use-auth.ts](web/src/lib/use-auth.ts): Client-side auth hook
 - Auth token stored in cookies with 30-day expiration
-- Token extraction happens in `getInitialProps` for SSR compatibility
 
 **GraphQL Operations** ([web/src/graphql/](web/src/graphql/)):
 
@@ -152,32 +177,51 @@ docker-compose up
 - GraphQL Code Generator creates type-safe React hooks in [web/src/generated/graphql.tsx](web/src/generated/graphql.tsx)
 - Common fragments shared across queries (e.g., `recipeBaseFragment`, `recipeDetailFragment`)
 
-**Key Pages**:
+**Routes** (App Router in [web/src/app/](web/src/app/)):
 
-- [index.tsx](web/src/pages/index.tsx): Recipe list with search
-- [recept/[slug].tsx](web/src/pages/recept/): Recipe detail view
-- [novy-recept.tsx](web/src/pages/novy-recept.tsx): Create new recipe
-- [admin.tsx](web/src/pages/admin.tsx): Admin panel for user management
-- [prihlaseni.tsx](web/src/pages/prihlaseni.tsx): Login page
+- `/` - Recipe list with search ([page.tsx](web/src/app/page.tsx))
+- `/recept/[slug]` - Recipe detail view ([recept/[slug]/page.tsx](web/src/app/recept/[slug]/page.tsx))
+- `/recept/[slug]/upravit` - Edit recipe ([recept/[slug]/upravit/page.tsx](web/src/app/recept/[slug]/upravit/page.tsx))
+- `/novy-recept` - Create new recipe ([novy-recept/page.tsx](web/src/app/novy-recept/page.tsx))
+- `/admin` - Admin panel for user management ([admin/page.tsx](web/src/app/admin/page.tsx))
+- `/prihlaseni` - Login page ([prihlaseni/page.tsx](web/src/app/prihlaseni/page.tsx))
+- `/odhlaseni` - Logout page ([odhlaseni/page.tsx](web/src/app/odhlaseni/page.tsx))
+- `/nastaveni` - Settings page ([nastaveni/page.tsx](web/src/app/nastaveni/page.tsx))
 
 **Styling**:
 
 - Tailwind CSS 4 with OKLch color space
 - CSS variables for theming in [web/src/app/globals.css](web/src/app/globals.css)
 - Dark mode via `.dark` class on `<html>` element
-- Shadcn/Radix UI components with Tailwind styling
+- Shadcn/Radix UI components in [web/src/components/ui/](web/src/components/ui/)
 - Lucide React for icons
+
+**Key Libraries**:
+
+- **dnd-kit**: Drag and drop for ingredient reordering
+- **Sonner**: Toast notifications
+- **Conform + Zod**: Form validation
+- **react-markdown**: Markdown rendering for recipe directions
+- **Downshift**: Autocomplete/combobox for search
+
+**Key Components** ([web/src/components/](web/src/components/)):
+
+- [RecipeList/](web/src/components/RecipeList/): Recipe listing with filtering
+- [RecipeDetail/](web/src/components/RecipeDetail/): Recipe view with ingredients, directions, sous vide options
+- [RecipeEdit/](web/src/components/RecipeEdit/): Recipe creation/editing form
+- [ImageUpload/](web/src/components/ImageUpload/): Image upload with preview
+- [ui/](web/src/components/ui/): Shadcn/Radix primitives (button, dialog, select, etc.)
 
 ## GraphQL Code Generation Workflow
 
 When modifying GraphQL schema or operations:
 
 1. **API**: Update schema in [api/src/typeDefs.ts](api/src/typeDefs.ts)
-2. **API**: Run `npm run generate` in [api/](api/) to regenerate resolver types
+2. **API**: Run `yarn workspace cookbook-api generate` to regenerate resolver types
 3. **API**: Update resolvers in [api/src/resolvers.ts](api/src/resolvers.ts)
-4. **Web**: Run `npm run schema:local` (or `schema:dev`) in [web/](web/) to download updated schema
+4. **Web**: Run `yarn workspace cookbook-web schema:local` (or `schema:dev`) to download updated schema
 5. **Web**: Update GraphQL operations in [web/src/graphql/](web/src/graphql/)
-6. **Web**: Run `npm run generate` in [web/](web/) to regenerate hooks and types
+6. **Web**: Run `yarn workspace cookbook-web generate` to regenerate hooks and types
 
 ## Code Style
 

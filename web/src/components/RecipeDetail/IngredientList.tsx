@@ -1,9 +1,10 @@
 'use client';
 
+import { ShoppingBasket } from 'lucide-react';
 import { ChangeEvent, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
@@ -60,53 +61,60 @@ export function IngredientList(props: Props) {
 
   return (
     <>
-      <h3 className="mb-2 text-xl font-medium">Ingredience</h3>
-      <Card className="gap-0">
-        {(!ingredients || !ingredients.length) && (
-          <Alert>
-            <AlertDescription>Žádné ingredience.</AlertDescription>
-          </Alert>
-        )}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingBasket className="size-5" />
+            Ingredience
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {(!ingredients || !ingredients.length) && (
+            <Alert>
+              <AlertDescription>Žádné ingredience.</AlertDescription>
+            </Alert>
+          )}
 
-        {Boolean(initialServingCount) && (
-          <div className="flex items-center gap-3 border-b px-4 py-2">
-            <span className="text-muted-foreground">Počet porcí</span>
-            <Input
-              type="number"
-              min={1}
-              value={!servingCount ? '' : servingCount}
-              onBlur={handleServingCountBlur}
-              onChange={handleServingCountChange}
-              className="flex-1"
-            />
-          </div>
-        )}
+          {Boolean(initialServingCount) && (
+            <div className="flex items-center gap-3 border-b pb-4">
+              <span className="text-muted-foreground">Počet porcí</span>
+              <Input
+                type="number"
+                min={1}
+                value={!servingCount ? '' : servingCount}
+                onBlur={handleServingCountBlur}
+                onChange={handleServingCountChange}
+                className="flex-1"
+              />
+            </div>
+          )}
 
-        {ingredients && ingredients.length > 0 && (
-          <Table>
-            <TableBody>
-              {ingredients.map((ingredient) => {
-                const { id, isGroup, name, amount, amountUnit } = ingredient;
+          {ingredients && ingredients.length > 0 && (
+            <Table>
+              <TableBody>
+                {ingredients.map((ingredient) => {
+                  const { id, isGroup, name, amount, amountUnit } = ingredient;
 
-                return (
-                  <TableRow key={id} className={cn(isGroup && 'bg-muted')}>
-                    <TableCell className="w-[20%] text-right">
-                      {!isGroup && getAmount(amount ?? undefined)}
-                    </TableCell>
-                    <TableCell className="w-[10%]">
-                      {!isGroup && amountUnit}
-                    </TableCell>
-                    <TableCell>
-                      <span className={isGroup ? 'font-medium' : ''}>
-                        {name}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        )}
+                  return (
+                    <TableRow key={id} className={cn(isGroup && 'bg-muted')}>
+                      <TableCell className="w-[20%] text-right">
+                        {!isGroup && getAmount(amount ?? undefined)}
+                      </TableCell>
+                      <TableCell className="w-[10%]">
+                        {!isGroup && amountUnit}
+                      </TableCell>
+                      <TableCell>
+                        <span className={isGroup ? 'font-medium' : ''}>
+                          {name}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
       </Card>
     </>
   );

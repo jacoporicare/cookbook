@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { ChangePasswordState } from '@/app/actions/auth';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -18,10 +18,8 @@ type Props = {
 };
 
 export function ChangePassword({ state, isPending }: Props) {
-  const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
-  const formRef = useRef<HTMLFormElement>(null);
 
   const passwordsMatch = newPassword === newPasswordConfirm;
 
@@ -30,16 +28,6 @@ export function ChangePassword({ state, isPending }: Props) {
   const passwordErrors = state.error?.['password'];
   const newPasswordErrors = state.error?.['newPassword'];
   const newPasswordConfirmErrors = state.error?.['newPasswordConfirm'];
-
-  // Reset form on success
-  useEffect(() => {
-    if (state.status === 'success' && formRef.current) {
-      formRef.current.reset();
-      setPassword('');
-      setNewPassword('');
-      setNewPasswordConfirm('');
-    }
-  }, [state.status]);
 
   return (
     <>
@@ -54,10 +42,8 @@ export function ChangePassword({ state, isPending }: Props) {
                 id="password"
                 name="password"
                 type="password"
-                value={password}
                 required
                 className={passwordErrors ? 'border-destructive' : ''}
-                onChange={(e) => setPassword(e.currentTarget.value)}
               />
               {passwordErrors?.[0] && (
                 <p className="text-sm text-destructive">{passwordErrors[0]}</p>
@@ -70,10 +56,9 @@ export function ChangePassword({ state, isPending }: Props) {
                 id="newPassword"
                 name="newPassword"
                 type="password"
-                value={newPassword}
                 required
                 className={newPasswordErrors ? 'border-destructive' : ''}
-                onChange={(e) => setNewPassword(e.currentTarget.value)}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
               {newPasswordErrors?.[0] && (
                 <p className="text-sm text-destructive">
@@ -88,10 +73,9 @@ export function ChangePassword({ state, isPending }: Props) {
                 id="newPasswordConfirm"
                 name="newPasswordConfirm"
                 type="password"
-                value={newPasswordConfirm}
                 required
                 className={newPasswordConfirmErrors ? 'border-destructive' : ''}
-                onChange={(e) => setNewPasswordConfirm(e.currentTarget.value)}
+                onChange={(e) => setNewPasswordConfirm(e.target.value)}
               />
               {newPasswordConfirmErrors?.[0] && (
                 <p className="text-sm text-destructive">
@@ -101,16 +85,7 @@ export function ChangePassword({ state, isPending }: Props) {
             </div>
 
             <div className="flex justify-end">
-              <Button
-                type="submit"
-                disabled={
-                  isPending ||
-                  !password ||
-                  !newPassword ||
-                  !newPasswordConfirm ||
-                  !passwordsMatch
-                }
-              >
+              <Button type="submit" disabled={isPending || !passwordsMatch}>
                 Změnit heslo
               </Button>
             </div>

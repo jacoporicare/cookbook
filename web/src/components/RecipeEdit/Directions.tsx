@@ -15,7 +15,7 @@ export function Directions({ defaultValue, onChange }: Props) {
         id="directions"
         name="directions"
         className={`
-          border-0 p-0 shadow-none
+          border-0 bg-card! p-0 shadow-none
           focus-visible:ring-0
         `}
         defaultValue={defaultValue}

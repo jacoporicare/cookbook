@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "concurrently \"yarn workspace cookbook-api start\" \"yarn workspace cookbook-web dev\"",
     "format": "yarn workspaces foreach -Apt run format",
-    "format:check": "yarn workspaces foreach -Apt run format:check"
+    "format:check": "yarn workspaces foreach -Apt run format:check",
+    "lint": "yarn workspaces foreach -Apt run lint"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
