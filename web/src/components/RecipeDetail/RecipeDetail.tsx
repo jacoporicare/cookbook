@@ -70,7 +70,7 @@ export function RecipeDetail({
           </CardHeader>
           <CardContent>
             {isInstantPotRecipe && (
-              <Alert>
+              <Alert className="mb-8">
                 <AlertDescription>
                   <strong>Instant Pot</strong>
                   Tento recept je určený pro multifunkční hrnec Instant Pot nebo
@@ -80,9 +80,7 @@ export function RecipeDetail({
             )}
 
             {directions ? (
-              <div className="p-6">
-                <RichText text={directions} />
-              </div>
+              <RichText text={directions} />
             ) : (
               <Alert>
                 <AlertDescription>Žádný postup.</AlertDescription>

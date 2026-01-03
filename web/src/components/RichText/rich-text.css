@@ -5,6 +5,10 @@
   counter-reset: step-counter;
 }
 
+.rich-text ol:last-child {
+  @apply mb-0;
+}
+
 .rich-text ol li {
   @apply relative pl-12 leading-6;
   counter-increment: step-counter;
@@ -19,11 +23,21 @@
   content: counter(step-counter);
 }
 
-.rich-text h1,
-.rich-text h2,
-.rich-text h3,
-.rich-text h4,
-.rich-text h5,
-.rich-text h6 {
-  @apply mt-0;
+.rich-text h1 {
+  @apply text-xl font-bold mb-6;
+}
+
+.rich-text h2 {
+  @apply text-lg font-semibold mb-4;
+}
+.rich-text h3 {
+  @apply text-sm font-semibold mb-3;
+}
+
+.rich-text p {
+  @apply mb-4;
+}
+
+.rich-text p:last-child {
+  @apply mb-0;
 }

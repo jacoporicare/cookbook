@@ -17,7 +17,7 @@ export function RecipeListItem({ recipe }: Props) {
     <Link href={`/recept/${slug}`}>
       <Card
         className={`
-          cursor-pointer gap-0 overflow-hidden transition-shadow
+          cursor-pointer gap-0 overflow-hidden py-0 transition-shadow
           hover:bg-muted hover:shadow-lg
         `}
       >
