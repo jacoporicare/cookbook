@@ -84,6 +84,9 @@ export function RecipeEditPage({
     })) ?? [],
   );
 
+  // Directions require local state for live preview
+  const [directions, setDirections] = useState(initialRecipe?.directions ?? '');
+
   const isSaving = isPending || uploadProgress;
 
   // Handle errors from Conform submission
@@ -225,6 +228,10 @@ export function RecipeEditPage({
     setChanged(true);
   }
 
+  function handleDirectionsChange(value: string) {
+    setDirections(value);
+  }
+
   // Get default values from initialRecipe (form state is preserved on error via useActionState)
   const defaultValues = {
     title: initialRecipe?.title ?? '',
@@ -238,6 +245,7 @@ export function RecipeEditPage({
     <Layout recipes={recipes} user={user}>
       <RecipeEdit
         defaultValues={defaultValues}
+        directions={directions}
         formAction={formAction}
         imageId={imageId}
         imageUrl={initialRecipe?.imageThumbWebPUrl ?? undefined}
@@ -253,6 +261,7 @@ export function RecipeEditPage({
         onAddIngredient={handleAddIngredient}
         onAddSousVideOption={handleAddSousVideOption}
         onChange={handleChange}
+        onDirectionsChange={handleDirectionsChange}
         onImageChange={handleImageChange}
         onRemoveIngredient={handleRemoveIngredient}
         onRemoveSousVideOption={handleRemoveSousVideOption}

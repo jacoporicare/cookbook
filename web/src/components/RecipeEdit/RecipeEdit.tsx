@@ -44,6 +44,7 @@ type DefaultValues = {
 
 type Props = {
   defaultValues: DefaultValues;
+  directions: string;
   formAction: (payload: FormData) => void;
   imageId?: string;
   imageUrl?: string;
@@ -55,6 +56,7 @@ type Props = {
   onAddIngredient: AddIngredientEventHandler;
   onAddSousVideOption: AddSousVideOptionHandler;
   onChange: () => void;
+  onDirectionsChange: (value: string) => void;
   onImageChange: (data: File) => void;
   onRemoveIngredient: RemoveEventHandler;
   onRemoveSousVideOption: RemoveSousVideOptionHandler;
@@ -69,6 +71,7 @@ type Props = {
 
 export function RecipeEdit({
   defaultValues,
+  directions,
   formAction,
   imageId,
   imageUrl,
@@ -80,6 +83,7 @@ export function RecipeEdit({
   onAddIngredient,
   onAddSousVideOption,
   onChange,
+  onDirectionsChange,
   onImageChange,
   onRemoveIngredient,
   onRemoveSousVideOption,
@@ -257,6 +261,7 @@ export function RecipeEdit({
               <Directions
                 defaultValue={defaultValues.directions}
                 onChange={onChange}
+                onDirectionsChange={onDirectionsChange}
               />
             </CardContent>
           </Card>
@@ -294,7 +299,7 @@ export function RecipeEdit({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RichText text={defaultValues.directions} />
+                <RichText text={directions} />
               </CardContent>
             </Card>
           </div>

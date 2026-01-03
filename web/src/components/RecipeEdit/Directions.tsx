@@ -6,9 +6,14 @@ import { Textarea } from '@/components/ui/textarea';
 type Props = {
   defaultValue: string;
   onChange: () => void;
+  onDirectionsChange: (value: string) => void;
 };
 
-export function Directions({ defaultValue, onChange }: Props) {
+export function Directions({
+  defaultValue,
+  onChange,
+  onDirectionsChange,
+}: Props) {
   return (
     <div className="space-y-2">
       <Textarea
@@ -20,7 +25,10 @@ export function Directions({ defaultValue, onChange }: Props) {
         `}
         defaultValue={defaultValue}
         rows={10}
-        onChange={onChange}
+        onChange={(e) => {
+          onChange();
+          onDirectionsChange(e.target.value);
+        }}
       />
       <div className="text-right">
         <Button variant="ghost" size="sm" asChild>
