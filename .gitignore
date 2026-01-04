@@ -28,7 +28,8 @@ node_modules/
 !*.secret
 
 # Claude Code
-.claude/
+**/.claude/*.local.json
+**/CLAUDE.local.md
 
 # IDE
 .vscode/
