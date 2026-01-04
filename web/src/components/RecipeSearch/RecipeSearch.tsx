@@ -95,8 +95,8 @@ export function RecipeSearch(props: Props) {
         className={cn(
           `
             fixed top-16.25 right-2 left-2 z-1001 max-h-72 overflow-x-hidden
-            overflow-y-auto
-            sm:absolute sm:top-[calc(100%+0.25rem)] sm:right-0 sm:left-auto
+            overflow-y-auto py-0
+            sm:absolute sm:top-[calc(100%+0.25rem)] sm:right-auto sm:left-0
             sm:w-87.5
           `,
           !isOpen && 'hidden',

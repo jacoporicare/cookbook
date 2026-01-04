@@ -46,12 +46,14 @@ export function Nav(props: Props) {
       </label>
       <div
         className={`
+          pb-4
           peer-checked:translate-x-0
           peer-checked:shadow-[-16px_0_32px_rgba(0,0,0,0.25)]
-          max-lg:fixed max-lg:top-14.25 max-lg:right-0 max-lg:bottom-0
+          max-lg:fixed max-lg:top-15.5 max-lg:right-0 max-lg:bottom-0
           max-lg:z-20 max-lg:flex max-lg:w-62.5 max-lg:translate-x-62.5
           max-lg:flex-col max-lg:justify-between max-lg:bg-gray-900
           max-lg:transition-transform max-lg:duration-250 max-lg:ease-in-out
+          sm:pb-0
         `}
       >
         <nav className="lg:flex lg:items-center">

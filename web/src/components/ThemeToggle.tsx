@@ -70,14 +70,22 @@ export function ThemeToggle({ className }: Props) {
         className,
       )}
     >
-      <div className="flex items-center justify-center gap-1">
+      <div
+        className={`
+          mb-1 flex items-center justify-center gap-1
+          sm:mb-0
+        `}
+      >
         {options.map(({ value, icon: Icon, label }) => (
           <button
             key={value}
             onClick={() => selectTheme(value)}
             aria-label={label}
             className={cn(
-              'rounded p-1.5 transition-colors',
+              `
+                rounded p-2.5 transition-colors
+                sm:p-1.5
+              `,
               theme === value
                 ? 'text-white'
                 : `
@@ -86,7 +94,12 @@ export function ThemeToggle({ className }: Props) {
                 `,
             )}
           >
-            <Icon className="size-4" />
+            <Icon
+              className={`
+                size-5
+                sm:size-4
+              `}
+            />
           </button>
         ))}
       </div>
