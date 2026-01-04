@@ -373,7 +373,12 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
               {dialog?.button ? 'Zrušit' : 'Zavřít'}
             </AlertDialogCancel>
             {dialog?.button && (
-              <AlertDialogAction onClick={dialog.button.onClick}>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault();
+                  dialog.button?.onClick();
+                }}
+              >
                 {dialog.button.label}
               </AlertDialogAction>
             )}
