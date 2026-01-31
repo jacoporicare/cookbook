@@ -9,7 +9,7 @@ services:
   admin:
     image: mongo-express
     ports:
-      - "8081:8081"
+      - "8181:8081"
     depends_on:
       - db
     environment:

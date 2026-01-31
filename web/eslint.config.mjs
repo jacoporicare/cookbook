@@ -20,7 +20,6 @@ const eslintConfig = defineConfig([
     },
     rules: {
       ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
-      'better-tailwindcss/enforce-shorthand-classes': 'warn',
     },
     settings: {
       'better-tailwindcss': {

@@ -1,0 +1,16 @@
+schema: 'http://localhost:4000/graphql'
+overwrite: true
+documents: './src/**/*.{query,mutation,fragment}.ts'
+config:
+  scalars:
+    Date: string
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - add:
+          content: '/* eslint-disable */'
+      - typescript
+      - typescript-operations
+      - typed-document-node
+    config:
+      avoidOptionals: true

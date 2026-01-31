@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@theme {
+  --radius-card: 28px;
+  --radius-sheet: 34px;
+}
+
+@layer theme {
+  :root {
+    @variant light {
+      --color-background: #f2f2f7; /* systemGroupedBackground */
+      --color-foreground: #000000; /* label */
+      --color-card: #ffffff; /* secondarySystemGroupedBackground */
+      --color-card-foreground: #000000; /* label */
+      --color-primary: #007aff; /* systemBlue */
+      --color-primary-foreground: #ffffff;
+      --color-secondary: #f2f2f7; /* systemGray6 */
+      --color-secondary-foreground: #000000; /* label */
+      --color-muted: #e5e5ea; /* systemGray5 */
+      --color-muted-foreground: #8e8e93; /* systemGray */
+      --color-accent: #f2f2f7; /* systemGray6 */
+      --color-accent-foreground: #000000; /* label */
+      --color-destructive: #ff3b30; /* systemRed */
+      --color-destructive-foreground: #ffffff;
+      --color-border: #c6c6c8; /* opaqueSeparator */
+      --color-input: #d1d1d6; /* systemGray4 */
+      --color-ring: #007aff; /* systemBlue */
+    }
+
+    @variant dark {
+      --color-background: #000000; /* systemGroupedBackground */
+      --color-foreground: #ffffff; /* label */
+      --color-card: #1c1c1e; /* secondarySystemGroupedBackground */
+      --color-card-foreground: #ffffff; /* label */
+      --color-primary: #0a84ff; /* systemBlue */
+      --color-primary-foreground: #ffffff;
+      --color-secondary: #1c1c1e; /* systemGray6 */
+      --color-secondary-foreground: #ffffff; /* label */
+      --color-muted: #2c2c2e; /* systemGray5 */
+      --color-muted-foreground: #8e8e93; /* systemGray */
+      --color-accent: #2c2c2e; /* systemGray5 */
+      --color-accent-foreground: #ffffff; /* label */
+      --color-destructive: #ff453a; /* systemRed */
+      --color-destructive-foreground: #ffffff;
+      --color-border: #38383a; /* opaqueSeparator */
+      --color-input: #3a3a3c; /* systemGray4 */
+      --color-ring: #0a84ff; /* systemBlue */
+    }
+  }
+}
