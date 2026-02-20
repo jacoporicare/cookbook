@@ -18,6 +18,7 @@ export async function startApolloServer(
   resolvers: IExecutableSchemaDefinition['resolvers'],
 ) {
   const app = express();
+  app.get('/health', (_req, res) => res.send('ok'));
   app.use(recipeImageMiddleware());
   app.use(imageUploadMiddleware());
 

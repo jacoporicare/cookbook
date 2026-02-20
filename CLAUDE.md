@@ -126,3 +126,8 @@ Recipe images are stored in MongoDB GridFS (via the Image model). The API serves
 In production, a background worker pre-generates common image sizes to improve performance.
 
 - Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.
+
+## GraphQL Gotchas
+
+- When running GraphQL codegen, always use the `/gql-codegen` skill — it handles starting/stopping the API automatically.
+- GraphQL codegen generates `Maybe<T>` = `T | null` for optional fields. Local component types often use `T | undefined`. Use `?? undefined` when mapping from generated types to component props.

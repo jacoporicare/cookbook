@@ -20,7 +20,7 @@ Determine the scope of the change:
 Codegen fetches the schema directly from the local API. Before running codegen (Phases 2 & 3), check if the API is running:
 
 ```bash
-curl -sf http://localhost:4000/graphql -o /dev/null
+curl -sf http://localhost:4000/health
 ```
 
 - **If running:** proceed with codegen.
@@ -32,7 +32,7 @@ yarn workspace cookbook-api start &
 API_PID=$!
 
 # Wait for API to be ready
-until curl -sf http://localhost:4000/graphql -o /dev/null 2>&1; do sleep 1; done
+until curl -sf http://localhost:4000/health 2>&1; do sleep 1; done
 
 # ... run codegen for web and mobile ...
 
