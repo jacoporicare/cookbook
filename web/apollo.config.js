@@ -2,9 +2,8 @@ module.exports = {
   client: {
     service: {
       name: 'zradelnik',
-      // url: 'http://localhost:3000/api/graphql',
-      localSchemaFile: './schema.json',
+      url: 'http://localhost:4000/graphql',
     },
-    excludes: ['src/generated/**', 'src/apollo/**'],
+    excludes: ['src/generated/**'],
   },
 };

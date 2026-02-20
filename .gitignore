@@ -18,6 +18,9 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 
+# GraphQL schema (fetched by codegen from local API)
+schema.json
+
 # Environment variables
 .env
 .env.local
