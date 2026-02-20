@@ -54,6 +54,7 @@ export function RecipeDetailPage({
           ingredients={ingredients ?? undefined}
           isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
           lastModifiedDate={lastModifiedDate}
+          preparationTime={preparationTime ?? undefined}
           servingCount={servingCount ?? undefined}
           sousVideOptions={sousVideOptions ?? undefined}
           title={title}

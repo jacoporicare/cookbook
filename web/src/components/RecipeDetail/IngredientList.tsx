@@ -70,13 +70,20 @@ export function IngredientList(props: Props) {
         </CardHeader>
         <CardContent>
           {(!ingredients || !ingredients.length) && (
-            <Alert>
+            <Alert
+              className={Boolean(initialServingCount) ? 'mb-4' : undefined}
+            >
               <AlertDescription>Žádné ingredience.</AlertDescription>
             </Alert>
           )}
 
           {Boolean(initialServingCount) && (
-            <div className="flex items-center gap-3 border-b pb-4">
+            <div
+              className={cn(
+                'flex items-center gap-3',
+                ingredients && ingredients.length > 0 && 'border-b pb-4',
+              )}
+            >
               <span className="text-muted-foreground">Počet porcí</span>
               <Input
                 type="number"

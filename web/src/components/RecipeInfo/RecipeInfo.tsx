@@ -1,26 +1,13 @@
 import { ReactNode } from 'react';
 
+import { formatTime } from '@/lib/utils';
+
 type Props = {
   preparationTime?: number;
   sideDish?: string;
   placeholder?: ReactNode;
   small?: boolean;
 };
-
-function formatTime(time: number) {
-  const hours = Math.floor(time / 60);
-  const minutes = time % 60;
-
-  if (hours > 0 && minutes === 0) {
-    return `${hours} h`;
-  }
-
-  if (hours > 0 && minutes > 0) {
-    return `${hours} h ${minutes} min`;
-  }
-
-  return `${minutes} min`;
-}
 
 export function RecipeInfo({
   preparationTime,

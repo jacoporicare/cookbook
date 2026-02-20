@@ -23,11 +23,22 @@ const ingredientSchema = z.object({
   isGroup: z.stringbool().optional().default(false),
 });
 
-const sousVideOptionSchema = z.object({
-  temperature: z.number({ error: 'Teplota musí být číslo' }),
-  time: z.string().min(1, { error: 'Čas je povinný' }),
-  label: z.string().min(1, { error: 'Popisek je povinný' }),
-});
+const sousVideOptionSchema = z
+  .object({
+    temperature: z.number({ error: 'Teplota musí být číslo' }),
+    toTemperature: z.number({ error: 'Teplota musí být číslo' }).optional(),
+    time: z.string().optional(),
+    label: z.string().min(1, { error: 'Popisek je povinný' }),
+  })
+  .refine(
+    (data) =>
+      typeof data.toTemperature !== 'number' ||
+      data.toTemperature > data.temperature,
+    {
+      message: 'Horní teplota musí být vyšší než dolní',
+      path: ['toTemperature'],
+    },
+  );
 
 const recipeSchema = z.object({
   title: z.string().min(1, { error: 'Název receptu je povinný' }),

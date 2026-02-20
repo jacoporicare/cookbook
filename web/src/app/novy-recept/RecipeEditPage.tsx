@@ -79,7 +79,8 @@ export function RecipeEditPage({
   const [sousVideOptions, setSousVideOptions] = useState<SousVideOption[]>(
     initialRecipe?.sousVideOptions?.map((o) => ({
       temperature: o.temperature,
-      time: o.time,
+      toTemperature: o.toTemperature ?? undefined,
+      time: o.time ?? undefined,
       label: o.label,
     })) ?? [],
   );

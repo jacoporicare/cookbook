@@ -16,3 +16,28 @@ export function formatTemperature(temp: number): string {
     ? String(temp)
     : temp.toFixed(1).replace('.', ',');
 }
+
+export function formatTemperatureRange(
+  temp: number,
+  toTemp?: number | null,
+): string {
+  if (typeof toTemp === 'number') {
+    return `${formatTemperature(temp)}–${formatTemperature(toTemp)}°C`;
+  }
+  return `${formatTemperature(temp)}°C`;
+}
+
+export function formatTime(time: number) {
+  const hours = Math.floor(time / 60);
+  const minutes = time % 60;
+
+  if (hours > 0 && minutes === 0) {
+    return `${hours} h`;
+  }
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} h ${minutes} min`;
+  }
+
+  return `${minutes} min`;
+}

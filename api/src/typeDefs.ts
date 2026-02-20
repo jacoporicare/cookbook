@@ -48,7 +48,8 @@ const typeDefs = gql`
   type SousVideOption {
     id: ID!
     temperature: Float!
-    time: String!
+    toTemperature: Float
+    time: String
     label: String!
   }
 
@@ -84,7 +85,8 @@ const typeDefs = gql`
 
   input SousVideOptionInput {
     temperature: Float!
-    time: String!
+    toTemperature: Float
+    time: String
     label: String!
   }
 

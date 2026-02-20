@@ -43,7 +43,8 @@ export function mapToRecipeDbObject(
     sousVideOptions:
       recipe.sousVideOptions?.map((option) => ({
         temperature: option.temperature,
-        time: option.time.trim(),
+        toTemperature: option.toTemperature ?? undefined,
+        time: option.time?.trim(),
         label: option.label.trim(),
       })) ?? [],
   };

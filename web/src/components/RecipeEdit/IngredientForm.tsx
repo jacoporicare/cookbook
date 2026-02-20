@@ -38,6 +38,7 @@ export function IngredientForm({
         <Label htmlFor="ingredientName">Nová ingredience</Label>
         <Input
           id="ingredientName"
+          autoCapitalize="off"
           list="ingredientOptions"
           value={name ?? ''}
           onChange={(e) => onChange('name', e.currentTarget.value)}
@@ -66,6 +67,7 @@ export function IngredientForm({
           <Label htmlFor="ingredientUnit">Jednotka</Label>
           <Input
             id="ingredientUnit"
+            autoCapitalize="off"
             value={amountUnit ?? ''}
             onChange={(e) => onChange('amountUnit', e.currentTarget.value)}
             onKeyDown={handleKeyDown}

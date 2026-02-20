@@ -24,11 +24,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { cn, formatTemperature } from '@/lib/utils';
+import { cn, formatTemperatureRange, formatTime } from '@/lib/utils';
 
 export type SousVideOption = {
   temperature: number;
-  time: string;
+  toTemperature?: number;
+  time?: string;
   label: string;
 };
 
@@ -40,6 +41,7 @@ export type SortSousVideHandler = (args: {
 }) => void;
 
 type Props = {
+  defaultTime?: number;
   items: SousVideOption[];
   onAdd: AddSousVideOptionHandler;
   onRemove: RemoveSousVideOptionHandler;
@@ -47,13 +49,20 @@ type Props = {
 };
 
 type SortableItemProps = {
+  defaultTime?: number;
   id: string;
   itemIndex: number;
   option: SousVideOption;
   onRemove: RemoveSousVideOptionHandler;
 };
 
-function SortableItem({ id, itemIndex, option, onRemove }: SortableItemProps) {
+function SortableItem({
+  defaultTime,
+  id,
+  itemIndex,
+  option,
+  onRemove,
+}: SortableItemProps) {
   const {
     attributes,
     isDragging,
@@ -96,9 +105,12 @@ function SortableItem({ id, itemIndex, option, onRemove }: SortableItemProps) {
 
       <div className="flex flex-1 items-center gap-3 text-sm">
         <span className="font-medium">
-          {formatTemperature(option.temperature)}°C
+          {formatTemperatureRange(option.temperature, option.toTemperature)}
         </span>
-        <span className="text-muted-foreground">{option.time}</span>
+        <span className="text-muted-foreground">
+          {option.time ??
+            (typeof defaultTime === 'number' ? formatTime(defaultTime) : '')}
+        </span>
         <span className="rounded bg-muted px-2 py-0.5">{option.label}</span>
       </div>
 
@@ -116,10 +128,12 @@ function SortableItem({ id, itemIndex, option, onRemove }: SortableItemProps) {
 }
 
 function SousVideList({
+  defaultTime,
   items,
   onRemove,
   onSort,
 }: {
+  defaultTime?: number;
   items: SousVideOption[];
   onRemove: RemoveSousVideOptionHandler;
   onSort: SortSousVideHandler;
@@ -162,6 +176,7 @@ function SousVideList({
           {items.map((option, index) => (
             <SortableItem
               key={`sous-vide-${index}`}
+              defaultTime={defaultTime}
               id={`sous-vide-${index}`}
               option={option}
               itemIndex={index}
@@ -174,18 +189,39 @@ function SousVideList({
   );
 }
 
-export function SousVideEdit({ items, onAdd, onRemove, onSort }: Props) {
+export function SousVideEdit({
+  defaultTime,
+  items,
+  onAdd,
+  onRemove,
+  onSort,
+}: Props) {
   const [temperature, setTemperature] = useState<number | undefined>();
+  const [toTemperature, setToTemperature] = useState<number | undefined>();
   const [time, setTime] = useState('');
   const [label, setLabel] = useState('');
+  const [error, setError] = useState<string>();
 
   function handleAdd() {
-    if (!temperature || !time || !label) {
+    if (!temperature) {
+      setError('Teplota je povinná');
       return;
     }
 
-    onAdd({ temperature, time, label });
+    if (!label) {
+      setError('Popisek je povinný');
+      return;
+    }
+
+    if (typeof toTemperature === 'number' && toTemperature <= temperature) {
+      setError('Horní teplota musí být vyšší než dolní');
+      return;
+    }
+
+    setError(undefined);
+    onAdd({ temperature, toTemperature, time: time || undefined, label });
     setTemperature(undefined);
+    setToTemperature(undefined);
     setTime('');
     setLabel('');
   }
@@ -199,10 +235,15 @@ export function SousVideEdit({ items, onAdd, onRemove, onSort }: Props) {
 
   return (
     <div className="space-y-6">
-      <SousVideList items={items} onRemove={onRemove} onSort={onSort} />
+      <SousVideList
+        defaultTime={defaultTime}
+        items={items}
+        onRemove={onRemove}
+        onSort={onSort}
+      />
       <Separator />
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           <div className="space-y-2">
             <Label htmlFor="sv-temperature">Teplota (°C)</Label>
             <Input
@@ -213,6 +254,20 @@ export function SousVideEdit({ items, onAdd, onRemove, onSort }: Props) {
               onChange={(e) => {
                 const parsed = Number.parseFloat(e.target.value);
                 setTemperature(Number.isNaN(parsed) ? undefined : parsed);
+              }}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="sv-to-temperature">do (°C)</Label>
+            <Input
+              id="sv-to-temperature"
+              type="number"
+              step="0.5"
+              value={toTemperature ?? ''}
+              onChange={(e) => {
+                const parsed = Number.parseFloat(e.target.value);
+                setToTemperature(Number.isNaN(parsed) ? undefined : parsed);
               }}
               onKeyDown={handleKeyDown}
             />
@@ -231,6 +286,7 @@ export function SousVideEdit({ items, onAdd, onRemove, onSort }: Props) {
             <Label htmlFor="sv-label">Popisek</Label>
             <Input
               id="sv-label"
+              autoCapitalize="off"
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
@@ -238,15 +294,20 @@ export function SousVideEdit({ items, onAdd, onRemove, onSort }: Props) {
             />
           </div>
         </div>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={handleAdd}
-          disabled={!temperature || !time || !label}
-        >
-          <Plus className="mr-2 size-4" />
-          Přidat možnost
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleAdd}
+            disabled={!temperature || !label}
+          >
+            <Plus className="mr-2 size-4" />
+            Přidat možnost
+          </Button>
+          {typeof error === 'string' && (
+            <p className="text-sm text-destructive">{error}</p>
+          )}
+        </div>
       </div>
     </div>
   );

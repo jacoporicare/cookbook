@@ -18,6 +18,7 @@ export default gql`
     sousVideOptions {
       id
       temperature
+      toTemperature
       time
       label
     }

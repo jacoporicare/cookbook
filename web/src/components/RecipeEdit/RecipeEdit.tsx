@@ -143,11 +143,20 @@ export function RecipeEdit({
             name={`sousVideOptions[${index}].temperature`}
             value={option.temperature}
           />
-          <input
-            type="hidden"
-            name={`sousVideOptions[${index}].time`}
-            value={option.time}
-          />
+          {typeof option.toTemperature === 'number' && (
+            <input
+              type="hidden"
+              name={`sousVideOptions[${index}].toTemperature`}
+              value={option.toTemperature}
+            />
+          )}
+          {option.time != null && (
+            <input
+              type="hidden"
+              name={`sousVideOptions[${index}].time`}
+              value={option.time}
+            />
+          )}
           <input
             type="hidden"
             name={`sousVideOptions[${index}].label`}
@@ -239,6 +248,11 @@ export function RecipeEdit({
               </CardHeader>
               <CardContent>
                 <SousVideEdit
+                  defaultTime={
+                    defaultValues.preparationTime
+                      ? Number(defaultValues.preparationTime)
+                      : undefined
+                  }
                   items={sousVideOptions}
                   onAdd={onAddSousVideOption}
                   onRemove={onRemoveSousVideOption}

@@ -131,3 +131,7 @@ In production, a background worker pre-generates common image sizes to improve p
 
 - When running GraphQL codegen, always use the `/gql-codegen` skill — it handles starting/stopping the API automatically.
 - GraphQL codegen generates `Maybe<T>` = `T | null` for optional fields. Local component types often use `T | undefined`. Use `?? undefined` when mapping from generated types to component props.
+
+## Code Style
+
+- Use explicit type checks (`typeof x === 'number'`, `typeof x === 'string'`) instead of `== null`, `!= null`, `== undefined`, or `!= undefined`.

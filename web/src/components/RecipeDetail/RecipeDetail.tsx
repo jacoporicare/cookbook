@@ -21,6 +21,7 @@ type Props = {
   isInstantPotRecipe?: boolean;
   sousVideOptions?: Omit<SousVideOption, 'id'>[];
   userName?: string;
+  preparationTime?: number;
 };
 
 export function RecipeDetail({
@@ -34,6 +35,7 @@ export function RecipeDetail({
   isInstantPotRecipe,
   sousVideOptions,
   userName,
+  preparationTime,
 }: Props) {
   return (
     <div
@@ -51,7 +53,10 @@ export function RecipeDetail({
       >
         <IngredientList ingredients={ingredients} servingCount={servingCount} />
         {sousVideOptions && sousVideOptions.length > 0 && (
-          <SousVideList options={sousVideOptions} />
+          <SousVideList
+            options={sousVideOptions}
+            defaultTime={preparationTime}
+          />
         )}
       </div>
 

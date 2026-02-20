@@ -2,19 +2,21 @@ import { Thermometer } from 'lucide-react';
 import { Fragment } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatTemperature } from '@/lib/utils';
+import { formatTemperatureRange, formatTime } from '@/lib/utils';
 
 type SousVideOption = {
   temperature: number;
-  time: string;
+  toTemperature?: number | null;
+  time?: string | null;
   label: string;
 };
 
 type Props = {
   options: SousVideOption[];
+  defaultTime?: number;
 };
 
-export function SousVideList({ options }: Props) {
+export function SousVideList({ options, defaultTime }: Props) {
   if (options.length === 0) {
     return null;
   }
@@ -35,9 +37,11 @@ export function SousVideList({ options }: Props) {
         {options.map((option, index) => (
           <Fragment key={index}>
             <span className="font-medium tabular-nums">
-              {formatTemperature(option.temperature)}°C
+              {formatTemperatureRange(option.temperature, option.toTemperature)}
             </span>
-            <span className="text-muted-foreground">{option.time}</span>
+            <span className="text-muted-foreground">
+              {option.time ?? (defaultTime ? formatTime(defaultTime) : '')}
+            </span>
             <span>
               <span className="rounded bg-muted px-2 py-0.5">
                 {option.label}

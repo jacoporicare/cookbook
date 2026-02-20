@@ -196,13 +196,15 @@ export type SousVideOption = {
   id: Scalars['ID'];
   label: Scalars['String'];
   temperature: Scalars['Float'];
-  time: Scalars['String'];
+  time?: Maybe<Scalars['String']>;
+  toTemperature?: Maybe<Scalars['Float']>;
 };
 
 export type SousVideOptionInput = {
   label: Scalars['String'];
   temperature: Scalars['Float'];
-  time: Scalars['String'];
+  time?: InputMaybe<Scalars['String']>;
+  toTemperature?: InputMaybe<Scalars['Float']>;
 };
 
 export type User = {
@@ -409,7 +411,8 @@ export type SousVideOptionResolvers<ContextType = any, ParentType extends Resolv
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   temperature?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  time?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  toTemperature?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

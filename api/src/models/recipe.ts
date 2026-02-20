@@ -14,7 +14,8 @@ export type IngredientDbObject = {
 export type SousVideOptionDbObject = {
   id: string;
   temperature: number;
-  time: string;
+  toTemperature?: number;
+  time?: string;
   label: string;
 };
 
@@ -71,7 +72,8 @@ const RecipeSchema = new Schema({
     type: [
       {
         temperature: { type: Number, required: true },
-        time: { type: String, required: true },
+        toTemperature: { type: Number },
+        time: { type: String },
         label: { type: String, required: true },
       },
     ],
