@@ -17,7 +17,7 @@ type Props = {
 
 export function SideDishList({ sideDishes }: Props) {
   return (
-    <div className="max-w-150">
+    <div className="mx-auto max-w-md">
       <PageHeading>Přílohy</PageHeading>
       <Card>
         <CardContent>

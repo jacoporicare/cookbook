@@ -32,7 +32,7 @@ export function ChangePassword({ state, isPending }: Props) {
   return (
     <>
       {isPending && <Spinner overlay />}
-      <div className="max-w-md">
+      <div className="mx-auto max-w-md">
         <PageHeading>Změna hesla</PageHeading>
         <Card>
           <CardContent>

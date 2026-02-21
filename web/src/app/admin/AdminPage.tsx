@@ -192,7 +192,7 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
     <>
       <Layout recipes={recipes} user={user}>
         {isPending && <Spinner overlay />}
-        <div className="max-w-4xl">
+        <div className="mx-auto max-w-4xl">
           <PageHeading>Správa uživatelů</PageHeading>
           <Card>
             <CardContent>

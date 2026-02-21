@@ -133,7 +133,7 @@ export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
       {isForWebView ? (
         <div className="mx-auto max-w-md">{content}</div>
       ) : (
-        <div className="max-w-md">
+        <div className="mx-auto max-w-md">
           <PageHeading>Přihlášení</PageHeading>
           <Card>
             <CardContent>{content}</CardContent>
