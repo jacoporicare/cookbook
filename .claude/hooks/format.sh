@@ -1,33 +1,34 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# PostToolUse hook: auto-format files with Prettier + ESLint after Edit/Write
 
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path')
+set -euo pipefail
+
+FILE_PATH=$(jq -r '.tool_input.file_path // empty')
+
+[[ -z "$FILE_PATH" ]] && exit 0
+[[ ! -f "$FILE_PATH" ]] && exit 0
 
 # Only format files Prettier would handle
-if [[ ! "$FILE_PATH" =~ \.(ts|tsx|js|jsx|json|css|md|yml|yaml|graphql)$ ]]; then
-  exit 0
-fi
+[[ ! "$FILE_PATH" =~ \.(ts|tsx|js|jsx|json|css|md|yml|yaml|graphql)$ ]] && exit 0
 
-# Skip generated files and lock files
-if [[ "$FILE_PATH" =~ /generated/ ]] || [[ "$FILE_PATH" =~ yarn\.lock ]] || [[ "$FILE_PATH" =~ \.next/ ]] || [[ "$FILE_PATH" =~ /build/ ]]; then
-  exit 0
-fi
+# Skip generated files, lock files, and build artifacts
+[[ "$FILE_PATH" =~ /generated/ ]] && exit 0
+[[ "$FILE_PATH" =~ yarn\.lock ]] && exit 0
+[[ "$FILE_PATH" =~ \.next/ ]] && exit 0
+[[ "$FILE_PATH" =~ /build/ ]] && exit 0
 
-# Determine which workspace the file belongs to and run its prettier
-PROJECT_DIR=$(echo "$INPUT" | jq -r '.cwd')
+# Determine which workspace the file belongs to
+WORKSPACES="api|web|mobile"
 
-if [[ "$FILE_PATH" == */api/* ]]; then
-  cd "$PROJECT_DIR/api" && npx prettier --write "$FILE_PATH" 2>/dev/null
-  [[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx)$ ]] && npx eslint --fix "$FILE_PATH" 2>/dev/null
-elif [[ "$FILE_PATH" == */web/* ]]; then
-  cd "$PROJECT_DIR/web" && npx prettier --write "$FILE_PATH" 2>/dev/null
-  [[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx)$ ]] && npx eslint --fix "$FILE_PATH" 2>/dev/null
-elif [[ "$FILE_PATH" == */mobile/* ]]; then
-  cd "$PROJECT_DIR/mobile" && npx prettier --write "$FILE_PATH" 2>/dev/null
-  [[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx)$ ]] && npx eslint --fix "$FILE_PATH" 2>/dev/null
+if [[ "$FILE_PATH" =~ /($WORKSPACES)/ ]]; then
+  WORKSPACE_DIR="$CLAUDE_PROJECT_DIR/${BASH_REMATCH[1]}"
 else
-  # Root-level files
-  cd "$PROJECT_DIR" && npx prettier --write "$FILE_PATH" 2>/dev/null
+  WORKSPACE_DIR="$CLAUDE_PROJECT_DIR"
 fi
 
-exit 0
+cd "$WORKSPACE_DIR" || exit 0
+
+yarn prettier --write "$FILE_PATH" 2>/dev/null || true
+
+[[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx)$ ]] &&
+  yarn eslint --fix "$FILE_PATH" 2>/dev/null || true
