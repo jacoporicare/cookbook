@@ -1,6 +1,6 @@
 ## Formatting
 
-Formatting is handled automatically by a PostToolUse hook that runs Prettier after every Edit/Write. No need to run `yarn format` manually.
+Formatting is handled automatically by a PostToolUse hook that runs Prettier after every Edit/Write. No need to run `pnpm format` manually.
 
 **Prettier config**: Single quotes, trailing commas, 100 char width, arrow parens avoid.
 
@@ -8,9 +8,9 @@ Formatting is handled automatically by a PostToolUse hook that runs Prettier aft
 
 ESLint with TypeScript support. Run in each workspace:
 
-- `yarn workspace cookbook-api lint`
-- `yarn workspace cookbook-web lint`
-- `cd mobile && yarn lint`
+- `pnpm --filter api lint`
+- `pnpm --filter web lint`
+- `cd mobile && pnpm lint`
 
 ## TypeScript
 

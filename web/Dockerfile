@@ -3,12 +3,14 @@ FROM node:24-alpine AS builder
 RUN corepack enable
 
 WORKDIR /app
-COPY package.json yarn.lock .yarnrc.yml ./
+ENV CI=true
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY web/package.json web/
-RUN yarn workspaces focus cookbook-web
+RUN pnpm --filter web install --frozen-lockfile
 COPY web web
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN yarn workspace cookbook-web build
+RUN pnpm --filter web build
+# No pruning with install --prod is needed, standalone contains only prod deps
 
 
 FROM node:24-alpine

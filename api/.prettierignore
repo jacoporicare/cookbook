@@ -1,5 +1,5 @@
 package.json
 .next/
 src/generated/
-yarn.lock
+pnpm-lock.yaml
 build/

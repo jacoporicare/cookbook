@@ -13,77 +13,80 @@ The application is deployed at https://www.zradelnik.cz/ and allows users to cre
 
 ## Package Manager
 
-This project uses **Yarn 4** with **Yarn Workspaces**. The two workspaces are:
+This project uses **pnpm** with **pnpm workspaces**. The two workspaces are:
 
-- `cookbook-api` (in `api/`)
-- `cookbook-web` (in `web/`)
+- `api` (in `api/`)
+- `web` (in `web/`)
 
 ## Development Commands
 
 ### Root Level
 
 ```bash
-# Start both API and Web dev servers concurrently
-yarn dev
+# Start API dev server
+pnpm dev:api
+
+# Start Web dev server
+pnpm dev:web
 
 # Format all code across workspaces
-yarn format
+pnpm format
 
 # Check formatting across workspaces
-yarn format:check
+pnpm format:check
 ```
 
-### API (`yarn workspace cookbook-api <script>`)
+### API (`pnpm --filter api <script>`)
 
 ```bash
 # Start development server (auto-restarts on changes)
-yarn workspace cookbook-api start
+pnpm --filter api start
 
 # Start with debugging enabled
-yarn workspace cookbook-api start:inspect
+pnpm --filter api start:inspect
 
 # Build for production
-yarn workspace cookbook-api build
+pnpm --filter api build
 
 # Generate TypeScript types from GraphQL schema
-yarn workspace cookbook-api codegen
+pnpm --filter api codegen
 
 # Lint code
-yarn workspace cookbook-api lint
+pnpm --filter api lint
 
 # Format code
-yarn workspace cookbook-api format
+pnpm --filter api format
 
 # Check formatting
-yarn workspace cookbook-api format:check
+pnpm --filter api format:check
 ```
 
-### Web (`yarn workspace cookbook-web <script>`)
+### Web (`pnpm --filter web <script>`)
 
 ```bash
 # Start Next.js dev server
-yarn workspace cookbook-web dev
+pnpm --filter web dev
 
 # Start with Node.js inspector
-yarn workspace cookbook-web dev:inspect
+pnpm --filter web dev:inspect
 
 # Build for production
-yarn workspace cookbook-web build
+pnpm --filter web build
 
 # Start production server
-yarn workspace cookbook-web start
+pnpm --filter web start
 
 # Lint code
-yarn workspace cookbook-web lint
+pnpm --filter web lint
 
 # Format code
-yarn workspace cookbook-web format
+pnpm --filter web format
 
 # Check formatting
-yarn workspace cookbook-web format:check
+pnpm --filter web format:check
 
 # Generate TypeScript types and React hooks from GraphQL operations (fetches schema from local API)
-yarn workspace cookbook-web codegen
+pnpm --filter web codegen
 ```
 
 ### Docker

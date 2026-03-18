@@ -14,8 +14,8 @@ case "$BASENAME" in
   echo "Blocked: $BASENAME contains secrets — edit manually." >&2
   exit 2
   ;;
-yarn.lock)
-  echo "Blocked: yarn.lock should only be modified by the package manager." >&2
+pnpm-lock.yaml)
+  echo "Blocked: pnpm-lock.yaml should only be modified by the package manager." >&2
   exit 2
   ;;
 esac

@@ -28,7 +28,7 @@ curl -sf http://localhost:4000/health
 
 ```bash
 # Start API in background
-yarn workspace cookbook-api start &
+pnpm dev:api &
 API_PID=$!
 
 # Wait for API to be ready
@@ -49,7 +49,7 @@ kill $API_PID
 **Step 2.** Run codegen to regenerate resolver types:
 
 ```bash
-yarn workspace cookbook-api codegen
+pnpm --filter api codegen
 ```
 
 Verify: Check that `api/src/generated/graphql.ts` updated successfully.
@@ -59,7 +59,7 @@ Verify: Check that `api/src/generated/graphql.ts` updated successfully.
 **Step 4.** Verify the API compiles:
 
 ```bash
-yarn workspace cookbook-api build
+pnpm --filter api build
 ```
 
 ### Phase 2: Web Frontend
@@ -71,7 +71,7 @@ yarn workspace cookbook-api build
 **Step 7.** Run codegen to regenerate hooks and types (fetches schema from local API):
 
 ```bash
-yarn workspace cookbook-web codegen
+pnpm --filter web codegen
 ```
 
 Verify: Check that files in `web/src/generated/` updated. Use the generated hooks in components.
@@ -87,7 +87,7 @@ Verify: Check that files in `web/src/generated/` updated. Use the generated hook
 **Step 9.** Run codegen to regenerate typed document nodes (fetches schema from local API):
 
 ```bash
-cd mobile && yarn codegen
+cd mobile && pnpm codegen
 ```
 
 Verify: Check that files in `mobile/src/generated/` updated.

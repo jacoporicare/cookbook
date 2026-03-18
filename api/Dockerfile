@@ -4,12 +4,13 @@ RUN apk add --no-cache python3 make g++
 RUN corepack enable
 
 WORKDIR /srv
-COPY package.json yarn.lock .yarnrc.yml ./
+ENV CI=true
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY api/package.json api/
-RUN yarn workspaces focus cookbook-api
+RUN pnpm --filter api install --frozen-lockfile
 COPY api api
-RUN yarn workspace cookbook-api build
-RUN yarn workspaces focus cookbook-api --production
+RUN pnpm --filter api build
+RUN pnpm --filter api install --frozen-lockfile --prod
 
 
 FROM node:24-alpine

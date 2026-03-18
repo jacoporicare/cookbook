@@ -23,7 +23,7 @@ If the health check failed, start the API in the background and wait for it:
 
 ```bash
 # Start in background
-yarn workspace cookbook-api start
+pnpm dev:api
 # (run as background shell)
 
 # Then poll until ready
@@ -36,9 +36,9 @@ Set `STARTED_API=true` and note the background task ID so you can stop it later.
 
 Always run API codegen first (it doesn't need the running API), then web/mobile:
 
-- **API** (always): `yarn workspace cookbook-api codegen`
-- **Web** (always): `yarn workspace cookbook-web codegen`
-- **Mobile** (only if mobile workspace exists and has GraphQL operations): `cd mobile && yarn codegen`
+- **API** (always): `pnpm --filter api codegen`
+- **Web** (always): `pnpm --filter web codegen`
+- **Mobile** (only if mobile workspace exists and has GraphQL operations): `cd mobile && pnpm codegen`
 
 ### 4. Stop API if we started it
 

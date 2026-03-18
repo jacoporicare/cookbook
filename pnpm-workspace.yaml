@@ -1,0 +1,11 @@
+packages:
+  - api
+  - web
+onlyBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@sentry/cli'
+  - bcrypt
+  - esbuild
+  - protobufjs
+  - sharp
+  - unrs-resolver

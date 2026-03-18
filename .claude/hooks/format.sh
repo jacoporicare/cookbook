@@ -13,7 +13,7 @@ FILE_PATH=$(jq -r '.tool_input.file_path // empty')
 
 # Skip generated files, lock files, and build artifacts
 [[ "$FILE_PATH" =~ /generated/ ]] && exit 0
-[[ "$FILE_PATH" =~ yarn\.lock ]] && exit 0
+[[ "$FILE_PATH" =~ pnpm-lock\.yaml ]] && exit 0
 [[ "$FILE_PATH" =~ \.next/ ]] && exit 0
 [[ "$FILE_PATH" =~ /build/ ]] && exit 0
 
@@ -28,7 +28,7 @@ fi
 
 cd "$WORKSPACE_DIR" || exit 0
 
-yarn prettier --write "$FILE_PATH" 2>/dev/null || true
+pnpm prettier --write "$FILE_PATH" 2>/dev/null || true
 
 [[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx)$ ]] &&
-  yarn eslint --fix "$FILE_PATH" 2>/dev/null || true
+  pnpm eslint --fix "$FILE_PATH" 2>/dev/null || true
