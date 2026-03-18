@@ -1,12 +1,14 @@
 FROM node:24-alpine AS builder
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 WORKDIR /app
 ENV CI=true
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY web/package.json web/
-RUN pnpm --filter web install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter web install --frozen-lockfile
 COPY web web
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter web build

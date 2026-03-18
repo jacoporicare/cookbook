@@ -1,6 +1,7 @@
 packages:
   - api
   - web
+injectWorkspacePackages: true
 onlyBuiltDependencies:
   - '@apollo/protobufjs'
   - '@sentry/cli'
