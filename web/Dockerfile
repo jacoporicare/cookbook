@@ -23,8 +23,8 @@ RUN apk add --no-cache tini
 WORKDIR /app
 
 # Add non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-  adduser --system --uid 1001 nextjs
+RUN addgroup -S -g 1001 nodejs && \
+  adduser -S -u 1001 -G nodejs nextjs
 
 # Set correct permissions for prerender cache
 RUN mkdir .next && chown nextjs:nodejs .next
