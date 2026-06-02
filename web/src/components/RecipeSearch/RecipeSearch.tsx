@@ -3,9 +3,9 @@
 import { useCombobox } from 'downshift';
 import { Search } from 'lucide-react';
 import { matchSorter } from 'match-sorter';
+import Image from 'next/image';
 import { useState } from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -110,9 +110,9 @@ export function RecipeSearch(props: Props) {
           )}
           {isOpen &&
             suggestions.map((recipe, index) => {
-              const { imageThumbWebPUrl, preparationTime, sideDish } = recipe;
+              const { preparationTime, sideDish } = recipe;
               const imageUrl =
-                imageThumbWebPUrl || '/assets/food-placeholder.webp';
+                recipe.imageUrl || '/assets/food-placeholder.webp';
 
               return (
                 <li
@@ -123,10 +123,19 @@ export function RecipeSearch(props: Props) {
                     highlightedIndex === index && 'bg-muted',
                   )}
                 >
-                  <Avatar className="size-10 rounded">
-                    <AvatarImage src={imageUrl} alt={recipe.title} />
-                    <AvatarFallback>{recipe.title[0]}</AvatarFallback>
-                  </Avatar>
+                  <div
+                    className={`
+                      relative size-10 shrink-0 overflow-hidden rounded
+                    `}
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={recipe.title}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">{recipe.title}</p>
                     <RecipeInfo

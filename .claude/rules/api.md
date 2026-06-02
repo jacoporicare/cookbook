@@ -32,11 +32,11 @@ paths:
 
 **Image Processing** ([api/src/recipeImage.ts](api/src/recipeImage.ts)):
 
-- Express middleware serves optimized recipe images
-- Supports dynamic resizing via query parameters (width, height)
-- WebP format support
-- Uses Sharp library for image manipulation
-- Background worker ([api/src/scripts/imagesGenerator.ts](api/src/scripts/imagesGenerator.ts)) pre-generates image variants in production
+- Express middleware (`/image/:slugAndId`) serves recipe images
+- Bare request returns the **web source**: original capped to 1920px (long edge) re-encoded as WebP, disk-cached under `IMAGE_CACHE_DIR`; `next/image` resizes it per viewport
+- Sized request (`?size=WxH`, optional `?format=webp`) returns a Sharp-resized WebP/JPEG rendition, disk-cached (used by push notifications)
+- Cold encodes are concurrency-limited; a forked warmer ([api/src/scripts/imagesGenerator.ts](api/src/scripts/imagesGenerator.ts)) pre-generates WebP sources in production
+- AVIF is intentionally unsupported (AV1 encoding too slow on the VM)
 
 **Firebase Integration**:
 
@@ -44,10 +44,4 @@ The API uses Firebase Admin SDK ([api/src/firebase.ts](api/src/firebase.ts)) for
 
 **Image Handling**:
 
-Recipe images are stored in MongoDB GridFS (via the Image model). The API serves optimized images through:
-
-- Dynamic resizing: `?width=X&height=Y`
-- Format conversion: `?format=webp`
-- Middleware route: `/recipe/:recipeId/image`
-
-In production, a background worker pre-generates common image sizes to improve performance.
+Recipe images are stored in MongoDB (via the Image model) and served from `/image/:slugAndId` (`<slug>_<imageId>`). See **Image Processing** above for the bare-vs-sized behavior. Image identity is content-addressed: a new `imageId` is minted whenever a recipe's picture changes.

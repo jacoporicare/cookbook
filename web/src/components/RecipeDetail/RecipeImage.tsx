@@ -34,6 +34,7 @@ export function RecipeImage(props: Props) {
           className="w-full rounded"
           width={800}
           height={800}
+          sizes="(min-width: 768px) 17vw, 100vw"
         />
       </a>
       <Dialog open={isImageOpen} onOpenChange={setIsImageOpen}>

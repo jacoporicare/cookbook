@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import { authenticated, signToken } from './auth';
 import { messaging } from './firebase';
-import { ImageFormat, Resolvers } from './generated/graphql';
+import { Resolvers } from './generated/graphql';
 import logger from './logger';
 import {
   mapToRecipeDbObject,
@@ -141,7 +141,6 @@ const resolvers: Resolvers = {
                   imageUrl: appendSizeAndFormatToImageUrl(
                     newRecipeGqlModel.imageUrl,
                     { width: 1080, height: 1080 },
-                    ImageFormat.Webp,
                   ),
                 },
               }
@@ -233,7 +232,6 @@ const resolvers: Resolvers = {
                   imageUrl: appendSizeAndFormatToImageUrl(
                     newRecipeGqlModel.imageUrl,
                     { width: 1080, height: 1080 },
-                    ImageFormat.Webp,
                   ),
                 },
               }

@@ -10,8 +10,8 @@ type Props = {
 };
 
 export function RecipeListItem({ recipe }: Props) {
-  const { slug, imageThumbWebPUrl } = recipe;
-  const imageUrl = imageThumbWebPUrl || '/assets/food-placeholder.webp';
+  const { slug } = recipe;
+  const imageUrl = recipe.imageUrl || '/assets/food-placeholder.webp';
 
   return (
     <Link href={`/recept/${slug}`}>

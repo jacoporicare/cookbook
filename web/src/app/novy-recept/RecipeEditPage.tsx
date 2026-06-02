@@ -249,7 +249,7 @@ export function RecipeEditPage({
         directions={directions}
         formAction={formAction}
         imageId={imageId}
-        imageUrl={initialRecipe?.imageThumbWebPUrl ?? undefined}
+        imageUrl={initialRecipe?.imageUrl ?? undefined}
         ingredientOptions={options.ingredients}
         ingredients={ingredients}
         isNew={isNew}

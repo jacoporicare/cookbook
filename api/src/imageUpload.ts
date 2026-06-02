@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
+import sharp from 'sharp';
 
 import { verifyToken } from './auth';
 import ImageModel from './models/image';
@@ -47,6 +48,20 @@ export function imageUploadMiddleware() {
       // Check file
       if (!req.file) {
         return res.status(400).json({ error: 'No image file provided' });
+      }
+
+      // Keep the pristine original (future-proof: re-encodable into whatever
+      // codec wins next), but reject anything Sharp can't decode so the image
+      // route — which always re-encodes from this original — can never fail.
+      // Note: metadata() only parses the header (it passes HEVC/HEIC, whose
+      // decoder is absent from the musl prebuilt binary), so force a real
+      // pixel decode with stats() to prove the bytes are actually serveable.
+      try {
+        await sharp(req.file.buffer).stats();
+      } catch {
+        return res
+          .status(415)
+          .json({ error: 'Unsupported or corrupt image file' });
       }
 
       // Save image to database

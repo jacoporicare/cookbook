@@ -108,6 +108,7 @@ docker-compose up
 - `APOLLO_EXPLORER_ENABLED`: Enable Apollo GraphQL explorer (default: disabled in production)
 - `MONGODB_URI`: MongoDB connection string
 - `NODE_ENV`: Environment mode (production/development)
+- `IMAGE_CACHE_DIR`: Directory for warmed image renditions. In production must point at a persistent volume (see [deploy/docker-compose.yml](deploy/docker-compose.yml)); defaults to a tmp dir for local dev.
 
 ### Web
 
@@ -120,13 +121,12 @@ The API uses Firebase Admin SDK ([api/src/firebase.ts](api/src/firebase.ts)) for
 
 ## Image Handling
 
-Recipe images are stored in MongoDB GridFS (via the Image model). The API serves optimized images through:
+Recipe images are stored in MongoDB (via the Image model). The image route is `/image/:slugAndId` (where `slugAndId` is `<slug>_<imageId>`):
 
-- Dynamic resizing: `?width=X&height=Y`
-- Format conversion: `?format=webp`
-- Middleware route: `/recipe/:recipeId/image`
+- **Bare request** (no query): the **web source** — the original capped to 1920px on its long edge and re-encoded as WebP, cached on disk under `IMAGE_CACHE_DIR`. This is what the web's `next/image` fetches and resizes per viewport. (Serving the multi-megapixel original instead overwhelmed the API and Next's decoder — the cap is lossless in practice since the largest width any component requests is 1200.)
+- **Sized request** (`?size=WxH`, optional `?format=webp`): a Sharp-resized WebP/JPEG rendition cached on disk. Used by push notifications (`?size=1080x1080` → JPEG).
 
-In production, a background worker pre-generates common image sizes to improve performance.
+Cold encodes on the request path are concurrency-limited so a burst can't exhaust the VM. A forked background warmer ([api/src/scripts/imagesGenerator.ts](api/src/scripts/imagesGenerator.ts)) pre-generates the WebP source for every recipe in production. AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. Image identity is content-addressed (a new `imageId` is minted whenever a recipe's picture changes), so cached renditions never go stale.
 
 - Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.
 

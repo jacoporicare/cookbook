@@ -30,8 +30,7 @@ export function RecipeDetailPage({
     sousVideOptions,
     tags,
     title,
-    imageWebPUrl,
-    imageThumbWebPUrl,
+    imageUrl,
     user,
   } = recipe;
 
@@ -49,8 +48,8 @@ export function RecipeDetailPage({
         />
         <RecipeDetail
           directions={directions ?? undefined}
-          imageFullUrl={imageWebPUrl ?? undefined}
-          imageUrl={imageThumbWebPUrl ?? undefined}
+          imageFullUrl={imageUrl ?? undefined}
+          imageUrl={imageUrl ?? undefined}
           ingredients={ingredients ?? undefined}
           isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
           lastModifiedDate={lastModifiedDate}

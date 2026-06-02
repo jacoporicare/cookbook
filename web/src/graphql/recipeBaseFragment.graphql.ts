@@ -9,9 +9,6 @@ export default gql`
     tags
     preparationTime
     imageUrl
-    imageWebPUrl: imageUrl(format: WEBP)
-    imageThumbUrl: imageUrl(size: { width: 800, height: 800 })
-    imageThumbWebPUrl: imageUrl(size: { width: 800, height: 800 }, format: WEBP)
     lastModifiedDate
   }
 `;
