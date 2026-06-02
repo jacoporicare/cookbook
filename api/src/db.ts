@@ -7,18 +7,6 @@ const maxAttempts = 3;
 
 export let connected = false;
 
-function mongooseConnect(uri: string) {
-  return new Promise<void>((resolve, reject) => {
-    mongoose.connect(uri, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
 export async function connectToDb() {
   while (attempt < maxAttempts) {
     try {
@@ -28,7 +16,7 @@ export async function connectToDb() {
         } (attempt ${++attempt} of ${maxAttempts})...`,
       );
 
-      await mongooseConnect(process.env.MONGO_URI!);
+      await mongoose.connect(process.env.MONGO_URI!);
 
       connected = true;
       attempt = 0;

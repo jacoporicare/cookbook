@@ -320,7 +320,7 @@ const resolvers: Resolvers = {
     ),
     deleteUser: authenticated(
       async (_, args) => {
-        const user = await UserModel.findByIdAndRemove(args.id);
+        const user = await UserModel.findByIdAndDelete(args.id);
 
         if (!user) {
           throw new Error('User not found or cannot be deleted');

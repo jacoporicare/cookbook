@@ -1,23 +1,20 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: Date;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Date: { input: Date; output: Date; }
 };
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
-  token: Scalars['String'];
+  token: Scalars['String']['output'];
 };
 
 export enum ImageFormat {
@@ -25,52 +22,52 @@ export enum ImageFormat {
 }
 
 export type ImageSize = {
-  height: Scalars['Int'];
-  width: Scalars['Int'];
+  height: Scalars['Int']['input'];
+  width: Scalars['Int']['input'];
 };
 
 export type Ingredient = {
   __typename?: 'Ingredient';
-  amount?: Maybe<Scalars['Float']>;
-  amountUnit?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  isGroup: Scalars['Boolean'];
-  name: Scalars['String'];
+  amount?: Maybe<Scalars['Float']['output']>;
+  amountUnit?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  isGroup: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type IngredientInput = {
-  amount?: InputMaybe<Scalars['Float']>;
-  amountUnit?: InputMaybe<Scalars['String']>;
-  isGroup?: InputMaybe<Scalars['Boolean']>;
-  name: Scalars['String'];
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  amountUnit?: InputMaybe<Scalars['String']['input']>;
+  isGroup?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  changePassword: Scalars['Boolean'];
+  changePassword: Scalars['Boolean']['output'];
   createRecipe: Recipe;
   createUser: User;
-  deleteRecipe: Scalars['Boolean'];
+  deleteRecipe: Scalars['Boolean']['output'];
   deleteRecipeCooked: Recipe;
-  deleteUser: Scalars['ID'];
+  deleteUser: Scalars['ID']['output'];
   importRecipe: Recipe;
   login: AuthPayload;
   recipeCooked: Recipe;
-  resetPassword: Scalars['String'];
+  resetPassword: Scalars['String']['output'];
   updateRecipe: Recipe;
   updateUser: User;
-  updateUserLastActivity: Scalars['Boolean'];
+  updateUserLastActivity: Scalars['Boolean']['output'];
 };
 
 
 export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  password: Scalars['String'];
+  newPassword: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationCreateRecipeArgs = {
-  imageId?: InputMaybe<Scalars['ID']>;
+  imageId?: InputMaybe<Scalars['ID']['input']>;
   recipe: RecipeInput;
 };
 
@@ -81,89 +78,89 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteRecipeArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteRecipeCookedArgs = {
-  cookedId: Scalars['ID'];
-  recipeId: Scalars['ID'];
+  cookedId: Scalars['ID']['input'];
+  recipeId: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationImportRecipeArgs = {
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 };
 
 
 export type MutationLoginArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
 export type MutationRecipeCookedArgs = {
-  date: Scalars['Date'];
-  id: Scalars['ID'];
+  date: Scalars['Date']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationResetPasswordArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationUpdateRecipeArgs = {
-  id: Scalars['ID'];
-  imageId?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID']['input'];
+  imageId?: InputMaybe<Scalars['ID']['input']>;
   recipe: RecipeInput;
 };
 
 
 export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
   user: UserInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  ingredients: Array<Scalars['String']>;
+  ingredients: Array<Scalars['String']['output']>;
   me: User;
   recipe?: Maybe<Recipe>;
   recipes: Array<Recipe>;
-  sideDishes: Array<Scalars['String']>;
-  tags: Array<Scalars['String']>;
+  sideDishes: Array<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
   users: Array<User>;
 };
 
 
 export type QueryRecipeArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Recipe = {
   __typename?: 'Recipe';
   cookedHistory: Array<RecipeCooked>;
-  creationDate: Scalars['Date'];
-  deleted: Scalars['Boolean'];
-  directions?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  imageUrl?: Maybe<Scalars['String']>;
+  creationDate: Scalars['Date']['output'];
+  deleted: Scalars['Boolean']['output'];
+  directions?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
   ingredients: Array<Ingredient>;
-  lastModifiedDate: Scalars['Date'];
-  preparationTime?: Maybe<Scalars['Int']>;
-  servingCount?: Maybe<Scalars['Int']>;
-  sideDish?: Maybe<Scalars['String']>;
-  slug: Scalars['String'];
+  lastModifiedDate: Scalars['Date']['output'];
+  preparationTime?: Maybe<Scalars['Int']['output']>;
+  servingCount?: Maybe<Scalars['Int']['output']>;
+  sideDish?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
   sousVideOptions: Array<SousVideOption>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
+  tags: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
   user?: Maybe<User>;
 };
 
@@ -175,51 +172,51 @@ export type RecipeImageUrlArgs = {
 
 export type RecipeCooked = {
   __typename?: 'RecipeCooked';
-  date: Scalars['Date'];
-  id: Scalars['ID'];
+  date: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
   user?: Maybe<User>;
 };
 
 export type RecipeInput = {
-  directions?: InputMaybe<Scalars['String']>;
+  directions?: InputMaybe<Scalars['String']['input']>;
   ingredients?: InputMaybe<Array<IngredientInput>>;
-  preparationTime?: InputMaybe<Scalars['Int']>;
-  servingCount?: InputMaybe<Scalars['Int']>;
-  sideDish?: InputMaybe<Scalars['String']>;
+  preparationTime?: InputMaybe<Scalars['Int']['input']>;
+  servingCount?: InputMaybe<Scalars['Int']['input']>;
+  sideDish?: InputMaybe<Scalars['String']['input']>;
   sousVideOptions?: InputMaybe<Array<SousVideOptionInput>>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title: Scalars['String'];
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
 };
 
 export type SousVideOption = {
   __typename?: 'SousVideOption';
-  id: Scalars['ID'];
-  label: Scalars['String'];
-  temperature: Scalars['Float'];
-  time?: Maybe<Scalars['String']>;
-  toTemperature?: Maybe<Scalars['Float']>;
+  id: Scalars['ID']['output'];
+  label: Scalars['String']['output'];
+  temperature: Scalars['Float']['output'];
+  time?: Maybe<Scalars['String']['output']>;
+  toTemperature?: Maybe<Scalars['Float']['output']>;
 };
 
 export type SousVideOptionInput = {
-  label: Scalars['String'];
-  temperature: Scalars['Float'];
-  time?: InputMaybe<Scalars['String']>;
-  toTemperature?: InputMaybe<Scalars['Float']>;
+  label: Scalars['String']['input'];
+  temperature: Scalars['Float']['input'];
+  time?: InputMaybe<Scalars['String']['input']>;
+  toTemperature?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type User = {
   __typename?: 'User';
-  displayName: Scalars['String'];
-  id: Scalars['ID'];
-  isAdmin: Scalars['Boolean'];
-  lastActivity?: Maybe<Scalars['Date']>;
-  username: Scalars['String'];
+  displayName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isAdmin: Scalars['Boolean']['output'];
+  lastActivity?: Maybe<Scalars['Date']['output']>;
+  username: Scalars['String']['output'];
 };
 
 export type UserInput = {
-  displayName: Scalars['String'];
-  isAdmin?: InputMaybe<Scalars['Boolean']>;
-  username: Scalars['String'];
+  displayName: Scalars['String']['input'];
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  username: Scalars['String']['input'];
 };
 
 
@@ -230,7 +227,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -267,21 +264,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -289,26 +286,30 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
+
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AuthPayload: ResolverTypeWrapper<AuthPayload>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  Date: ResolverTypeWrapper<Scalars['Date']>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Date: ResolverTypeWrapper<Scalars['Date']['output']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   ImageFormat: ImageFormat;
   ImageSize: ImageSize;
   Ingredient: ResolverTypeWrapper<Ingredient>;
   IngredientInput: IngredientInput;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Mutation: ResolverTypeWrapper<{}>;
-  Query: ResolverTypeWrapper<{}>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Recipe: ResolverTypeWrapper<Recipe>;
   RecipeCooked: ResolverTypeWrapper<RecipeCooked>;
   RecipeInput: RecipeInput;
   SousVideOption: ResolverTypeWrapper<SousVideOption>;
   SousVideOptionInput: SousVideOptionInput;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
 };
@@ -316,29 +317,28 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   AuthPayload: AuthPayload;
-  Boolean: Scalars['Boolean'];
-  Date: Scalars['Date'];
-  Float: Scalars['Float'];
-  ID: Scalars['ID'];
+  Boolean: Scalars['Boolean']['output'];
+  Date: Scalars['Date']['output'];
+  Float: Scalars['Float']['output'];
+  ID: Scalars['ID']['output'];
   ImageSize: ImageSize;
   Ingredient: Ingredient;
   IngredientInput: IngredientInput;
-  Int: Scalars['Int'];
-  Mutation: {};
-  Query: {};
+  Int: Scalars['Int']['output'];
+  Mutation: Record<PropertyKey, never>;
+  Query: Record<PropertyKey, never>;
   Recipe: Recipe;
   RecipeCooked: RecipeCooked;
   RecipeInput: RecipeInput;
   SousVideOption: SousVideOption;
   SousVideOptionInput: SousVideOptionInput;
-  String: Scalars['String'];
+  String: Scalars['String']['output'];
   User: User;
   UserInput: UserInput;
 };
 
 export type AuthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
@@ -351,7 +351,6 @@ export type IngredientResolvers<ContextType = any, ParentType extends ResolversP
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isGroup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -397,14 +396,12 @@ export type RecipeResolvers<ContextType = any, ParentType extends ResolversParen
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type RecipeCookedResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecipeCooked'] = ResolversParentTypes['RecipeCooked']> = {
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SousVideOptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SousVideOption'] = ResolversParentTypes['SousVideOption']> = {
@@ -413,7 +410,6 @@ export type SousVideOptionResolvers<ContextType = any, ParentType extends Resolv
   temperature?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   time?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   toTemperature?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -422,7 +418,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   isAdmin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastActivity?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
