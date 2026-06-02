@@ -1,17 +1,23 @@
 import http from 'http';
 
-import { IExecutableSchemaDefinition } from '@graphql-tools/schema';
+import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import {
-  ApolloServerPluginDrainHttpServer,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
-} from 'apollo-server-core';
-import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
+} from '@apollo/server/plugin/landingPage/default';
+import { expressMiddleware } from '@as-integrations/express4';
+import { IExecutableSchemaDefinition } from '@graphql-tools/schema';
+import cors from 'cors';
+import express, { Request } from 'express';
 
 import { imageUploadMiddleware } from './imageUpload';
 import logger from './logger';
 import { recipeImageMiddleware } from './recipeImage';
+
+export type Context = {
+  req: Request;
+};
 
 export async function startApolloServer(
   typeDefs: IExecutableSchemaDefinition['typeDefs'],
@@ -24,7 +30,7 @@ export async function startApolloServer(
 
   const httpServer = http.createServer(app);
 
-  const server = new ApolloServer({
+  const server = new ApolloServer<Context>({
     typeDefs,
     resolvers,
     cache: 'bounded',
@@ -35,20 +41,22 @@ export async function startApolloServer(
         : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
     introspection: process.env.APOLLO_EXPLORER_ENABLED === 'true',
-    context: (ctx) => ctx,
   });
 
   await server.start();
-  server.applyMiddleware({
-    // Type assertion needed due to multer's express type conflicts
-    app: app as unknown as Parameters<typeof server.applyMiddleware>[0]['app'],
-    path: '/graphql',
-    cors: { origin: true, credentials: true },
-  });
+
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>({ origin: true, credentials: true }),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => ({ req }),
+    }),
+  );
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve),
   );
 
-  logger.info(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  logger.info('🚀 Server ready at http://localhost:4000/graphql');
 }
