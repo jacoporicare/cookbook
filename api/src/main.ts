@@ -1,7 +1,5 @@
 import 'dotenv/config';
 
-import { fork } from 'child_process';
-
 import { startApolloServer } from './apolloServer';
 import { connectToDb } from './db';
 import logger from './logger';
@@ -17,12 +15,3 @@ main().catch((e) => {
   logger.error(e);
   process.exit(1);
 });
-
-// Pre-warm capped WebP image sources in the background so pages are served
-// from disk rather than cold on-demand encodes.
-if (process.env.NODE_ENV === 'production') {
-  logger.info('Forking process - imagesGenerator script');
-  fork(__dirname + '/scripts/imagesGenerator', [], {
-    env: { ...process.env, LOGGER_CATEGORY: 'imagesGenerator' },
-  });
-}

@@ -1,6 +1,5 @@
 import { Document, Model, model, models, Schema } from 'mongoose';
 
-import { ImageDbObject } from './image';
 import { UserDbObject } from './user';
 
 export type IngredientDbObject = {
@@ -28,7 +27,9 @@ export type RecipeCookedDbObject = {
 export type RecipeDbObject = {
   id: string;
   user: string | UserDbObject;
-  image?: string | ImageDbObject;
+  // Opaque S3 object-key prefix under which this image's renditions live.
+  // Empty when the recipe has no picture.
+  image?: string;
   title: string;
   slug: string;
   directions?: string;
@@ -48,7 +49,7 @@ export type RecipeDocument = Document & RecipeDbObject;
 
 const RecipeSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  image: { type: Schema.Types.ObjectId, ref: 'Image' },
+  image: { type: String },
   title: { type: String, required: true },
   slug: { type: String, unique: true },
   directions: String,

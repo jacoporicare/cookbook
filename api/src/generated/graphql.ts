@@ -17,13 +17,12 @@ export type AuthPayload = {
   token: Scalars['String']['output'];
 };
 
-export enum ImageFormat {
-  Webp = 'WEBP'
-}
-
-export type ImageSize = {
-  height: Scalars['Int']['input'];
-  width: Scalars['Int']['input'];
+export type ImageUploadTarget = {
+  __typename?: 'ImageUploadTarget';
+  /** Opaque image key; PUT the original to uploadUrl, then pass this as imageId to createRecipe/updateRecipe. */
+  key: Scalars['ID']['output'];
+  /** Presigned S3 URL to PUT the original file to (send the same Content-Type). */
+  uploadUrl: Scalars['String']['output'];
 };
 
 export type Ingredient = {
@@ -45,6 +44,8 @@ export type IngredientInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: Scalars['Boolean']['output'];
+  /** Presign a direct-to-S3 staging upload for a recipe image original. The returned key is submitted as imageId to createRecipe/updateRecipe, which promotes it. */
+  createImageUpload: ImageUploadTarget;
   createRecipe: Recipe;
   createUser: User;
   deleteRecipe: Scalars['Boolean']['output'];
@@ -63,6 +64,11 @@ export type Mutation = {
 export type MutationChangePasswordArgs = {
   newPassword: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationCreateImageUploadArgs = {
+  contentType: Scalars['String']['input'];
 };
 
 
@@ -162,12 +168,6 @@ export type Recipe = {
   tags: Array<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   user?: Maybe<User>;
-};
-
-
-export type RecipeImageUrlArgs = {
-  format?: InputMaybe<ImageFormat>;
-  size?: InputMaybe<ImageSize>;
 };
 
 export type RecipeCooked = {
@@ -297,8 +297,7 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  ImageFormat: ImageFormat;
-  ImageSize: ImageSize;
+  ImageUploadTarget: ResolverTypeWrapper<ImageUploadTarget>;
   Ingredient: ResolverTypeWrapper<Ingredient>;
   IngredientInput: IngredientInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -321,7 +320,7 @@ export type ResolversParentTypes = {
   Date: Scalars['Date']['output'];
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
-  ImageSize: ImageSize;
+  ImageUploadTarget: ImageUploadTarget;
   Ingredient: Ingredient;
   IngredientInput: IngredientInput;
   Int: Scalars['Int']['output'];
@@ -345,6 +344,11 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
+export type ImageUploadTargetResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageUploadTarget'] = ResolversParentTypes['ImageUploadTarget']> = {
+  key?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  uploadUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type IngredientResolvers<ContextType = any, ParentType extends ResolversParentTypes['Ingredient'] = ResolversParentTypes['Ingredient']> = {
   amount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   amountUnit?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -355,6 +359,7 @@ export type IngredientResolvers<ContextType = any, ParentType extends ResolversP
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   changePassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'newPassword' | 'password'>>;
+  createImageUpload?: Resolver<ResolversTypes['ImageUploadTarget'], ParentType, ContextType, RequireFields<MutationCreateImageUploadArgs, 'contentType'>>;
   createRecipe?: Resolver<ResolversTypes['Recipe'], ParentType, ContextType, RequireFields<MutationCreateRecipeArgs, 'recipe'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'user'>>;
   deleteRecipe?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteRecipeArgs, 'id'>>;
@@ -385,7 +390,7 @@ export type RecipeResolvers<ContextType = any, ParentType extends ResolversParen
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   directions?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<RecipeImageUrlArgs>>;
+  imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   ingredients?: Resolver<Array<ResolversTypes['Ingredient']>, ParentType, ContextType>;
   lastModifiedDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   preparationTime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -423,6 +428,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   AuthPayload?: AuthPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  ImageUploadTarget?: ImageUploadTargetResolvers<ContextType>;
   Ingredient?: IngredientResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

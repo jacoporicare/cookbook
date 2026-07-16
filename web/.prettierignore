@@ -3,3 +3,4 @@ package.json
 src/generated/
 pnpm-lock.yaml
 .next/
+schema.json

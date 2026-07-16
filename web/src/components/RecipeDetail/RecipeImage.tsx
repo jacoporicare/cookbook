@@ -14,6 +14,10 @@ type Props = {
 export function RecipeImage(props: Props) {
   const { imageUrl, imageFullUrl, title } = props;
 
+  // imageFullUrl is the S3 prefix; the plain <a> (open-in-new-tab / no-JS
+  // fallback) needs a concrete file, so point it at the largest rendition.
+  const fullHref = imageFullUrl ? `${imageFullUrl}/1920.webp` : undefined;
+
   const [isImageOpen, setIsImageOpen] = useState(false);
 
   function handleImageClick(e: MouseEvent) {
@@ -24,7 +28,7 @@ export function RecipeImage(props: Props) {
   return (
     <>
       <a
-        href={imageFullUrl}
+        href={fullHref}
         className="block cursor-pointer leading-none"
         onClick={handleImageClick}
       >

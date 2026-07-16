@@ -34,3 +34,6 @@ schema.json
 .idea/
 
 tsconfig.tsbuildinfo
+
+# MongoDB backup archives (large, never commit)
+*.archive

@@ -33,7 +33,11 @@ export function ImageUpload(props: Props) {
     props.onImageChange(file);
   }
 
-  const src = image || props.imageUrl;
+  // props.imageUrl is the S3 prefix for an existing image; append a rendition
+  // so it loads as a CSS background. `image` (a freshly-picked file) is an
+  // object URL and used as-is.
+  const src =
+    image || (props.imageUrl ? `${props.imageUrl}/640.webp` : undefined);
 
   return (
     <div className="overflow-hidden">

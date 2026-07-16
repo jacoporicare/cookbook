@@ -9,7 +9,6 @@ paths:
 
 - Connects to MongoDB
 - Starts Apollo Server on port 4000
-- In production, forks an image generator background process
 
 **GraphQL Layer**:
 
@@ -19,9 +18,9 @@ paths:
 
 **Database Models** ([api/src/models/](api/src/models/)):
 
-- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history, sous vide options
+- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history, sous vide options. `image` is the S3 object-key prefix (a plain string).
 - [user.ts](api/src/models/user.ts): User schema with bcrypt password hashing
-- [image.ts](api/src/models/image.ts): Image metadata storage
+- [image.ts](api/src/models/image.ts): Legacy MongoDB image-blob model — retained only for the S3 migration script to read old blobs; not used at runtime.
 
 **Authentication** ([api/src/auth.ts](api/src/auth.ts)):
 
@@ -30,18 +29,16 @@ paths:
 - Supports optional `requireAdmin` flag for admin-only operations
 - Tokens passed via `Authorization: Bearer <token>` header
 
-**Image Processing** ([api/src/recipeImage.ts](api/src/recipeImage.ts)):
+**Image Handling** (S3, direct-served — API is NOT in the read path):
 
-- Express middleware (`/image/:slugAndId`) serves recipe images
-- Bare request returns the **web source**: original capped to 1920px (long edge) re-encoded as WebP, disk-cached under `IMAGE_CACHE_DIR`; `next/image` resizes it per viewport
-- Sized request (`?size=WxH`, optional `?format=webp`) returns a Sharp-resized WebP/JPEG rendition, disk-cached (used by push notifications)
-- Cold encodes are concurrency-limited; a forked warmer ([api/src/scripts/imagesGenerator.ts](api/src/scripts/imagesGenerator.ts)) pre-generates WebP sources in production
-- AVIF is intentionally unsupported (AV1 encoding too slow on the VM)
+- [s3.ts](api/src/s3.ts): S3 client + helpers (presign **staging** upload, head/get/put/delete object, delete `<key>/` prefix, list). Public base URL builder. Bucket policy grants public GET only to `*.webp`/`*.jpg`; the `<key>/original` and `staging/<key>` objects are private.
+- [imageProcessing.ts](api/src/imageProcessing.ts): `RENDITION_WIDTHS` + Sharp generation (WebP widths + 1080×1080 push JPEG), size/pixel caps, a concurrency gate, and `promoteStagingImage(key)` — validates the staged original, stores it privately, generates renditions, deletes staging. Idempotent.
+- [recipeImage.ts](api/src/recipeImage.ts): builds the public `imageUrl` (`<publicBase>/<key>` prefix) and `pushImageUrl` (the `<key>/1080x1080.jpg` rendition).
+- Upload (staging pattern): `createImageUpload(contentType)` [auth] presigns a PUT to `staging/<key>`; the browser PUTs; then `createRecipe`/`updateRecipe` (imageId = key) call `promoteStagingImage`. Promotion rejects a key with no staging object (blocks attaching another recipe's public-keyed image).
+- Abandoned staging uploads expire via the S3 lifecycle rule `expire-staging-uploads` (no app-side prune). `updateRecipe` deletes the old prefix on replace only if no other recipe references it.
+- Image identity is content-addressed: a new key (`randomUUID`) is minted whenever a recipe's picture changes. AVIF is intentionally unsupported (AV1 too slow on the VM).
+- [migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts): one-shot idempotent migration of the old MongoDB blobs to S3 (key = old Image ObjectId hex, so archive and prod runs converge; writes straight to the permanent layout, no staging). `--drop-images` drops the legacy collection.
 
 **Firebase Integration**:
 
 The API uses Firebase Admin SDK ([api/src/firebase.ts](api/src/firebase.ts)) for push notifications to mobile apps (credentials in `zradelnik-firebase-adminsdk.json` - encrypted with git-secret).
-
-**Image Handling**:
-
-Recipe images are stored in MongoDB (via the Image model) and served from `/image/:slugAndId` (`<slug>_<imageId>`). See **Image Processing** above for the bare-vs-sized behavior. Image identity is content-addressed: a new `imageId` is minted whenever a recipe's picture changes.

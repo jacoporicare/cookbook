@@ -12,7 +12,7 @@ import {
 import { RecipeEdit } from '@/components/RecipeEdit/RecipeEdit';
 import { SousVideOption } from '@/components/RecipeEdit/SousVideEdit';
 import { Ingredient, RecipeEditQuery } from '@/generated/graphql';
-import { uploadImage } from '@/lib/image-upload';
+import { ImageTooLargeError, uploadImage } from '@/lib/image-upload';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -46,6 +46,9 @@ export function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
   const [changed, setChanged] = useState(false);
   const [imageId, setImageId] = useState<string>();
   const [uploadProgress, setUploadProgress] = useState(false);
+  // Bumped to remount ImageUpload and drop its local preview when an upload
+  // fails, so the preview never shows an image the recipe won't actually save.
+  const [imageResetToken, setImageResetToken] = useState(0);
 
   // Ingredients require local state for drag-drop reordering
   const [ingredients, setIngredients] = useState<
@@ -128,8 +131,16 @@ export function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
     try {
       const result = await uploadImage(file);
       setImageId(result.imageId);
-    } catch {
-      toast.error('Nepodařilo se nahrát obrázek');
+    } catch (e) {
+      // Drop the just-picked preview and the id so we don't save a picture the
+      // upload never actually stored.
+      setImageId(undefined);
+      setImageResetToken((t) => t + 1);
+      toast.error(
+        e instanceof ImageTooLargeError
+          ? e.message
+          : 'Nepodařilo se nahrát obrázek',
+      );
     } finally {
       setUploadProgress(false);
     }
@@ -236,6 +247,7 @@ export function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
       formAction={formAction}
       imageId={imageId}
       imageUrl={initialRecipe?.imageUrl ?? undefined}
+      imageResetToken={imageResetToken}
       ingredientOptions={options.ingredients}
       ingredients={ingredients}
       isNew={isNew}

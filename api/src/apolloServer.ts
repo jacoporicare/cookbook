@@ -11,9 +11,7 @@ import { IExecutableSchemaDefinition } from '@graphql-tools/schema';
 import cors from 'cors';
 import express, { Request } from 'express';
 
-import { imageUploadMiddleware } from './imageUpload';
 import logger from './logger';
-import { recipeImageMiddleware } from './recipeImage';
 
 export type Context = {
   req: Request;
@@ -25,8 +23,6 @@ export async function startApolloServer(
 ) {
   const app = express();
   app.get('/health', (_req, res) => res.send('ok'));
-  app.use(recipeImageMiddleware());
-  app.use(imageUploadMiddleware());
 
   const httpServer = http.createServer(app);
 

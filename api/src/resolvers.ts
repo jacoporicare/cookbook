@@ -1,9 +1,12 @@
+import { randomUUID } from 'crypto';
+
 import { GraphQLScalarType, Kind } from 'graphql';
 import mongoose from 'mongoose';
 
 import { authenticated, signToken } from './auth';
 import { messaging } from './firebase';
 import { Resolvers } from './generated/graphql';
+import { isAllowedContentType, promoteStagingImage } from './imageProcessing';
 import logger from './logger';
 import {
   mapToRecipeDbObject,
@@ -11,13 +14,13 @@ import {
   mapToUserDbObject,
   mapToUserGqlObject,
 } from './mapping';
-import ImageModel from './models/image';
 import RecipeModel, {
   RecipeCookedDbObject,
   RecipeDocument,
 } from './models/recipe';
 import UserModel, { UserDbObject, UserDocument } from './models/user';
-import { appendSizeAndFormatToImageUrl } from './recipeImage';
+import { pushImageUrl } from './recipeImage';
+import { deleteImagePrefix, presignStagingUpload } from './s3';
 import { importRecipeFromUrl } from './services/recipeImport';
 import {
   checkUserRightsAsync,
@@ -112,7 +115,26 @@ const resolvers: Resolvers = {
 
       return { token: signToken(user.id) };
     },
+    createImageUpload: authenticated(async (_, args) => {
+      if (!isAllowedContentType(args.contentType)) {
+        throw new Error('Only image files are allowed');
+      }
+
+      // Mint an opaque key; the client PUTs the original to staging/<key>.
+      // createRecipe/updateRecipe later promote it (see promoteStagingImage).
+      const key = randomUUID();
+      const uploadUrl = await presignStagingUpload(key, args.contentType);
+
+      return { key, uploadUrl };
+    }),
     createRecipe: authenticated(async (_, args, ctx) => {
+      // Promote the staged upload (validate + generate renditions) before we
+      // create the recipe, so the stored key always points at real renditions
+      // and the push notification below can reference the 1080×1080 JPEG.
+      if (args.imageId) {
+        await promoteStagingImage(args.imageId);
+      }
+
       const recipeToSave = mapToRecipeDbObject(
         args.recipe,
         args.imageId ?? undefined,
@@ -122,7 +144,18 @@ const resolvers: Resolvers = {
         slug: recipeToSave.slug,
         deleted: true,
       });
-      const recipe = await RecipeModel.create(recipeToSave as RecipeDocument);
+
+      let recipe: RecipeDocument;
+      try {
+        recipe = await RecipeModel.create(recipeToSave as RecipeDocument);
+      } catch (e) {
+        // Creation failed (e.g. slug conflict): the just-promoted image would
+        // otherwise be a permanent orphan (not under staging/), so remove it.
+        if (args.imageId) {
+          await deleteImagePrefix(args.imageId).catch(logger.error);
+        }
+        throw e;
+      }
       await recipe.populate(populateFields);
 
       const newRecipeGqlModel = mapToRecipeGqlObject(recipe);
@@ -138,10 +171,7 @@ const resolvers: Resolvers = {
           android: newRecipeGqlModel.imageUrl
             ? {
                 notification: {
-                  imageUrl: appendSizeAndFormatToImageUrl(
-                    newRecipeGqlModel.imageUrl,
-                    { width: 1080, height: 1080 },
-                  ),
+                  imageUrl: pushImageUrl(newRecipeGqlModel.imageUrl),
                 },
               }
             : undefined,
@@ -163,9 +193,20 @@ const resolvers: Resolvers = {
         throw new Error('Recipe not found');
       }
 
-      const origImage = recipe.image;
-      const origImageId =
-        typeof origImage === 'string' ? origImage : origImage?.id;
+      const origImageKey = recipe.image;
+      const imageChanged = Boolean(
+        args.imageId && args.imageId !== origImageKey,
+      );
+
+      // A new picture was uploaded: promote the staged upload first, so the
+      // recipe never points at a key without renditions. promoteStagingImage
+      // rejects a key that has no staging object (e.g. an arbitrary or
+      // already-committed key lifted from another recipe's public imageUrl),
+      // which prevents attaching — and later deleting — someone else's image.
+      if (imageChanged) {
+        await promoteStagingImage(args.imageId!);
+      }
+
       const recipeToSave = mapToRecipeDbObject(
         args.recipe,
         args.imageId ?? undefined,
@@ -178,9 +219,17 @@ const resolvers: Resolvers = {
       await recipe.set(recipeToSave).save();
       await recipe.populate(populateFields);
 
-      // Delete old image if a new one was provided
-      if (args.imageId && origImageId && args.imageId !== origImageId) {
-        await ImageModel.findByIdAndDelete(origImage);
+      // Delete the previous image's S3 renditions — but only if no other recipe
+      // still references that key (defence in depth). Best-effort: a failed
+      // cleanup only leaves an orphan, it must not fail the update.
+      if (imageChanged && origImageKey) {
+        RecipeModel.exists({ image: origImageKey })
+          .then((stillUsed) => {
+            if (!stillUsed) {
+              return deleteImagePrefix(origImageKey);
+            }
+          })
+          .catch(logger.error);
       }
 
       return mapToRecipeGqlObject(recipe);
@@ -229,10 +278,7 @@ const resolvers: Resolvers = {
           android: newRecipeGqlModel.imageUrl
             ? {
                 notification: {
-                  imageUrl: appendSizeAndFormatToImageUrl(
-                    newRecipeGqlModel.imageUrl,
-                    { width: 1080, height: 1080 },
-                  ),
+                  imageUrl: pushImageUrl(newRecipeGqlModel.imageUrl),
                 },
               }
             : undefined,
@@ -371,12 +417,6 @@ const resolvers: Resolvers = {
 
       return true;
     }),
-  },
-  Recipe: {
-    imageUrl: (recipe, args) =>
-      recipe.imageUrl
-        ? appendSizeAndFormatToImageUrl(recipe.imageUrl, args.size, args.format)
-        : null,
   },
   Date: new GraphQLScalarType<Date | null, number | string>({
     name: 'Date',
