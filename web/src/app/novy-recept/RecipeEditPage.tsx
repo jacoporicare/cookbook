@@ -9,16 +9,10 @@ import {
   createRecipeAction,
   updateRecipeAction,
 } from '@/app/actions/recipe';
-import { Layout } from '@/components/Layout';
 import { RecipeEdit } from '@/components/RecipeEdit/RecipeEdit';
 import { SousVideOption } from '@/components/RecipeEdit/SousVideEdit';
-import {
-  Ingredient,
-  RecipeBaseFragment,
-  RecipeEditQuery,
-} from '@/generated/graphql';
+import { Ingredient, RecipeEditQuery } from '@/generated/graphql';
 import { uploadImage } from '@/lib/image-upload';
-import { User } from '@/types/user';
 
 const confirmMsg = 'Neuložené změny. Opravdu opustit tuto stránku?';
 
@@ -31,16 +25,9 @@ type Props = {
     sideDishes: string[];
     tags: string[];
   };
-  recipes: RecipeBaseFragment[];
-  user: User;
 };
 
-export function RecipeEditPage({
-  recipe: initialRecipe,
-  options,
-  recipes,
-  user,
-}: Props) {
+export function RecipeEditPage({ recipe: initialRecipe, options }: Props) {
   const router = useRouter();
 
   const isNew = !initialRecipe;
@@ -243,33 +230,31 @@ export function RecipeEditPage({
   };
 
   return (
-    <Layout recipes={recipes} user={user}>
-      <RecipeEdit
-        defaultValues={defaultValues}
-        directions={directions}
-        formAction={formAction}
-        imageId={imageId}
-        imageUrl={initialRecipe?.imageUrl ?? undefined}
-        ingredientOptions={options.ingredients}
-        ingredients={ingredients}
-        isNew={isNew}
-        isSaving={isSaving}
-        sideDishOptions={options.sideDishes}
-        sousVideOptions={sousVideOptions}
-        tagOptions={options.tags}
-        tags={tags}
-        onAddGroup={handleAddGroup}
-        onAddIngredient={handleAddIngredient}
-        onAddSousVideOption={handleAddSousVideOption}
-        onChange={handleChange}
-        onDirectionsChange={handleDirectionsChange}
-        onImageChange={handleImageChange}
-        onRemoveIngredient={handleRemoveIngredient}
-        onRemoveSousVideOption={handleRemoveSousVideOption}
-        onSortIngredient={handleSortIngredient}
-        onSortSousVideOption={handleSortSousVideOption}
-        onTagsChange={handleTagsChange}
-      />
-    </Layout>
+    <RecipeEdit
+      defaultValues={defaultValues}
+      directions={directions}
+      formAction={formAction}
+      imageId={imageId}
+      imageUrl={initialRecipe?.imageUrl ?? undefined}
+      ingredientOptions={options.ingredients}
+      ingredients={ingredients}
+      isNew={isNew}
+      isSaving={isSaving}
+      sideDishOptions={options.sideDishes}
+      sousVideOptions={sousVideOptions}
+      tagOptions={options.tags}
+      tags={tags}
+      onAddGroup={handleAddGroup}
+      onAddIngredient={handleAddIngredient}
+      onAddSousVideOption={handleAddSousVideOption}
+      onChange={handleChange}
+      onDirectionsChange={handleDirectionsChange}
+      onImageChange={handleImageChange}
+      onRemoveIngredient={handleRemoveIngredient}
+      onRemoveSousVideOption={handleRemoveSousVideOption}
+      onSortIngredient={handleSortIngredient}
+      onSortSousVideOption={handleSortSousVideOption}
+      onTagsChange={handleTagsChange}
+    />
   );
 }

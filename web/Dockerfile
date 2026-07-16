@@ -11,6 +11,12 @@ COPY web/package.json web/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter web install --frozen-lockfile
 COPY web web
 ENV NEXT_TELEMETRY_DISABLED=1
+# Cache Components prerenders recipe pages at build time, so the (public,
+# anonymous) GraphQL API must be reachable during `next build`. Recipe queries
+# require no auth, so pointing at the public production API is sufficient.
+# Override with `--build-arg API_URL=...` for staging/feature builds.
+ARG API_URL=https://api.zradelnik.cz
+ENV API_URL=$API_URL
 RUN pnpm --filter web build
 # No pruning with install --prod is needed, standalone contains only prod deps
 

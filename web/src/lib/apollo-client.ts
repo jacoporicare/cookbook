@@ -31,3 +31,32 @@ export async function getClient() {
     },
   });
 }
+
+let publicClient: ApolloClient | undefined;
+
+/**
+ * Anonymous Apollo Client for public, user-agnostic queries (recipes, recipe
+ * detail, edit options). It does NOT read cookies or send an auth token, so it
+ * is safe to call inside `use cache` scopes (which cannot access `cookies()`).
+ *
+ * A single shared instance is reused across requests: the data is identical for
+ * every caller and result caching is handled by Next's `use cache`, not Apollo.
+ */
+export function getPublicClient() {
+  if (!publicClient) {
+    publicClient = new ApolloClient({
+      cache: new InMemoryCache(),
+      link: new HttpLink({
+        uri: `${process.env.API_URL || 'http://localhost:4000'}/graphql`,
+      }),
+      ssrMode: true,
+      defaultOptions: {
+        query: {
+          fetchPolicy: 'no-cache',
+        },
+      },
+    });
+  }
+
+  return publicClient;
+}

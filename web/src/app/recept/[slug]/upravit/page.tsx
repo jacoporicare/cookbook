@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
-import {
-  RecipeEditDocument,
-  RecipeEditOptionsDocument,
-  RecipeListDocument,
-} from '@/generated/graphql';
+import { Layout } from '@/components/Layout';
+import { Spinner } from '@/components/common/Spinner';
+import { RecipeEditDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, toUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@/lib/auth-server';
+import {
+  getCachedRecipe,
+  getCachedRecipeEditOptions,
+  getCachedRecipeList,
+} from '@/lib/recipes-cache';
 
 import { RecipeEditPage } from '../../../novy-recept/RecipeEditPage';
 
@@ -15,20 +19,34 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+// Prerender the static chrome for known recipe slugs so the path is known at
+// build (the nav's usePathname resolves). The auth-gated edit form itself stays
+// dynamic behind the Suspense boundary below.
+export async function generateStaticParams() {
+  const { recipes } = await getCachedRecipeList();
+  return recipes.map((recipe) => ({ slug: recipe.slug }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const client = await getClient();
-  const { data } = await client.query({
-    query: RecipeEditDocument,
-    variables: { slug },
-  });
+  const recipe = await getCachedRecipe(slug);
 
   return {
-    title: data?.recipe ? `Upravit: ${data.recipe.title}` : 'Upravit recept',
+    title: recipe ? `Upravit: ${recipe.title}` : 'Upravit recept',
   };
 }
 
-export default async function Page({ params }: Props) {
+export default function Page({ params }: Props) {
+  return (
+    <Layout>
+      <Suspense fallback={<Spinner overlay />}>
+        <EditRecipeContent params={params} />
+      </Suspense>
+    </Layout>
+  );
+}
+
+async function EditRecipeContent({ params }: Props) {
   const { slug } = await params;
   const client = await getClient();
   const currentUser = await getCurrentUser(client);
@@ -37,17 +55,15 @@ export default async function Page({ params }: Props) {
     redirect('/prihlaseni');
   }
 
-  const [recipeResult, optionsResult, recipesResult] = await Promise.all([
+  const [recipeResult, options] = await Promise.all([
     client.query({ query: RecipeEditDocument, variables: { slug } }),
-    client.query({ query: RecipeEditOptionsDocument }),
-    client.query({ query: RecipeListDocument }),
+    getCachedRecipeEditOptions(),
   ]);
 
   if (!recipeResult.data?.recipe) {
     notFound();
   }
 
-  // Check if user can edit this recipe
   const recipe = recipeResult.data.recipe;
   const canEdit =
     currentUser.isAdmin || currentUser.username === recipe.user?.username;
@@ -56,16 +72,5 @@ export default async function Page({ params }: Props) {
     redirect(`/recept/${slug}`);
   }
 
-  return (
-    <RecipeEditPage
-      recipe={recipe}
-      options={{
-        ingredients: optionsResult.data?.ingredients ?? [],
-        sideDishes: optionsResult.data?.sideDishes ?? [],
-        tags: optionsResult.data?.tags ?? [],
-      }}
-      recipes={recipesResult.data?.recipes ?? []}
-      user={toUser(currentUser)}
-    />
-  );
+  return <RecipeEditPage recipe={recipe} options={options} />;
 }

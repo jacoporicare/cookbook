@@ -2,7 +2,6 @@
 
 import type { SubmissionResult } from '@conform-to/dom';
 import { parseWithZod } from '@conform-to/zod/v4';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import {
@@ -72,7 +71,6 @@ export async function createUserAction(
       },
     });
 
-    revalidatePath('/admin');
     return { status: 'success' };
   } catch {
     return submission.reply({
@@ -112,7 +110,6 @@ export async function updateUserAction(
       },
     });
 
-    revalidatePath('/admin');
     return { status: 'success' };
   } catch {
     return submission.reply({
@@ -137,7 +134,6 @@ export async function deleteUserAction(
       variables: { id: userId },
     });
 
-    revalidatePath('/admin');
     return { success: true };
   } catch {
     return { error: 'Nepodařilo se smazat uživatele' };

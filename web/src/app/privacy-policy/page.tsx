@@ -1,20 +1,14 @@
 import type { Metadata } from 'next';
 
 import { Layout } from '@/components/Layout';
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
 };
 
-export default async function PrivacyPolicyPage() {
-  const client = await getClient();
-  const currentUser = await getCurrentUser(client);
-  const { recipes, user } = await getLayoutData({ client, currentUser });
-
+export default function PrivacyPolicyPage() {
   return (
-    <Layout recipes={recipes} user={user}>
+    <Layout>
       <strong>Privacy Policy</strong>
       <p>
         Jakub built the Zradelnik app as a Free app. This SERVICE is provided by

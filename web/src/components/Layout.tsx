@@ -1,24 +1,33 @@
-'use client';
+import { ReactNode, Suspense } from 'react';
 
-import { ReactNode } from 'react';
-
-import { RecipeBaseFragment } from '@/generated/graphql';
-import { User } from '@/types/user';
+import { getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { Footer } from './Footer/Footer';
 import { Header } from './Header/Header';
+import { Nav } from './Nav/Nav';
+import { NavUser } from './Nav/NavUser';
 import { TrackUserActivity } from './TrackUserActivity';
 
 type Props = {
   children: NonNullable<ReactNode>;
-  recipes?: RecipeBaseFragment[];
-  user?: User;
 };
 
-export function Layout(props: Props) {
+export async function Layout({ children }: Props) {
+  // Cached, user-agnostic recipe list powers the header search. The
+  // user-specific nav is streamed separately via <NavUser /> so this shell
+  // stays static/prerenderable.
+  const { recipes } = await getCachedRecipeList();
+
   return (
     <>
-      <Header recipes={props.recipes} user={props.user} />
+      <Header
+        recipes={recipes}
+        nav={
+          <Suspense fallback={<Nav user={null} />}>
+            <NavUser />
+          </Suspense>
+        }
+      />
       <TrackUserActivity />
       <div
         className={`
@@ -34,7 +43,7 @@ export function Layout(props: Props) {
             sm:py-8
           `}
         >
-          {props.children}
+          {children}
         </main>
         <footer
           className={`

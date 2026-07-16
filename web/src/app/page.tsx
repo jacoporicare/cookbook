@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import slug from 'slug';
 
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
+import { Layout } from '@/components/Layout';
+import { AuthedFab } from '@/components/RecipeList/AuthedFab';
+import { Spinner } from '@/components/common/Spinner';
+import { getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { RecipeListPage } from './RecipeListPage';
 
@@ -14,18 +17,24 @@ type Props = {
   searchParams: Promise<{ stitek?: string }>;
 };
 
-export default async function Page({ searchParams }: Props) {
+export default function Page({ searchParams }: Props) {
+  return (
+    <Layout>
+      <Suspense fallback={<Spinner overlay />}>
+        <RecipeListContent searchParams={searchParams} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <AuthedFab />
+      </Suspense>
+    </Layout>
+  );
+}
+
+async function RecipeListContent({ searchParams }: Props) {
   const { stitek } = await searchParams;
+  const { recipes: allRecipes, tags } = await getCachedRecipeList();
 
-  const client = await getClient();
-  const currentUser = await getCurrentUser(client);
-  const {
-    recipes: allRecipes,
-    tags,
-    user,
-  } = await getLayoutData({ client, currentUser });
-
-  // Filter recipes server-side
+  // Filter recipes server-side by the selected tag
   const recipes = stitek
     ? allRecipes.filter((recipe) => recipe.tags.some((t) => slug(t) === stitek))
     : allRecipes;
@@ -33,9 +42,7 @@ export default async function Page({ searchParams }: Props) {
   return (
     <RecipeListPage
       recipes={recipes}
-      allRecipes={allRecipes}
       tags={tags}
-      user={user}
       selectedTag={stitek ?? null}
     />
   );

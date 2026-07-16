@@ -1,8 +1,11 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { RecipeDetailDocument } from '@/generated/graphql';
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
+import { Layout } from '@/components/Layout';
+import { RecipeAuthorControls } from '@/components/RecipeDetail/RecipeAuthorControls';
+import { Spinner } from '@/components/common/Spinner';
+import { getCachedRecipe, getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { RecipeDetailPage } from './RecipeDetailPage';
 
@@ -10,45 +13,51 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateStaticParams() {
+  const { recipes } = await getCachedRecipeList();
+  return recipes.map((recipe) => ({ slug: recipe.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const client = await getClient();
-  const { data } = await client.query({
-    query: RecipeDetailDocument,
-    variables: { slug },
-  });
+  const recipe = await getCachedRecipe(slug);
 
   return {
-    title: data?.recipe?.title ?? slug,
+    title: recipe?.title ?? slug,
   };
 }
 
-export default async function Page({ params }: Props) {
-  const { slug } = await params;
-  const client = await getClient();
-  const currentUser = await getCurrentUser(client);
-  const recipeResult = await client.query({
-    query: RecipeDetailDocument,
-    variables: { slug },
-  });
+export default function Page({ params }: Props) {
+  return (
+    <Layout>
+      <Suspense fallback={<Spinner overlay />}>
+        <RecipeDetailContent params={params} />
+      </Suspense>
+    </Layout>
+  );
+}
 
-  if (!recipeResult.data?.recipe) {
+async function RecipeDetailContent({ params }: Props) {
+  const { slug } = await params;
+  const recipe = await getCachedRecipe(slug);
+
+  if (!recipe) {
     notFound();
   }
 
-  const { recipes, user } = await getLayoutData({ client, currentUser });
-
-  const isAuthor =
-    !!currentUser &&
-    (currentUser.isAdmin ||
-      currentUser.username === recipeResult.data.recipe.user?.username);
-
   return (
     <RecipeDetailPage
-      recipe={recipeResult.data.recipe}
-      recipes={recipes}
-      currentUser={user}
-      isAuthor={isAuthor}
+      recipe={recipe}
+      authorControls={
+        <Suspense fallback={null}>
+          <RecipeAuthorControls
+            id={recipe.id}
+            slug={recipe.slug}
+            title={recipe.title}
+            authorUsername={recipe.user?.username ?? undefined}
+          />
+        </Suspense>
+      }
     />
   );
 }

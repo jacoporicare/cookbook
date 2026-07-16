@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { RecipeListDocument, UserListDocument } from '@/generated/graphql';
+import { Layout } from '@/components/Layout';
+import { Spinner } from '@/components/common/Spinner';
+import { UserListDocument } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, toUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@/lib/auth-server';
 
 import { AdminPage } from './AdminPage';
 
@@ -11,7 +14,17 @@ export const metadata: Metadata = {
   title: 'Správa uživatelů',
 };
 
-export default async function Page() {
+export default function Page() {
+  return (
+    <Layout>
+      <Suspense fallback={<Spinner overlay />}>
+        <AdminContent />
+      </Suspense>
+    </Layout>
+  );
+}
+
+async function AdminContent() {
   const client = await getClient();
   const currentUser = await getCurrentUser(client);
 
@@ -19,17 +32,7 @@ export default async function Page() {
     redirect('/');
   }
 
-  const [usersResult, recipesResult] = await Promise.all([
-    client.query({ query: UserListDocument }),
-    client.query({ query: RecipeListDocument }),
-  ]);
+  const { data } = await client.query({ query: UserListDocument });
 
-  return (
-    <AdminPage
-      users={usersResult.data?.users ?? []}
-      currentUserId={currentUser.id}
-      recipes={recipesResult.data?.recipes ?? []}
-      user={toUser(currentUser)}
-    />
-  );
+  return <AdminPage users={data?.users ?? []} currentUserId={currentUser.id} />;
 }

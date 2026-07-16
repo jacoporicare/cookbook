@@ -1,52 +1,31 @@
-import { Pencil } from 'lucide-react';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 import toSlug from 'slug';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { sortLocaleInsensitive } from '@/lib/utils';
 
 import { RecipeInfo } from '../RecipeInfo/RecipeInfo';
 import { PageHeading } from '../common/PageHeading';
-import { RecipeDelete } from './RecipeDelete';
 
 type Props = {
-  id: string;
   preparationTime?: number;
   sideDish?: string;
-  slug: string;
   tags?: string[];
   title: string;
-  isAuthor?: boolean;
+  actions?: ReactNode;
 };
 
 export function RecipeHeader({
-  id,
   preparationTime,
   sideDish,
-  slug,
   tags,
   title,
-  isAuthor,
+  actions,
 }: Props) {
   return (
     <>
-      <PageHeading
-        buttons={
-          isAuthor && (
-            <div className="flex gap-2">
-              <Link href={`/recept/${slug}/upravit`}>
-                <Button variant="ghost" size="icon" aria-label="Upravit">
-                  <Pencil className="size-5" />
-                </Button>
-              </Link>
-              <RecipeDelete id={id} title={title} />
-            </div>
-          )
-        }
-      >
-        {title}
-      </PageHeading>
+      <PageHeading buttons={actions}>{title}</PageHeading>
 
       {Boolean(preparationTime || sideDish || tags?.length) && (
         <div className="mb-4">

@@ -11,7 +11,6 @@ import {
   resetPasswordAction,
   updateUserAction,
 } from '@/app/actions/user';
-import { Layout } from '@/components/Layout';
 import { ClientDate } from '@/components/common/ClientDate';
 import { PageHeading } from '@/components/common/PageHeading';
 import { Spinner } from '@/components/common/Spinner';
@@ -37,8 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { RecipeBaseFragment, UserFragment } from '@/generated/graphql';
-import { User } from '@/types/user';
+import { UserFragment } from '@/generated/graphql';
 
 type DialogOptions = {
   title?: ReactNode;
@@ -52,11 +50,9 @@ type DialogOptions = {
 type Props = {
   users: UserFragment[];
   currentUserId: string;
-  recipes: RecipeBaseFragment[];
-  user: User;
 };
 
-export function AdminPage({ users, currentUserId, recipes, user }: Props) {
+export function AdminPage({ users, currentUserId }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -190,7 +186,7 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
 
   return (
     <>
-      <Layout recipes={recipes} user={user}>
+      <>
         {isPending && <Spinner overlay />}
         <div className="mx-auto max-w-4xl">
           <PageHeading>Správa uživatelů</PageHeading>
@@ -360,7 +356,7 @@ export function AdminPage({ users, currentUserId, recipes, user }: Props) {
             </CardContent>
           </Card>
         </div>
-      </Layout>
+      </>
 
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <AlertDialogContent>

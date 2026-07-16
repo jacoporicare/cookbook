@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useActionState, useEffect } from 'react';
 
 import { LoginState, loginAction } from '@/app/actions/auth';
-import { Layout } from '@/components/Layout';
 import { PageHeading } from '@/components/common/PageHeading';
 import { Spinner } from '@/components/common/Spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -13,17 +12,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RecipeBaseFragment } from '@/generated/graphql';
 
 const initialState: LoginState = { status: undefined };
 
 type Props = {
-  recipes: RecipeBaseFragment[];
   redirectUri?: string;
   returnUrl?: string;
 };
 
-export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
+export function LoginPage({ redirectUri, returnUrl }: Props) {
   const [state, formAction, pending] = useActionState(
     loginAction,
     initialState,
@@ -143,9 +140,5 @@ export function LoginPage({ recipes, redirectUri, returnUrl }: Props) {
     </>
   );
 
-  if (isForWebView) {
-    return formContent;
-  }
-
-  return <Layout recipes={recipes}>{formContent}</Layout>;
+  return formContent;
 }

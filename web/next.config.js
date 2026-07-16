@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  cacheComponents: true,
   images: {
     dangerouslyAllowLocalIP:
       process.env.API_URL?.startsWith('http://localhost'),

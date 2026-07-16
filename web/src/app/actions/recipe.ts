@@ -2,7 +2,7 @@
 
 import type { SubmissionResult } from '@conform-to/dom';
 import { parseWithZod } from '@conform-to/zod/v4';
-import { revalidatePath } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { z } from 'zod';
 
 import {
@@ -14,6 +14,20 @@ import {
 } from '@/generated/graphql';
 import { getClient } from '@/lib/apollo-client';
 import { getCurrentUser } from '@/lib/auth-server';
+import { RECIPES_TAG, RECIPE_OPTIONS_TAG } from '@/lib/recipes-cache';
+
+/**
+ * Refresh the cached recipe data after a mutation. Called from Server Actions,
+ * so `updateTag` gives read-your-own-writes: the redirect/navigation that
+ * follows immediately sees the new data. Recipe list and every recipe detail
+ * share the RECIPES_TAG tag, so this refreshes both. Recipe edit options
+ * (ingredients/tags/side dishes) are derived from recipes on the API, so they
+ * are refreshed too.
+ */
+function revalidateRecipes() {
+  updateTag(RECIPES_TAG);
+  updateTag(RECIPE_OPTIONS_TAG);
+}
 
 // Schemas
 const ingredientSchema = z.object({
@@ -100,7 +114,7 @@ export async function deleteRecipeAction(
       variables: { id: recipeId },
     });
 
-    revalidatePath('/');
+    revalidateRecipes();
 
     return { success: true };
   } catch (e) {
@@ -139,7 +153,7 @@ export async function importRecipeAction(
       });
     }
 
-    revalidatePath('/');
+    revalidateRecipes();
 
     return {
       status: 'success',
@@ -185,7 +199,7 @@ export async function createRecipeAction(
       });
     }
 
-    revalidatePath('/');
+    revalidateRecipes();
 
     return { ...submission.reply(), recipeSlug: data.createRecipe.slug };
   } catch (e) {
@@ -236,8 +250,7 @@ export async function updateRecipeAction(
       });
     }
 
-    revalidatePath('/');
-    revalidatePath(`/recept/${data.updateRecipe.slug}`);
+    revalidateRecipes();
 
     return { ...submission.reply(), recipeSlug: data.updateRecipe.slug };
   } catch (e) {

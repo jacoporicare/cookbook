@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 
 import { Layout } from '@/components/Layout';
 import { SideDishList } from '@/components/SideDishList/SideDishList';
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser, getLayoutData } from '@/lib/auth-server';
 import { SideDish } from '@/types';
 
 export const metadata: Metadata = {
@@ -25,13 +23,9 @@ const sideDishes: SideDish[] = [
   { title: 'Polenta', sideWeight: '45 g' },
 ];
 
-export default async function Page() {
-  const client = await getClient();
-  const currentUser = await getCurrentUser(client);
-  const { recipes, user } = await getLayoutData({ client, currentUser });
-
+export default function Page() {
   return (
-    <Layout recipes={recipes} user={user}>
+    <Layout>
       <SideDishList sideDishes={sideDishes} />
     </Layout>
   );

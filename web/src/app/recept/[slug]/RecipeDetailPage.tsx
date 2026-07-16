@@ -1,32 +1,23 @@
-import { Layout } from '@/components/Layout';
+import { ReactNode } from 'react';
+
 import { RecipeDetail } from '@/components/RecipeDetail/RecipeDetail';
 import { RecipeHeader } from '@/components/RecipeDetail/RecipeHeader';
 import { INSTANT_POT_TAG } from '@/const';
-import { RecipeBaseFragment, RecipeDetailQuery } from '@/generated/graphql';
-import { User } from '@/types/user';
+import { RecipeDetailQuery } from '@/generated/graphql';
 
 type Props = {
   recipe: NonNullable<RecipeDetailQuery['recipe']>;
-  recipes: RecipeBaseFragment[];
-  currentUser: User;
-  isAuthor: boolean;
+  authorControls: ReactNode;
 };
 
-export function RecipeDetailPage({
-  recipe,
-  recipes,
-  currentUser,
-  isAuthor,
-}: Props) {
+export function RecipeDetailPage({ recipe, authorControls }: Props) {
   const {
-    id,
     directions,
     ingredients,
     lastModifiedDate,
     preparationTime,
     servingCount,
     sideDish,
-    slug,
     sousVideOptions,
     tags,
     title,
@@ -35,31 +26,27 @@ export function RecipeDetailPage({
   } = recipe;
 
   return (
-    <Layout recipes={recipes} user={currentUser}>
-      <article>
-        <RecipeHeader
-          id={id}
-          isAuthor={isAuthor}
-          preparationTime={preparationTime ?? undefined}
-          sideDish={sideDish ?? undefined}
-          slug={slug}
-          tags={tags ?? undefined}
-          title={title}
-        />
-        <RecipeDetail
-          directions={directions ?? undefined}
-          imageFullUrl={imageUrl ?? undefined}
-          imageUrl={imageUrl ?? undefined}
-          ingredients={ingredients ?? undefined}
-          isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
-          lastModifiedDate={lastModifiedDate}
-          preparationTime={preparationTime ?? undefined}
-          servingCount={servingCount ?? undefined}
-          sousVideOptions={sousVideOptions ?? undefined}
-          title={title}
-          userName={user?.displayName}
-        />
-      </article>
-    </Layout>
+    <article>
+      <RecipeHeader
+        actions={authorControls}
+        preparationTime={preparationTime ?? undefined}
+        sideDish={sideDish ?? undefined}
+        tags={tags ?? undefined}
+        title={title}
+      />
+      <RecipeDetail
+        directions={directions ?? undefined}
+        imageFullUrl={imageUrl ?? undefined}
+        imageUrl={imageUrl ?? undefined}
+        ingredients={ingredients ?? undefined}
+        isInstantPotRecipe={tags.includes(INSTANT_POT_TAG)}
+        lastModifiedDate={lastModifiedDate}
+        preparationTime={preparationTime ?? undefined}
+        servingCount={servingCount ?? undefined}
+        sousVideOptions={sousVideOptions ?? undefined}
+        title={title}
+        userName={user?.displayName}
+      />
+    </article>
   );
 }

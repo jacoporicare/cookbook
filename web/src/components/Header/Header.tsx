@@ -3,11 +3,10 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
 import { RecipeBaseFragment } from '@/generated/graphql';
-import { User } from '@/types/user';
 
-import { Nav } from '../Nav/Nav';
 import { RecipeSearchContainer as RecipeSearch } from '../RecipeSearch/RecipeSearch.container';
 import { ThemeToggle } from '../ThemeToggle';
 
@@ -18,7 +17,7 @@ const WakeLock = dynamic(
 
 type Props = {
   recipes?: RecipeBaseFragment[];
-  user?: User;
+  nav: ReactNode;
 };
 
 export function Header(props: Props) {
@@ -59,7 +58,7 @@ export function Header(props: Props) {
           {props.recipes && <RecipeSearch recipes={props.recipes} />}
           <ThemeToggle className="max-sm:hidden" />
           <WakeLock />
-          <Nav user={props.user} />
+          {props.nav}
         </div>
       </div>
     </header>
