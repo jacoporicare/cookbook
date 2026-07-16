@@ -4,7 +4,7 @@ import slug from 'slug';
 
 import { Layout } from '@/components/Layout';
 import { AuthedFab } from '@/components/RecipeList/AuthedFab';
-import { Spinner } from '@/components/common/Spinner';
+import { RecipeListSkeleton } from '@/components/RecipeList/RecipeListSkeleton';
 import { getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { RecipeListPage } from './RecipeListPage';
@@ -20,7 +20,7 @@ type Props = {
 export default function Page({ searchParams }: Props) {
   return (
     <Layout>
-      <Suspense fallback={<Spinner overlay />}>
+      <Suspense fallback={<RecipeListSkeleton />}>
         <RecipeListContent searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={null}>
