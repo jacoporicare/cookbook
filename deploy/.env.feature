@@ -9,3 +9,10 @@ WEB_HOST=${GITHUB_REF_NAME}.zradelnik.cz
 
 APOLLO_EXPLORER_ENABLED=true
 NEW_RECIPES_TOPIC=new_recipes.debug
+
+# Recipe image storage (S3). Bucket/region are public config; the IAM key
+# (zradelnik-app) is injected from the deploy environment / CI secrets.
+S3_BUCKET=zradelnik-recipe-images
+AWS_REGION=eu-central-1
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}

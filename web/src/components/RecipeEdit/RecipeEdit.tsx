@@ -48,6 +48,7 @@ type Props = {
   formAction: (payload: FormData) => void;
   imageId?: string;
   imageUrl?: string;
+  imageResetToken?: number;
   ingredientOptions: string[];
   ingredients: Omit<Ingredient, '_id' | 'id'>[];
   isNew: boolean;
@@ -75,6 +76,7 @@ export function RecipeEdit({
   formAction,
   imageId,
   imageUrl,
+  imageResetToken,
   ingredientOptions,
   ingredients,
   isNew,
@@ -297,6 +299,7 @@ export function RecipeEdit({
               </CardHeader>
               <CardContent>
                 <ImageUpload
+                  key={imageResetToken}
                   imageUrl={imageUrl}
                   onImageChange={onImageChange}
                 />

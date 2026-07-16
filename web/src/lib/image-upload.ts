@@ -1,29 +1,40 @@
+import { createImageUploadAction } from '@/app/actions/image';
+
 export type ImageUploadResult = {
   imageId: string;
 };
 
-export type ImageUploadError = {
-  error: string;
-};
+// Keep in sync with MAX_UPLOAD_BYTES in api/src/imageProcessing.ts. The API
+// re-checks server-side; this is just fast client feedback.
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
+
+export class ImageTooLargeError extends Error {}
 
 /**
- * Upload an image via the Next.js API route.
- * The API route proxies to the backend and handles auth from cookies.
+ * Upload a recipe image via a presigned direct-to-S3 PUT into staging:
+ *   1. ask the API (via a Server Action) to presign a staging upload,
+ *   2. PUT the original straight to S3 (never touches our servers).
+ * The returned key is submitted as `imageId` with the recipe; createRecipe/
+ * updateRecipe then promote the staged upload (generate renditions). Abandoned
+ * staging uploads are auto-expired by an S3 lifecycle rule.
  */
 export async function uploadImage(file: File): Promise<ImageUploadResult> {
-  const formData = new FormData();
-  formData.append('image', file);
+  if (file.size > MAX_UPLOAD_BYTES) {
+    throw new ImageTooLargeError('Obrázek je příliš velký (max 15 MB)');
+  }
 
-  const response = await fetch('/api/upload/image', {
-    method: 'POST',
-    body: formData,
+  const { key, uploadUrl } = await createImageUploadAction(file.type);
+
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    body: file,
+    // Must match the Content-Type the URL was signed with, or S3 rejects it.
+    headers: { 'Content-Type': file.type },
   });
 
   if (!response.ok) {
-    const error: ImageUploadError = await response.json();
-    throw new Error(error.error || 'Failed to upload image');
+    throw new Error('Failed to upload image to storage');
   }
 
-  const result: ImageUploadResult = await response.json();
-  return result;
+  return { imageId: key };
 }

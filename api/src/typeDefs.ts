@@ -3,15 +3,6 @@ import { gql } from 'graphql-tag';
 const typeDefs = gql`
   scalar Date
 
-  input ImageSize {
-    width: Int!
-    height: Int!
-  }
-
-  enum ImageFormat {
-    WEBP
-  }
-
   type Recipe {
     id: ID!
     title: String!
@@ -21,7 +12,7 @@ const typeDefs = gql`
     preparationTime: Int
     servingCount: Int
     user: User
-    imageUrl(size: ImageSize, format: ImageFormat): String
+    imageUrl: String
     creationDate: Date!
     lastModifiedDate: Date!
     ingredients: [Ingredient!]!
@@ -63,6 +54,13 @@ const typeDefs = gql`
 
   type AuthPayload {
     token: String!
+  }
+
+  type ImageUploadTarget {
+    "Opaque image key; PUT the original to uploadUrl, then pass this as imageId to createRecipe/updateRecipe."
+    key: ID!
+    "Presigned S3 URL to PUT the original file to (send the same Content-Type)."
+    uploadUrl: String!
   }
 
   input RecipeInput {
@@ -108,6 +106,8 @@ const typeDefs = gql`
 
   type Mutation {
     login(username: String!, password: String!): AuthPayload!
+    "Presign a direct-to-S3 staging upload for a recipe image original. The returned key is submitted as imageId to createRecipe/updateRecipe, which promotes it."
+    createImageUpload(contentType: String!): ImageUploadTarget!
     createRecipe(recipe: RecipeInput!, imageId: ID): Recipe!
     updateRecipe(id: ID!, recipe: RecipeInput!, imageId: ID): Recipe!
     deleteRecipe(id: ID!): Boolean!

@@ -55,6 +55,8 @@ paths:
 - Shadcn/Radix UI components in [web/src/components/ui/](web/src/components/ui/)
 - Lucide React for icons
 
+**Images**: Recipe images are served directly from a public S3 bucket, bypassing Next's optimizer. A custom `next/image` loader ([web/image-loader.js](web/image-loader.js)) maps the `imageUrl` prefix + requested width to a pre-generated `<key>/<width>.webp` object; local/static assets pass through unchanged. The loader's widths must match `deviceSizes`/`imageSizes` in [web/next.config.js](web/next.config.js) and `RENDITION_WIDTHS` in the API.
+
 **Key Libraries**:
 
 - **dnd-kit**: Drag and drop for ingredient reordering
@@ -68,7 +70,7 @@ paths:
 - [RecipeList/](web/src/components/RecipeList/): Recipe listing with filtering
 - [RecipeDetail/](web/src/components/RecipeDetail/): Recipe view with ingredients, directions, sous vide options
 - [RecipeEdit/](web/src/components/RecipeEdit/): Recipe creation/editing form
-- [ImageUpload/](web/src/components/ImageUpload/): Image upload with preview
+- [ImageUpload/](web/src/components/ImageUpload/): Image upload with preview. Uploads go presigned direct-to-S3 staging via [lib/image-upload.ts](web/src/lib/image-upload.ts) + [actions/image.ts](web/src/app/actions/image.ts) (`createImageUpload` → PUT to `staging/<key>`); the recipe save then promotes it.
 - [ui/](web/src/components/ui/): Shadcn/Radix primitives (button, dialog, select, etc.)
 
 **Server Components First**: Prefer React Server Components over Client Components. Avoid React Context as it requires client components - use self-contained components with localStorage/cookies for state persistence instead.

@@ -106,9 +106,12 @@ docker-compose up
 - `JWT_SECRET`: Secret for signing JWT tokens
 - `OPENAI_API_KEY`: OpenAI API Key for automatic recipe creation from a URL
 - `APOLLO_EXPLORER_ENABLED`: Enable Apollo GraphQL explorer (default: disabled in production)
-- `MONGODB_URI`: MongoDB connection string
+- `MONGO_URI`: MongoDB connection string
 - `NODE_ENV`: Environment mode (production/development)
-- `IMAGE_CACHE_DIR`: Directory for warmed image renditions. In production must point at a persistent volume (see [deploy/docker-compose.yml](deploy/docker-compose.yml)); defaults to a tmp dir for local dev.
+- `S3_BUCKET`: Bucket holding recipe images (default `zradelnik-recipe-images`).
+- `AWS_REGION`: AWS region for the bucket (default `eu-central-1`).
+- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`: Credentials for the `zradelnik-app` IAM user (S3 write access). Read from the ambient AWS config locally.
+- `S3_PUBLIC_BASE_URL`: Optional override for the public image base URL (defaults to the virtual-hosted S3 endpoint); set this to point image URLs at a CDN later.
 
 ### Web
 
@@ -121,12 +124,22 @@ The API uses Firebase Admin SDK ([api/src/firebase.ts](api/src/firebase.ts)) for
 
 ## Image Handling
 
-Recipe images are stored in MongoDB (via the Image model). The image route is `/image/:slugAndId` (where `slugAndId` is `<slug>_<imageId>`):
+Recipe images live in an S3 bucket (`zradelnik-recipe-images`, `eu-central-1`) and are served **directly to the browser from S3** — neither the API nor Next's image optimizer sits in the image read path (this keeps image traffic off the small VPS). The bucket policy grants public GET only to `*.webp` / `*.jpg`, so renditions are public while the original and staging uploads are private. `recipe.image` holds an opaque object-key prefix; per image:
 
-- **Bare request** (no query): the **web source** — the original capped to 1920px on its long edge and re-encoded as WebP, cached on disk under `IMAGE_CACHE_DIR`. This is what the web's `next/image` fetches and resizes per viewport. (Serving the multi-megapixel original instead overwhelmed the API and Next's decoder — the cap is lossless in practice since the largest width any component requests is 1200.)
-- **Sized request** (`?size=WxH`, optional `?format=webp`): a Sharp-resized WebP/JPEG rendition cached on disk. Used by push notifications (`?size=1080x1080` → JPEG).
+- `<key>/original` — the pristine uploaded file, **private** (kept for future re-encoding).
+- `<key>/{96,384,640,828,1080,1920}.webp` — fixed-width WebP renditions the website consumes (public).
+- `<key>/1080x1080.jpg` — square JPEG for Android push notifications (public).
 
-Cold encodes on the request path are concurrency-limited so a burst can't exhaust the VM. A forked background warmer ([api/src/scripts/imagesGenerator.ts](api/src/scripts/imagesGenerator.ts)) pre-generates the WebP source for every recipe in production. AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. Image identity is content-addressed (a new `imageId` is minted whenever a recipe's picture changes), so cached renditions never go stale.
+**Upload (presigned, direct-to-S3, staging pattern):**
+1. `createImageUpload(contentType)` (auth) allowlists the type, mints a key, and returns a presigned PUT URL for `staging/<key>`.
+2. The browser PUTs the original straight to S3 staging.
+3. On save, `createRecipe`/`updateRecipe` (with `imageId = key`) **promote** the staged upload: size/pixel-capped validation, generate + upload all renditions (concurrency-gated), store the original privately, delete the staging object. Promotion rejects a key with no staging object, which prevents attaching another recipe's (public-keyed) image.
+
+Abandoned staging uploads are swept automatically by an S3 lifecycle rule (`expire-staging-uploads`, `staging/` after 1 day) — there is no app-side orphan prune. On picture replace, `updateRecipe` deletes the old key's prefix only if no other recipe still references it.
+
+**Serving:** the GraphQL `imageUrl` returns the S3 base (`<publicBase>/<key>`). A custom `next/image` loader ([web/image-loader.js](web/image-loader.js)) appends `/<width>.webp`, so the browser fetches finished bytes directly from S3 and `/_next/image` never runs. The rendition widths in [api/src/imageProcessing.ts](api/src/imageProcessing.ts) (`RENDITION_WIDTHS`), the loader, and `next.config.js` `deviceSizes`/`imageSizes` **must stay in sync**.
+
+Image identity is content-addressed (a new key is minted whenever a recipe's picture changes). AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. Migrating the original MongoDB blobs to S3 is a one-shot idempotent script ([api/src/scripts/migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts)).
 
 - Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.
 
