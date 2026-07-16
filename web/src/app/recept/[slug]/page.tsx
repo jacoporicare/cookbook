@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 
 import { Layout } from '@/components/Layout';
 import { RecipeAuthorControls } from '@/components/RecipeDetail/RecipeAuthorControls';
-import { Spinner } from '@/components/common/Spinner';
+import { RecipeDetailSkeleton } from '@/components/RecipeDetail/RecipeDetailSkeleton';
 import { getCachedRecipe, getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { RecipeDetailPage } from './RecipeDetailPage';
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default function Page({ params }: Props) {
   return (
     <Layout>
-      <Suspense fallback={<Spinner overlay />}>
+      <Suspense fallback={<RecipeDetailSkeleton />}>
         <RecipeDetailContent params={params} />
       </Suspense>
     </Layout>
