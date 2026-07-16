@@ -18,9 +18,8 @@ paths:
 
 **Database Models** ([api/src/models/](api/src/models/)):
 
-- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history, sous vide options. `image` is the S3 object-key prefix (a plain string).
+- [recipe.ts](api/src/models/recipe.ts): Recipe schema with ingredients, tags, cooked history, sous vide options. `image` is the full S3 key `images/<id>` (a plain string).
 - [user.ts](api/src/models/user.ts): User schema with bcrypt password hashing
-- [image.ts](api/src/models/image.ts): Legacy MongoDB image-blob model — retained only for the S3 migration script to read old blobs; not used at runtime.
 
 **Authentication** ([api/src/auth.ts](api/src/auth.ts)):
 
@@ -37,8 +36,7 @@ paths:
 - Upload (staging pattern): `createImageUpload(contentType)` [auth] presigns a PUT to `staging/<id>`; the browser PUTs; then `createRecipe`/`updateRecipe` (imageId = id) call `promoteStagingImage` and store its returned `images/<id>` key. Promotion rejects an id with no staging object (blocks attaching another recipe's public-keyed image).
 - Abandoned staging uploads expire via the S3 lifecycle rule `expire-staging-uploads` (no app-side prune). `updateRecipe` deletes the old prefix on replace only if no other recipe references it.
 - Image identity is content-addressed: a new id (`randomUUID`) is minted whenever a recipe's picture changes. AVIF is intentionally unsupported (AV1 too slow on the VM).
-- [migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts): one-shot idempotent migration of the old MongoDB blobs to S3. `--drop-images` drops the legacy collection.
-- [relocateImagesToPrefix.ts](api/src/scripts/relocateImagesToPrefix.ts): one-shot idempotent relocation of root `<key>/…` objects into `images/<key>/…` + rewrite of `recipe.image` (used once to move the originally-root-keyed images under the `images/` prefix). `--dry-run` previews.
+- The one-shot MongoDB→S3 migration + `images/`-prefix relocation scripts and the legacy `Image` blob model have been removed now that the migration is complete.
 
 **Firebase Integration**:
 

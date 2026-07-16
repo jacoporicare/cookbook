@@ -139,7 +139,7 @@ Abandoned staging uploads are swept automatically by an S3 lifecycle rule (`expi
 
 **Serving:** the GraphQL `imageUrl` returns the S3 base (`<publicBase>/<key>`). A custom `next/image` loader ([web/image-loader.js](web/image-loader.js)) appends `/<width>.webp`, so the browser fetches finished bytes directly from S3 and `/_next/image` never runs. The rendition widths in [api/src/imageProcessing.ts](api/src/imageProcessing.ts) (`RENDITION_WIDTHS`), the loader, and `next.config.js` `deviceSizes`/`imageSizes` **must stay in sync**.
 
-Image identity is content-addressed (a new key is minted whenever a recipe's picture changes). AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. Migrating the original MongoDB blobs to S3 is a one-shot idempotent script ([api/src/scripts/migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts)).
+Image identity is content-addressed (a new key is minted whenever a recipe's picture changes). AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. (Images were migrated out of MongoDB into S3 in a one-shot pass; those migration scripts and the legacy `Image` blob model have since been removed.)
 
 - Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.
 
