@@ -31,13 +31,14 @@ paths:
 
 **Image Handling** (S3, direct-served — API is NOT in the read path):
 
-- [s3.ts](api/src/s3.ts): S3 client + helpers (presign **staging** upload, head/get/put/delete object, delete `<key>/` prefix, list). Public base URL builder. Bucket policy grants public GET only to `*.webp`/`*.jpg`; the `<key>/original` and `staging/<key>` objects are private.
-- [imageProcessing.ts](api/src/imageProcessing.ts): `RENDITION_WIDTHS` + Sharp generation (WebP widths + 1080×1080 push JPEG), size/pixel caps, a concurrency gate, and `promoteStagingImage(key)` — validates the staged original, stores it privately, generates renditions, deletes staging. Idempotent.
-- [recipeImage.ts](api/src/recipeImage.ts): builds the public `imageUrl` (`<publicBase>/<key>` prefix) and `pushImageUrl` (the `<key>/1080x1080.jpg` rendition).
-- Upload (staging pattern): `createImageUpload(contentType)` [auth] presigns a PUT to `staging/<key>`; the browser PUTs; then `createRecipe`/`updateRecipe` (imageId = key) call `promoteStagingImage`. Promotion rejects a key with no staging object (blocks attaching another recipe's public-keyed image).
+- [s3.ts](api/src/s3.ts): S3 client + helpers (presign **staging** upload, head/get/put/copy/delete object, delete `<key>/` prefix, list). `permanentImageKey(id)` = `images/<id>`. Bucket policy grants public GET only to `*.webp`/`*.jpg`; the `images/<id>/original` and `staging/<id>` objects are private. Bucket root holds only `images/` and `staging/`.
+- [imageProcessing.ts](api/src/imageProcessing.ts): `RENDITION_WIDTHS` + Sharp generation (WebP widths + 1080×1080 push JPEG), size/pixel caps, a concurrency gate, and `promoteStagingImage(id)` — validates the staged original, generates renditions under `images/<id>/`, stores the original privately, deletes staging, and returns the full key `images/<id>`. Idempotent.
+- [recipeImage.ts](api/src/recipeImage.ts): builds the public `imageUrl` (`<publicBase>/<recipe.image>`, where `recipe.image` = `images/<id>`) and `pushImageUrl` (`.../1080x1080.jpg`).
+- Upload (staging pattern): `createImageUpload(contentType)` [auth] presigns a PUT to `staging/<id>`; the browser PUTs; then `createRecipe`/`updateRecipe` (imageId = id) call `promoteStagingImage` and store its returned `images/<id>` key. Promotion rejects an id with no staging object (blocks attaching another recipe's public-keyed image).
 - Abandoned staging uploads expire via the S3 lifecycle rule `expire-staging-uploads` (no app-side prune). `updateRecipe` deletes the old prefix on replace only if no other recipe references it.
-- Image identity is content-addressed: a new key (`randomUUID`) is minted whenever a recipe's picture changes. AVIF is intentionally unsupported (AV1 too slow on the VM).
-- [migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts): one-shot idempotent migration of the old MongoDB blobs to S3 (key = old Image ObjectId hex, so archive and prod runs converge; writes straight to the permanent layout, no staging). `--drop-images` drops the legacy collection.
+- Image identity is content-addressed: a new id (`randomUUID`) is minted whenever a recipe's picture changes. AVIF is intentionally unsupported (AV1 too slow on the VM).
+- [migrateImagesToS3.ts](api/src/scripts/migrateImagesToS3.ts): one-shot idempotent migration of the old MongoDB blobs to S3. `--drop-images` drops the legacy collection.
+- [relocateImagesToPrefix.ts](api/src/scripts/relocateImagesToPrefix.ts): one-shot idempotent relocation of root `<key>/…` objects into `images/<key>/…` + rewrite of `recipe.image` (used once to move the originally-root-keyed images under the `images/` prefix). `--dry-run` previews.
 
 **Firebase Integration**:
 

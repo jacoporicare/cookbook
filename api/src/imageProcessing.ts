@@ -6,6 +6,7 @@ import {
   getObjectBuffer,
   headObject,
   originalObjectKey,
+  permanentImageKey,
   putObject,
   stagingObjectKey,
 } from './s3';
@@ -114,15 +115,16 @@ export async function generateAndUploadRenditions(
 // staging object. Idempotent — if the renditions already exist (e.g. a retried
 // save), it is a no-op. Throws if the staging upload is missing/expired, too
 // large, or not a decodable image; on a bad image the staging object is removed.
-export async function promoteStagingImage(key: string) {
+// Returns the permanent image key (`images/<id>`) to store in recipe.image.
+export async function promoteStagingImage(id: string): Promise<string> {
   // A staging object MUST exist. This is the security boundary: callers can only
-  // attach a key they just uploaded to staging (a random UUID, private, short
+  // attach an id they just uploaded to staging (a random UUID, private, short
   // lived). An arbitrary or already-committed key lifted from another recipe's
   // public imageUrl has no staging object and is rejected here — so it can
   // never be attached, and thus never later trigger a delete of someone else's
   // renditions. (Renditions from a partially-failed prior attempt are simply
   // overwritten, since staging is only deleted on full success below.)
-  const staging = stagingObjectKey(key);
+  const staging = stagingObjectKey(id);
   const meta = await headObject(staging);
 
   if (!meta) {
@@ -135,6 +137,7 @@ export async function promoteStagingImage(key: string) {
   }
 
   const original = await getObjectBuffer(staging);
+  const key = permanentImageKey(id);
 
   // metadata() only parses the header and passes HEIC/HEVC (whose decoder is
   // absent from the musl prebuilt binary); stats() forces a real pixel decode.
@@ -150,4 +153,6 @@ export async function promoteStagingImage(key: string) {
   await putObject(originalObjectKey(key), original, meta.contentType);
   await generateAndUploadRenditions(key, original);
   await deleteObject(staging).catch(() => {});
+
+  return key;
 }

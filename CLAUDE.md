@@ -124,16 +124,16 @@ The API uses Firebase Admin SDK ([api/src/firebase.ts](api/src/firebase.ts)) for
 
 ## Image Handling
 
-Recipe images live in an S3 bucket (`zradelnik-recipe-images`, `eu-central-1`) and are served **directly to the browser from S3** — neither the API nor Next's image optimizer sits in the image read path (this keeps image traffic off the small VPS). The bucket policy grants public GET only to `*.webp` / `*.jpg`, so renditions are public while the original and staging uploads are private. `recipe.image` holds an opaque object-key prefix; per image:
+Recipe images live in an S3 bucket (`zradelnik-recipe-images`, `eu-central-1`) and are served **directly to the browser from S3** — neither the API nor Next's image optimizer sits in the image read path (this keeps image traffic off the small VPS). The bucket policy grants public GET only to `*.webp` / `*.jpg`, so renditions are public while the original and staging uploads are private. The bucket root holds just two prefixes: `images/` (permanent) and `staging/` (transient uploads). `recipe.image` holds the full permanent key `images/<id>`; per image:
 
-- `<key>/original` — the pristine uploaded file, **private** (kept for future re-encoding).
-- `<key>/{96,384,640,828,1080,1920}.webp` — fixed-width WebP renditions the website consumes (public).
-- `<key>/1080x1080.jpg` — square JPEG for Android push notifications (public).
+- `images/<id>/original` — the pristine uploaded file, **private** (kept for future re-encoding).
+- `images/<id>/{96,384,640,828,1080,1920}.webp` — fixed-width WebP renditions the website consumes (public).
+- `images/<id>/1080x1080.jpg` — square JPEG for Android push notifications (public).
 
 **Upload (presigned, direct-to-S3, staging pattern):**
-1. `createImageUpload(contentType)` (auth) allowlists the type, mints a key, and returns a presigned PUT URL for `staging/<key>`.
+1. `createImageUpload(contentType)` (auth) allowlists the type, mints an id, and returns a presigned PUT URL for `staging/<id>`.
 2. The browser PUTs the original straight to S3 staging.
-3. On save, `createRecipe`/`updateRecipe` (with `imageId = key`) **promote** the staged upload: size/pixel-capped validation, generate + upload all renditions (concurrency-gated), store the original privately, delete the staging object. Promotion rejects a key with no staging object, which prevents attaching another recipe's (public-keyed) image.
+3. On save, `createRecipe`/`updateRecipe` (with `imageId = id`) **promote** the staged upload: size/pixel-capped validation, generate + upload all renditions under `images/<id>/` (concurrency-gated), store the original privately, delete the staging object. Promotion returns the full key `images/<id>` stored on the recipe, and rejects an id with no staging object (prevents attaching another recipe's public-keyed image).
 
 Abandoned staging uploads are swept automatically by an S3 lifecycle rule (`expire-staging-uploads`, `staging/` after 1 day) — there is no app-side orphan prune. On picture replace, `updateRecipe` deletes the old key's prefix only if no other recipe still references it.
 

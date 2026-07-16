@@ -1,4 +1,5 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
@@ -35,10 +36,17 @@ export const IMMUTABLE_CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
 const s3 = new S3Client({ region });
 
+// Permanent images live under an `images/` prefix so the bucket root stays
+// clean (only `images/` and `staging/`). This is the value stored in
+// `recipe.image` and used as the public URL path; renditions live beneath it.
+export function permanentImageKey(id: string) {
+  return `images/${id}`;
+}
+
 // Transient upload location (private, lifecycle-expired). The browser PUTs the
 // original here; promotion reads it and then deletes it.
-export function stagingObjectKey(key: string) {
-  return `staging/${key}`;
+export function stagingObjectKey(id: string) {
+  return `staging/${id}`;
 }
 
 // The pristine original, kept for future re-encoding. Private (no public ext).
@@ -116,6 +124,18 @@ export async function putObject(
 
 export async function deleteObject(objectKey: string) {
   await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: objectKey }));
+}
+
+// Server-side copy within the bucket (preserves content-type + cache-control).
+export async function copyObject(fromKey: string, toKey: string) {
+  await s3.send(
+    new CopyObjectCommand({
+      Bucket: bucket,
+      CopySource: `${bucket}/${encodeURIComponent(fromKey)}`,
+      Key: toKey,
+      MetadataDirective: 'COPY',
+    }),
+  );
 }
 
 export async function listKeysUnderPrefix(prefix: string): Promise<string[]> {

@@ -131,13 +131,14 @@ const resolvers: Resolvers = {
       // Promote the staged upload (validate + generate renditions) before we
       // create the recipe, so the stored key always points at real renditions
       // and the push notification below can reference the 1080×1080 JPEG.
-      if (args.imageId) {
-        await promoteStagingImage(args.imageId);
-      }
+      // Returns the permanent key (`images/<id>`) that is stored on the recipe.
+      const imageKey = args.imageId
+        ? await promoteStagingImage(args.imageId)
+        : undefined;
 
       const recipeToSave = mapToRecipeDbObject(
         args.recipe,
-        args.imageId ?? undefined,
+        imageKey,
         ctx.currentUser.id,
       );
       await RecipeModel.findOneAndDelete({
@@ -151,8 +152,8 @@ const resolvers: Resolvers = {
       } catch (e) {
         // Creation failed (e.g. slug conflict): the just-promoted image would
         // otherwise be a permanent orphan (not under staging/), so remove it.
-        if (args.imageId) {
-          await deleteImagePrefix(args.imageId).catch(logger.error);
+        if (imageKey) {
+          await deleteImagePrefix(imageKey).catch(logger.error);
         }
         throw e;
       }
@@ -194,22 +195,21 @@ const resolvers: Resolvers = {
       }
 
       const origImageKey = recipe.image;
-      const imageChanged = Boolean(
-        args.imageId && args.imageId !== origImageKey,
-      );
 
       // A new picture was uploaded: promote the staged upload first, so the
       // recipe never points at a key without renditions. promoteStagingImage
-      // rejects a key that has no staging object (e.g. an arbitrary or
+      // rejects an id that has no staging object (e.g. an arbitrary or
       // already-committed key lifted from another recipe's public imageUrl),
       // which prevents attaching — and later deleting — someone else's image.
-      if (imageChanged) {
-        await promoteStagingImage(args.imageId!);
-      }
+      // Returns the permanent key (`images/<id>`) stored on the recipe.
+      const imageKey = args.imageId
+        ? await promoteStagingImage(args.imageId)
+        : undefined;
+      const imageChanged = Boolean(imageKey && imageKey !== origImageKey);
 
       const recipeToSave = mapToRecipeDbObject(
         args.recipe,
-        args.imageId ?? undefined,
+        imageKey,
         undefined,
       );
       await RecipeModel.findOneAndDelete({
