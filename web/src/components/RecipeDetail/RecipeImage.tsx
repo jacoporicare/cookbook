@@ -35,9 +35,9 @@ export function RecipeImage(props: Props) {
         <Image
           alt={title}
           src={imageUrl}
-          className="w-full rounded"
+          className="aspect-[4/3] w-full rounded object-cover"
           width={800}
-          height={800}
+          height={600}
           sizes="(min-width: 768px) 17vw, 100vw"
         />
       </a>
@@ -49,9 +49,9 @@ export function RecipeImage(props: Props) {
               alt={title}
               src={imageFullUrl}
               width={1200}
-              height={1200}
+              height={900}
               sizes="(max-width: 896px) 100vw, 896px"
-              className="h-auto w-full"
+              className="aspect-[4/3] h-auto w-full object-cover"
             />
           )}
         </DialogContent>
