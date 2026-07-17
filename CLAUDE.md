@@ -92,11 +92,12 @@ pnpm --filter web codegen
 ### Docker
 
 ```bash
-# Start MongoDB and Mongo Express (admin UI)
+# Start MongoDB, Mongo Express (admin UI), and MinIO (local S3 for images)
 docker-compose up
 
 # MongoDB runs on port 27017
 # Mongo Express admin UI available at http://localhost:8081
+# MinIO S3 API on port 9100, web console on http://localhost:9101 (minioadmin/minioadmin)
 ```
 
 ## Environment Variables
@@ -110,8 +111,9 @@ docker-compose up
 - `NODE_ENV`: Environment mode (production/development)
 - `S3_BUCKET`: Bucket holding recipe images (default `zradelnik-recipe-images`).
 - `AWS_REGION`: AWS region for the bucket (default `eu-central-1`).
-- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`: Credentials for the `zradelnik-app` IAM user (S3 write access). Read from the ambient AWS config locally.
-- `S3_PUBLIC_BASE_URL`: Optional override for the public image base URL (defaults to the virtual-hosted S3 endpoint); set this to point image URLs at a CDN later.
+- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`: Credentials for S3 write access. In production these are the `zradelnik-app` IAM user (read from the ambient AWS config on the VPS); locally they are `minioadmin`/`minioadmin` for MinIO.
+- `S3_PUBLIC_BASE_URL`: Optional override for the public image base URL (defaults to the virtual-hosted S3 endpoint); set this to point image URLs at a CDN later. Locally it targets the path-style MinIO bucket URL.
+- `S3_ENDPOINT` / `S3_FORCE_PATH_STYLE`: **Local dev only.** Point the S3 client at the MinIO emulator (`http://localhost:9100`, path-style). Both are unset in staging/production so the client talks to real AWS S3. See [Image Handling → Local development](#image-handling).
 
 ### Web
 
@@ -138,6 +140,8 @@ Recipe images live in an S3 bucket (`zradelnik-recipe-images`, `eu-central-1`) a
 Abandoned staging uploads are swept automatically by an S3 lifecycle rule (`expire-staging-uploads`, `staging/` after 1 day) — there is no app-side orphan prune. On picture replace, `updateRecipe` deletes the old key's prefix only if no other recipe still references it.
 
 **Serving:** the GraphQL `imageUrl` returns the S3 base (`<publicBase>/<key>`). A custom `next/image` loader ([web/image-loader.js](web/image-loader.js)) appends `/<width>.webp`, so the browser fetches finished bytes directly from S3 and `/_next/image` never runs. The rendition widths in [api/src/imageProcessing.ts](api/src/imageProcessing.ts) (`RENDITION_WIDTHS`), the loader, and `next.config.js` `deviceSizes`/`imageSizes` **must stay in sync**.
+
+**Local development:** local dev never touches the production bucket. `docker-compose up` starts a **MinIO** container (S3-compatible emulator) alongside MongoDB; a one-shot `minio-setup` container creates the `zradelnik-recipe-images` bucket, adds the `staging/` 1-day expiry lifecycle rule, and applies [docker/minio-recipe-images-policy.json](docker/minio-recipe-images-policy.json) — anonymous GET on `*.webp`/`*.jpg` only, mirroring the prod bucket policy so renditions are public and originals/staging stay private. The same code path targets MinIO vs. real S3 purely via env: locally `api/.env` sets `S3_ENDPOINT=http://localhost:9100`, `S3_FORCE_PATH_STYLE=true`, `S3_PUBLIC_BASE_URL=http://localhost:9100/zradelnik-recipe-images`, and `minioadmin` credentials; in production all three `S3_ENDPOINT`/`S3_FORCE_PATH_STYLE`/`S3_PUBLIC_BASE_URL` are unset. MinIO allows browser presigned PUTs via `MINIO_API_CORS_ALLOW_ORIGIN=http://localhost:3000` (the web dev origin).
 
 **Backups:** the bucket is snapshotted daily into a dated zip via [api/src/scripts/backupImages.ts](api/src/scripts/backupImages.ts). It runs **inside the API container** (where the S3 credentials live) using the bundled `@aws-sdk` + `fflate` — no `aws` CLI or `zip` binary needed. It zips everything under `images/` (private originals + all renditions), skipping the transient `staging/` prefix, mirroring the bucket folder structure so a restore is a plain re-upload. A VPS cron (`images-backup.sh`, not in this repo — mirrors the accounting attachments backup) `docker exec`s it to `/tmp`, `docker cp`s the zip out, and prunes zips older than 30 days. Each run is a full snapshot.
 

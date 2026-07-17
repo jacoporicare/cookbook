@@ -24,8 +24,16 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 const region = process.env.AWS_REGION || 'eu-central-1';
 export const bucket = process.env.S3_BUCKET || 'zradelnik-recipe-images';
 
+// Local dev points at a MinIO container (see docker-compose.yml) via S3_ENDPOINT
+// + path-style addressing; both are unset in staging/production so the SDK talks
+// to real AWS S3. When set, presigned URLs and the public base must use the same
+// host so the browser can reach the objects it's handed.
+const endpoint = process.env.S3_ENDPOINT || undefined;
+const forcePathStyle = process.env.S3_FORCE_PATH_STYLE === 'true';
+
 // Public base for GET URLs. Defaults to the virtual-hosted S3 endpoint; override
-// with S3_PUBLIC_BASE_URL to point at a CDN later without touching stored keys.
+// with S3_PUBLIC_BASE_URL to point at a CDN later without touching stored keys
+// (locally this points at the path-style MinIO bucket URL).
 export const publicBaseUrl =
   process.env.S3_PUBLIC_BASE_URL ||
   `https://${bucket}.s3.${region}.amazonaws.com`;
@@ -34,7 +42,7 @@ export const publicBaseUrl =
 // recipe's picture changes), so they can be cached forever.
 export const IMMUTABLE_CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
-const s3 = new S3Client({ region });
+const s3 = new S3Client({ region, endpoint, forcePathStyle });
 
 // Permanent images live under an `images/` prefix so the bucket root stays
 // clean (only `images/` and `staging/`). This is the value stored in

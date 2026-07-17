@@ -14,3 +14,42 @@ services:
       - db
     environment:
       ME_CONFIG_MONGODB_SERVER: db
+
+  # S3-compatible object storage for recipe images (emulates AWS S3) so local
+  # uploads never touch the production bucket.
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ':9001'
+    # Host ports 9100/9101 (not the MinIO-default 9000/9001) so this can run
+    # alongside other local projects' S3 emulators without a port clash.
+    ports:
+      - "9100:9000" # S3 API (browser uploads + API access)
+      - "9101:9001" # web console
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      # Allow browser PUT from the local web app via presigned URLs.
+      MINIO_API_CORS_ALLOW_ORIGIN: "http://localhost:3000"
+
+  # One-shot: create the bucket, expire stale staging uploads after 1 day, and
+  # grant anonymous GET to *.webp / *.jpg only — mirroring the prod bucket policy
+  # so renditions are public while originals/staging stay private.
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    volumes:
+      - ./docker/minio-recipe-images-policy.json:/policy.json:ro
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 minioadmin minioadmin; do sleep 1; done;
+      mc mb --ignore-existing local/zradelnik-recipe-images;
+      mc ilm rule add --expire-days 1 --prefix staging/ local/zradelnik-recipe-images || true;
+      mc anonymous set-json /policy.json local/zradelnik-recipe-images;
+      echo 'MinIO ready';
+      "
+
+volumes:
+  minio-data:
