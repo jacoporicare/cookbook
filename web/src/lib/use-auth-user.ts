@@ -13,10 +13,13 @@ let cachedUser: User = null;
 let initialized = false;
 
 function getSnapshot(): User {
+  // `getAuthToken()` is only the cache key; `getAuthUser()` re-reads the cookie
+  // itself (it takes an optional cookie *string*, not a token — passing the raw
+  // token here would make it look for `auth_token=` inside the token and fail).
   const token = getAuthToken();
   if (!initialized || token !== cachedToken) {
     cachedToken = token;
-    cachedUser = getAuthUser(token);
+    cachedUser = getAuthUser();
     initialized = true;
   }
   return cachedUser;
