@@ -139,6 +139,8 @@ Abandoned staging uploads are swept automatically by an S3 lifecycle rule (`expi
 
 **Serving:** the GraphQL `imageUrl` returns the S3 base (`<publicBase>/<key>`). A custom `next/image` loader ([web/image-loader.js](web/image-loader.js)) appends `/<width>.webp`, so the browser fetches finished bytes directly from S3 and `/_next/image` never runs. The rendition widths in [api/src/imageProcessing.ts](api/src/imageProcessing.ts) (`RENDITION_WIDTHS`), the loader, and `next.config.js` `deviceSizes`/`imageSizes` **must stay in sync**.
 
+**Backups:** the bucket is snapshotted daily into a dated zip via [api/src/scripts/backupImages.ts](api/src/scripts/backupImages.ts). It runs **inside the API container** (where the S3 credentials live) using the bundled `@aws-sdk` + `fflate` — no `aws` CLI or `zip` binary needed. It zips everything under `images/` (private originals + all renditions), skipping the transient `staging/` prefix, mirroring the bucket folder structure so a restore is a plain re-upload. A VPS cron (`images-backup.sh`, not in this repo — mirrors the accounting attachments backup) `docker exec`s it to `/tmp`, `docker cp`s the zip out, and prunes zips older than 30 days. Each run is a full snapshot.
+
 Image identity is content-addressed (a new key is minted whenever a recipe's picture changes). AVIF is intentionally unsupported — AV1 encoding is far too slow on the deployment VM. (Images were migrated out of MongoDB into S3 in a one-shot pass; those migration scripts and the legacy `Image` blob model have since been removed.)
 
 - Preserve all diacritics and special characters exactly as they are, when copying or manipulating with text.
