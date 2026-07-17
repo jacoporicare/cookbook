@@ -19,9 +19,7 @@ export default function Page() {
       <Suspense fallback={<RecipeListSkeleton />}>
         <RecipeListContent />
       </Suspense>
-      <Suspense fallback={null}>
-        <AuthedFab />
-      </Suspense>
+      <AuthedFab />
     </Layout>
   );
 }

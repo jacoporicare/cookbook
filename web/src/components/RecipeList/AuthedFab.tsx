@@ -1,15 +1,16 @@
-import { getClient } from '@/lib/apollo-client';
-import { getCurrentUser } from '@/lib/auth-server';
+'use client';
+
+import { useAuthUser } from '@/lib/use-auth-user';
 
 import { RecipeListFab } from './RecipeListFab';
 
 /**
- * Renders the "new recipe" FAB only for logged-in users. Reads the auth cookie,
- * so it must be rendered inside a `<Suspense>` boundary (fallback: nothing).
+ * Renders the "new recipe" FAB only for logged-in users. The signed-in state is
+ * resolved on the client from the JWT cookie (see `useAuthUser`), so the recipe
+ * list stays fully static — no dynamic hole, no server round-trip for the FAB.
  */
-export async function AuthedFab() {
-  const client = await getClient();
-  const user = await getCurrentUser(client);
+export function AuthedFab() {
+  const user = useAuthUser();
 
   if (!user) {
     return null;

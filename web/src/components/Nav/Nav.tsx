@@ -9,6 +9,7 @@ import { UserInfo } from '../UserInfo/UserInfo';
 import { NavLink } from './NavLink';
 
 type Props = {
+  // `undefined` = not yet known (server / pre-hydration), `null` = guest.
   user?: User;
 };
 
@@ -68,7 +69,7 @@ export function Nav(props: Props) {
               Admin
             </NavLink>
           )}
-          <UserInfo userName={props.user?.name} />
+          <UserInfo user={props.user} />
         </nav>
         <ThemeToggle className="sm:hidden" />
       </div>

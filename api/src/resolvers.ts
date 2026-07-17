@@ -113,7 +113,7 @@ const resolvers: Resolvers = {
         throw new Error('Invalid credentials');
       }
 
-      return { token: signToken(user.id) };
+      return { token: signToken(user) };
     },
     createImageUpload: authenticated(async (_, args) => {
       if (!isAllowedContentType(args.contentType)) {

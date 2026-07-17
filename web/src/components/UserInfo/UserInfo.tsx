@@ -3,15 +3,17 @@
 import { LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
+import { User } from '@/types/user';
+
 import { NavLink } from '../Nav/NavLink';
 
 type Props = {
-  userName?: string;
+  // `undefined` = not yet known (server / pre-hydration), `null` = guest.
+  user?: User;
 };
 
-export function UserInfo(props: Props) {
+export function UserInfo({ user }: Props) {
   const pathname = usePathname();
-  const isLoggedIn = !!props.userName;
 
   return (
     <>
@@ -24,26 +26,35 @@ export function UserInfo(props: Props) {
       >
         ·
       </div>
-      {!isLoggedIn ? (
-        <NavLink
-          active={pathname === '/prihlaseni'}
-          href={
-            !pathname || pathname === '/prihlaseni'
-              ? '/prihlaseni'
-              : `/prihlaseni?u=${encodeURIComponent(pathname) || ''}`
-          }
-        >
-          Přihlásit
-        </NavLink>
-      ) : (
-        <>
-          <NavLink href="/nastaveni">{props.userName}</NavLink>
-          <NavLink href={`/odhlaseni?u=${encodeURIComponent(pathname) || ''}`}>
-            <LogOut className="inline size-5" />{' '}
-            <span className="lg:hidden">Odhlásit</span>
+      {/*
+        Reserve a stable width on desktop so the auth links filling in after
+        hydration don't shift the search box. `undefined` is the unknown state:
+        render nothing (never the guest login button) to avoid a wrong flash.
+      */}
+      <div className="lg:flex lg:min-w-36 lg:items-center">
+        {user === undefined ? null : !user ? (
+          <NavLink
+            active={pathname === '/prihlaseni'}
+            href={
+              !pathname || pathname === '/prihlaseni'
+                ? '/prihlaseni'
+                : `/prihlaseni?u=${encodeURIComponent(pathname) || ''}`
+            }
+          >
+            Přihlásit
           </NavLink>
-        </>
-      )}
+        ) : (
+          <>
+            <NavLink href="/nastaveni">{user.name}</NavLink>
+            <NavLink
+              href={`/odhlaseni?u=${encodeURIComponent(pathname) || ''}`}
+            >
+              <LogOut className="inline size-5" />{' '}
+              <span className="lg:hidden">Odhlásit</span>
+            </NavLink>
+          </>
+        )}
+      </div>
     </>
   );
 }

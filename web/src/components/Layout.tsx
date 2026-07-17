@@ -1,11 +1,10 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 
 import { getCachedRecipeList } from '@/lib/recipes-cache';
 
 import { Footer } from './Footer/Footer';
 import { Header } from './Header/Header';
-import { Nav } from './Nav/Nav';
-import { NavUser } from './Nav/NavUser';
+import { NavClient } from './Nav/NavClient';
 import { TrackUserActivity } from './TrackUserActivity';
 
 type Props = {
@@ -14,20 +13,14 @@ type Props = {
 
 export async function Layout({ children }: Props) {
   // Cached, user-agnostic recipe list powers the header search. The
-  // user-specific nav is streamed separately via <NavUser /> so this shell
-  // stays static/prerenderable.
+  // user-specific nav resolves the signed-in state on the client (<NavClient />
+  // reads the JWT cookie), so this shell stays fully static/prerenderable — no
+  // dynamic hole, no guest-then-signed-in flash.
   const { recipes } = await getCachedRecipeList();
 
   return (
     <>
-      <Header
-        recipes={recipes}
-        nav={
-          <Suspense fallback={<Nav user={null} />}>
-            <NavUser />
-          </Suspense>
-        }
-      />
+      <Header recipes={recipes} nav={<NavClient />} />
       <TrackUserActivity />
       <div
         className={`

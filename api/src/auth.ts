@@ -6,8 +6,21 @@ import UserModel, { UserDbObject, UserDocument } from './models/user';
 
 const jwtSecret = process.env.JWT_SECRET!;
 
-export function signToken(userId: string) {
-  return jwt.sign({ userId }, jwtSecret, { expiresIn: '1y' });
+export function signToken(user: {
+  id: string;
+  displayName: string;
+  isAdmin: boolean;
+}) {
+  // `userId` is the only claim the API trusts (see `authenticated()` — it always
+  // re-loads the user from the DB). `displayName`/`isAdmin` are included purely
+  // so the web client can render the correct nav straight from the cookie,
+  // without a round-trip. JWT payloads are readable (not secret), and these are
+  // non-sensitive display values, so exposing them client-side is fine.
+  return jwt.sign(
+    { userId: user.id, displayName: user.displayName, isAdmin: user.isAdmin },
+    jwtSecret,
+    { expiresIn: '1y' },
+  );
 }
 
 export function verifyToken<T>(token: string) {
